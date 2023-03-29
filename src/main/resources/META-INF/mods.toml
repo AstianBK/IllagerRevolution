@@ -1,0 +1,36 @@
+modLoader="javafml" 
+
+loaderVersion="[40,)" 
+
+license="All rights reserved"
+
+[[mods]] 
+
+modId="illagerrevolutionmod"
+version="${file.jarVersion}" 
+displayName="Illager Revolution"
+logoFile="illagerrevolution.png" 
+credits="..."
+authors="Blood Knight Team"
+
+description='''
+Illagers have risen up in rebellion against players and their villages.
+
+This mod adds new content such as new illager variants, resources, mechanics, weapons and items
+that will revolutionize your gameplay with some much needed challenge.
+'''
+
+[[dependencies.illagerrevolutionmod]]
+    
+    modId="forge" 
+    mandatory=true 
+    versionRange="[40,)" 
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.illagerrevolutionmod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,1.19)"
+    ordering="NONE"
+    side="BOTH"

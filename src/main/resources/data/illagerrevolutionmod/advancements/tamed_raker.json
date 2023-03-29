@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "item": "illagerrevolutionmod:scraper_claw"
+    },
+    "title": "Raking Friends Forever!",
+    "description": "You tamed a wild Raker.",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "illagerrevolutionmod:illagerrevolutionmod",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "illagerrevolutionmod:scrapper"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  }
+}

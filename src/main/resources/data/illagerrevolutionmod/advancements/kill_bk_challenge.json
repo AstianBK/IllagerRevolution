@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "item": "illagerrevolutionmod:illagium_runed_blade"
+    },
+    "title": "Traitorous Edge",
+    "description": "You killed a Blade Knight with it's own weapon.",
+    "frame": "challenge",
+    "show_toast": false,
+    "announce_to_chat": true
+  },
+  "parent": "illagerrevolutionmod:runed_blade_get",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "mainhand": {
+              "items": [
+                "illagerrevolutionmod:illagium_runed_blade"
+              ]
+            }
+          }
+        },
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "illagerrevolutionmod:blade_knight"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 250
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:iron_sword"
+  },
+  "addition": {
+    "item": "illagerrevolutionmod:illagium"
+  },
+  "result": {
+    "item": "illagerrevolutionmod:illagium_cleaver",
+    "count": 1
+  }
+}

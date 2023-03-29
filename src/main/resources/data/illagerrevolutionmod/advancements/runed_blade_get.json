@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "illagerrevolutionmod:illagium_runed_blade"
+    },
+    "title": "The Runed Blade",
+    "description": "Whomsoever takes up this blade shall wield power eternal. Just as the blade rends flesh, so must power scar the soul",
+    "frame": "task",
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "illagerrevolutionmod:illagerrevolutionmod",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "illagerrevolutionmod:illagium_runed_blade"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

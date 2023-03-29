@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "illagerrevolutionmod:scrapper_armor_diamond"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "item": "illagerrevolutionmod:scrapper_armor_netherite"
+  }
+}

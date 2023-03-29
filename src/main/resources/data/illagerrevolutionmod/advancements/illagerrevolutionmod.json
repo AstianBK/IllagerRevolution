@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "illagerrevolutionmod:illagium"
+    },
+    "title": "Illagium Forger",
+    "description": "It's stronger than iron and a third of the weight. It's completely vibration absorbent.",
+    "frame": "task",
+    "background": "minecraft:textures/block/stone.png",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "illagerrevolutionmod:illagium"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

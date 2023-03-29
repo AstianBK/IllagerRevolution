@@ -1,0 +1,331 @@
+package net.BKTeam.illagerrevolutionmod.entity.custom;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.scores.Team;
+import net.BKTeam.illagerrevolutionmod.entity.goals.FollowOwnerGoalZombie;
+import net.BKTeam.illagerrevolutionmod.entity.goals.OwnerDefend;
+import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Attacking;
+import net.BKTeam.illagerrevolutionmod.procedures.Event_Death;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
+
+import java.util.EnumSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+
+public class ZombifiedEntity extends Monster implements IAnimatable {
+
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
+    private static final EntityDataAccessor<Boolean> ATTACKING =
+            SynchedEntityData.defineId(ZombifiedEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Boolean> HASSOUL =
+                SynchedEntityData.defineId(ZombifiedEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<String> ID_SOUL =
+            SynchedEntityData.defineId(ZombifiedEntity.class,EntityDataSerializers.STRING);
+
+    private static final EntityDataAccessor<Optional<UUID>> ID_OWNER =
+            SynchedEntityData.defineId(ZombifiedEntity.class,EntityDataSerializers.OPTIONAL_UUID);
+
+    private int attackTimer;
+
+
+    public ZombifiedEntity(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
+        this.attackTimer=0;
+    }
+
+    public boolean isAlliedTo(@NotNull Entity pEntity) {
+        if (this.getOwner()==pEntity) {
+            return true;
+        } else if (super.isAlliedTo(pEntity)) {
+            return true;
+        } else if (pEntity instanceof LivingEntity && ((LivingEntity) pEntity).getMobType() == MobType.ILLAGER  && this.getOwner()==null) {
+            return this.getTeam() == null && pEntity.getTeam() == null;
+        }else if(pEntity instanceof Villager && getOwner()!=null){
+            return true;
+        }
+        if(getOwner()!=null){
+            return this.getOwner().isAlliedTo(pEntity);
+        }
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Team getTeam() {
+        if(this.getOwner()!=null){
+            return this.getOwner().getTeam();
+        }
+        return super.getTeam();
+    }
+
+    public static AttributeSupplier setAttributes() {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 35.0D)
+                .add(Attributes.ATTACK_DAMAGE, 3.0D)
+                .add(Attributes.FOLLOW_RANGE, 35.D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25f).build();
+    }
+
+    @Override
+    public MobType getMobType() {
+        return MobType.UNDEAD;
+    }
+
+    private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+
+        String s1="";
+        if(this.getIdSoul().equals("illagerbeasttamer")){
+            s1=this.getnameSoul();
+        }
+        if (event.isMoving() && !this.isAttacking() && !this.isAggressive()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.walk"+s1, ILoopType.EDefaultLoopTypes.LOOP));
+        }
+        else if (event.isMoving() && !this.isAttacking() && this.isAggressive()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.walk"+s1+"2", ILoopType.EDefaultLoopTypes.LOOP));
+        }
+        else if (this.isAttacking()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.attack"+s1, ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+
+        }
+        else event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.idle"+s1, ILoopType.EDefaultLoopTypes.LOOP));
+        return PlayState.CONTINUE;
+
+    }
+
+    public String getIdSoul() {
+        return this.entityData.get(ID_SOUL);
+    }
+
+    public void setIdSoul(String idSoul){
+        this.entityData.set(ID_SOUL,idSoul);
+    }
+
+    public UUID getIdOwner() {
+        return this.entityData.get(ID_OWNER).orElse((UUID)null);
+    }
+    public boolean isAttacking(){
+        return this.entityData.get(ATTACKING);
+    }
+    public void setAttacking(boolean attacking){
+        this.entityData.set(ATTACKING,attacking);
+        this.attackTimer = isAttacking() ? 7 : 0;
+    }
+
+    public void setIdOwner(UUID idOwner){
+        this.entityData.set(ID_OWNER, Optional.ofNullable(idOwner));
+    }
+
+    public String getnameSoul(){
+        return this.getIdSoul();
+    }
+    public boolean isHasSoul(){
+        return this.entityData.get(HASSOUL);
+    }
+
+    public void setHasSoul(boolean pBoolean){
+        this.entityData.set(HASSOUL,pBoolean);
+    }
+
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("hasSoul",isHasSoul());
+        pCompound.putBoolean("isAttacking",isAttacking());
+        pCompound.putString("idSoul",getIdSoul());
+        if (this.getIdOwner() != null) {
+            pCompound.putUUID("Owner", this.getIdOwner());
+        }
+
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        setHasSoul(pCompound.getBoolean("hasSoul"));
+        setAttacking(pCompound.getBoolean("isAttacking"));
+        setIdSoul(pCompound.getString("idSoul"));
+        UUID uuid;
+        if (pCompound.hasUUID("Owner")) {
+            uuid = pCompound.getUUID("Owner");
+        } else {
+            String s = pCompound.getString("Owner");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
+        }
+        if (uuid != null) {
+            this.setIdOwner(uuid);
+        }
+    }
+    public LivingEntity getOwner(){
+        if(this.getIdOwner()!=null){
+            return this.level.getPlayerByUUID(getIdOwner());
+        }
+        return null;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING,false);
+        this.entityData.define(HASSOUL,false);
+        this.entityData.define(ID_SOUL,"pillager");
+        this.entityData.define(ID_OWNER, Optional.empty());
+    }
+
+    @Override
+    protected void dropExperience() {
+        if(this.getIdOwner()==null){
+            super.dropExperience();
+        }
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(0,new OwnerDefend(this,false));
+        this.targetSelector.addGoal(1,new Owner_Attacking(this));
+        this.goalSelector.addGoal(1,new Zombiefied_Attack(this,1.1D,true));
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7));
+        this.goalSelector.addGoal(3,new FollowOwnerGoalZombie(this,1.0d,10.0f,3.0f,false));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(6, new FloatGoal(this));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
+
+    }
+    static class Zombiefied_Attack extends MeleeAttackGoal {
+        private final ZombifiedEntity goalOwner;
+
+        public Zombiefied_Attack(ZombifiedEntity entity, double speedModifier, boolean followWithoutLineOfSight) {
+            super(entity, speedModifier, followWithoutLineOfSight);
+            this.goalOwner = entity;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+        }
+
+        @Override
+        protected void checkAndPerformAttack(@NotNull LivingEntity entity, double distance) {
+            double d0 = this.getAttackReachSqr(entity);
+            if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
+                this.resetAttackCooldown();
+                this.goalOwner.playSound(SoundEvents.ZOMBIE_HURT, 1.0F, 4.0F);
+                this.goalOwner.doHurtTarget(entity);
+                this.goalOwner.getNavigation().stop();
+            }
+        }
+
+        @Override
+        protected void resetAttackCooldown() {
+            super.resetAttackCooldown();
+            this.goalOwner.setAttacking(true);
+        }
+
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.isAlive()) {
+            boolean flag = this.isSunBurnTick();
+            if (flag) {
+                ItemStack itemstack = this.getItemBySlot(EquipmentSlot.HEAD);
+                if (!itemstack.isEmpty()) {
+                    if (itemstack.isDamageableItem()) {
+                        itemstack.setDamageValue(itemstack.getDamageValue() + this.random.nextInt(2));
+                        if (itemstack.getDamageValue() >= itemstack.getMaxDamage()) {
+                            this.broadcastBreakEvent(EquipmentSlot.HEAD);
+                            this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                        }
+                    }
+
+                    flag = false;
+                }
+
+                if (flag) {
+                    this.setSecondsOnFire(8);
+                }
+            }
+        }
+        if(Event_Death.hasNameSoul(this.getnameSoul())){
+            this.setHasSoul(true);
+        }
+        if (this.isAttacking()) {
+            this.attackTimer--;
+        }
+        if(this.attackTimer==0){
+            this.setAttacking(false);
+        }
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController(this, "controller",
+                0, this::predicate));
+    }
+    @Override
+    public AnimationFactory getFactory() {
+        return this.factory;
+    }
+
+    protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
+        this.playSound(SoundEvents.STONE_STEP, 0.15F, 1.5F);
+    }
+
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ZOMBIE_VILLAGER_AMBIENT;
+    }
+
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
+        return SoundEvents.ZOMBIE_HURT;
+    }
+
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ZOMBIE_VILLAGER_DEATH;
+    }
+
+    protected float getSoundVolume() {
+        return 0.2F;
+    }
+
+}
