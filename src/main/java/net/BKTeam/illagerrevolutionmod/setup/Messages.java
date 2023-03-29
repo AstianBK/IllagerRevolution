@@ -1,4 +1,4 @@
-package net.BKTeam.illagerrevolutionmod.Setup;
+package net.BKTeam.illagerrevolutionmod.setup;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

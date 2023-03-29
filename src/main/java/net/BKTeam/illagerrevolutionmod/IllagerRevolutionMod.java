@@ -24,7 +24,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.data.DeathEntityEvent;
-import net.BKTeam.illagerrevolutionmod.Setup.Messages;
+import net.BKTeam.illagerrevolutionmod.setup.Messages;
 import net.BKTeam.illagerrevolutionmod.effect.init_effect;
 import net.BKTeam.illagerrevolutionmod.enchantment.Init_enchantment;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;

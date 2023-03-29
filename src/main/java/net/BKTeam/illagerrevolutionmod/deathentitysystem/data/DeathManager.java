@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.network.PacketSyncSoulBkToClient;
-import net.BKTeam.illagerrevolutionmod.Setup.Messages;
+import net.BKTeam.illagerrevolutionmod.setup.Messages;
 
 public class DeathManager {
     private static int count=0;
