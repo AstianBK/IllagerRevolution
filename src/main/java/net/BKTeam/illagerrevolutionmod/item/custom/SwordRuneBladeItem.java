@@ -110,7 +110,7 @@ public class SwordRuneBladeItem extends SwordItem {
                     while (i < listZombi.size()) {
                         if (listZombi.get(i).getOwner() == pPlayer) {
                             if (listZombi.get(i).isAlive()) {
-                                listZombi.get(i).die(DamageSource.playerAttack(pPlayer));
+                                listZombi.get(i).hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),listZombi.get(i).getMaxHealth());
                             }
                         }
                         i++;
