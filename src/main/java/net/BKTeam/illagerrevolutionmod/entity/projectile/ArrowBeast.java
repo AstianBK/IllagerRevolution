@@ -46,9 +46,4 @@ public class ArrowBeast extends AbstractArrow {
             }
         }
     }
-
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 }
