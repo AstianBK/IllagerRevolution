@@ -53,10 +53,8 @@ public class IllagerMinerRenderer extends ExtendedGeoEntityRenderer<IllagerMiner
     }
     public ItemStack getHeldItemForBone(String boneName, IllagerMinerEntity currentEntity) {
         switch (boneName) {
-            case LEFT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? mainHand : offHand;
             case RIGHT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? offHand : mainHand;
+                return mainHand;
             case POTION_BONE_IDENT:
                 break;
         }

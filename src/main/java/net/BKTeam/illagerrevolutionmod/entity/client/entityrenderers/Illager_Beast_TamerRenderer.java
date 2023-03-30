@@ -53,10 +53,8 @@ public class Illager_Beast_TamerRenderer extends ExtendedGeoEntityRenderer<Illag
     }
     public ItemStack getHeldItemForBone(String boneName, IllagerBeastTamerEntity currentEntity) {
         switch (boneName) {
-            case LEFT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? mainHand : offHand;
             case RIGHT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? offHand : mainHand;
+                return mainHand;
             case POTION_BONE_IDENT:
                 break;
         }

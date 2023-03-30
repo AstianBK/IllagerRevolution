@@ -6,9 +6,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
-public class death_mark_effect extends MobEffect {
+public class Death_mark_effect extends MobEffect {
 
-    public death_mark_effect() {
+    public Death_mark_effect() {
             super(MobEffectCategory.HARMFUL, 0);}
 
     @Override

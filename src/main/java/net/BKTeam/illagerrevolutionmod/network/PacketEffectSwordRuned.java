@@ -13,18 +13,18 @@ import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 
 import java.util.function.Supplier;
 
-public class packetEffectSwordRuned {
+public class PacketEffectSwordRuned {
     private final ItemStack stack;
     private final Entity entity;
 
-    public packetEffectSwordRuned(FriendlyByteBuf buf) {
+    public PacketEffectSwordRuned(FriendlyByteBuf buf) {
         Minecraft mc = Minecraft.getInstance();
         this.stack = buf.readItem();
         assert mc.level != null;
         this.entity = mc.level.getEntity(buf.readInt());
     }
 
-    public packetEffectSwordRuned(ItemStack stack, Entity entity) {
+    public PacketEffectSwordRuned(ItemStack stack, Entity entity) {
         this.stack = stack;
         this.entity = entity;
     }

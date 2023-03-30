@@ -8,16 +8,14 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class ZombifiedModel<I extends Monster> extends AnimatedGeoModel<ZombifiedEntity> {
 
+    private static final ResourceLocation MODEL=new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+            "geo/zombified_illager.geo.json");
+
     protected static final ResourceLocation ANIMATION_RESLOC = new ResourceLocation(IllagerRevolutionMod.MOD_ID,
             "animations/zombified_entity.animation.json");
     @Override
     public ResourceLocation getModelLocation(ZombifiedEntity object) {
-        if(object.isHasSoul()){
-            return  new ResourceLocation(IllagerRevolutionMod.MOD_ID,
-                    "geo/zombified_"+object.getnameSoul()+".geo.json");
-        }
-        return  new ResourceLocation(IllagerRevolutionMod.MOD_ID,
-                "geo/zombified_pillager.geo.json");
+        return MODEL;
     }
 
     @Override

@@ -34,7 +34,6 @@ public class Blade_knightRenderer extends ExtendedGeoEntityRenderer<Blade_Knight
     public Blade_knightRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Blade_KnightModel<Blade_KnightEntity>(MODEL_RESLOC,TEXTURE,TEXTURE_LOWLIFE,"blade_knight"));
         this.shadowRadius = 0.5f;
-        //this.setCurrentModelRenderCycle(EModelRenderCycle.REPEATED);
     }
 
     @Override
@@ -52,10 +51,8 @@ public class Blade_knightRenderer extends ExtendedGeoEntityRenderer<Blade_Knight
     @Override
     protected ItemStack getHeldItemForBone(String boneName, Blade_KnightEntity currentEntity) {
         switch (boneName) {
-            case LEFT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? currentEntity.getMainHandItem() : currentEntity.getOffhandItem();
             case RIGHT_HAND_BONE_IDENT:
-                return currentEntity.isLeftHanded() ? currentEntity.getOffhandItem(): currentEntity.getMainHandItem();
+                return currentEntity.getMainHandItem();
             case POTION_BONE_IDENT:
                 break;
         }

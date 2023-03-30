@@ -28,7 +28,7 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
-import net.BKTeam.illagerrevolutionmod.network.packetEffectSwordRuned;
+import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
 
 import javax.annotation.Nullable;
 
@@ -131,9 +131,9 @@ public class Event_Death {
     }
     public static void sendRunedBladePacket(ItemStack stack, LivingEntity livingEntity) {
         if (livingEntity instanceof ServerPlayer player) {
-            PacketHandler.sendToPlayer(new packetEffectSwordRuned(stack, player), player);
+            PacketHandler.sendToPlayer(new PacketEffectSwordRuned(stack, player), player);
         }
-        PacketHandler.sendToAllTracking(new packetEffectSwordRuned(stack, livingEntity), livingEntity);
+        PacketHandler.sendToAllTracking(new PacketEffectSwordRuned(stack, livingEntity), livingEntity);
     }
     public static void giveUseStatAndCriterion(ItemStack stack, ServerPlayer player) {
         if (!stack.isEmpty()) {

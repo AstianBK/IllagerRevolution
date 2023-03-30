@@ -31,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.BKTeam.illagerrevolutionmod.effect.init_effect;
 import net.BKTeam.illagerrevolutionmod.entity.goals.GoalLowhealth;
@@ -101,7 +102,6 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
 
     public Blade_KnightEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
         super(entityType, level);
-        this.populateDefaultEquipmentSlots(this.level.getCurrentDifficultyAt(this.blockPosition()));
         this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,99999,0));
         this.attackTimer=0;
         this.lowHealtTimer=40;
@@ -211,6 +211,14 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
             this.dismountTo(this.getX(),this.getY(),this.getZ());
         }
     }
+
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        this.populateDefaultEquipmentSlots(pDifficulty);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
     public boolean isAttackingShield(){
         return this.entityData.get(ATTACKINGSHIELD);
     }

@@ -18,8 +18,8 @@ public class PacketHandler {
 
     public static void registerMessages() {
         int index = 0;
-        MOD_CHANNEL.registerMessage(index++, packetEffectSwordRuned.class, packetEffectSwordRuned::encode, packetEffectSwordRuned::new,
-                packetEffectSwordRuned::handle);
+        MOD_CHANNEL.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode, PacketEffectSwordRuned::new,
+                PacketEffectSwordRuned::handle);
         MOD_CHANNEL.registerMessage(index++,ClientRakerScreenOpenPacket.class,ClientRakerScreenOpenPacket::write,ClientRakerScreenOpenPacket::read,ClientRakerScreenOpenPacket::handle);    }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {

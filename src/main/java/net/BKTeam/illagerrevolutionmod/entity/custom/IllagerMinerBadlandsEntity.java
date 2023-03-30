@@ -27,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.BKTeam.illagerrevolutionmod.entity.goals.EscapeMinerGoal;
 import net.BKTeam.illagerrevolutionmod.entity.goals.HurtByTargetGoalIllager;
@@ -34,6 +35,7 @@ import net.BKTeam.illagerrevolutionmod.entity.goals.NearestAttackableTargetGoalI
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -71,7 +73,6 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
             SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.BOOLEAN);
     public IllagerMinerBadlandsEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
         super(entityType, level);
-        this.populateDefaultEquipmentSlots(this.level.getCurrentDifficultyAt(this.blockPosition()));
         this.robTimer=0;
         this.attackTimer=0;
         this.useLantern=false;
@@ -79,6 +80,12 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         for (int i=0;i<5;i++) {
             this.listRob[i]=0;
         }
+    }
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_PICKAXE));
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
     public boolean isAlliedTo(@NotNull Entity pEntity) {
