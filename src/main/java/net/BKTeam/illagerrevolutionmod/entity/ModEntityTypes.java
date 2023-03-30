@@ -51,6 +51,12 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.5f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "zombified").toString()));
 
+    public static final RegistryObject<EntityType<FallenKnight>> FALLEN_KNIGHT =
+            ENTITY_TYPES.register("fallen_knight",
+                    () -> EntityType.Builder.of(FallenKnight::new, MobCategory.MONSTER)
+                            .sized(0.60f, 2.5f)
+                            .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "fallen_knight").toString()));
+
 
     public static final RegistryObject<EntityType<Blade_KnightEntity>> BLADE_KNIGHT =
             ENTITY_TYPES.register("blade_knight",

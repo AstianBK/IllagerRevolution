@@ -42,10 +42,19 @@ public class Event_Death {
             upSouls(event.getEntity().level,event.getEntity(),event.getSource().getEntity());
             DamageSource pSource=event.getSource();
             LivingEntity entity=event.getEntityLiving();
-            if (entity.isDeadOrDying() && checkSword(pSource,entity)){
+            if(entity instanceof FallenKnight fallenKnight){
                 event.setCanceled(true);
-                sendRunedBladePacket(entity.getMainHandItem(),entity);
-                giveUseStatAndCriterion(entity.getMainHandItem(),(ServerPlayer) entity);
+                fallenKnight.setHealth(1.0f);
+                fallenKnight.setInvulnerable(true);
+                fallenKnight.setIsArmed(false);
+                fallenKnight.setUnarmed(true);
+            }
+            if(entity instanceof  Player){
+                if (entity.isDeadOrDying() && checkSword(pSource,entity)){
+                    event.setCanceled(true);
+                    sendRunedBladePacket(entity.getMainHandItem(),entity);
+                    giveUseStatAndCriterion(entity.getMainHandItem(),(ServerPlayer) entity);
+                }
             }
         }
     }

@@ -117,7 +117,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         String s1="";
-        if(this.isEscape){
+        if(this.robTimer!=0){
             s1="3";
         }
 

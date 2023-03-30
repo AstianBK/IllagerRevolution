@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
+import net.BKTeam.illagerrevolutionmod.entity.custom.ReanimatedEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
@@ -8,14 +9,14 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 
 import java.util.EnumSet;
 
-public class OwnerDefend extends TargetGoal {
+public class Owner_Defend extends TargetGoal {
 
-    private final ZombifiedEntity owner;
+    private final ReanimatedEntity owner;
     private LivingEntity ownerLastHurtBy;
     private int timestamp;
     
 
-    public OwnerDefend(ZombifiedEntity pMob, boolean pMustSee) {
+    public Owner_Defend(ReanimatedEntity pMob, boolean pMustSee) {
         super(pMob, pMustSee);
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
         this.owner =pMob;

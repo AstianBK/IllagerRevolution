@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
+import net.BKTeam.illagerrevolutionmod.entity.custom.ReanimatedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -15,13 +16,13 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 
 import java.util.EnumSet;
 
-public class FollowOwnerGoalZombie  extends Goal {
+public class FollowOwnerGoalReanimate  extends Goal {
 
     public static final int TELEPORT_WHEN_DISTANCE_IS = 12;
     private static final int MIN_HORIZONTAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 2;
     private static final int MAX_HORIZONTAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 3;
     private static final int MAX_VERTICAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 1;
-    private final ZombifiedEntity tamable;
+    private final ReanimatedEntity tamable;
     private LivingEntity owner;
     private final LevelReader level;
     private final double speedModifier;
@@ -32,24 +33,20 @@ public class FollowOwnerGoalZombie  extends Goal {
     private float oldWaterCost;
     private final boolean canFly;
 
-    public FollowOwnerGoalZombie(ZombifiedEntity pZombie, double pSpeedModifier, float pStartDistance, float pStopDistance, boolean pCanFly) {
-        this.tamable = pZombie;
-        this.level = pZombie.level;
+    public FollowOwnerGoalReanimate(ReanimatedEntity reanimated, double pSpeedModifier, float pStartDistance, float pStopDistance, boolean pCanFly) {
+        this.tamable = reanimated;
+        this.level = reanimated.level;
         this.speedModifier = pSpeedModifier;
-        this.navigation = pZombie.getNavigation();
+        this.navigation = reanimated.getNavigation();
         this.startDistance = pStartDistance;
         this.stopDistance = pStopDistance;
         this.canFly = pCanFly;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        if (!(pZombie.getNavigation() instanceof GroundPathNavigation) && !(pZombie.getNavigation() instanceof FlyingPathNavigation)) {
+        if (!(reanimated.getNavigation() instanceof GroundPathNavigation) && !(reanimated.getNavigation() instanceof FlyingPathNavigation)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
     }
-
-    /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-     * method as well.
-     */
+    
     public boolean canUse() {
         LivingEntity livingentity = this.tamable.getOwner();
         if (livingentity == null) {
@@ -64,9 +61,7 @@ public class FollowOwnerGoalZombie  extends Goal {
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
+    
     public boolean canContinueToUse() {
         if (this.navigation.isDone()) {
             return false;
@@ -74,28 +69,19 @@ public class FollowOwnerGoalZombie  extends Goal {
             return !(this.tamable.distanceToSqr(this.owner) <= (double)(this.stopDistance * this.stopDistance));
         }
     }
-
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
+    
     public void start() {
         this.timeToRecalcPath = 0;
         this.oldWaterCost = this.tamable.getPathfindingMalus(BlockPathTypes.WATER);
         this.tamable.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
-
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
+    
     public void stop() {
         this.owner = null;
         this.navigation.stop();
         this.tamable.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
     }
-
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
+    
     public void tick() {
         this.tamable.getLookControl().setLookAt(this.owner, 10.0F, (float)this.tamable.getMaxHeadXRot());
         if (--this.timeToRecalcPath <= 0) {

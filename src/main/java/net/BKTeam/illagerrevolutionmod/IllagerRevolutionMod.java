@@ -86,6 +86,7 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(ModEntityTypes.ILLAGERBEASTTAMER.get(), Illager_Beast_TamerRenderer::new);
         EntityRenderers.register(ModEntityTypes.ZOMBIFIED.get(), ZombifiedRenderer::new);
         EntityRenderers.register(ModEntityTypes.BLADE_KNIGHT.get(), Blade_knightRenderer::new);
+        EntityRenderers.register(FALLEN_KNIGHT.get(),FallenKnightRenderer::new);
         EntityRenderers.register(ModEntityTypes.SOUL_PROJECTILE.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(SOUL_HUNTER.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(SUMMONED_SOUL.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);

@@ -38,6 +38,7 @@ public class ModEventBusEvents {
         event.put(ModEntityTypes.ILLAGERBEASTTAMER.get(), IllagerBeastTamerEntity.setAttributes());
         event.put(ModEntityTypes.ZOMBIFIED.get(), ZombifiedEntity.setAttributes());
         event.put(ModEntityTypes.BLADE_KNIGHT.get(), Blade_KnightEntity.setAttributes());
+        event.put(ModEntityTypes.FALLEN_KNIGHT.get(),FallenKnight.setAttributes());
 
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
