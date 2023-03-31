@@ -27,6 +27,8 @@ public class ReanimatedEntity extends Monster {
 
     private static final EntityDataAccessor<Optional<UUID>> ID_OWNER =
             SynchedEntityData.defineId(ReanimatedEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Integer> ID_NECROMANCER =
+            SynchedEntityData.defineId(ReanimatedEntity.class,EntityDataSerializers.INT);
 
     protected ReanimatedEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
@@ -51,11 +53,10 @@ public class ReanimatedEntity extends Monster {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.targetSelector.addGoal(1,new Owner_Defend(this,false));
-        this.targetSelector.addGoal(2,new Owner_Attacking(this));
-        this.goalSelector.addGoal(3,new FollowOwnerGoalReanimate(this,1.0d,10.0f,3.0f,false));
     }
-
+    public LivingEntity getNecromancer(){
+        return this.getIdNecromancer()!=-1 ? (LivingEntity) this.level.getEntity(this.getIdNecromancer()) : null;
+    }
     public LivingEntity getOwner(){
         if(this.getIdOwner()!=null){
             return this.level.getPlayerByUUID(getIdOwner());
@@ -78,13 +79,44 @@ public class ReanimatedEntity extends Monster {
         }
     }
 
+    public int getIdNecromancer() {
+        return this.entityData.get(ID_NECROMANCER);
+    }
+    public void setIdNecromancer(int idOwner){
+        this.entityData.set(ID_NECROMANCER,idOwner);
+    }
+
+
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         if (this.getIdOwner() != null) {
             pCompound.putUUID("Owner", this.getIdOwner());
         }
+        if(this.getIdNecromancer()!=-1){
+            pCompound.putInt("IdNecromancer",this.getIdNecromancer());
+        }
 
+    }
+
+
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        UUID uuid;
+        if (pCompound.hasUUID("Owner")) {
+            uuid = pCompound.getUUID("Owner");
+        } else {
+            String s = pCompound.getString("Owner");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
+        }
+        if (uuid != null) {
+            this.setIdOwner(uuid);
+        }
+        if(pCompound.getInt("IdNecromancer")!=-1){
+            this.setIdNecromancer(pCompound.getInt("IdNecromancer"));
+        }
     }
 
     @Override
@@ -102,23 +134,9 @@ public class ReanimatedEntity extends Monster {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        UUID uuid;
-        if (pCompound.hasUUID("Owner")) {
-            uuid = pCompound.getUUID("Owner");
-        } else {
-            String s = pCompound.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
-        }
-        if (uuid != null) {
-            this.setIdOwner(uuid);
-        }
-    }
-
-    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ID_OWNER, Optional.empty());
+        this.entityData.define(ID_NECROMANCER,-1);
     }
 }

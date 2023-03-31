@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -154,7 +156,6 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
-
     }
 
     @Override
@@ -190,6 +191,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
                     for (int i=0;i<6;i++){
                         Vec3 pos=new Vec3(this.getX()+this.level.getRandom().nextDouble(-3.0d,3.0d),this.getY()+3.0D,this.getZ()+this.level.getRandom().nextDouble(-3.0d,3.0d));
                         Player player=this.level.getNearestPlayer(this,40.0D);
+                        this.spawFallenKnight();
                         if(player!=null){
                             Soul_Projectile soul_projectile=new Soul_Projectile(player,player.level,this);
                             soul_projectile.moveTo(pos);
@@ -216,9 +218,25 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.populateDefaultEquipmentSlots(pDifficulty);
+        this.spawFallenKnight();
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
-
+    private void spawFallenKnight(){
+        float f = this.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
+        float f1 = Mth.cos(f);
+        float f2 = Mth.sin(f);
+        BlockPos pos=this.blockPosition();
+        BlockPos pos1=new BlockPos(pos.getX()+f1*0.5d,pos.getY(),pos.getZ()+f2*0.5d);
+        BlockPos pos2=new BlockPos(pos.getX()-f1*0.5d,pos.getY(),pos.getZ()-f2*0.5d);
+        FallenKnight knight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),this.level);
+        FallenKnight knight2=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),this.level);
+        knight.setIdNecromancer(this.getId());
+        knight2.setIdNecromancer(this.getId());
+        knight.moveTo(pos1,0.0f,0.0f);
+        knight2.moveTo(pos2,0.0f,0.0f);
+        this.level.addFreshEntity(knight);
+        this.level.addFreshEntity(knight2);
+    }
     public boolean isAttackingShield(){
         return this.entityData.get(ATTACKINGSHIELD);
     }

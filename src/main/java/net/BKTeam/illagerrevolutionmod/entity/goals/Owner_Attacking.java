@@ -21,21 +21,30 @@ public class Owner_Attacking extends TargetGoal {
     }
     public boolean canUse() {
         LivingEntity livingentity = this.owner.getOwner();
-        if (livingentity == null) {
+        LivingEntity livingentity2 = this.owner.getNecromancer();
+        if (livingentity == null || livingentity2 == null) {
             return false;
         } else {
-            this.ownerLastHurt = livingentity.getLastHurtMob();
-            int i = livingentity.getLastHurtMobTimestamp();
-            return i != this.timestamp && this.canAttack(this.ownerLastHurt, TargetingConditions.DEFAULT);
+            if(this.owner.getIdOwner()!=null){
+                this.ownerLastHurt = livingentity.getLastHurtMob();
+                int i = livingentity.getLastHurtMobTimestamp();
+                return i != this.timestamp && this.canAttack(this.ownerLastHurt, TargetingConditions.DEFAULT);
+            }else {
+                this.ownerLastHurt = livingentity2.getLastHurtMob();
+                int i = livingentity2.getLastHurtMobTimestamp();
+                return i != this.timestamp && this.canAttack(this.ownerLastHurt, TargetingConditions.DEFAULT);
+            }
         }
     }
     public void start() {
         this.mob.setTarget(this.ownerLastHurt);
         LivingEntity livingentity = this.owner.getOwner();
+        LivingEntity livingentity2 = this.owner.getNecromancer();
         if (livingentity != null) {
             this.timestamp = livingentity.getLastHurtMobTimestamp();
+        } else if (livingentity2 != null) {
+            this.timestamp = livingentity2.getLastHurtMobTimestamp();
         }
-
         super.start();
     }
 }

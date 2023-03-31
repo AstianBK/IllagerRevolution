@@ -11,6 +11,7 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.LevelAccessor;
@@ -43,11 +44,25 @@ public class Event_Death {
             DamageSource pSource=event.getSource();
             LivingEntity entity=event.getEntityLiving();
             if(entity instanceof FallenKnight fallenKnight){
-                event.setCanceled(true);
-                fallenKnight.setHealth(1.0f);
-                fallenKnight.setInvulnerable(true);
-                fallenKnight.setIsArmed(false);
-                fallenKnight.setUnarmed(true);
+                if(!(entity.getMainHandItem().getItem() instanceof SwordItem swordItem &&
+                        EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SMITE,swordItem.getDefaultInstance())!=0)){
+                    if(fallenKnight.getOwner()!=null){
+                        if(fallenKnight.getDispawnTimer()!=0){
+                            event.setCanceled(true);
+                            fallenKnight.setHealth(1.0f);
+                            fallenKnight.setInvulnerable(true);
+                            fallenKnight.setIsArmed(false);
+                            fallenKnight.setUnarmed(true);
+                        }
+                    }
+                    if(fallenKnight.getNecromancer()!=null){
+                        event.setCanceled(true);
+                        fallenKnight.setHealth(1.0f);
+                        fallenKnight.setInvulnerable(true);
+                        fallenKnight.setIsArmed(false);
+                        fallenKnight.setUnarmed(true);
+                    }
+                }
             }
             if(entity instanceof  Player){
                 if (entity.isDeadOrDying() && checkSword(pSource,entity)){

@@ -1,8 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
-import net.BKTeam.illagerrevolutionmod.entity.goals.RandomLookAroundFallenKnightGoal;
-import net.BKTeam.illagerrevolutionmod.entity.goals.UnarmedFallenGoal;
+import net.BKTeam.illagerrevolutionmod.entity.goals.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -10,6 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -38,6 +38,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib3.util.RenderUtils;
 
 import java.util.EnumSet;
 
@@ -49,6 +50,8 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public int unarmedTimer;
     public int rearmedTimer;
     public int reviveTimer;
+    public int dispawnTimer;
+    public boolean isEndlees;
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(FallenKnight.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> UNARMED =
@@ -62,10 +65,12 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     public FallenKnight(EntityType<? extends Monster> p_33570_, Level p_33571_) {
         super(p_33570_, p_33571_);
+        this.dispawnTimer=0;
         this.attackTimer=0;
         this.unarmedTimer=0;
         this.rearmedTimer=0;
         this.reviveTimer=0;
+        this.isEndlees=false;
     }
 
     public static AttributeSupplier setAttributes() {
@@ -80,9 +85,20 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         return this.inventory;
     }
 
+    public void setDispawnTimer(int dispawnTimer,@Nullable Player player,boolean isInfinite) {
+        if(!isInfinite){
+            this.dispawnTimer=dispawnTimer;
+            this.isEndlees=true;
+        }
+    }
+
+    public int getDispawnTimer() {
+        return this.dispawnTimer;
+    }
+
     @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.IRON_SWORD));
+        this.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(this.level.random.nextFloat() < 0.5 ? Items.IRON_SWORD : Items.IRON_AXE));
     }
 
     @Nullable
@@ -96,6 +112,8 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "controller",
                 0, this::predicate));
+        data.addAnimationController(new AnimationController(this, "controllerUnarded",
+                0, this::predicateUnarmed));
     }
 
     @Override
@@ -104,20 +122,31 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.goalSelector.addGoal(0,new UnarmedFallenGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(2,new FallenKnightAttack(this,1.5D,true));
-        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7){
-            @Override
-            public boolean canUse() {
-                if(this.mob instanceof FallenKnight fallenKnight){
-                    return fallenKnight.isArmed() && super.canUse();
-                }
-                return super.canUse();
-            }
-        });
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7));
         this.goalSelector.addGoal(4, new RandomLookAroundFallenKnightGoal(this));
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
+        this.targetSelector.addGoal(1,new Owner_Defend(this,false){
+            @Override
+            public boolean canUse() {
+                if(this.mob instanceof FallenKnight fallenKnight){
+                    return super.canUse() && fallenKnight.isArmed();
+                }
+                return super.canUse();
+            }
+        });
+        this.targetSelector.addGoal(2,new Owner_Attacking(this){
+            @Override
+            public boolean canUse() {
+                if(this.mob instanceof FallenKnight fallenKnight){
+                    return super.canUse() && fallenKnight.isArmed();
+                }
+                return super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(3,new FollowOwnerGoalReanimate(this,1.0d,10.0f,3.0f,false));
     }
     public boolean isArmed(){
         return this.entityData.get(ARMED);
@@ -137,6 +166,16 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     public void setIsAttacking(boolean pBoolean){
         this.entityData.set(ATTACKING,pBoolean);
+        this.attackTimer= pBoolean ? 20 : 0;
+    }
+
+    public boolean isOnGroundUnarmed() {
+        return this.entityData.get(ON_GROUND_UNARMED);
+    }
+
+    public void setOnGroundUnarmed(boolean b){
+        this.entityData.set(ON_GROUND_UNARMED,b);
+        this.reviveTimer= b ? 200 : 0;
     }
 
     public boolean isUnarmed() {
@@ -145,7 +184,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     public void setUnarmed(boolean b){
         this.entityData.set(UNARMED,b);
-        this.unarmedTimer= b ? 30 : 0;
+        this.unarmedTimer= b ? 10 : 0;
     }
 
     private void setIsRearmed(boolean b) {
@@ -158,6 +197,12 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     }
     @Override
     public void aiStep() {
+        if(this.isEndlees && this.dispawnTimer>0){
+            this.dispawnTimer--;
+        }
+        if (this.dispawnTimer==0 && this.isEndlees){
+            this.hurt(DamageSource.MAGIC.bypassMagic().bypassArmor(),this.getMaxHealth());
+        }
         if(this.isAttacking()){
             this.attackTimer--;
         }
@@ -169,11 +214,13 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         }
         if(this.unarmedTimer==0 && this.isUnarmed()){
             this.setUnarmed(false);
+            this.setOnGroundUnarmed(true);
         }
-        if(!this.isArmed()){
+        if(this.isOnGroundUnarmed()){
             this.reviveTimer--;
         }
-        if(this.reviveTimer==0 && !this.isArmed()){
+        if(this.reviveTimer==0 && this.isOnGroundUnarmed()){
+            this.setOnGroundUnarmed(false);
             this.setIsRearmed(true);
         }
         if(this.isRearmed()){
@@ -194,6 +241,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         pCompound.putBoolean("isAttacking",this.isAttacking());
         pCompound.putBoolean("isRearmed",this.isRearmed());
         pCompound.putBoolean("isArmed",this.isArmed());
+        pCompound.putBoolean("isOnGround",this.isOnGroundUnarmed());
     }
 
     @Override
@@ -203,6 +251,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.setUnarmed(pCompound.getBoolean("isUnarmed"));
         this.setIsAttacking(pCompound.getBoolean("isAttacking"));
         this.setIsArmed(pCompound.getBoolean("isArmed"));
+        this.setOnGroundUnarmed(pCompound.getBoolean("isOnGround"));
     }
 
     @Override
@@ -212,28 +261,30 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.entityData.define(UNARMED,false);
         this.entityData.define(REARMED,false);
         this.entityData.define(ARMED,true);
+        this.entityData.define(ON_GROUND_UNARMED,false);
     }
 
     private <E extends IAnimatable>PlayState predicate(AnimationEvent<E> event) {
-        if(this.isArmed()){
-            if (event.isMoving() && !this.isAttacking() && !this.isAggressive()) {
+        if (event.isMoving() && !this.isAttacking() && !this.isAggressive()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk1", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if(event.isMoving() && this.isAggressive() && !this.isAttacking()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk2", ILoopType.EDefaultLoopTypes.LOOP));
+        } else if (this.isAttacking()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        }else  if(this.isArmed()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        }
+        return PlayState.CONTINUE;
+    }
 
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk1", ILoopType.EDefaultLoopTypes.LOOP));
-            }else if(event.isMoving() && this.isAggressive() && !this.isAttacking()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk2", ILoopType.EDefaultLoopTypes.LOOP));
-            } else if (this.isAttacking()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-            }else  {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            }
+    private <E extends IAnimatable>PlayState predicateUnarmed(AnimationEvent<E> event) {
+
+        if(this.isUnarmed() && !this.isOnGroundUnarmed()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+        } else if (this.isRearmed() && !this.isOnGroundUnarmed()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.revive1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
         }else {
-            if(this.isUnarmed()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
-            } else if (this.isRearmed()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.revive1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
-            }else {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death2", ILoopType.EDefaultLoopTypes.LOOP));
-            }
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death2", ILoopType.EDefaultLoopTypes.LOOP));
         }
         return PlayState.CONTINUE;
     }
@@ -261,7 +312,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         @Override
         public boolean canUse() {
             if(this.goalOwner.getTarget()!=null){
-                return super.canUse() && !this.goalOwner.getTarget().isInvulnerable();
+                return super.canUse() && !this.goalOwner.getTarget().isInvulnerable() && this.goalOwner.isArmed();
             }
             return super.canUse() ;
         }

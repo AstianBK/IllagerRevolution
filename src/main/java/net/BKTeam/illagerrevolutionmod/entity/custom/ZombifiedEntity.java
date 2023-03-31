@@ -1,5 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.entity.goals.FollowOwnerGoalReanimate;
+import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Attacking;
+import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Defend;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -148,6 +151,9 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.targetSelector.addGoal(1,new Owner_Defend(this,false));
+        this.targetSelector.addGoal(2,new Owner_Attacking(this));
+        this.goalSelector.addGoal(3,new FollowOwnerGoalReanimate(this,1.0d,10.0f,3.0f,false));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(1,new Zombiefied_Attack(this,1.1D,true));
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7));
