@@ -75,9 +75,12 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 35.0D)
-                .add(Attributes.ATTACK_DAMAGE, 3.0D)
-                .add(Attributes.FOLLOW_RANGE, 35.D)
+                .add(Attributes.MAX_HEALTH, 45.0D)
+                .add(Attributes.ATTACK_DAMAGE, 1.0D)
+                .add(Attributes.ARMOR,25.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 12.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .add(Attributes.FOLLOW_RANGE, 45.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f).build();
     }
     @Override
