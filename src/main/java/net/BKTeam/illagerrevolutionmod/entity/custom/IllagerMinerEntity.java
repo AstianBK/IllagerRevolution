@@ -81,17 +81,15 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
     }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
 
-        if (event.isMoving() && this.isHasItems()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk3", ILoopType.EDefaultLoopTypes.LOOP));
-
-        }else if (event.isMoving() && !this.isAggressive() && !this.isAttacking()) {
+        if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isSprinting()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk", ILoopType.EDefaultLoopTypes.LOOP));
         }
         else if (this.isAggressive() && event.isMoving() && !this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk2", ILoopType.EDefaultLoopTypes.LOOP));
 
-        }
-        else if (this.isAttacking()){
+        } else if (event.isMoving() && this.isSprinting()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk3", ILoopType.EDefaultLoopTypes.LOOP));
+        } else if (this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
 
         }
@@ -104,24 +102,6 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
     public void setHasItem(boolean pBoolean) {
         super.setHasItem(pBoolean);
         this.fistUseInvi=pBoolean;
-    }
-
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-    }
-
-    @Override
-    public void applyRaidBuffs(int pWave, boolean p_34080_) {
-        ItemStack itemstack = new ItemStack(Items.IRON_AXE);
-        Raid raid = this.getCurrentRaid();
-        int i = 1;
-        if (pWave > raid.getNumGroups(Difficulty.NORMAL)) {
-            i = 2;
-        }
-
-
-        this.setItemSlot(EquipmentSlot.MAINHAND, itemstack);
     }
 
     @Override

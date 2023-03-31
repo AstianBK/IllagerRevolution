@@ -100,7 +100,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        if(this.level.getRandom().nextInt(0,5)==0 && !(this instanceof IllagerMinerEntity)){
+        if(this.level.getRandom().nextFloat() < 0.2 && !(this instanceof IllagerMinerEntity)){
             this.spawnAtLocation(ModItems.GOGGLES_MINER.get());
         }
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
@@ -118,13 +118,8 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     }
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        String s1="";
-        if(this.robTimer!=0){
-            s1="3";
-        }
-
         if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isAttackLantern()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk"+s1, ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk", ILoopType.EDefaultLoopTypes.LOOP));
         }
         else if (this.isAttacking() && this.isAttackLantern()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.attack2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
@@ -134,8 +129,10 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         }
         else if (this.isAggressive() && event.isMoving() && !this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk2", ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        } else if (this.isSprinting() && event.isMoving()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk3", ILoopType.EDefaultLoopTypes.LOOP));
+
+        } else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
 
     }
