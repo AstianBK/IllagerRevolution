@@ -136,18 +136,18 @@ public class ModItems {
     //
 
     public static final RegistryObject<Item> ILLAGIUM_CLEAVER = ITEMS.register("illagium_cleaver",
-            ()->new BleedingSwordItem(ModTiers.ILLAGIUM,8,-3.0F,props()));
+            ()->new BleedingSwordItem(ModTiers.ILLAGIUM,7,-3.0F,props()));
 
     public static final RegistryObject<Item> ILLAGIUM_HELBERD = ITEMS.register("illagium_helberd",
-            ()->new AxeItem(ModTiers.ILLAGIUM,7,-3.0F,props()));
+            ()->new AxeItem(ModTiers.ILLAGIUM,9,-3.1F,props()));
     public static final RegistryObject<Item> ILLAGIUM_HAMMER = ITEMS.register("illagium_hammer",
-            ()->new PickaxeItem(ModTiers.ILLAGIUM,1,-3.0F,props()));
+            ()->new PickaxeItem(ModTiers.ILLAGIUM,4,-3.0F,props()));
 
     public static final RegistryObject<Item> ILLAGIUM_SCYTHE = ITEMS.register("illagium_scythe",
             ()->new HoeItem(ModTiers.ILLAGIUM,0,1,props()));
 
     public static final RegistryObject<Item> ILLAGIUM_MACE = ITEMS.register("illagium_mace",
-            ()->new ShovelItem(ModTiers.ILLAGIUM,2,-3.0F,props()));
+            ()->new ShovelItem(ModTiers.ILLAGIUM,2,-3.1F,props()));
 
     public static final RegistryObject<Item> ILLAGIUM_RUNED_BLADE = ITEMS.register("illagium_runed_blade",
             ()->new SwordRuneBladeItem(ModTiers.ILLAGIUM,4,-2.5F,props()));
