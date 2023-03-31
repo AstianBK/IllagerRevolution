@@ -1,15 +1,15 @@
 {
   "item.illagerrevolutionmod.illagerminer_spawn_egg": "Illager Miner Spawn Egg",
-  "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Illager Miner (Badlands) Spawn Egg",
+  "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Illager Scavenger Spawn Egg",
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Illager Beast Tamer Spawn Egg",
   "item.illagerrevolutionmod.scrapper_spawn_egg": "Raker Spawn Egg",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Blade Knight Illager Spawn Egg",
 
 
   "item.illagerrevolutionmod.helmet_miner_reinforced": "Illagium Miner Helmet",
-  "item.illagerrevolutionmod.goggles_miner_reinforced": "Illagium Miner Goggles",
+  "item.illagerrevolutionmod.goggles_miner_reinforced": "Illagium Scavenger Goggles",
   "item.illagerrevolutionmod.helmet_miner": "Miner Helmet",
-  "item.illagerrevolutionmod.goggles_miner": "Miner Goggles",
+  "item.illagerrevolutionmod.goggles_miner": "Scavenger Goggles",
   "item.illagerrevolutionmod.scrapper_armor_illagium": "Illagium Raker Armor",
   "item.illagerrevolutionmod.scrapper_armor_netherite": "Netherite Raker Armor",
   "item.illagerrevolutionmod.scrapper_armor_diamond": "Diamond Raker Armor",
@@ -44,7 +44,7 @@
 
   "entity.illagerrevolutionmod.raker": "Raker",
   "entity.illagerrevolutionmod.illagerminer": "Illager Miner",
-  "entity.illagerrevolutionmod.illagerminerbadlands": "Badlands Illager Miner",
+  "entity.illagerrevolutionmod.illagerminerbadlands": "Illager Scavenger",
   "entity.illagerrevolutionmod.blade_knight": "Illager Blade Knight",
   "entity.illagerrevolutionmod.illagerbeasttamer": "Illager Beast Tamer",
   "entity.illagerrevolutionmod.zombified": "Zombified Illager",
