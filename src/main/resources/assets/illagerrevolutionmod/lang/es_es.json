@@ -1,0 +1,55 @@
+{
+  "item.illagerrevolutionmod.illagerminer_spawn_egg": "Generar illager minero",
+  "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Generar illager rastreador",
+  "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Generar illager domador de bestias",
+  "item.illagerrevolutionmod.scrapper_spawn_egg": "Generar Rasgador",
+  "item.illagerrevolutionmod.blade_knight_spawn_egg": "Generar illager caballero de la espada",
+
+
+  "item.illagerrevolutionmod.helmet_miner_reinforced": "Casco minero de illagium",
+  "item.illagerrevolutionmod.goggles_miner_reinforced": "Lentes rastreador de illagium",
+  "item.illagerrevolutionmod.helmet_miner": "Casco de minero",
+  "item.illagerrevolutionmod.goggles_miner": "Lentes de rastreador",
+  "item.illagerrevolutionmod.scrapper_armor_illagium": "Armadura de illagium para rasgador",
+  "item.illagerrevolutionmod.scrapper_armor_netherite": "Armadura de netherita para rasgador",
+  "item.illagerrevolutionmod.scrapper_armor_diamond": "Armadura de diamante para rasgador",
+  "item.illagerrevolutionmod.scrapper_armor_gold": "Armadura de oro para rasgador",
+  "item.illagerrevolutionmod.scrapper_armor_iron": "Armadura de hierro para rasgador",
+  "item.illagerrevolutionmod.claws_armor_illagium": "Garras de illagium para rasgador",
+  "item.illagerrevolutionmod.claws_armor_netherite": "Garras de netherita para rasgador",
+  "item.illagerrevolutionmod.claws_armor_diamond": "Garras de diamante para rasgador",
+  "item.illagerrevolutionmod.claws_armor_gold": "Garras de oro para rasgador",
+  "item.illagerrevolutionmod.claws_armor_iron": "Garras de hierro para rasgador",
+
+
+  "item.illagerrevolutionmod.encrusted_lapis": "Lapislàzuli incrustado",
+  "item.illagerrevolutionmod.illagium": "Lingote de illagium",
+  "item.illagerrevolutionmod.scraper_claw": "Garra de rasgador",
+
+
+  "effect.illagerrevolutionmod.bleeding": "Herida profunda",
+  "effect.illagerrevolutionmod.death_mark": "Atado a la muerte",
+
+
+  "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
+  "item.illagerrevolutionmod.illagium_cleaver": "Espada de illagium",
+  "item.illagerrevolutionmod.illagium_helberd": "Hacha de illagium",
+  "item.illagerrevolutionmod.illagium_hammer": "Martillo de illagium",
+  "item.illagerrevolutionmod.illagium_scythe": "Guadaña de illagium",
+  "item.illagerrevolutionmod.illagium_mace": "Mazo de illagium",
+  "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
+
+  "enchantment.illagerrevolutionmod.serrated_edge": "Filo dentado",
+  "enchantment.illagerrevolutionmod.wary_lenses": "Lentes cautelosos",
+
+  "entity.illagerrevolutionmod.raker": "Rasgador",
+  "entity.illagerrevolutionmod.illagerminer": "Minero illager",
+  "entity.illagerrevolutionmod.illagerminerbadlands": "Illager rastreador",
+  "entity.illagerrevolutionmod.blade_knight": "Illager caballero de la espada",
+  "entity.illagerrevolutionmod.illagerbeasttamer": "Illager domador de bestias",
+  "entity.illagerrevolutionmod.zombified": "Illager zombi",
+
+  "itemGroup.illagerrevolutiontab":"Illager Revolution",
+
+  "sounds.illagerrevolutionmod.tamer_whistle": "Domador de bestias silvando"
+}
