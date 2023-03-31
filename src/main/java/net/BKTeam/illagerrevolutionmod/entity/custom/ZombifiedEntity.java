@@ -76,18 +76,13 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
 
-        String s1="";
-        if(this.getIdSoul().equals("illagerbeasttamer")){
-            s1=this.getnameSoul();
-        }
         if (event.isMoving() && !this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.walk"+s1, ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.walk", ILoopType.EDefaultLoopTypes.LOOP));
         }
         else if (this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.attack"+s1, ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }
-        else event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.idle"+s1, ILoopType.EDefaultLoopTypes.LOOP));
+        else event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
 
     }
