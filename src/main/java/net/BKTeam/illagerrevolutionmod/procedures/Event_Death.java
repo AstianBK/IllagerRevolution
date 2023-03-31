@@ -43,8 +43,9 @@ public class Event_Death {
             upSouls(event.getEntity().level,event.getEntity(),event.getSource().getEntity());
             DamageSource pSource=event.getSource();
             LivingEntity entity=event.getEntityLiving();
+            LivingEntity entity1= (LivingEntity) event.getSource().getEntity();
             if(entity instanceof FallenKnight fallenKnight){
-                if(!(entity.getMainHandItem().getItem() instanceof SwordItem swordItem &&
+                if(!(entity1.getMainHandItem().getItem() instanceof SwordItem swordItem &&
                         EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SMITE,swordItem.getDefaultInstance())!=0)){
                     if(fallenKnight.getOwner()!=null){
                         if(fallenKnight.getDispawnTimer()!=0){

@@ -51,7 +51,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public int rearmedTimer;
     public int reviveTimer;
     public int dispawnTimer;
-    public boolean isEndlees;
+    public boolean isEndless;
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(FallenKnight.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> UNARMED =
@@ -70,7 +70,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.unarmedTimer=0;
         this.rearmedTimer=0;
         this.reviveTimer=0;
-        this.isEndlees=false;
+        this.isEndless=false;
     }
 
     public static AttributeSupplier setAttributes() {
@@ -88,7 +88,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public void setDispawnTimer(int dispawnTimer,@Nullable Player player,boolean isInfinite) {
         if(!isInfinite){
             this.dispawnTimer=dispawnTimer;
-            this.isEndlees=true;
+            this.isEndless=true;
         }
     }
 
@@ -98,7 +98,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(this.level.random.nextFloat() < 0.5 ? Items.IRON_SWORD : Items.IRON_AXE));
+        this.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(this.level.random.nextFloat() < 0.5 ? Items.STONE_SWORD : Items.STONE_AXE));
     }
 
     @Nullable
@@ -112,8 +112,6 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "controller",
                 0, this::predicate));
-        data.addAnimationController(new AnimationController(this, "controllerUnarded",
-                0, this::predicateUnarmed));
     }
 
     @Override
@@ -166,7 +164,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     public void setIsAttacking(boolean pBoolean){
         this.entityData.set(ATTACKING,pBoolean);
-        this.attackTimer= pBoolean ? 20 : 0;
+        this.attackTimer= pBoolean ? 10 : 0;
     }
 
     public boolean isOnGroundUnarmed() {
@@ -197,10 +195,10 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     }
     @Override
     public void aiStep() {
-        if(this.isEndlees && this.dispawnTimer>0){
+        if(this.isEndless && this.dispawnTimer>0){
             this.dispawnTimer--;
         }
-        if (this.dispawnTimer==0 && this.isEndlees){
+        if (this.dispawnTimer==0 && this.isEndless){
             this.hurt(DamageSource.MAGIC.bypassMagic().bypassArmor(),this.getMaxHealth());
         }
         if(this.isAttacking()){
@@ -265,29 +263,29 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     }
 
     private <E extends IAnimatable>PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !this.isAttacking() && !this.isAggressive()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk1", ILoopType.EDefaultLoopTypes.LOOP));
-        }else if(event.isMoving() && this.isAggressive() && !this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk2", ILoopType.EDefaultLoopTypes.LOOP));
-        } else if (this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-        }else  if(this.isArmed()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        if(this.isArmed()){
+            if (event.isMoving() && !this.isAttacking() && !this.isAggressive()) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk1", ILoopType.EDefaultLoopTypes.LOOP));
+            }else if(event.isMoving() && this.isAggressive() && !this.isAttacking()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.walk2", ILoopType.EDefaultLoopTypes.LOOP));
+            } else if (this.isAttacking()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            }else   {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.idle", ILoopType.EDefaultLoopTypes.LOOP));
+            }
+        }else{
+            if(this.isUnarmed() && !this.isOnGroundUnarmed()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+            } else if (this.isRearmed() && !this.isOnGroundUnarmed()) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.revive1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+            }else {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death2", ILoopType.EDefaultLoopTypes.LOOP));
+            }
         }
+
         return PlayState.CONTINUE;
     }
 
-    private <E extends IAnimatable>PlayState predicateUnarmed(AnimationEvent<E> event) {
-
-        if(this.isUnarmed() && !this.isOnGroundUnarmed()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
-        } else if (this.isRearmed() && !this.isOnGroundUnarmed()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.revive1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
-        }else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fallenknight.death2", ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        return PlayState.CONTINUE;
-    }
 
     static class FallenKnightAttack extends MeleeAttackGoal {
         private final FallenKnight goalOwner;
@@ -311,10 +309,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
         @Override
         public boolean canUse() {
-            if(this.goalOwner.getTarget()!=null){
-                return super.canUse() && !this.goalOwner.getTarget().isInvulnerable() && this.goalOwner.isArmed();
-            }
-            return super.canUse() ;
+            return super.canUse()  && this.goalOwner.isArmed();
         }
 
         @Override

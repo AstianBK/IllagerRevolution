@@ -25,10 +25,10 @@ public class Owner_Defend extends TargetGoal {
     public boolean canUse() {
         LivingEntity livingentity = this.owner.getOwner();
         LivingEntity livingentity2 = this.owner.getNecromancer();
-        if (livingentity == null || livingentity2 == null) {
+        if (livingentity == null && livingentity2 == null) {
             return false;
         } else {
-            if(this.owner.getIdOwner()!=null){
+            if(livingentity!=null){
                 this.ownerLastHurtBy = livingentity.getLastHurtByMob();
                 int i = livingentity.getLastHurtByMobTimestamp();
                 return i != this.timestamp && this.canAttack(this.ownerLastHurtBy, TargetingConditions.DEFAULT);

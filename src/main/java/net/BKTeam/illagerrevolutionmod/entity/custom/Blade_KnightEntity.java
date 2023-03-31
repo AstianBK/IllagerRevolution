@@ -115,14 +115,8 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     }
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        String s1="1";
-        String s2="1";
-        if(this.isAttackingShield()){
-            s1="2";
-        }
-        if(this.isLowLife() && this.isFase2()){
-            s2="2";
-        }
+        String s1=this.isAttackingShield() ? "2"  : "1";
+        String s2=this.isLowLife() && this.isFase2()? "2" : "1";
         if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isCastingSpell() && !this.isStartAnimationLowHealth()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.walk" + s2, ILoopType.EDefaultLoopTypes.LOOP));
 
@@ -188,10 +182,10 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
             }
             if(this.lowHealtTimer<=39 && this.lowHealtTimer>=20){
                 if(this.lowHealtTimer==39){
+                    this.spawFallenKnight();
                     for (int i=0;i<6;i++){
                         Vec3 pos=new Vec3(this.getX()+this.level.getRandom().nextDouble(-3.0d,3.0d),this.getY()+3.0D,this.getZ()+this.level.getRandom().nextDouble(-3.0d,3.0d));
                         Player player=this.level.getNearestPlayer(this,40.0D);
-                        this.spawFallenKnight();
                         if(player!=null){
                             Soul_Projectile soul_projectile=new Soul_Projectile(player,player.level,this);
                             soul_projectile.moveTo(pos);
@@ -218,7 +212,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.populateDefaultEquipmentSlots(pDifficulty);
-        this.spawFallenKnight();
+        this.spawBackup();
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
     private void spawFallenKnight(){
@@ -230,12 +224,24 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
         BlockPos pos2=new BlockPos(pos.getX()-f1*0.5d,pos.getY(),pos.getZ()-f2*0.5d);
         FallenKnight knight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),this.level);
         FallenKnight knight2=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),this.level);
+        knight.populateDefaultEquipmentSlots(this.level.getCurrentDifficultyAt(pos));
+        knight2.populateDefaultEquipmentSlots(this.level.getCurrentDifficultyAt(pos));
         knight.setIdNecromancer(this.getId());
         knight2.setIdNecromancer(this.getId());
         knight.moveTo(pos1,0.0f,0.0f);
         knight2.moveTo(pos2,0.0f,0.0f);
         this.level.addFreshEntity(knight);
         this.level.addFreshEntity(knight2);
+    }
+
+    private void spawBackup(){
+        for(int i=0;i<4;i++){
+            BlockPos pos=this.blockPosition();
+            BlockPos pos1=new BlockPos(pos.getX()+this.getRandomX(0.5d),pos.getY(),pos.getZ()+this.getRandomZ(0.5d));
+            ZombifiedEntity zombie=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),this.level);
+            zombie.moveTo(pos1,0.0f,0.0f);
+            this.level.addFreshEntity(zombie);
+        }
     }
     public boolean isAttackingShield(){
         return this.entityData.get(ATTACKINGSHIELD);
