@@ -1,5 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.deathentitysystem;
 
+import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.item.custom.RunedSword;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -18,23 +21,23 @@ public class SoulTick {
     @SubscribeEvent
     public static void soulDeathEvent(LivingDeathEvent event){
         Entity assasin=event.getSource().getEntity();
-        if(assasin instanceof Player player){
-            if(player.getMainHandItem().is(ModItems.ILLAGIUM_RUNED_BLADE.get())){
-                if(!(event.getEntity() instanceof ZombifiedEntity entity && entity.getOwner()==assasin)){
-                    if(player.getAttribute(SoulTick.SOUL).getValue()<6){
-                        player.getAttribute(SoulTick.SOUL).setBaseValue(player.getAttribute(SoulTick.SOUL).getValue()+1);
-                        event.getEntity().playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
-                        if(player.getAttribute(SoulTick.SOUL).getValue()==6){
-                            event.getEntity().playSound(ModSounds.SOUL_LIMIT.get(),4.0f,1.0f);
-                        }
-                    }
+        if(assasin instanceof Player player && !(event.getEntity() instanceof FallenKnight)){
+            if(player.getMainHandItem().getItem() instanceof RunedSword){
+                if(player.getAttribute(SoulTick.SOUL).getValue()<6){
+                    player.getAttribute(SoulTick.SOUL).setBaseValue(player.getAttribute(SoulTick.SOUL).getValue()+1);
+                    event.getEntity().playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
+                       if(player.getAttribute(SoulTick.SOUL).getValue()==6){
+                           event.getEntity().playSound(ModSounds.SOUL_LIMIT.get(),4.0f,1.0f);
+                       }
                 }
-                if(event.getEntity() instanceof ZombifiedEntity){
-                    if(player.getAttribute(SoulTick.SOUL).getValue()<6){
-                        player.getAttribute(SoulTick.SOUL).setBaseValue(player.getAttribute(SoulTick.SOUL).getValue()+1);
-                        event.getEntity().playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
-                        if(player.getAttribute(SoulTick.SOUL).getValue()==6){
-                            player.getKillCredit().playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
+                if (player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())) {
+                    if(player instanceof IRelatedEntity relatedEntity){
+                        if(!relatedEntity.getBondedMinions().isEmpty()){
+                            relatedEntity.getBondedMinions().forEach(knight->{
+                                if(knight.isArmed()){
+                                    knight.heal(6);
+                                }
+                            });
                         }
                     }
                 }

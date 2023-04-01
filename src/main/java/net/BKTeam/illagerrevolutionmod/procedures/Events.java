@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
+import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -42,6 +43,23 @@ public class Events {
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event != null && event.getEntity() != null) {
             LivingEntity entity=event.getEntityLiving();
+            if(entity instanceof Player player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
+                if(player instanceof IRelatedEntity){
+                    if(((IRelatedEntity)player).getBondedMinions()!=null){
+                        if(!((IRelatedEntity)player).getBondedMinions().isEmpty()){
+                            if(Util.checkIsOneLinked(((IRelatedEntity)player).getBondedMinions())){
+                                player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                                ((IRelatedEntity)player).getBondedMinions().forEach(knight->{
+                                    if(knight.itIsLinked()){
+                                        knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(((IRelatedEntity)player).getBondedMinions()));
+                                    }
+                                });
+                                event.setCanceled(true);
+                            }
+                        }
+                    }
+                }
+            }
             if(entity.hasEffect(init_effect.DEATH_MARK.get() ) && entity.level.random.nextInt(0,7)==1){
                 for (int i=0;i<3;i++){
                     double xp=entity.getX()+entity.getRandom().nextDouble(-1.0,1.0);

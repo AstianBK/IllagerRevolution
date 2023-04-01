@@ -44,9 +44,12 @@ public class Event_Death {
             DamageSource pSource=event.getSource();
             LivingEntity entity=event.getEntityLiving();
             LivingEntity entity1= (LivingEntity) event.getSource().getEntity();
+            boolean flag=false;
+            if(entity1!=null){
+                flag=checkSmiteInItem(entity1.getMainHandItem(),entity1);
+            }
             if(entity instanceof FallenKnight fallenKnight){
-                if(!(entity1.getMainHandItem().getItem() instanceof SwordItem swordItem &&
-                        EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SMITE,swordItem.getDefaultInstance())!=0)){
+                if(!flag){
                     if(fallenKnight.getOwner()!=null){
                         if(fallenKnight.getDispawnTimer()!=0){
                             event.setCanceled(true);
@@ -166,7 +169,9 @@ public class Event_Death {
         }
     }
 
-
+    public static boolean checkSmiteInItem(ItemStack itemStack,LivingEntity entity){
+        return itemStack.getItem() instanceof SwordItem && entity instanceof Player && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SMITE,itemStack)!=0;
+    }
 }
 
 

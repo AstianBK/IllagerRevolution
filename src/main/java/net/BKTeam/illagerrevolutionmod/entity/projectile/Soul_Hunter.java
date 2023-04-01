@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.decoration.GlowItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
@@ -52,21 +53,18 @@ public class Soul_Hunter extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-
-        if(!(result.getEntity() instanceof GlowItemFrame)){
-            Entity entity = result.getEntity();
-            Entity owner = this.getOwner();
-            LivingEntity livingEntity = (LivingEntity) entity;
-            LivingEntity owner1 = (LivingEntity) owner;
+        super.onHitEntity(result);
+        if(result.getEntity() instanceof LivingEntity entity){
+            LivingEntity owner = (LivingEntity) this.getOwner();
             if (owner instanceof Blade_KnightEntity && entity instanceof Player) {
-                float f = owner1.yBodyRotO * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
+                float f = owner.yBodyRotO * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
                 float f1 = Mth.cos(f);
                 float f2 = Mth.sin(f);
                 entity.teleportTo(owner.getX()+f1*1.0D,owner.getY(),owner.getZ()+f2);
                 playSound(SoundEvents.ENDERMAN_TELEPORT,1.0f,1.0f);
                 owner.playSound(ModSounds.BLADE_KNIGHT_LAUGH.get(),6.5f,1.0f);
                 discard();
-            }else{
+            }else if (entity.getMobType().equals(MobType.UNDEAD)){
                 playSound(SoundEvents.ENDERMAN_TELEPORT, 2.0F, 1.0F);
                 discard();
             }
@@ -78,6 +76,7 @@ public class Soul_Hunter extends ThrowableItemProjectile {
     protected Item getDefaultItem() {
         return ModItems.SOUL_HUNTER.get();
     }
+
     public ItemStack getItem() {
         ItemStack itemstack = this.getItemRaw();
         return itemstack.isEmpty() ? new ItemStack(this.getDefaultItem()) : itemstack;

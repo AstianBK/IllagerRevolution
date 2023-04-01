@@ -1,8 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
-import net.minecraft.nbt.CompoundTag;
 import com.google.common.collect.Multimap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -10,13 +10,11 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
@@ -29,8 +27,7 @@ import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
 import java.util.List;
 
-public class SwordRuneBladeItem extends SwordItem {
-    public int tier1=0;
+public class SwordRuneBladeItem extends RunedSword {
     private final float attackDamage;
     private final float attackSpeed;
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
@@ -42,23 +39,26 @@ public class SwordRuneBladeItem extends SwordItem {
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)pAttackSpeedModifier, AttributeModifier.Operation.ADDITION));
         this.defaultModifiers=builder.build();
-    }
 
+    }
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         CompoundTag nbt = null;
-        int cc = (int) ((Player)entity).getAttribute(SoulTick.SOUL).getValue();
-        if (cc <= 6) {
-            nbt = itemStack.getOrCreateTag();
-            this.tier1 = cc;
+        if(entity instanceof Player){
+            int cc = (int) ((Player)entity).getAttribute(SoulTick.SOUL).getValue();
+            if (cc <= 6) {
+                nbt = itemStack.getOrCreateTag();
+                this.souls = cc;
+            }
+            if(nbt!=null){
+                nbt.putInt("CustomModelData", this.souls);
+            }
         }
-        if(nbt!=null){
-            nbt.putInt("CustomModelData", this.tier1);
-        }
+        super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
     }
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage+(double)this.tier1, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage+(double)this.souls, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)this.attackSpeed, AttributeModifier.Operation.ADDITION));
         if(slot == EquipmentSlot.MAINHAND) {
             return builder.build();
@@ -110,7 +110,15 @@ public class SwordRuneBladeItem extends SwordItem {
                     while (i < listZombi.size()) {
                         if (listZombi.get(i).getOwner() == pPlayer) {
                             if (listZombi.get(i).isAlive()) {
-                                listZombi.get(i).hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),listZombi.get(i).getMaxHealth());
+                                if(cc<6){
+                                    listZombi.get(i).hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),listZombi.get(i).getMaxHealth());
+                                    cc++;
+                                    pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
+                                    pPlayer.playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
+                                    if(cc==6){
+                                        pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
+                                    }
+                                }
                             }
                         }
                         i++;
@@ -124,10 +132,5 @@ public class SwordRuneBladeItem extends SwordItem {
 
         }
         return super.use(pLevel,pPlayer,pUsedHand);
-    }
-
-    @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 }

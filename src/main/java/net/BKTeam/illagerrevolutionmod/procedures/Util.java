@@ -1,11 +1,19 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
+import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
+import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -18,7 +26,10 @@ import net.BKTeam.illagerrevolutionmod.effect.init_effect;
 import net.BKTeam.illagerrevolutionmod.entity.custom.Blade_KnightEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public class Util {
@@ -115,6 +126,87 @@ public class Util {
         }
         return entity;
 
+    }
+    public static boolean checkCanLink(List<FallenKnight> knights){
+        int i=0;
+        int j=0;
+        while (i<knights.size()){
+            if (knights.get(i).itIsLinked()){
+                j++;
+            }
+            i++;
+        }
+        return j==knights.size() ;
+    }
+    public static boolean checkIsOneLinked(List<FallenKnight> knights){
+        int i=0;
+        int j=0;
+        while (i<knights.size()){
+            if (knights.get(i).itIsLinked()){
+                j++;
+            }
+            i++;
+        }
+        return j>0 ;
+    }
+    public static int getNumberOfLinked(List<FallenKnight> knights){
+        int i=0;
+        int j=0;
+        while (i<knights.size()){
+            if (knights.get(i).itIsLinked()){
+                j++;
+            }
+            i++;
+        }
+        return j;
+    }
+
+    public static <T extends LivingEntity>LivingEntity getEntityForUUID(List<T> list, UUID uuid){
+        int i=0;
+        LivingEntity entity=null;
+        while (i<list.size() && entity==null){
+            if (list.get(i).getUUID().equals(uuid)){
+                entity=list.get(i);
+            }
+        }
+        return entity;
+    }
+    public static <T extends LivingEntity> void spawFallenKnightBack(Level level, LivingEntity livingEntity,int number){
+        List<BlockPos> pos=blockPosList(livingEntity,number);
+        for(int i=0;i<number;i++){
+            FallenKnight knight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),level);
+            knight.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(level.random.nextFloat() < 0.5 ? Items.STONE_SWORD : Items.STONE_AXE));
+            knight.setIdNecromancer(livingEntity.getUUID());
+            knight.moveTo(pos.get(i),0.0f,0.0f);
+            level.addFreshEntity(knight);
+            ((Blade_KnightEntity)livingEntity).getKnights().add(knight);
+        }
+    }
+    public static <T extends LivingEntity> void spawZombifiedBack(Level level, LivingEntity livingEntity,int number){
+        List<BlockPos> pos=blockPosList(livingEntity,number);
+        for(int i=0;i<number;i++){
+            ZombifiedEntity zombie=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),level);
+            zombie.moveTo(pos.get(i),0.0f,0.0f);
+            level.addFreshEntity(zombie);
+        }
+    }
+    public static List<BlockPos> blockPosList(LivingEntity livingEntity,int number){
+        List<BlockPos> list=new ArrayList<>();
+        int i=0;
+        int j=1;
+        double k=0;
+        float f = livingEntity.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) livingEntity.tickCount * 0.6662F) * 0.25F;
+        float f1 = Mth.cos(f);
+        float f2 = Mth.sin(f);
+        while (i<number){
+            list.add(new BlockPos(livingEntity.getX()+j+f1*k,livingEntity.getY(),livingEntity.getZ()-j+f2*k));
+            i++;
+            j*=-1;
+            if(i%2==1){
+                k+=0.3d;
+            }
+        }
+        return list;
     }
 }
 
