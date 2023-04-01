@@ -76,10 +76,10 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 45.0D)
+                .add(Attributes.MAX_HEALTH, 40.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
-                .add(Attributes.ARMOR,25.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 12.0D)
+                .add(Attributes.ARMOR,10.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 45.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f).build();
@@ -123,7 +123,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         super.registerGoals();
         this.goalSelector.addGoal(0,new UnarmedFallenGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(2,new FallenKnightAttack(this,1.5D,true));
+        this.goalSelector.addGoal(2,new FallenKnightAttack(this,1.0D,true));
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7));
         this.goalSelector.addGoal(4, new RandomLookAroundFallenKnightGoal(this));
         this.goalSelector.addGoal(6, new FloatGoal(this));
