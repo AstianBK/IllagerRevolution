@@ -127,7 +127,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7));
         this.goalSelector.addGoal(4, new RandomLookAroundFallenKnightGoal(this));
         this.goalSelector.addGoal(6, new FloatGoal(this));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
         this.targetSelector.addGoal(1,new Owner_Defend(this,false){

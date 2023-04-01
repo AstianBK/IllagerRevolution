@@ -202,7 +202,7 @@ public class Util {
             list.add(new BlockPos(livingEntity.getX()+j+f1*k,livingEntity.getY(),livingEntity.getZ()-j+f2*k));
             i++;
             j*=-1;
-            if(i%2==1){
+            if(i+1%2==0){
                 k+=0.3d;
             }
         }
