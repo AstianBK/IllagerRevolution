@@ -151,10 +151,12 @@ public class ModItems {
 
     public static final RegistryObject<Item> ILLAGIUM_RUNED_BLADE = ITEMS.register("illagium_runed_blade",
             ()->new SwordRuneBladeItem(ModTiers.ILLAGIUM,4,-2.5F,props()));
+
+    public static final RegistryObject<Item> ILLAGIUM_ALT_RUNED_BLADE = ITEMS.register("illagium_alt_runed_blade",
+            ()->new VariantRuneBladeItem(ModTiers.ILLAGIUM,4,-2.5F,props()));
     private static Item.Properties props() {
         return new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
     }
-
 
 
 
