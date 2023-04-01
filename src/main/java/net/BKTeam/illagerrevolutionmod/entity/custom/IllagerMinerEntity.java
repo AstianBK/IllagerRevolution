@@ -79,17 +79,16 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
         }
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
     }
+
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
 
-        if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isSprinting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk", ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        else if (this.isAggressive() && event.isMoving() && !this.isAttacking()){
+        if (event.isMoving() && !this.isAggressive() && !this.isAttacking()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk"+(this.isHasItems() ? "3" : ""), ILoopType.EDefaultLoopTypes.LOOP));
+
+        }else if (this.isAggressive() && event.isMoving() && !this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk2", ILoopType.EDefaultLoopTypes.LOOP));
 
-        } else if (event.isMoving() && this.isSprinting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk3", ILoopType.EDefaultLoopTypes.LOOP));
-        } else if (this.isAttacking()){
+        }else if (this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
 
         }

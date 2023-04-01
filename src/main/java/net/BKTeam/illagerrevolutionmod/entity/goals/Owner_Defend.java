@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
 import net.BKTeam.illagerrevolutionmod.entity.custom.ReanimatedEntity;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Hunter;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;

@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.entity.goals.FollowOwnerGoalReanimate;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Attacking;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Defend;
+import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -19,6 +20,7 @@ import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,8 +29,8 @@ public class ReanimatedEntity extends Monster {
 
     private static final EntityDataAccessor<Optional<UUID>> ID_OWNER =
             SynchedEntityData.defineId(ReanimatedEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    private static final EntityDataAccessor<Integer> ID_NECROMANCER =
-            SynchedEntityData.defineId(ReanimatedEntity.class,EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Optional<UUID>> ID_NECROMANCER =
+            SynchedEntityData.defineId(ReanimatedEntity.class,EntityDataSerializers.OPTIONAL_UUID);
 
     protected ReanimatedEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
@@ -54,8 +56,13 @@ public class ReanimatedEntity extends Monster {
     protected void registerGoals() {
         super.registerGoals();
     }
+
     public LivingEntity getNecromancer(){
-        return this.getIdNecromancer()!=-1 ? (LivingEntity) this.level.getEntity(this.getIdNecromancer()) : null;
+        List<Blade_KnightEntity> necromancers=this.level.getEntitiesOfClass(Blade_KnightEntity.class,this.getBoundingBox().inflate(100.0d));
+        if(!necromancers.isEmpty()){
+            return this.getIdNecromancer()!=null ? Util.getEntityForUUID(necromancers,this.getIdNecromancer()) : null ;
+        }
+        return null;
     }
     public LivingEntity getOwner(){
         if(this.getIdOwner()!=null){
@@ -79,11 +86,11 @@ public class ReanimatedEntity extends Monster {
         }
     }
 
-    public int getIdNecromancer() {
-        return this.entityData.get(ID_NECROMANCER);
+    public UUID getIdNecromancer() {
+        return this.entityData.get(ID_NECROMANCER).orElse(null);
     }
-    public void setIdNecromancer(int idOwner){
-        this.entityData.set(ID_NECROMANCER,idOwner);
+    public void setIdNecromancer(UUID idOwner){
+        this.entityData.set(ID_NECROMANCER,Optional.ofNullable(idOwner));
     }
 
 
@@ -93,10 +100,9 @@ public class ReanimatedEntity extends Monster {
         if (this.getIdOwner() != null) {
             pCompound.putUUID("Owner", this.getIdOwner());
         }
-        if(this.getIdNecromancer()!=-1){
-            pCompound.putInt("IdNecromancer",this.getIdNecromancer());
+        if(this.getIdNecromancer()!=null){
+            pCompound.putUUID("IdNecromancer",this.getIdNecromancer());
         }
-
     }
 
 
@@ -114,8 +120,14 @@ public class ReanimatedEntity extends Monster {
         if (uuid != null) {
             this.setIdOwner(uuid);
         }
-        if(pCompound.getInt("IdNecromancer")!=-1){
-            this.setIdNecromancer(pCompound.getInt("IdNecromancer"));
+        if (pCompound.hasUUID("IdNecromancer")) {
+            uuid = pCompound.getUUID("IdNecromancer");
+        } else {
+            String s = pCompound.getString("IdNecromancer");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
+        }
+        if (uuid != null) {
+            this.setIdNecromancer(pCompound.getUUID("IdNecromancer"));
         }
     }
 
@@ -137,6 +149,6 @@ public class ReanimatedEntity extends Monster {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ID_OWNER, Optional.empty());
-        this.entityData.define(ID_NECROMANCER,-1);
+        this.entityData.define(ID_NECROMANCER,Optional.empty());
     }
 }

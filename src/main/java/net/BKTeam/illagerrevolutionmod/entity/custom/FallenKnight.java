@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
+import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -15,7 +16,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -38,7 +38,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
-import software.bernie.geckolib3.util.RenderUtils;
 
 import java.util.EnumSet;
 
@@ -52,6 +51,8 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public int reviveTimer;
     public int dispawnTimer;
     public boolean isEndless;
+    private static final EntityDataAccessor<Boolean> LINKED =
+            SynchedEntityData.defineId(FallenKnight.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(FallenKnight.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> UNARMED =
@@ -170,6 +171,13 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.attackTimer= pBoolean ? 10 : 0;
     }
 
+    public LivingEntity getLinkOwner(){
+        if(this.getIdOwner()!=null){
+            return this.itIsLinked() ? this.getOwner() : null;
+        }
+        return null;
+    }
+
     public boolean isOnGroundUnarmed() {
         return this.entityData.get(ON_GROUND_UNARMED);
     }
@@ -187,6 +195,13 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.entityData.set(UNARMED,b);
         this.unarmedTimer= b ? 10 : 0;
     }
+    public boolean itIsLinked() {
+        return this.entityData.get(LINKED);
+    }
+
+    public void setLink(boolean b){
+        this.entityData.set(LINKED,b);
+    }
 
     private void setIsRearmed(boolean b) {
         this.entityData.set(REARMED,b);
@@ -202,6 +217,9 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.dispawnTimer--;
         }
         if (this.dispawnTimer==0 && this.isEndless){
+            if(this.getOwner() instanceof IRelatedEntity entity && this.itIsLinked()){
+                entity.getBondedMinions().remove(this);
+            }
             this.hurt(DamageSource.MAGIC.bypassMagic().bypassArmor(),this.getMaxHealth());
         }
         if(this.isAttacking()){
@@ -211,6 +229,9 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.setIsAttacking(false);
         }
         if(this.isUnarmed()){
+            if(this.getOwner() instanceof IRelatedEntity entity && this.itIsLinked()){
+                entity.getBondedMinions().remove(this);
+            }
             this.unarmedTimer--;
         }
         if(this.unarmedTimer==0 && this.isUnarmed()){
@@ -231,6 +252,9 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.setIsRearmed(false);
             this.setIsArmed(true);
             this.heal(this.getMaxHealth());
+            if(this.getOwner() instanceof IRelatedEntity entity && this.itIsLinked()){
+                entity.getBondedMinions().add(this);
+            }
         }
         super.aiStep();
     }
@@ -243,6 +267,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         pCompound.putBoolean("isRearmed",this.isRearmed());
         pCompound.putBoolean("isArmed",this.isArmed());
         pCompound.putBoolean("isOnGround",this.isOnGroundUnarmed());
+        pCompound.putBoolean("ItIsLinked",this.itIsLinked());
     }
 
     @Override
@@ -253,6 +278,9 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.setIsAttacking(pCompound.getBoolean("isAttacking"));
         this.setIsArmed(pCompound.getBoolean("isArmed"));
         this.setOnGroundUnarmed(pCompound.getBoolean("isOnGround"));
+        this.setLink(pCompound.getBoolean("ItIsLinked"));
+        this.updateListLinked();
+        this.updateTimerDispawn();
     }
 
     @Override
@@ -263,8 +291,29 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.entityData.define(REARMED,false);
         this.entityData.define(ARMED,true);
         this.entityData.define(ON_GROUND_UNARMED,false);
+        this.entityData.define(LINKED,false);
     }
 
+    private void updateListLinked(){
+        if(this.getOwner()!=null){
+            if(this.itIsLinked()){
+                if(this.getOwner() instanceof IRelatedEntity entity){
+                    entity.getBondedMinions().add(this);
+                }
+            }
+        }
+        if(this.getIdNecromancer()!=null){
+            if(this.getNecromancer() instanceof Blade_KnightEntity bk){
+                bk.getKnights().add(this);
+            }
+        }
+    }
+    private void updateTimerDispawn(){
+        if(this.getOwner()!=null){
+            this.dispawnTimer=300;
+            this.isEndless=true;
+        }
+    }
     private <E extends IAnimatable>PlayState predicate(AnimationEvent<E> event) {
         if(this.isArmed()){
             if (event.isMoving() && !this.isAttacking() && !this.isAggressive()) {

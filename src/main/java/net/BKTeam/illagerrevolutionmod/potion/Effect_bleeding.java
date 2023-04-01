@@ -44,7 +44,7 @@ public class Effect_bleeding extends MobEffect {
     public void applyEffectTick(LivingEntity entity, int amplifier) {
         if(amplifier < 2){
             if ((entity.isSprinting() || (!(entity instanceof Player || entity instanceof AbstractSkeleton || entity instanceof AbstractGolem || entity instanceof Blaze || entity instanceof Vex || entity instanceof WitherBoss))) ) {
-                entity.hurt(DamageSource.MAGIC, 1);
+                entity.hurt(DamageSource.GENERIC, 1);
                 bleedingParticle(entity);
             }
         }else {

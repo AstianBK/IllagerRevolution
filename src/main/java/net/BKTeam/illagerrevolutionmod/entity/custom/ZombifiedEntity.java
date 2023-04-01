@@ -40,8 +40,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.EnumSet;
-import java.util.Optional;
-import java.util.UUID;
 
 
 public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {

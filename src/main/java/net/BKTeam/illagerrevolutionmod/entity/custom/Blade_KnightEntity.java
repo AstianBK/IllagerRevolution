@@ -59,6 +59,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -70,6 +71,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     private int attackShield;
     public int lowHealtTimer;
     public float count_expansion;
+    private List<FallenKnight> knights=new ArrayList<>();
 
     @Override
     public boolean canBeAffected(MobEffectInstance pPotioneffect) {
@@ -182,7 +184,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
             }
             if(this.lowHealtTimer<=39 && this.lowHealtTimer>=20){
                 if(this.lowHealtTimer==39){
-                    this.spawFallenKnight();
+                    Util.spawFallenKnightBack(this.level,this,2);
                     for (int i=0;i<6;i++){
                         Vec3 pos=new Vec3(this.getX()+this.level.getRandom().nextDouble(-3.0d,3.0d),this.getY()+3.0D,this.getZ()+this.level.getRandom().nextDouble(-3.0d,3.0d));
                         Player player=this.level.getNearestPlayer(this,40.0D);
@@ -208,41 +210,18 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
         }
     }
 
+    public List<FallenKnight> getKnights() {
+        return this.knights;
+    }
+
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.populateDefaultEquipmentSlots(pDifficulty);
-        this.spawBackup();
+        Util.spawZombifiedBack(this.level,this,4);
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
-    private void spawFallenKnight(){
-        float f = this.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
-        float f1 = Mth.cos(f);
-        float f2 = Mth.sin(f);
-        BlockPos pos=this.blockPosition();
-        BlockPos pos1=new BlockPos(pos.getX()+f1*0.5d,pos.getY(),pos.getZ()+f2*0.5d);
-        BlockPos pos2=new BlockPos(pos.getX()-f1*0.5d,pos.getY(),pos.getZ()-f2*0.5d);
-        FallenKnight knight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),this.level);
-        FallenKnight knight2=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),this.level);
-        knight.populateDefaultEquipmentSlots(this.level.getCurrentDifficultyAt(pos));
-        knight2.populateDefaultEquipmentSlots(this.level.getCurrentDifficultyAt(pos));
-        knight.setIdNecromancer(this.getId());
-        knight2.setIdNecromancer(this.getId());
-        knight.moveTo(pos1,0.0f,0.0f);
-        knight2.moveTo(pos2,0.0f,0.0f);
-        this.level.addFreshEntity(knight);
-        this.level.addFreshEntity(knight2);
-    }
 
-    private void spawBackup(){
-        for(int i=0;i<4;i++){
-            BlockPos pos=this.blockPosition();
-            BlockPos pos1=new BlockPos(pos.getX()+this.getRandomX(0.5d),pos.getY(),pos.getZ()+this.getRandomZ(0.5d));
-            ZombifiedEntity zombie=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),this.level);
-            zombie.moveTo(pos1,0.0f,0.0f);
-            this.level.addFreshEntity(zombie);
-        }
-    }
     public boolean isAttackingShield(){
         return this.entityData.get(ATTACKINGSHIELD);
     }
@@ -250,6 +229,14 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     public void setAttackingshield(boolean pboolean){
         this.entityData.set(ATTACKINGSHIELD,pboolean);
         this.attackShield=pboolean ? 600 : this.attackShield;
+    }
+
+    @Override
+    public void die(DamageSource pCause) {
+        this.knights.forEach(knight->{
+            knight.setIdNecromancer(null);
+        });
+        super.die(pCause);
     }
 
     public boolean isStartAnimationLowHealth() {
