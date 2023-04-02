@@ -1,6 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
-import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -38,20 +38,19 @@ import java.util.List;
 
 @Mod.EventBusSubscriber
 public class Events {
-    //public static int count=0;
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event != null && event.getEntity() != null) {
             LivingEntity entity=event.getEntityLiving();
             if(entity instanceof Player player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
-                if(player instanceof IRelatedEntity){
-                    if(((IRelatedEntity)player).getBondedMinions()!=null){
-                        if(!((IRelatedEntity)player).getBondedMinions().isEmpty()){
-                            if(Util.checkIsOneLinked(((IRelatedEntity)player).getBondedMinions())){
+                if(player instanceof INecromancerEntity){
+                    if(((INecromancerEntity)player).getBondedMinions()!=null){
+                        if(!((INecromancerEntity)player).getBondedMinions().isEmpty()){
+                            if(Util.checkIsOneLinked(((INecromancerEntity)player).getBondedMinions())){
                                 player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                                ((IRelatedEntity)player).getBondedMinions().forEach(knight->{
+                                ((INecromancerEntity)player).getBondedMinions().forEach(knight->{
                                     if(knight.itIsLinked()){
-                                        knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(((IRelatedEntity)player).getBondedMinions()));
+                                        knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(((INecromancerEntity)player).getBondedMinions()));
                                     }
                                 });
                                 event.setCanceled(true);

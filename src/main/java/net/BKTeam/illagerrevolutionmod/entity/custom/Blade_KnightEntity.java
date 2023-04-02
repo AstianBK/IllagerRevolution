@@ -144,9 +144,9 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
         this.goalSelector.addGoal(1,new BKSummonUpUndeadSpellGoal());
         this.goalSelector.addGoal(1,new BKSummonHunterSpellGoal());
         this.goalSelector.addGoal(2, new BkAttackGoal(this,1.0,false));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractGolem.class, true, true));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, false));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractGolem.class, true, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(4, new RandomStrollGoal(this, 0.7));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
@@ -350,8 +350,9 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     }
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.ILLAGIUM_RUNED_BLADE.get()));
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.random.nextFloat() < 0.5f ? ModItems.ILLAGIUM_RUNED_BLADE.get() :ModItems.ILLAGIUM_ALT_RUNED_BLADE.get()));
     }
+
     class BKSummonHunterSpellGoal extends SpellcasterUseSpellGoal {
 
         BKSummonHunterSpellGoal() {
@@ -429,6 +430,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
 
         }
     }
+
     static class BkAttackGoal extends MeleeAttackGoal {
         private final Blade_KnightEntity goalOwner;
 

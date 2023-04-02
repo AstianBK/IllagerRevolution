@@ -1,10 +1,10 @@
 package net.BKTeam.illagerrevolutionmod.mixin;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenRakerContainer;
-import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.entity.custom.RakerEntity;
-import net.BKTeam.illagerrevolutionmod.entity.custom.ReanimatedEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 import net.BKTeam.illagerrevolutionmod.gui.RakerInventoryMenu;
 import net.BKTeam.illagerrevolutionmod.network.ClientRakerScreenOpenPacket;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
@@ -12,7 +12,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.level.Level;
@@ -22,20 +21,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixins extends Player implements IOpenRakerContainer, IRelatedEntity {
+public abstract class ServerPlayerMixins extends Player implements IOpenRakerContainer, INecromancerEntity {
     @Shadow
     @Final
     private ContainerListener containerListener;
 
-    private List<FallenKnight> entitiesLinked=new ArrayList<>();
-
     @Shadow
     private int containerCounter;
+
+    private final List<FallenKnight> entitiesLinked=new ArrayList<>();
+
+    private final List<ZombifiedEntity> zombifieds=new ArrayList<>();
+
 
     public ServerPlayerMixins(Level p_36114_, BlockPos p_36115_, float p_36116_, GameProfile p_36117_) {
         super(p_36114_, p_36115_, p_36116_, p_36117_);
@@ -64,7 +64,7 @@ public abstract class ServerPlayerMixins extends Player implements IOpenRakerCon
     }
 
     @Override
-    public void setBoundedMinios(List<FallenKnight> minions){
-        this.entitiesLinked=minions;
+    public List<ZombifiedEntity> getInvocations() {
+        return this.zombifieds;
     }
 }

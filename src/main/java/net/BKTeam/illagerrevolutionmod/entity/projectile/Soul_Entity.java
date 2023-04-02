@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -11,6 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -170,6 +172,9 @@ public class Soul_Entity extends ThrowableItemProjectile {
             entity.addEffect(new MobEffectInstance(init_effect.DEATH_MARK.get(),99999,0));
             entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pSummoner.blockPosition()), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
             pSummoner.level.addFreshEntity(entity);
+            if(pSummoner instanceof Player){
+                entity.addEntityOfList();
+            }
         }else if(undead.equals("villager") || undead.equals("zombie_villager")){
             ZombieVillager entity=new ZombieVillager(EntityType.ZOMBIE_VILLAGER,world);
             BlockPos blockpos = Source.blockPosition();

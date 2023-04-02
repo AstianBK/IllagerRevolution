@@ -1,7 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
-import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -93,6 +93,9 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         if(!isInfinite){
             this.dispawnTimer=dispawnTimer;
             this.isEndless=true;
+        }else {
+            this.dispawnTimer=0;
+            this.isEndless=false;
         }
     }
 
@@ -216,10 +219,8 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         if(this.isEndless && this.dispawnTimer>0){
             this.dispawnTimer--;
         }
-        if (this.dispawnTimer==0 && this.isEndless){
-            if(this.getOwner() instanceof IRelatedEntity entity && this.itIsLinked()){
-                entity.getBondedMinions().remove(this);
-            }
+        if (this.dispawnTimer==0 && this.isEndless) {
+            this.removeEntityOfList();
             this.hurt(DamageSource.MAGIC.bypassMagic().bypassArmor(),this.getMaxHealth());
         }
         if(this.isAttacking()){
@@ -229,9 +230,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.setIsAttacking(false);
         }
         if(this.isUnarmed()){
-            if(this.getOwner() instanceof IRelatedEntity entity && this.itIsLinked()){
-                entity.getBondedMinions().remove(this);
-            }
+            this.removeEntityOfList();
             this.unarmedTimer--;
         }
         if(this.unarmedTimer==0 && this.isUnarmed()){
@@ -252,9 +251,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.setIsRearmed(false);
             this.setIsArmed(true);
             this.heal(this.getMaxHealth());
-            if(this.getOwner() instanceof IRelatedEntity entity && this.itIsLinked()){
-                entity.getBondedMinions().add(this);
-            }
+            this.addEntityOfList();
         }
         super.aiStep();
     }
@@ -283,6 +280,16 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.updateTimerDispawn();
     }
 
+    public void removeEntityOfList(){
+        if(this.getOwner() instanceof INecromancerEntity entity){
+            entity.getBondedMinions().remove(this);
+        }
+    }
+    public void addEntityOfList(){
+        if(this.getOwner() instanceof INecromancerEntity entity){
+            entity.getBondedMinions().add(this);
+        }
+    }
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -297,7 +304,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     private void updateListLinked(){
         if(this.getOwner()!=null){
             if(this.itIsLinked()){
-                if(this.getOwner() instanceof IRelatedEntity entity){
+                if(this.getOwner() instanceof INecromancerEntity entity){
                     entity.getBondedMinions().add(this);
                 }
             }

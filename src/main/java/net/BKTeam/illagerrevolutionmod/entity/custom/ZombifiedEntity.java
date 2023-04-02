@@ -1,8 +1,13 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.FollowOwnerGoalReanimate;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Attacking;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Defend;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -113,6 +118,33 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         this.entityData.set(HASSOUL,pBoolean);
     }
 
+    @Override
+    public void die(DamageSource pCause) {
+        LivingEntity source=(LivingEntity) Util.Entity(this,Blade_KnightEntity.class);
+        if(this.getOwner()!=null){
+            if(source instanceof Blade_KnightEntity blade_knight){
+                if(blade_knight.getMainHandItem().is(ModItems.ILLAGIUM_RUNED_BLADE.get())){
+                    Soul_Projectile soul_projectile= new Soul_Projectile((LivingEntity) this,this.level,source);
+                    Soul_Entity soul_entity = new Soul_Entity(this,this.level,this.getnameSoul(),source,this.getY()+1.0D);
+                    this.level.addFreshEntity(soul_projectile);
+                    this.level.addFreshEntity(soul_entity);
+                }
+            }
+        }
+        this.removeEntityOfList();
+        super.die(pCause);
+    }
+
+    public void removeEntityOfList(){
+        if(this.getOwner() instanceof INecromancerEntity entity){
+            entity.getInvocations().remove(this);
+        }
+    }
+    public void addEntityOfList(){
+        if(this.getOwner() instanceof INecromancerEntity entity){
+            entity.getInvocations().add(this);
+        }
+    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
@@ -128,7 +160,16 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         setHasSoul(pCompound.getBoolean("hasSoul"));
         setAttacking(pCompound.getBoolean("isAttacking"));
         setIdSoul(pCompound.getString("idSoul"));
+        this.updateListOwner();
 
+    }
+
+    private void updateListOwner(){
+        if(this.getOwner()!=null){
+            if(this.getOwner() instanceof INecromancerEntity entity){
+                entity.getInvocations().add(this);
+            }
+        }
     }
 
     @Override

@@ -30,6 +30,7 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 
@@ -51,20 +52,23 @@ public class Event_Death {
             if(entity instanceof FallenKnight fallenKnight){
                 if(!flag){
                     if(fallenKnight.getOwner()!=null){
+                        if(entity1 instanceof Blade_KnightEntity blade_knight){
+                            if(blade_knight.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
+                                event.setCanceled(true);
+                                unarmedMoment(fallenKnight);
+                                fallenKnight.setIdNecromancer(blade_knight.getUUID());
+                                fallenKnight.setIdOwner(null);
+                                fallenKnight.setDispawnTimer(0,null,true);
+                            }
+                        }
                         if(fallenKnight.getDispawnTimer()!=0){
                             event.setCanceled(true);
-                            fallenKnight.setHealth(1.0f);
-                            fallenKnight.setInvulnerable(true);
-                            fallenKnight.setIsArmed(false);
-                            fallenKnight.setUnarmed(true);
+                            unarmedMoment(fallenKnight);
                         }
                     }
                     if(fallenKnight.getNecromancer()!=null){
                         event.setCanceled(true);
-                        fallenKnight.setHealth(1.0f);
-                        fallenKnight.setInvulnerable(true);
-                        fallenKnight.setIsArmed(false);
-                        fallenKnight.setUnarmed(true);
+                        unarmedMoment(fallenKnight);
                     }
                 }
             }
@@ -76,6 +80,12 @@ public class Event_Death {
                 }
             }
         }
+    }
+    private static void unarmedMoment(FallenKnight fallenKnight){
+        fallenKnight.setHealth(1.0f);
+        fallenKnight.setInvulnerable(true);
+        fallenKnight.setIsArmed(false);
+        fallenKnight.setUnarmed(true);
     }
     public static void upSouls(LevelAccessor world, Entity entity,Entity assasin) {
         upSouls(null, world, entity,assasin);
@@ -89,33 +99,38 @@ public class Event_Death {
         if ((entity instanceof LivingEntity _livEnt && _livEnt.hasEffect(init_effect.DEATH_MARK.get())) && !world
                 .getEntitiesOfClass(Blade_KnightEntity.class, AABB.ofSize(new Vec3((entity.getX()), (entity.getY()), (entity.getZ())), 100, 100, 100), e -> true)
                 .isEmpty() && !(assasin instanceof Zombie)) {
+            boolean flag=true;
             String name=entity.getType().getRegistryName().getPath();
             if(_livEnt instanceof ZombifiedEntity zombified_evokerEntity){
                 name=zombified_evokerEntity.getIdSoul();
+                flag=!(zombified_evokerEntity.getOwner() instanceof Player);
             }
-            Soul_Projectile soul_projectile= new Soul_Projectile((LivingEntity) entity,entity.level,souce);
-            Soul_Entity soul_entity = new Soul_Entity(_livEnt,entity.level,name,souce,_livEnt.getY()+1.0D);
-            entity.level.addFreshEntity(soul_projectile);
-            entity.level.addFreshEntity(soul_entity);
-            if(entity instanceof Player || entity instanceof Villager){
-                entity.level.getEntitiesOfClass(Monster.class,entity.getBoundingBox().inflate(50.0d),e-> e.getMobType()==MobType.UNDEAD).forEach(undead->{
-                    boolean flag1=true;
-                    if(undead instanceof ZombifiedEntity){
-                        flag1=!(((ZombifiedEntity)undead).getOwner() instanceof Player);
-                    }
-                    if (flag1){
-                        undead.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,600,1));
-                        undead.heal(undead.getMaxHealth()-undead.getHealth());
-                        undead.level.addParticle(ParticleTypes.HEART,undead.getX(),undead.getY()+undead.getBbHeight()+0.5d,undead.getZ(),0.0d,0.1d,0.0d);
-                        for(int j=0;j<5;j++){
-                            double xp=undead.getX()+undead.getRandom().nextDouble(-1.0,1.0);
-                            double yp=undead.getY()+undead.getRandom().nextDouble(0.5d,2.0d);
-                            double zp=undead.getZ()+undead.getRandom().nextDouble(-1.0,1.0);
-                            undead.level.addParticle(ParticleTypes.TOTEM_OF_UNDYING,undead.getX()+xp,undead.getY()+yp,undead.getZ()+zp,0.0d,0.2d,0.0d);
+            if(flag){
+                Soul_Projectile soul_projectile= new Soul_Projectile((LivingEntity) entity,entity.level,souce);
+                Soul_Entity soul_entity = new Soul_Entity(_livEnt,entity.level,name,souce,_livEnt.getY()+1.0D);
+                entity.level.addFreshEntity(soul_projectile);
+                entity.level.addFreshEntity(soul_entity);
+                if(entity instanceof Player){
+                    entity.level.getEntitiesOfClass(Monster.class,entity.getBoundingBox().inflate(50.0d),e-> e.getMobType()==MobType.UNDEAD).forEach(undead->{
+                        boolean flag1=true;
+                        if(undead instanceof ZombifiedEntity){
+                            flag1=!(((ZombifiedEntity)undead).getOwner() instanceof Player);
                         }
-                    }
-                });
+                        if (flag1){
+                            undead.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,600,1));
+                            undead.heal(undead.getMaxHealth()-undead.getHealth());
+                            undead.level.addParticle(ParticleTypes.HEART,undead.getX(),undead.getY()+undead.getBbHeight()+0.5d,undead.getZ(),0.0d,0.1d,0.0d);
+                            for(int j=0;j<5;j++){
+                                double xp=undead.getX()+undead.getRandom().nextDouble(-1.0,1.0);
+                                double yp=undead.getY()+undead.getRandom().nextDouble(0.5d,2.0d);
+                                double zp=undead.getZ()+undead.getRandom().nextDouble(-1.0,1.0);
+                                undead.level.addParticle(ParticleTypes.TOTEM_OF_UNDYING,undead.getX()+xp,undead.getY()+yp,undead.getZ()+zp,0.0d,0.2d,0.0d);
+                            }
+                        }
+                    });
+                }
             }
+
         }
     }
     public static boolean hasNameSoul(String soul){

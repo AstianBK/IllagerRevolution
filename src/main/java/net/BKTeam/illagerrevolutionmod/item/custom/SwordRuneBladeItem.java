@@ -2,8 +2,11 @@ package net.BKTeam.illagerrevolutionmod.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
+import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,6 +28,7 @@ import net.BKTeam.illagerrevolutionmod.procedures.Events;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SwordRuneBladeItem extends RunedSword {
@@ -74,17 +78,19 @@ public class SwordRuneBladeItem extends RunedSword {
         int cc = (int) pPlayer.getAttribute(SoulTick.SOUL).getValue();
         if(pUsedHand==InteractionHand.MAIN_HAND){
             List<Soul_Entity> listSoul=pPlayer.level.getEntitiesOfClass(Soul_Entity.class,pPlayer.getBoundingBox().inflate(50.0d));
-            List<ZombifiedEntity> listZombi=pPlayer.level.getEntitiesOfClass(ZombifiedEntity.class,pPlayer.getBoundingBox().inflate(50.0d));
+            List<ZombifiedEntity> listZombi=new ArrayList<>();
+            if(pPlayer instanceof INecromancerEntity entity){
+                listZombi=entity.getInvocations();
+            }
             boolean flag1= pPlayer.isShiftKeyDown();
             boolean flag2= cc>=0 && cc<=6;
             boolean canSummon= Events.checkOwnerSoul(listSoul,pPlayer);
             if(!flag1 ){
-                if(!pLevel.isClientSide && flag2 && cc>0 ){
+                if(!pLevel.isClientSide && flag2 && cc>0){
                     Summoned_Soul soul_wither= new Summoned_Soul(pPlayer,pLevel);
                     pPlayer.level.playSound(null,pPlayer.blockPosition(),ModSounds.SOUL_RELEASE.get(),SoundSource.AMBIENT,3.0f,1.0f);
                     soul_wither.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 1.5F, 1.0F);
                     pLevel.addFreshEntity(soul_wither);
-
                 }
                 if (!pPlayer.getAbilities().instabuild && cc>0){
                     pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
@@ -94,31 +100,37 @@ public class SwordRuneBladeItem extends RunedSword {
                     int i = 0;
                     int j = 0;
                     Entity entity;
-                    if (canSummon) {
-                        while (i < listSoul.size() && j <= 5) {
+                    int k = Util.getNumberOfInvocations(listZombi);
+                    if (canSummon && k<12) {
+                        while (i < listSoul.size() && j <= 5 && k<12) {
                             entity = listSoul.get(i);
                             if (entity instanceof Soul_Entity entity1 && entity1.getOwner() == pPlayer) {
                                 entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity);
                                 j++;
+                                k++;
+                                if(k==12){
+                                    pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
+                                }
                             }
                             i++;
                         }
+                    }else if (k==12){
+                        pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
                     }
                 }
                 if (!listZombi.isEmpty() && flag2 && !canSummon) {
-                    int i=0;
-                    while (i < listZombi.size()) {
-                        if (listZombi.get(i).getOwner() == pPlayer) {
-                            if (listZombi.get(i).isAlive()) {
-                                if(cc<6){
-                                    listZombi.get(i).hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),listZombi.get(i).getMaxHealth());
-                                    cc++;
-                                    pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
-                                    pPlayer.playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
-                                    if(cc==6){
-                                        pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
-                                    }
-                                }
+                    int i = 0;
+                    while (i<listZombi.size() && cc<6){
+                        ZombifiedEntity zombie=listZombi.get(i);
+                        if(zombie.isAlive()){
+
+                            zombie.hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),zombie.getMaxHealth());
+                            cc++;
+                            pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
+                            pPlayer.playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
+                            zombie.removeEntityOfList();
+                            if(cc==6){
+                                    pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
                             }
                         }
                         i++;

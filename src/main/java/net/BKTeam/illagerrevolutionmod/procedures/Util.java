@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.common.Mod;
@@ -31,7 +33,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber
 public class Util {
 
     public static Entity entitydeterminar(Entity entity){
@@ -168,6 +169,7 @@ public class Util {
             if (list.get(i).getUUID().equals(uuid)){
                 entity=list.get(i);
             }
+            i++;
         }
         return entity;
     }
@@ -194,19 +196,22 @@ public class Util {
         List<BlockPos> list=new ArrayList<>();
         int i=0;
         int j=1;
-        double k=0;
+        double k=0.5d;
         float f = livingEntity.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) livingEntity.tickCount * 0.6662F) * 0.25F;
         float f1 = Mth.cos(f);
         float f2 = Mth.sin(f);
         while (i<number){
-            list.add(new BlockPos(livingEntity.getX()+j+f1*k,livingEntity.getY(),livingEntity.getZ()-j+f2*k));
+            list.add(new BlockPos(livingEntity.getX()+j+(f1*k),livingEntity.getY(),livingEntity.getZ()-j+(f2*k)));
             i++;
             j*=-1;
-            if(i+1%2==0){
+            if((i+1)%2==0){
                 k+=0.3d;
             }
         }
         return list;
+    }
+    public static int getNumberOfInvocations(List<ZombifiedEntity> zombies){
+        return zombies.size();
     }
 }
 

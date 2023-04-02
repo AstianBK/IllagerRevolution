@@ -1,6 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.deathentitysystem;
 
-import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.item.custom.RunedSword;
 import net.minecraft.world.entity.Entity;
@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
@@ -31,7 +30,7 @@ public class SoulTick {
                        }
                 }
                 if (player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())) {
-                    if(player instanceof IRelatedEntity relatedEntity){
+                    if(player instanceof INecromancerEntity relatedEntity){
                         if(!relatedEntity.getBondedMinions().isEmpty()){
                             relatedEntity.getBondedMinions().forEach(knight->{
                                 if(knight.isArmed()){

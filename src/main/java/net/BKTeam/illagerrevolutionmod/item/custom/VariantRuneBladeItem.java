@@ -2,7 +2,7 @@ package net.BKTeam.illagerrevolutionmod.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.BKTeam.illagerrevolutionmod.api.IRelatedEntity;
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 
 import java.util.List;
 import java.util.UUID;
@@ -81,20 +83,18 @@ public class VariantRuneBladeItem extends RunedSword{
                     BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextDouble(-1.0d,1.0d),pos.getY(),pos.getZ()+pos.getX()+pLevel.getRandom().nextDouble(-1.0d,1.0d));
                     FallenKnight fallenKnight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
                     fallenKnight.setIdOwner(pPlayer.getUUID());
-                    fallenKnight.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(pLevel.random.nextFloat() < 0.5 ? Items.STONE_SWORD : Items.STONE_AXE));
+                    fallenKnight.finalizeSpawn((ServerLevelAccessor) pLevel,pLevel.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED,null,null);
                     fallenKnight.setDispawnTimer(1200,pPlayer,false);
                     fallenKnight.moveTo(pos1,0.0f,0.0f);
                     pLevel.addFreshEntity(fallenKnight);
-                    if(pPlayer instanceof IRelatedEntity){
-                        ((IRelatedEntity)pPlayer).getBondedMinions().add(fallenKnight);
-                    }
+                    fallenKnight.addEntityOfList();
                 }
                 if (!pPlayer.getAbilities().instabuild && cc>2){
                     pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-3);
                 }
             }else {
                 if (!pLevel.isClientSide && flag2) {
-                    List<FallenKnight> knights=((IRelatedEntity)pPlayer).getBondedMinions();
+                    List<FallenKnight> knights=((INecromancerEntity)pPlayer).getBondedMinions();
                     boolean flag= Util.checkCanLink(knights);
                     if(!knights.isEmpty()) {
                         knights.forEach(knight ->{
