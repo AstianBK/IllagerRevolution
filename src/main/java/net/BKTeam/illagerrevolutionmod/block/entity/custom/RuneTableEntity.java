@@ -48,7 +48,7 @@ public class RuneTableEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("Rune Inscription Table");
+        return new TextComponent("Rune Workbench");
     }
 
     @Nullable
