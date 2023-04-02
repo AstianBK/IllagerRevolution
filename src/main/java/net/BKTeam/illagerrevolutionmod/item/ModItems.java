@@ -15,11 +15,43 @@ public class ModItems {
 
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
     //                                                                                          //
-    //ITEMS                                                                                     //
+    //                                                                                         //
     //
     //
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, IllagerRevolutionMod.MOD_ID);
+    
+    //                                                                                            //
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+    //                                                                                          //
+    //RUNES                                                                                    //
+    //
+    //
+    public static final RegistryObject<Item> RUNE_FRAGMENT_BONE = ITEMS.register("rune_fragment_bone",()->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> RUNE_FRAGMENT_FLESH = ITEMS.register("rune_fragment_flesh",()->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> RUNE_FRAGMENT_UNDYING = ITEMS.register("rune_fragment_undying",()->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> RUNE_TABLET_UNDYING_BONE = ITEMS.register("rune_tablet_undying_bone",()->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> RUNE_TABLET_UNDYING_FLESH = ITEMS.register("rune_tablet_undying_flesh",()->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    
+    
+    
+    
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+    //                                                                                          //
+    //ITEMS                                                                                     //
+    //
+    //
+  
 
 
 
@@ -27,6 +59,9 @@ public class ModItems {
             ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> ENCRUSTED_LAPIS = ITEMS.register("encrusted_lapis",()->
+            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+    
+    public static final RegistryObject<Item> RUSTIC_CHISEL = ITEMS.register("rustic_chisel",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SCRAPER_CLAW = ITEMS.register("scraper_claw",()->
@@ -153,7 +188,7 @@ public class ModItems {
             ()->new SwordRuneBladeItem(ModTiers.ILLAGIUM,4,-2.5F,props()));
 
     public static final RegistryObject<Item> ILLAGIUM_ALT_RUNED_BLADE = ITEMS.register("illagium_alt_runed_blade",
-            ()->new VariantRuneBladeItem(ModTiers.ILLAGIUM,4,-2.5F,props()));
+            ()->new VariantRuneBladeItem(ModTiers.ILLAGIUM,5,-2.5F,props()));
     private static Item.Properties props() {
         return new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
     }
