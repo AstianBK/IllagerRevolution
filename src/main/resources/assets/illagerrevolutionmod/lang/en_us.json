@@ -1,4 +1,15 @@
 {
+
+  "block.illagerrevolutionmod.rune_table_block": "Rune Inscription Table",
+  "item.illagerrevolutionmod.rustic_chisel": "Stone Chisel",
+
+  "item.illagerrevolutionmod.rune_fragment_bone": "Rune Fragment",
+  "item.illagerrevolutionmod.rune_fragment_flesh": "Rune Fragment",
+  "item.illagerrevolutionmod.rune_fragment_undying": "Rune Fragment",
+  "item.illagerrevolutionmod.rune_tablet_undying_bone": "Rune Tablet",
+  "item.illagerrevolutionmod.rune_tablet_undying_flesh": "Rune Tablet",
+
+
   "item.illagerrevolutionmod.illagerminer_spawn_egg": "Illager Miner Spawn Egg",
   "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Illager Scavenger Spawn Egg",
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Illager Beast Tamer Spawn Egg",
