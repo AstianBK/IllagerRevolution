@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,6 +26,9 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -97,6 +101,50 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.dispawnTimer=0;
             this.isEndless=false;
         }
+    }
+
+    @Override
+    public void die(DamageSource pCause) {
+        LivingEntity entity1=pCause.getEntity() instanceof LivingEntity ? (LivingEntity) pCause.getEntity() : null;
+        boolean flag= entity1!=null && checkSmiteInItem(entity1.getMainHandItem(),entity1);
+        boolean flag1= this.getOwner()!=null || this.getNecromancer()!=null;
+        if(!flag){
+            if(flag1){
+                if(this.getOwner()!=null){
+                    if(entity1 instanceof Blade_KnightEntity blade_knight){
+                        if(blade_knight.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
+                            this.unarmedMoment(this);
+                            this.setIdNecromancer(blade_knight.getUUID());
+                            this.setIdOwner(null);
+                            this.setDispawnTimer(0,null,true);
+                        }
+                    }
+                    if(this.getDispawnTimer()!=0){
+                        this.unarmedMoment(this);
+                    }
+                }
+                if(this.getNecromancer()!=null){
+                    this.unarmedMoment(this);
+                }
+            }else {
+                super.die(pCause);
+            }
+
+        }else {
+            super.die(pCause);
+        }
+
+    }
+
+    private void unarmedMoment(FallenKnight fallenKnight){
+        fallenKnight.setHealth(1.0f);
+        fallenKnight.setInvulnerable(true);
+        fallenKnight.setIsArmed(false);
+        fallenKnight.setUnarmed(true);
+    }
+
+    public boolean checkSmiteInItem(ItemStack itemStack,LivingEntity entity){
+        return itemStack.getItem() instanceof SwordItem && entity instanceof Player && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SMITE,itemStack)!=0;
     }
 
     public int getDispawnTimer() {
@@ -255,7 +303,6 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         }
         super.aiStep();
     }
-
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);

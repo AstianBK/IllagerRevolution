@@ -44,34 +44,6 @@ public class Event_Death {
             upSouls(event.getEntity().level,event.getEntity(),event.getSource().getEntity());
             DamageSource pSource=event.getSource();
             LivingEntity entity=event.getEntityLiving();
-            LivingEntity entity1= (LivingEntity) event.getSource().getEntity();
-            boolean flag=false;
-            if(entity1!=null){
-                flag=checkSmiteInItem(entity1.getMainHandItem(),entity1);
-            }
-            if(entity instanceof FallenKnight fallenKnight){
-                if(!flag){
-                    if(fallenKnight.getOwner()!=null){
-                        if(entity1 instanceof Blade_KnightEntity blade_knight){
-                            if(blade_knight.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
-                                event.setCanceled(true);
-                                unarmedMoment(fallenKnight);
-                                fallenKnight.setIdNecromancer(blade_knight.getUUID());
-                                fallenKnight.setIdOwner(null);
-                                fallenKnight.setDispawnTimer(0,null,true);
-                            }
-                        }
-                        if(fallenKnight.getDispawnTimer()!=0){
-                            event.setCanceled(true);
-                            unarmedMoment(fallenKnight);
-                        }
-                    }
-                    if(fallenKnight.getNecromancer()!=null){
-                        event.setCanceled(true);
-                        unarmedMoment(fallenKnight);
-                    }
-                }
-            }
             if(entity instanceof  Player){
                 if (entity.isDeadOrDying() && checkSword(pSource,entity)){
                     event.setCanceled(true);
@@ -80,12 +52,6 @@ public class Event_Death {
                 }
             }
         }
-    }
-    private static void unarmedMoment(FallenKnight fallenKnight){
-        fallenKnight.setHealth(1.0f);
-        fallenKnight.setInvulnerable(true);
-        fallenKnight.setIsArmed(false);
-        fallenKnight.setUnarmed(true);
     }
     public static void upSouls(LevelAccessor world, Entity entity,Entity assasin) {
         upSouls(null, world, entity,assasin);
@@ -182,10 +148,6 @@ public class Event_Death {
         if (!stack.isEmpty()) {
             player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
         }
-    }
-
-    public static boolean checkSmiteInItem(ItemStack itemStack,LivingEntity entity){
-        return itemStack.getItem() instanceof SwordItem && entity instanceof Player && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SMITE,itemStack)!=0;
     }
 }
 

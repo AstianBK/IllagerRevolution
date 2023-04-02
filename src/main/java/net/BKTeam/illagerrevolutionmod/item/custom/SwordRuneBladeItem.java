@@ -82,9 +82,10 @@ public class SwordRuneBladeItem extends RunedSword {
             if(pPlayer instanceof INecromancerEntity entity){
                 listZombi=entity.getInvocations();
             }
+            int k = Util.getNumberOfInvocations(listZombi);
             boolean flag1= pPlayer.isShiftKeyDown();
             boolean flag2= cc>=0 && cc<=6;
-            boolean canSummon= Events.checkOwnerSoul(listSoul,pPlayer);
+            boolean canSummon= Events.checkOwnerSoul(listSoul,pPlayer) && k<12;
             if(!flag1 ){
                 if(!pLevel.isClientSide && flag2 && cc>0){
                     Summoned_Soul soul_wither= new Summoned_Soul(pPlayer,pLevel);
@@ -96,44 +97,42 @@ public class SwordRuneBladeItem extends RunedSword {
                     pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
                 }
             }else {
-                if (!pLevel.isClientSide && flag2) {
-                    int i = 0;
-                    int j = 0;
-                    Entity entity;
-                    int k = Util.getNumberOfInvocations(listZombi);
-                    if (canSummon && k<12) {
-                        while (i < listSoul.size() && j <= 5 && k<12) {
-                            entity = listSoul.get(i);
-                            if (entity instanceof Soul_Entity entity1 && entity1.getOwner() == pPlayer) {
-                                entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity);
-                                j++;
-                                k++;
-                                if(k==12){
-                                    pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
+                if(!pLevel.isClientSide){
+                    if (flag2) {
+                        int i = 0;
+                        int j = 0;
+                        Entity entity;
+                        if (canSummon) {
+                            while (i < listSoul.size() && j <= 5 && k<12) {
+                                entity = listSoul.get(i);
+                                if (entity instanceof Soul_Entity entity1 && entity1.getOwner() == pPlayer) {
+                                    entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity);
+                                    j++;
+                                    k++;
+                                    if(k==12){
+                                        pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
+                                    }
                                 }
+                                i++;
                             }
-                            i++;
+                        }else{
+                            pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
                         }
-                    }else if (k==12){
-                        pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
-                    }
-                }
-                if (!listZombi.isEmpty() && flag2 && !canSummon) {
-                    int i = 0;
-                    while (i<listZombi.size() && cc<6){
-                        ZombifiedEntity zombie=listZombi.get(i);
-                        if(zombie.isAlive()){
-
-                            zombie.hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),zombie.getMaxHealth());
-                            cc++;
-                            pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
-                            pPlayer.playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
-                            zombie.removeEntityOfList();
-                            if(cc==6){
-                                    pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
+                        if (!listZombi.isEmpty() && !canSummon) {
+                            while (i<listZombi.size() && cc<6){
+                                ZombifiedEntity zombie=listZombi.get(i);
+                                if(zombie.isAlive()){
+                                    zombie.hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),zombie.getMaxHealth());
+                                    cc++;
+                                    pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
+                                    pPlayer.playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
+                                    if(cc==6){
+                                        pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
+                                    }
+                                }
+                                i++;
                             }
                         }
-                        i++;
                     }
                 }
                 if (!pPlayer.getAbilities().instabuild){
