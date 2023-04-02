@@ -52,10 +52,16 @@ public class IllagerRevolutionMod {
 
         GeckoLib.initialize();
         GeckoLibMod.DISABLE_IN_DEV=true;
+        
         ModEntityTypes.register(eventBus);
-
         ModParticles.register(eventBus);
         ModSounds.register(eventBus);
+        ModItems.register(eventBus);
+        ModBlockEntities.register(eventBus);
+        ModBlocks.register(eventBus);
+        ModMenuTypes.register(eventBus);
+        
+        
         init_effect.REGISTRY.register(eventBus);
         Init_enchantment.REGISTRY.register(eventBus);
         eventBus.addListener(this::clientSetup);
@@ -63,8 +69,6 @@ public class IllagerRevolutionMod {
 
         PacketHandler.registerMessages();
         setupD();
-
-        ModItems.register(eventBus);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT,()->()->{
             eventBus.addListener(this::registerRenderers);
@@ -74,8 +78,12 @@ public class IllagerRevolutionMod {
         ATTRIBUTES.register("soul",()->SoulTick.SOUL);
         ATTRIBUTES.register(eventBus);
     }
+    
     private void clientSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(ModEntityTypes::registerWaveMembers);
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.RUNE_TABLE_BLOCK.get(), RenderType.translucent());
+
+        MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
 
     @OnlyIn(Dist.CLIENT)

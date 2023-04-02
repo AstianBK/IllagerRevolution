@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "illagerrevolutionmod:block/rune_table_block" },
+    "facing=east": { "model": "illagerrevolutionmod:block/rune_table_block", "y": 90 },
+    "facing=south": { "model": "illagerrevolutionmod:block/rune_table_block", "y": 180 },
+    "facing=west": { "model": "illagerrevolutionmod:block/rune_table_block", "y": 270 }
+  }
+}
