@@ -6,7 +6,10 @@ import com.mojang.math.Vector3f;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.FallenKnightModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.IllagerMinerBadlandsModel;
+import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.RakerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.entity.layers.LinkedLayer;
+import net.BKTeam.illagerrevolutionmod.entity.layers.ScrapperArmorLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -27,6 +30,7 @@ public class FallenKnightRenderer extends ExtendedGeoEntityRenderer<FallenKnight
 
     public FallenKnightRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new FallenKnightModel<>());
+        this.addLayer(new LinkedLayer(this,new FallenKnightModel<>()));
         this.shadowRadius = 0.5f;
     }
 
