@@ -108,7 +108,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 27.0D)
+                .add(Attributes.MAX_HEALTH, 25.0D)
                 .add(Attributes.ARMOR,10.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 7.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
@@ -169,7 +169,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     }
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_PICKAXE));
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
     }
 
     public boolean isAttackLantern(){
