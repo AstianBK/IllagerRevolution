@@ -42,7 +42,7 @@ public class Events {
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event != null && event.getEntity() != null) {
             LivingEntity entity=event.getEntityLiving();
-            if(entity instanceof Player player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
+            if(entity instanceof ServerPlayer player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
                 if(player instanceof INecromancerEntity){
                     if(((INecromancerEntity)player).getBondedMinions()!=null){
                         if(!((INecromancerEntity)player).getBondedMinions().isEmpty()){
@@ -50,7 +50,7 @@ public class Events {
                                 player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                                 ((INecromancerEntity)player).getBondedMinions().forEach(knight->{
                                     if(knight.itIsLinked()){
-                                        knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(((INecromancerEntity)player).getBondedMinions()));
+                                        knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(((INecromancerEntity)knight.getOwner()).getBondedMinions()));
                                     }
                                 });
                                 event.setCanceled(true);

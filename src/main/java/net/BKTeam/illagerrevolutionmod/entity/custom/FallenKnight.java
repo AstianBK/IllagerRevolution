@@ -338,6 +338,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         pCompound.putBoolean("isArmed",this.isArmed());
         pCompound.putBoolean("isOnGround",this.isOnGroundUnarmed());
         pCompound.putBoolean("ItIsLinked",this.itIsLinked());
+        pCompound.putBoolean("damageLink",this.getDamageLink());
     }
 
     @Override
@@ -349,18 +350,23 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.setIsArmed(pCompound.getBoolean("isArmed"));
         this.setOnGroundUnarmed(pCompound.getBoolean("isOnGround"));
         this.setLink(pCompound.getBoolean("ItIsLinked"));
+        this.setDamageLink(pCompound.getBoolean("damageLink"));
         this.updateListLinked();
         this.updateTimerDispawn();
     }
 
     public void removeEntityOfList(){
         if(this.getOwner() instanceof INecromancerEntity entity){
-            entity.getBondedMinions().remove(this);
+            if(entity.getBondedMinions()!=null && !entity.getBondedMinions().isEmpty()){
+                entity.getBondedMinions().remove(this);
+            }
         }
     }
     public void addEntityOfList(){
         if(this.getOwner() instanceof INecromancerEntity entity){
-            entity.getBondedMinions().add(this);
+            if(entity.getBondedMinions()!=null && !entity.getBondedMinions().isEmpty()){
+                entity.getBondedMinions().add(this);
+            }
         }
     }
     @Override
@@ -372,6 +378,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.entityData.define(ARMED,true);
         this.entityData.define(ON_GROUND_UNARMED,false);
         this.entityData.define(LINKED,false);
+        this.entityData.define(DAMAGE_LINK,false);
     }
 
     private void updateListLinked(){
