@@ -1,6 +1,13 @@
 package net.BKTeam.illagerrevolutionmod;
 
 import com.mojang.logging.LogUtils;
+import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
+import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
+import net.BKTeam.illagerrevolutionmod.screen.ModMenuTypes;
+import net.BKTeam.illagerrevolutionmod.screen.RuneTableScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;

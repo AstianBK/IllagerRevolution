@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.item;
 
 import com.google.common.collect.Ordering;
+import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.*;
 
@@ -33,7 +34,7 @@ public class ModCreativeModeTab {
                 ,ModItems.GOGGLES_MINER.get(),ModItems.GOGGLES_MINER_REINFORCED.get(),ModItems.CLAWS_ARMOR_IRON.get(),ModItems.CLAWS_ARMOR_GOLD.get(),ModItems.CLAWS_ARMOR_DIAMOND.get()
                 ,ModItems.CLAWS_ARMOR_NETHERITE.get(),ModItems.CLAWS_ARMOR_ILLAGIUM.get(),ModItems.ARROW_BEAST.get()
                 ,ModItems.RUNE_FRAGMENT_BONE.get(),ModItems.RUNE_FRAGMENT_FLESH.get(),ModItems.RUNE_FRAGMENT_UNDYING.get(),ModItems.RUNE_TABLET_UNDYING_BONE.get(),ModItems.RUNE_TABLET_UNDYING_FLESH.get()
-                ,ModBlocks.RUNE_TABLE_BLOCK.get().asItem());
+                , ModBlocks.RUNE_TABLE_BLOCK.get().asItem());
 
         stackComparator= Ordering.explicit(itemList).onResultOf(ItemStack::getItem);
     }

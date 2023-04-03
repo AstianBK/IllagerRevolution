@@ -55,6 +55,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public int reviveTimer;
     public int dispawnTimer;
     public boolean isEndless;
+    public int damageLinkTimer;
     private static final EntityDataAccessor<Boolean> LINKED =
             SynchedEntityData.defineId(FallenKnight.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ATTACKING =
@@ -67,7 +68,8 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             SynchedEntityData.defineId(FallenKnight.class,EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ARMED=
             SynchedEntityData.defineId(FallenKnight.class,EntityDataSerializers.BOOLEAN);
-
+    private static final EntityDataAccessor<Boolean> DAMAGE_LINK =
+            SynchedEntityData.defineId(FallenKnight.class, EntityDataSerializers.BOOLEAN);
     public FallenKnight(EntityType<? extends Monster> p_33570_, Level p_33571_) {
         super(p_33570_, p_33571_);
         this.dispawnTimer=0;
@@ -76,6 +78,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.rearmedTimer=0;
         this.reviveTimer=0;
         this.isEndless=false;
+        this.damageLinkTimer=0;
     }
 
     public static AttributeSupplier setAttributes() {
@@ -117,9 +120,11 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
                             this.setIdNecromancer(blade_knight.getUUID());
                             this.setIdOwner(null);
                             this.setDispawnTimer(0,null,true);
+                            this.removeEntityOfList();
                         }
                     }
                     if(this.getDispawnTimer()!=0){
+                        this.removeEntityOfList();
                         this.unarmedMoment(this);
                     }
                 }
@@ -133,7 +138,23 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         }else {
             super.die(pCause);
         }
+    }
 
+    public boolean getDamageLink() {
+        return this.entityData.get(DAMAGE_LINK);
+    }
+
+    public void setDamageLink(boolean b) {
+        this.entityData.set(DAMAGE_LINK,b);
+        this.damageLinkTimer=b ? 20 : 0;
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if(this.itIsLinked()){
+            this.setDamageLink(true);
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     private void unarmedMoment(FallenKnight fallenKnight){
@@ -264,6 +285,12 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     }
     @Override
     public void aiStep() {
+        if(this.getDamageLink()){
+            this.damageLinkTimer--;
+        }
+        if (this.damageLinkTimer==0 && this.getDamageLink()){
+            this.setDamageLink(false);
+        }
         if(this.isEndless && this.dispawnTimer>0){
             this.dispawnTimer--;
         }
@@ -278,7 +305,6 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.setIsAttacking(false);
         }
         if(this.isUnarmed()){
-            this.removeEntityOfList();
             this.unarmedTimer--;
         }
         if(this.unarmedTimer==0 && this.isUnarmed()){

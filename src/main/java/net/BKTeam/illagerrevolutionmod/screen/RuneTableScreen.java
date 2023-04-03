@@ -25,7 +25,6 @@ public class RuneTableScreen extends AbstractContainerScreen<RuneTableMenu> {
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
     }
 

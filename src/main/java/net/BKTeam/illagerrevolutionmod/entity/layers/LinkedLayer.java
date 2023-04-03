@@ -27,12 +27,15 @@ public class LinkedLayer extends GeoLayerRenderer<FallenKnight> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, FallenKnight entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        float f=!entityLivingBaseIn.getDamageLink() ? 0.1f : 1.0f;
+        float f1=!entityLivingBaseIn.getDamageLink() ? 0.7f : 0.0f;
+        float f2=!entityLivingBaseIn.getDamageLink() ? 0.5f : 0.0f;
         if(entityLivingBaseIn.itIsLinked()){
             this.tick=(float) entityLivingBaseIn.tickCount+partialTicks;
             model.getModelLocation(entityLivingBaseIn);
             model.getAnimationFileLocation(entityLivingBaseIn);
             model.getTextureLocation(entityLivingBaseIn);
-            renderCopyModel(this.model,LINKED_ARMOR,matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
+            renderCopyModel(this.model,LINKED_ARMOR,matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,f,f1,f2);
         }
     }
 

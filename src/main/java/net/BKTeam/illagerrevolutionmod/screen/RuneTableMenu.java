@@ -2,6 +2,8 @@ package net.BKTeam.illagerrevolutionmod.screen;
 
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.custom.RuneTableEntity;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.item.custom.RunedSword;
 import net.BKTeam.illagerrevolutionmod.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class RuneTableMenu extends AbstractContainerMenu {
     private final RuneTableEntity blockEntity;
@@ -33,9 +36,24 @@ public class RuneTableMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 34, 40));
-            this.addSlot(new SlotItemHandler(handler, 1, 57, 18));
-            this.addSlot(new SlotItemHandler(handler, 2, 103, 18));
+            this.addSlot(new SlotItemHandler(handler, 0, 17, 40){
+                @Override
+                public boolean mayPlace(@NotNull ItemStack stack) {
+                    return stack.is(ModItems.RUNE_TABLET_UNDYING_BONE.get()) || stack.is(ModItems.RUNE_TABLET_UNDYING_FLESH.get());
+                }
+            });
+            this.addSlot(new SlotItemHandler(handler, 1, 17, 17){
+                @Override
+                public boolean mayPlace(@NotNull ItemStack stack) {
+                    return stack.is(ModItems.RUSTIC_CHISEL.get());
+                }
+            });
+            this.addSlot(new SlotItemHandler(handler, 2, 77, 17){
+                @Override
+                public boolean mayPlace(@NotNull ItemStack stack) {
+                    return stack.getItem() instanceof RunedSword;
+                }
+            });
             this.addSlot(new ModResultSlot(handler, 3, 80, 60));
         });
     }
