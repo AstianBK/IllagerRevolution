@@ -40,6 +40,13 @@
       "illagerrevolutionmod:soul_release"
     ]
   },
+  
+"rune_table_use": {
+    "subtitle": "sounds.illagerrevolutionmod.rune_table_use",
+    "sounds": [
+      "illagerrevolutionmod:rune_table_use"
+    ]
+  },
 
   "blade_knight_swordhit1": {
     "subtitle": "sounds.illagerrevolutionmod.blade_knight_swordhit1",
