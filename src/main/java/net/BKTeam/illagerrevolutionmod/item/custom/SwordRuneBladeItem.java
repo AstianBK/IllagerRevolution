@@ -119,7 +119,7 @@ public class SwordRuneBladeItem extends RunedSword {
                             pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
                         }
                         if (!listZombi.isEmpty() && !canSummon) {
-                            while (i<listZombi.size() && cc<6){
+                            while (i<listZombi.size()){
                                 ZombifiedEntity zombie=listZombi.get(i);
                                 if(zombie.isAlive()){
                                     zombie.hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),zombie.getMaxHealth());

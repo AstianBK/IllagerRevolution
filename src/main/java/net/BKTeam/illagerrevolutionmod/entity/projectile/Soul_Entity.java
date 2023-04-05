@@ -169,11 +169,12 @@ public class Soul_Entity extends ThrowableItemProjectile {
             entity.setIdSoul(undead);
             entity.setIdOwner(pSummoner.getUUID());
             entity.moveTo(blockpos,0.0F,0.0F);
-            entity.addEffect(new MobEffectInstance(init_effect.DEATH_MARK.get(),99999,0));
             entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pSummoner.blockPosition()), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
             pSummoner.level.addFreshEntity(entity);
             if(pSummoner instanceof Player){
                 entity.addEntityOfList();
+            }else {
+                entity.addEffect(new MobEffectInstance(init_effect.DEATH_MARK.get(),99999,0));
             }
         }else if(undead.equals("villager") || undead.equals("zombie_villager")){
             ZombieVillager entity=new ZombieVillager(EntityType.ZOMBIE_VILLAGER,world);

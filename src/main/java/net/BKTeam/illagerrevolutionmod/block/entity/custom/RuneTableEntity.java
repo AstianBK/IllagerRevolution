@@ -13,6 +13,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -30,10 +31,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.beans.EventHandler;
 import java.util.Random;
 
 public class RuneTableEntity extends BlockEntity implements MenuProvider {
@@ -112,17 +115,31 @@ public class RuneTableEntity extends BlockEntity implements MenuProvider {
     }
 
     private static void craftItem(RuneTableEntity entity) {
-        ItemStack stack = new ItemStack(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get());
+        ItemStack stack = new ItemStack(entity.itemHandler.getStackInSlot(2).getItem() instanceof SwordRuneBladeItem ? ModItems.ILLAGIUM_ALT_RUNED_BLADE.get() : ModItems.ILLAGIUM_RUNED_BLADE.get());
         ItemStack stack1 = entity.itemHandler.getStackInSlot(2);
-        entity.itemHandler.extractItem(0, 1, false);
-        entity.itemHandler.extractItem(1, 1, false);
-        entity.itemHandler.getStackInSlot(2).getItem();
+        if(stack.getItem() instanceof SwordRuneBladeItem){
+            if(entity.itemHandler.getStackInSlot(0).is(ModItems.RUNE_TABLET_UNDYING_BONE.get())){
+                EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(stack1), stack);
+                stack.setHoverName(stack1.getHoverName());
+                stack.setDamageValue(stack1.getDamageValue());
+                entity.itemHandler.insertItem(3,stack,true);
+                stack1.shrink(1);
+                entity.itemHandler.extractItem(0, 1, false);
+                entity.itemHandler.extractItem(1, 1, false);
+                entity.itemHandler.setStackInSlot(3,stack);
 
-        EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(stack1), stack);
-        stack.setHoverName(stack1.getHoverName());
-        stack.setDamageValue(stack1.getDamageValue());
-        stack1.shrink(1);
-        entity.itemHandler.setStackInSlot(3,stack);
+
+            }
+        }else if(entity.itemHandler.getStackInSlot(0).is(ModItems.RUNE_TABLET_UNDYING_FLESH.get())){
+            entity.itemHandler.extractItem(0, 1, false);
+            entity.itemHandler.extractItem(1, 1, false);
+
+            EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(stack1), stack);
+            stack.setHoverName(stack1.getHoverName());
+            stack.setDamageValue(stack1.getDamageValue());
+            stack1.shrink(1);
+            entity.itemHandler.setStackInSlot(3,stack);
+        }
     }
 
     private static boolean hasRecipe(RuneTableEntity entity) {
