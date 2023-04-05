@@ -1,8 +1,13 @@
 package net.BKTeam.illagerrevolutionmod.event;
 
 
+import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -19,16 +24,21 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.*;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorGogglesItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
 import net.BKTeam.illagerrevolutionmod.particle.custom.*;
+import software.bernie.example.GeckoLibMod;
+import software.bernie.geckolib3.GeckoLib;
+import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
-
-import java.util.function.Supplier;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib3.resource.GeckoLibCache;
+import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib3.world.storage.GeckoLibIdTracker;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
 
 
 @Mod.EventBusSubscriber(modid = IllagerRevolutionMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEventBusEvents {
-
 
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
@@ -65,9 +75,17 @@ public class ModEventBusEvents {
     }
 
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     @OnlyIn(Dist.CLIENT)
-    public static void registerArmorRenderers(final EntityRenderersEvent.AddLayers event){
+    public static void registerArmorRenderers(EntityRenderersEvent.AddLayers event){
+        event.getSkins().forEach(s -> {
+            event.getSkin(s).addLayer(new PlayerLikedLayer(event.getSkin(s)));
+        });
+        Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(s->{
+            if(s instanceof LivingEntityRenderer l){
+                l.addLayer(new PlayerLikedLayer(l));
+            }
+        });
         GeoArmorRenderer.registerArmorRenderer(IllagiumArmorItem.class, Helmet_Miner_ReinforcedRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorGogglesItem.class, Goggles_Miner_ReinforcedRenderer::new);
     }

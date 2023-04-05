@@ -28,10 +28,10 @@ public class LinkedLayer extends GeoLayerRenderer<FallenKnight> {
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, FallenKnight entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         float f=!entityLivingBaseIn.getDamageLink() ? 0.1f : 1.0f;
-        float f1=!entityLivingBaseIn.getDamageLink() ? 0.7f : 0.0f;
-        float f2=!entityLivingBaseIn.getDamageLink() ? 0.5f : 0.0f;
+        float f1=!entityLivingBaseIn.getDamageLink() ? 0.8f : 0.0f;
+        float f2=!entityLivingBaseIn.getDamageLink() ? 0.4f : 0.0f;
         if(entityLivingBaseIn.itIsLinked()){
-            this.tick=(float) entityLivingBaseIn.tickCount+partialTicks;
+            tick=(float) entityLivingBaseIn.tickCount+partialTicks;
             model.getModelLocation(entityLivingBaseIn);
             model.getAnimationFileLocation(entityLivingBaseIn);
             model.getTextureLocation(entityLivingBaseIn);
@@ -41,6 +41,6 @@ public class LinkedLayer extends GeoLayerRenderer<FallenKnight> {
 
     @Override
     public RenderType getRenderType(ResourceLocation textureLocation){
-        return RenderType.energySwirl(textureLocation,this.tick*0.01f,this.tick*0.01f);
+        return RenderType.energySwirl(textureLocation,tick*0.01f,tick*0.01f);
     }
 }

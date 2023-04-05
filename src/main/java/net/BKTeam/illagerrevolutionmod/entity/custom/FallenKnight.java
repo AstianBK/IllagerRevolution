@@ -5,6 +5,7 @@ import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -44,6 +45,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasInventory {
 
@@ -114,22 +116,14 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         if(!flag){
             if(flag1){
                 if(this.getOwner()!=null){
-                    if(entity1 instanceof Blade_KnightEntity blade_knight){
-                        if(blade_knight.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
-                            this.unarmedMoment(this);
-                            this.setIdNecromancer(blade_knight.getUUID());
-                            this.setIdOwner(null);
-                            this.setDispawnTimer(0,null,true);
-                            this.removeEntityOfList();
-                        }
-                    }
                     if(this.getDispawnTimer()!=0){
                         this.removeEntityOfList();
-                        this.unarmedMoment(this);
+                        this.unarmedMoment();
                     }
                 }
                 if(this.getNecromancer()!=null){
-                    this.unarmedMoment(this);
+                    this.removeEntityOfList();
+                    this.unarmedMoment();
                 }
             }else {
                 super.die(pCause);
@@ -157,11 +151,11 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         return super.hurt(pSource, pAmount);
     }
 
-    private void unarmedMoment(FallenKnight fallenKnight){
-        fallenKnight.setHealth(1.0f);
-        fallenKnight.setInvulnerable(true);
-        fallenKnight.setIsArmed(false);
-        fallenKnight.setUnarmed(true);
+    private void unarmedMoment(){
+        this.setHealth(1.0f);
+        this.setInvulnerable(true);
+        this.setIsArmed(false,false);
+        this.setUnarmed(true);
     }
 
     public boolean checkSmiteInItem(ItemStack itemStack,LivingEntity entity){
@@ -226,9 +220,11 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         return this.entityData.get(ARMED);
     }
 
-    public void setIsArmed(boolean b){
+    public void setIsArmed(boolean b,boolean isSpawn){
         this.entityData.set(ARMED,b);
-        this.reviveTimer= !b ? 200 : 0;
+        if(!isSpawn){
+            this.reviveTimer= !b ? 200 : 0;
+        }
         if(b){
             this.setInvulnerable(false);
         }
@@ -241,13 +237,6 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public void setIsAttacking(boolean pBoolean){
         this.entityData.set(ATTACKING,pBoolean);
         this.attackTimer= pBoolean ? 10 : 0;
-    }
-
-    public LivingEntity getLinkOwner(){
-        if(this.getIdOwner()!=null){
-            return this.itIsLinked() ? this.getOwner() : null;
-        }
-        return null;
     }
 
     public boolean isOnGroundUnarmed() {
@@ -277,7 +266,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     private void setIsRearmed(boolean b) {
         this.entityData.set(REARMED,b);
-        this.rearmedTimer= b ? 30 : 0;
+        this.rearmedTimer= b ? 20 : 0;
     }
 
     public boolean isRearmed() {
@@ -305,6 +294,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             this.setIsAttacking(false);
         }
         if(this.isUnarmed()){
+            this.removeEntityOfList();
             this.unarmedTimer--;
         }
         if(this.unarmedTimer==0 && this.isUnarmed()){
@@ -323,7 +313,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         }
         if (this.rearmedTimer==0 && this.isRearmed()){
             this.setIsRearmed(false);
-            this.setIsArmed(true);
+            this.setIsArmed(true,false);
             this.heal(this.getMaxHealth());
             this.addEntityOfList();
         }
@@ -347,7 +337,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.setIsRearmed(pCompound.getBoolean("isRearmed"));
         this.setUnarmed(pCompound.getBoolean("isUnarmed"));
         this.setIsAttacking(pCompound.getBoolean("isAttacking"));
-        this.setIsArmed(pCompound.getBoolean("isArmed"));
+        this.setIsArmed(pCompound.getBoolean("isArmed"),false);
         this.setOnGroundUnarmed(pCompound.getBoolean("isOnGround"));
         this.setLink(pCompound.getBoolean("ItIsLinked"));
         this.setDamageLink(pCompound.getBoolean("damageLink"));
@@ -356,15 +346,15 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     }
 
     public void removeEntityOfList(){
-        if(this.getOwner() instanceof INecromancerEntity entity){
-            if(entity.getBondedMinions()!=null && !entity.getBondedMinions().isEmpty()){
+        if(this.getOwner()!=null){
+            if(this.getOwner() instanceof INecromancerEntity entity){
                 entity.getBondedMinions().remove(this);
             }
         }
     }
     public void addEntityOfList(){
-        if(this.getOwner() instanceof INecromancerEntity entity){
-            if(entity.getBondedMinions()!=null && !entity.getBondedMinions().isEmpty()){
+        if(this.getOwner()!=null){
+            if(this.getOwner() instanceof INecromancerEntity entity){
                 entity.getBondedMinions().add(this);
             }
         }
@@ -425,6 +415,12 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         return PlayState.CONTINUE;
     }
 
+    @Override
+    public void spawnAnim() {
+        this.setIsArmed(false,true);
+        this.setIsRearmed(true);
+        super.spawnAnim();
+    }
 
     static class FallenKnightAttack extends MeleeAttackGoal {
         private final FallenKnight goalOwner;
