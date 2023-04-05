@@ -71,7 +71,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     private int attackShield;
     public int lowHealtTimer;
     public float count_expansion;
-    private List<FallenKnight> knights=new ArrayList<>();
+    private final List<FallenKnight> knights=new ArrayList<>();
 
     @Override
     public boolean canBeAffected(MobEffectInstance pPotioneffect) {
@@ -184,7 +184,11 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
             }
             if(this.lowHealtTimer<=39 && this.lowHealtTimer>=20){
                 if(this.lowHealtTimer==39){
-                    Util.spawFallenKnightBack(this.level,this,2);
+                    if(this.getMainHandItem().is(ModItems.ILLAGIUM_RUNED_BLADE.get())){
+                        Util.spawZombifiedBack(this.level,this,4);
+                    }else {
+                        Util.spawFallenKnightBack(this.level,this,2);
+                    }
                     for (int i=0;i<6;i++){
                         Vec3 pos=new Vec3(this.getX()+this.level.getRandom().nextDouble(-3.0d,3.0d),this.getY()+3.0D,this.getZ()+this.level.getRandom().nextDouble(-3.0d,3.0d));
                         Player player=this.level.getNearestPlayer(this,40.0D);
@@ -218,7 +222,11 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.populateDefaultEquipmentSlots(pDifficulty);
-        Util.spawZombifiedBack(this.level,this,4);
+        if(this.getMainHandItem().is(ModItems.ILLAGIUM_RUNED_BLADE.get())){
+            Util.spawZombifiedBack(this.level,this,4);
+        }else {
+            Util.spawFallenKnightBack(this.level,this,2);
+        }
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
@@ -235,6 +243,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     public void die(DamageSource pCause) {
         this.knights.forEach(knight->{
             knight.setIdNecromancer(null);
+            knight.hurt(DamageSource.MAGIC.bypassMagic().bypassArmor(),knight.getMaxHealth());
         });
         super.die(pCause);
     }

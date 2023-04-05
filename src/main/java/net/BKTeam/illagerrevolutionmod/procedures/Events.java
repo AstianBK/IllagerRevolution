@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -42,17 +43,19 @@ public class Events {
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event != null && event.getEntity() != null) {
             LivingEntity entity=event.getEntityLiving();
-            if(entity instanceof ServerPlayer player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
-                if(player instanceof INecromancerEntity){
-                    if(((INecromancerEntity)player).getBondedMinions()!=null){
-                        if(!((INecromancerEntity)player).getBondedMinions().isEmpty()){
-                            if(Util.checkIsOneLinked(((INecromancerEntity)player).getBondedMinions())){
+            if(entity instanceof Player player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
+                if(player instanceof INecromancerEntity necromancer){
+                    if(necromancer.getBondedMinions()!=null){
+                        if(!necromancer.getBondedMinions().isEmpty()){
+                            if(Util.checkIsOneLinked(necromancer.getBondedMinions())){
                                 player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                                ((INecromancerEntity)player).getBondedMinions().forEach(knight->{
-                                    if(knight.itIsLinked()){
-                                        knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(((INecromancerEntity)knight.getOwner()).getBondedMinions()));
+                                for(FallenKnight knight : necromancer.getBondedMinions()){
+                                    if(knight!=null){
+                                        if(knight.itIsLinked()){
+                                            knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(necromancer.getBondedMinions()));
+                                        }
                                     }
-                                });
+                                }
                                 event.setCanceled(true);
                             }
                         }

@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.FollowOwnerGoalReanimate;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Attacking;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Defend;
@@ -47,6 +48,9 @@ public class ReanimatedEntity extends Monster {
             return true;
         }
         if(getOwner()!=null){
+            if(pEntity instanceof ReanimatedEntity reanimated){
+                return reanimated.getOwner()==this.getOwner();
+            }
             return this.getOwner().isAlliedTo(pEntity);
         }
         return false;
@@ -64,6 +68,7 @@ public class ReanimatedEntity extends Monster {
         }
         return null;
     }
+
     public LivingEntity getOwner(){
         if(this.getIdOwner()!=null){
             return this.level.getPlayerByUUID(getIdOwner());
@@ -89,6 +94,7 @@ public class ReanimatedEntity extends Monster {
     public UUID getIdNecromancer() {
         return this.entityData.get(ID_NECROMANCER).orElse(null);
     }
+
     public void setIdNecromancer(UUID idOwner){
         this.entityData.set(ID_NECROMANCER,Optional.ofNullable(idOwner));
     }

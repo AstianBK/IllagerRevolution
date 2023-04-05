@@ -33,6 +33,7 @@ import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
 import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 
 @Mod.EventBusSubscriber
@@ -44,6 +45,7 @@ public class Event_Death {
             upSouls(event.getEntity().level,event.getEntity(),event.getSource().getEntity());
             DamageSource pSource=event.getSource();
             LivingEntity entity=event.getEntityLiving();
+
             if(entity instanceof  Player){
                 if (entity.isDeadOrDying() && checkSword(pSource,entity)){
                     event.setCanceled(true);
@@ -102,6 +104,7 @@ public class Event_Death {
     public static boolean hasNameSoul(String soul){
         return ModConstants.LIST_NAME_ZOMBIFIED.contains(soul);
     }
+
 
     private static boolean checkSword(DamageSource damageSource,LivingEntity souce){
         if(damageSource.isBypassInvul()){

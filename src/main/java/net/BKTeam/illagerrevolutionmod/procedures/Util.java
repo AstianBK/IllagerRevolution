@@ -5,6 +5,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.AbstractIllager;
@@ -142,11 +143,13 @@ public class Util {
     public static boolean checkIsOneLinked(List<FallenKnight> knights){
         int i=0;
         int j=0;
-        while (i<knights.size()){
-            if (knights.get(i).itIsLinked()){
-                j++;
+        if(knights!=null){
+            while (i<knights.size()){
+                if (knights.get(i).itIsLinked() && knights.get(i).isArmed()){
+                    j++;
+                }
+                i++;
             }
-            i++;
         }
         return j>0 ;
     }
@@ -173,10 +176,11 @@ public class Util {
         }
         return entity;
     }
-    public static <T extends LivingEntity> void spawFallenKnightBack(Level level, LivingEntity livingEntity,int number){
+    public static void spawFallenKnightBack(Level level, LivingEntity livingEntity,int number){
         List<BlockPos> pos=blockPosList(livingEntity,number);
         for(int i=0;i<number;i++){
             FallenKnight knight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),level);
+            knight.spawnAnim();
             knight.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(level.random.nextFloat() < 0.5 ? Items.STONE_SWORD : Items.STONE_AXE));
             knight.setIdNecromancer(livingEntity.getUUID());
             knight.moveTo(pos.get(i),0.0f,0.0f);
@@ -184,10 +188,11 @@ public class Util {
             ((Blade_KnightEntity)livingEntity).getKnights().add(knight);
         }
     }
-    public static <T extends LivingEntity> void spawZombifiedBack(Level level, LivingEntity livingEntity,int number){
+    public static void spawZombifiedBack(Level level, LivingEntity livingEntity,int number){
         List<BlockPos> pos=blockPosList(livingEntity,number);
         for(int i=0;i<number;i++){
             ZombifiedEntity zombie=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),level);
+            zombie.addEffect(new MobEffectInstance(init_effect.DEATH_MARK.get(),999999,0));
             zombie.moveTo(pos.get(i),0.0f,0.0f);
             level.addFreshEntity(zombie);
         }
@@ -204,7 +209,7 @@ public class Util {
             list.add(new BlockPos(livingEntity.getX()+j+(f1*k),livingEntity.getY(),livingEntity.getZ()-j+(f2*k)));
             i++;
             j*=-1;
-            if((i+1)%2==0){
+            if(j==1){
                 k+=0.3d;
             }
         }
