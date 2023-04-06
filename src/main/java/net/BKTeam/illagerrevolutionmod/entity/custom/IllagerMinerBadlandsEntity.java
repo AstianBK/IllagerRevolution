@@ -61,7 +61,6 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     private int attackTimer;
 
-    private boolean isEscape;
 
     private static final EntityDataAccessor<Boolean> HAS_ITEM =
             SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.BOOLEAN);
@@ -76,7 +75,6 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         this.robTimer=0;
         this.attackTimer=0;
         this.useLantern=false;
-        this.isEscape=false;
         for (int i=0;i<5;i++) {
             this.listRob[i]=0;
         }
@@ -119,7 +117,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isAttackLantern()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk"+(this.isHasItems() ? "3" : ""), ILoopType.EDefaultLoopTypes.LOOP));
         }
         else if (this.isAttacking() && this.isAttackLantern()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.attack2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
@@ -179,9 +177,6 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         this.entityData.set(ATTACKLANTERN,pboolean);
     }
 
-    public void setEscape(boolean escape) {
-        this.isEscape = escape;
-    }
 
     @Override
     protected void registerGoals() {
@@ -297,14 +292,11 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
                 }
             }
         }
-        int cc = this.robTimer;
         if(this.isHasItems()){
-            if(cc==0){
-                this.setHasItem(false);
-            }else{
-                --cc;
-                this.robTimer=cc;
-            }
+            this.robTimer--;
+        }
+        if(this.robTimer==0 && this.isHasItems()){
+            this.setHasItem(false);
         }
     }
 

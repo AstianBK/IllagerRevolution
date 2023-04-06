@@ -40,10 +40,14 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(5);
     public boolean fistUseInvi;
+    public boolean animIdle2;
+    private int animIdle2Timer;
 
     public IllagerMinerEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
         super(entityType, level);
         this.fistUseInvi = false;
+        this.animIdle2 = false;
+        this.animIdle2Timer = 0;
     }
 
     @Nullable
@@ -91,8 +95,8 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
         }else if (this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
 
-        }
-        else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        }else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.idle1", ILoopType.EDefaultLoopTypes.LOOP));
+
         return PlayState.CONTINUE;
 
     }
