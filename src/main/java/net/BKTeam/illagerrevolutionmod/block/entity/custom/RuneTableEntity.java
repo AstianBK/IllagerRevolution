@@ -109,7 +109,7 @@ public class RuneTableEntity extends BlockEntity implements MenuProvider {
 
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, RuneTableEntity pBlockEntity) {
-        if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity)) {
+        if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity) && pBlockEntity.itemHandler.extractItem(3,1,true).isEmpty()) {
             craftItem(pBlockEntity);
         }
     }
@@ -128,7 +128,6 @@ public class RuneTableEntity extends BlockEntity implements MenuProvider {
                 entity.itemHandler.extractItem(1, 1, false);
                 entity.itemHandler.setStackInSlot(3,stack);
 
-
             }
         }else if(entity.itemHandler.getStackInSlot(0).is(ModItems.RUNE_TABLET_UNDYING_FLESH.get())){
             entity.itemHandler.extractItem(0, 1, false);
@@ -140,10 +139,11 @@ public class RuneTableEntity extends BlockEntity implements MenuProvider {
             stack1.shrink(1);
             entity.itemHandler.setStackInSlot(3,stack);
         }
+
     }
 
     private static boolean hasRecipe(RuneTableEntity entity) {
-        boolean hasItemInWaterSlot = entity.itemHandler.getStackInSlot(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get();
+        boolean hasItemInWaterSlot = entity.itemHandler.getStackInSlot(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get() || entity.itemHandler.getStackInSlot(0).getItem() == ModItems.RUNE_TABLET_UNDYING_FLESH.get();
         boolean hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == ModItems.RUSTIC_CHISEL.get();
         boolean hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() instanceof RunedSword;
 
