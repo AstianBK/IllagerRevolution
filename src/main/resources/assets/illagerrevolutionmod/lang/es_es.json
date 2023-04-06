@@ -1,12 +1,12 @@
 {
-  "block.illagerrevolutionmod.rune_table_block": "Rune Inscription Table",
-  "item.illagerrevolutionmod.rustic_chisel": "Stone Chisel",
+  "block.illagerrevolutionmod.rune_table_block": "Mesa runica",
+  "item.illagerrevolutionmod.rustic_chisel": "Cinsel de piedra",
 
-  "item.illagerrevolutionmod.rune_fragment_bone": "Rune Fragment",
-  "item.illagerrevolutionmod.rune_fragment_flesh": "Rune Fragment",
-  "item.illagerrevolutionmod.rune_fragment_undying": "Rune Fragment",
-  "item.illagerrevolutionmod.rune_tablet_undying_bone": "Rune Tablet",
-  "item.illagerrevolutionmod.rune_tablet_undying_flesh": "Rune Tablet",
+  "item.illagerrevolutionmod.rune_fragment_bone": "Fragmento runico",
+  "item.illagerrevolutionmod.rune_fragment_flesh": "Fragmento runico",
+  "item.illagerrevolutionmod.rune_fragment_undying": "Fragmento runico",
+  "item.illagerrevolutionmod.rune_tablet_undying_bone": "Tableta runica",
+  "item.illagerrevolutionmod.rune_tablet_undying_flesh": "Tableta runica",
 
 
   "item.illagerrevolutionmod.illagerminer_spawn_egg": "Generar illager minero",
