@@ -78,14 +78,11 @@ public class SwordRuneBladeItem extends RunedSword {
         int cc = (int) pPlayer.getAttribute(SoulTick.SOUL).getValue();
         if(pUsedHand==InteractionHand.MAIN_HAND){
             List<Soul_Entity> listSoul=pPlayer.level.getEntitiesOfClass(Soul_Entity.class,pPlayer.getBoundingBox().inflate(50.0d));
-            List<ZombifiedEntity> listZombi=new ArrayList<>();
-            if(pPlayer instanceof INecromancerEntity entity){
-                listZombi=entity.getInvocations();
-            }
+            List<ZombifiedEntity> listZombi=pPlayer.level.getEntitiesOfClass(ZombifiedEntity.class,pPlayer.getBoundingBox().inflate(50.0d),e->e.getOwner()==pPlayer);
             int k = Util.getNumberOfInvocations(listZombi);
             boolean flag1= pPlayer.isShiftKeyDown();
             boolean flag2= cc>=0 && cc<=6;
-            boolean canSummon= Events.checkOwnerSoul(listSoul,pPlayer) && k<12;
+            boolean canSummon= Events.checkOwnerSoul(listSoul,pPlayer);
             if(!flag1 ){
                 if(!pLevel.isClientSide && flag2 && cc>0){
                     Summoned_Soul soul_wither= new Summoned_Soul(pPlayer,pLevel);
@@ -103,7 +100,7 @@ public class SwordRuneBladeItem extends RunedSword {
                         int j = 0;
                         Entity entity;
                         if (canSummon) {
-                            while (i < listSoul.size() && j <= 5 && k<12) {
+                            while (i < listSoul.size() && j < 6 ) {
                                 entity = listSoul.get(i);
                                 if (entity instanceof Soul_Entity entity1 && entity1.getOwner() == pPlayer) {
                                     entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity);
@@ -116,22 +113,22 @@ public class SwordRuneBladeItem extends RunedSword {
                                 i++;
                             }
                         }else{
-                            pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
-                        }
-                        if (!listZombi.isEmpty() && !canSummon) {
-                            while (i<listZombi.size()){
-                                ZombifiedEntity zombie=listZombi.get(i);
-                                if(zombie.isAlive()){
-                                    zombie.hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),zombie.getMaxHealth());
-                                    cc++;
-                                    pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
-                                    pPlayer.playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
-                                    if(cc==6){
-                                        pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
+                            if (!listZombi.isEmpty() && cc<6 ) {
+                                while (i<listZombi.size()){
+                                    ZombifiedEntity zombie=listZombi.get(i);
+                                    if(zombie.isAlive() && cc<6){
+                                        zombie.hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),zombie.getMaxHealth());
+                                        cc++;
+                                        pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
+                                        pPlayer.playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);
+                                        if(cc==6){
+                                            pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),5.0f,1.0f);
+                                        }
                                     }
+                                    i++;
                                 }
-                                i++;
                             }
+                            pPlayer.level.playSound(pPlayer,pPlayer,SoundEvents.DISPENSER_FAIL,SoundSource.AMBIENT,2.0f,-3.0f);
                         }
                     }
                 }

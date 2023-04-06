@@ -83,7 +83,7 @@ public class VariantRuneBladeItem extends RunedSword{
                     BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextDouble(-1.0d,1.0d),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextDouble(-1.0d,1.0d));
                     FallenKnight fallenKnight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
                     fallenKnight.setIdOwner(pPlayer.getUUID());
-                    fallenKnight.spawnAnim();
+                    //fallenKnight.spawnAnim();
                     fallenKnight.finalizeSpawn((ServerLevelAccessor) pLevel,pLevel.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED,null,null);
                     fallenKnight.setDispawnTimer(1200,pPlayer,false);
                     fallenKnight.moveTo(pos1,0.0f,0.0f);

@@ -29,7 +29,6 @@ public class EscapeMinerGoal<T extends LivingEntity> extends AvoidEntityGoal {
     @Override
     public void start() {
         super.start();
-        this.goalOwner.setEscape(true);
         Minecraft mc=Minecraft.getInstance();
         if(this.goalOwner instanceof IllagerMinerEntity) {
             boolean flag1 = this.goalOwner.hasEffect(MobEffects.INVISIBILITY);

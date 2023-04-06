@@ -478,9 +478,6 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
         if(this.attackShield>0){
             this.attackShield--;
         }
-        if(!this.hasItemInSlot(EquipmentSlot.MAINHAND)){
-            this.populateDefaultEquipmentSlots(this.level.getCurrentDifficultyAt(this.blockPosition()));
-        }
         if(this.isAttacking()){
             --this.attackTimer;
             if(this.attackTimer!=0){

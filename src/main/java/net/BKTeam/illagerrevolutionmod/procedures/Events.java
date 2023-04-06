@@ -44,21 +44,16 @@ public class Events {
         if (event != null && event.getEntity() != null) {
             LivingEntity entity=event.getEntityLiving();
             if(entity instanceof Player player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
-                if(player instanceof INecromancerEntity necromancer){
-                    if(necromancer.getBondedMinions()!=null){
-                        if(!necromancer.getBondedMinions().isEmpty()){
-                            if(Util.checkIsOneLinked(necromancer.getBondedMinions())){
-                                player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                                for(FallenKnight knight : necromancer.getBondedMinions()){
-                                    if(knight!=null){
-                                        if(knight.itIsLinked()){
-                                            knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(necromancer.getBondedMinions()));
-                                        }
-                                    }
-                                }
-                                event.setCanceled(true);
+                List<FallenKnight> knights=player.level.getEntitiesOfClass(FallenKnight.class,player.getBoundingBox().inflate(50.0d),e->e.getOwner()==player);
+                if(!knights.isEmpty()){
+                    if(Util.checkIsOneLinked(knights)){
+                        player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        for(FallenKnight knight : knights){
+                            if(knight.itIsLinked()){
+                                knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(knights));
                             }
                         }
+                        event.setCanceled(true);
                     }
                 }
             }
@@ -81,6 +76,13 @@ public class Events {
                     entity=list.get(i);
                 }
                 i++;
+            }
+            if(owner instanceof Player player){
+                if(player instanceof INecromancerEntity necromancer){
+                    if(!necromancer.getInvocations().isEmpty()){
+                        return entity!=null && necromancer.getInvocations().size()<12;
+                    }
+                }
             }
             return entity!=null;
         }

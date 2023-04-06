@@ -3,9 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
-import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -45,7 +43,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.EnumSet;
-import java.util.UUID;
 
 public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasInventory {
 
@@ -187,7 +184,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0,new UnarmedFallenGoal(this));
+        this.goalSelector.addGoal(0,new SpawnReanimatedGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(2,new FallenKnightAttack(this,1.0D,true));
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7));

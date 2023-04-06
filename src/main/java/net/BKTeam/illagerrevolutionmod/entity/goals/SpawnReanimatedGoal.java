@@ -1,20 +1,26 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.entity.custom.ReanimatedEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public class UnarmedFallenGoal extends Goal {
-    private final FallenKnight reanimated;
+public class SpawnReanimatedGoal extends Goal {
+    private final ReanimatedEntity reanimated;
 
-    public UnarmedFallenGoal(FallenKnight fallenKnight){
+    public SpawnReanimatedGoal(ReanimatedEntity reanimated){
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK,Flag.TARGET,Flag.JUMP));
-        this.reanimated=fallenKnight;
+        this.reanimated=reanimated;
     }
     @Override
     public boolean canUse() {
-        return !this.reanimated.isArmed() && !this.reanimated.isRearmed() && !this.reanimated.isUnarmed();
+        if(this.reanimated instanceof FallenKnight knight){
+            return !knight.isArmed() && !knight.isRearmed() && !knight.isUnarmed();
+        }else {
+            return ((ZombifiedEntity)this.reanimated).getIsSpawned();
+        }
     }
 
     @Override

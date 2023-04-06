@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.FollowOwnerGoalReanimate;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Attacking;
 import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Defend;
+import net.BKTeam.illagerrevolutionmod.entity.goals.SpawnReanimatedGoal;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -87,19 +88,17 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-
         if(!this.getIsSpawned()){
             if (event.isMoving() && !this.isAttacking()) {
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            } else if (this.isAttacking()) {
+            }else if(this.isAttacking()){
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-            } else {
+            }else {
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.idle", ILoopType.EDefaultLoopTypes.LOOP));
             }
         }else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.idle", ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("zombified.illager.revive", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
         }
-
         return PlayState.CONTINUE;
 
     }
@@ -119,6 +118,8 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     public void setIsSpawned(boolean isSpawned) {
         this.entityData.set(IS_SPAWNED, isSpawned);
         this.animSpawnTimer = isSpawned ? 28 : 0;
+        this.setInvulnerable(isSpawned);
+
     }
 
     public boolean isAttacking() {
@@ -127,7 +128,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
 
     public void setAttacking(boolean attacking) {
         this.entityData.set(ATTACKING, attacking);
-        this.attackTimer = isAttacking() ? 7 : 0;
+        this.attackTimer = isAttacking() ? 10 : 0;
     }
 
     public String getnameSoul() {
@@ -193,7 +194,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         this.entityData.define(ATTACKING,false);
         this.entityData.define(HASSOUL,false);
         this.entityData.define(ID_SOUL,"pillager");
-        this.entityData.define(IS_SPAWNED,true);
+        this.entityData.define(IS_SPAWNED,false);
     }
 
 
@@ -201,8 +202,19 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.targetSelector.addGoal(1,new Owner_Defend(this,false));
-        this.targetSelector.addGoal(2,new Owner_Attacking(this));
+        this.goalSelector.addGoal(0,new SpawnReanimatedGoal(this));
+        this.targetSelector.addGoal(1,new Owner_Defend(this,false){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !((ZombifiedEntity)this.mob).getIsSpawned();
+            }
+        });
+        this.targetSelector.addGoal(2,new Owner_Attacking(this){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !((ZombifiedEntity)this.mob).getIsSpawned();
+            }
+        });
         this.goalSelector.addGoal(3,new FollowOwnerGoalReanimate(this,1.0d,34.0f,2.0f,false));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(1,new Zombiefied_Attack(this,1.1D,true));
@@ -269,17 +281,16 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         if(Event_Death.hasNameSoul(this.getnameSoul())){
             this.setHasSoul(true);
         }
-        if(this.attackTimer<=0){
-            this.setAttacking(false);
-        }
         if (this.isAttacking()) {
             this.attackTimer--;
         }
+        if(this.attackTimer==0 && this.isAttacking()){
+            this.setAttacking(false);
+        }
         if(this.getIsSpawned()){
             this.animSpawnTimer--;
-            this.getNavigation().stop();
         }
-        if(this.getIsSpawned() && this.animSpawnTimer<=0){
+        if(this.getIsSpawned() && this.animSpawnTimer==0){
             this.setIsSpawned(false);
         }
     }
@@ -287,13 +298,19 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        this.setIsSpawned(true);
+        this.spawnAnim();
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
     @Override
+    public void spawnAnim() {
+        this.setIsSpawned(true);
+        super.spawnAnim();
+    }
+
+    @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
+        data.addAnimationController(new AnimationController<>(this, "controller",
                 0, this::predicate));
     }
     @Override

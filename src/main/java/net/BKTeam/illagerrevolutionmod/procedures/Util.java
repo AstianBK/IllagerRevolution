@@ -157,7 +157,7 @@ public class Util {
         int i=0;
         int j=0;
         while (i<knights.size()){
-            if (knights.get(i).itIsLinked()){
+            if (knights.get(i).itIsLinked() && knights.get(i).isArmed()){
                 j++;
             }
             i++;
@@ -192,6 +192,7 @@ public class Util {
         List<BlockPos> pos=blockPosList(livingEntity,number);
         for(int i=0;i<number;i++){
             ZombifiedEntity zombie=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),level);
+            zombie.spawnAnim();
             zombie.addEffect(new MobEffectInstance(init_effect.DEATH_MARK.get(),999999,0));
             zombie.moveTo(pos.get(i),0.0f,0.0f);
             level.addFreshEntity(zombie);
