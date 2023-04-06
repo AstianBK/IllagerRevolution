@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "illagerrevolutionmod:claws_armor_iron"
+  },
+  "addition": {
+    "item": "minecraft:diamond"
+  },
+  "result": {
+    "item": "illagerrevolutionmod:claws_armor_diamond"
+  }
+}

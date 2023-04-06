@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:iron_axe"
+  },
+  "addition": {
+    "item": "illagerrevolutionmod:illagium"
+  },
+  "result": {
+    "item": "illagerrevolutionmod:illagium_helberd",
+    "count": 1
+  }
+}
