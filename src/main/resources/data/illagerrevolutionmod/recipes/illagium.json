@@ -1,32 +1,21 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "group": "netherite_ingot",
-  "ingredients": [
-    {
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#Ei",
+    "EEi",
+    "ii "
+  ],
+  "key": {
+    "#": {
       "item": "illagerrevolutionmod:encrusted_lapis"
     },
-    {
+    "E": {
       "item": "minecraft:emerald"
     },
-    {
-      "item": "minecraft:emerald"
-    },
-    {
-      "item": "minecraft:emerald"
-    },
-    {
-      "item": "minecraft:iron_ingot"
-    },
-    {
-      "item": "minecraft:iron_ingot"
-    },
-    {
-      "item": "minecraft:iron_ingot"
-    },
-    {
+    "i": {
       "item": "minecraft:iron_ingot"
     }
-  ],
+  },
   "result": {
     "item": "illagerrevolutionmod:illagium",
     "count": 1

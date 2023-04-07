@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "L"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stone"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:rustic_chisel",
+    "count": 1
+  }
+}
