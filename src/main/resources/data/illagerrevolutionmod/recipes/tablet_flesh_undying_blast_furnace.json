@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "illagerrevolutionmod:rune_tablet_undying_flesh"
+  },
+  "result": "minecraft:stone",
+  "experience": 130,
+  "cookingtime": 350
+}
