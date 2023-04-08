@@ -88,6 +88,10 @@ public class ModEventBusEvents {
         });
         GeoArmorRenderer.registerArmorRenderer(IllagiumArmorItem.class, Helmet_Miner_ReinforcedRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorGogglesItem.class, Goggles_Miner_ReinforcedRenderer::new);
+        GeoArmorRenderer.registerArmorRenderer(ArmorEvokerRobeItem.class, EvokerPlayerArmorRenderer::new);
+        GeoArmorRenderer.registerArmorRenderer(ArmorIllusionerRobeItem.class, IllusionerPlayerArmorRenderer::new);
+        GeoArmorRenderer.registerArmorRenderer(ArmorPillagerVestItem.class, PillagerPlayerArmorRenderer::new);
+        GeoArmorRenderer.registerArmorRenderer(ArmorVindicatorJacketItem.class, VindicatorPlayerArmorRenderer::new);
     }
 }
 
