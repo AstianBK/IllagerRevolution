@@ -25,7 +25,7 @@ public class RuneBoneFragmentLootDrop extends LootModifier {
     @Nonnull
     @Override
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-        if(context.getRandom().nextFloat() > 0.3f) {
+        if(context.getRandom().nextFloat() > 0.1f) {
             generatedLoot.add(new ItemStack(addition, 1));
         }
         return generatedLoot;
