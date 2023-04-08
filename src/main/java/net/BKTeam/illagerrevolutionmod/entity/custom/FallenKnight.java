@@ -3,11 +3,13 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -172,6 +174,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.populateDefaultEquipmentSlots(pDifficulty);
+        this.spawnAnim();
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
@@ -252,6 +255,9 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     public void setUnarmed(boolean b){
         this.entityData.set(UNARMED,b);
         this.unarmedTimer= b ? 10 : 0;
+        if (b){
+            this.level.playSound(null,this, ModSounds.SOUL_RELEASE.get(), SoundSource.AMBIENT,1.0f,1.0f);
+        }
     }
     public boolean itIsLinked() {
         return this.entityData.get(LINKED);
@@ -264,6 +270,9 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     private void setIsRearmed(boolean b) {
         this.entityData.set(REARMED,b);
         this.rearmedTimer= b ? 20 : 0;
+        if (b){
+            this.level.playSound(null,this, ModSounds.SOUL_RELEASE.get(), SoundSource.AMBIENT,1.0f,1.0f);
+        }
     }
 
     public boolean isRearmed() {

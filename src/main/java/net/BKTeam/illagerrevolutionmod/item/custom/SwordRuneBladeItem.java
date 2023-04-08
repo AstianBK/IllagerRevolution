@@ -122,6 +122,7 @@ public class SwordRuneBladeItem extends RunedSword {
                                 while (i<listZombi.size()){
                                     ZombifiedEntity zombie=listZombi.get(i);
                                     if(zombie.isAlive() && cc<6){
+                                        zombie.setInvulnerable(false);
                                         zombie.hurt(DamageSource.playerAttack(pPlayer).bypassMagic().bypassArmor(),zombie.getMaxHealth());
                                         cc++;
                                         pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc);
@@ -160,8 +161,9 @@ public class SwordRuneBladeItem extends RunedSword {
         } else {
             pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1"));
             pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2"));
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.charged"+this.souls));
 
-            }
+        }
     }
     
     

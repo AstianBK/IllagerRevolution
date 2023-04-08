@@ -60,11 +60,11 @@ public class Soul_Hunter extends ThrowableItemProjectile {
                 float f = owner.yBodyRotO * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
                 float f1 = Mth.cos(f);
                 float f2 = Mth.sin(f);
-                entity.teleportTo(owner.getX()+f1*1.0D,owner.getY(),owner.getZ()+f2);
+                entity.teleportTo(owner.getX()+f1*1.0D,owner.getY(),owner.getZ()+f2*1.0D);
                 playSound(SoundEvents.ENDERMAN_TELEPORT,1.0f,1.0f);
                 owner.playSound(ModSounds.BLADE_KNIGHT_LAUGH.get(),6.5f,1.0f);
                 discard();
-            }else if (entity.getMobType().equals(MobType.UNDEAD)){
+            }else if (!entity.getMobType().equals(MobType.UNDEAD)){
                 playSound(SoundEvents.ENDERMAN_TELEPORT, 2.0F, 1.0F);
                 discard();
             }

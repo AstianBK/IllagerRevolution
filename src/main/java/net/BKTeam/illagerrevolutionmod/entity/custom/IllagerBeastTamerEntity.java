@@ -11,6 +11,8 @@ import net.minecraft.world.Container;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -127,6 +129,9 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
     @Override
     public void performRangedAttack(LivingEntity target, float flval) {
         ArrowBeast entityarrow = new ArrowBeast(this.level, this);
+        if(this.random.nextFloat() < 0.9){
+            entityarrow.addEffect(new MobEffectInstance(MobEffects.POISON,300,0));
+        }
         double d0 = target.getY() + target.getEyeHeight() - 1.1;
         double d1 = target.getX() - this.getX();
         double d3 = target.getZ() - this.getZ();

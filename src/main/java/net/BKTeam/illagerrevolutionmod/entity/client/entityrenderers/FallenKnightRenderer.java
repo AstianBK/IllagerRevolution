@@ -11,6 +11,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.entity.layers.LinkedLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.ScrapperArmorLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -140,6 +141,6 @@ public class FallenKnightRenderer extends ExtendedGeoEntityRenderer<FallenKnight
                                     MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                                     ResourceLocation textureLocation) {
         stack.scale(1, 1, 1);
-        return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
+        return RenderType.entityTranslucent(textureLocation);
     }
 }
