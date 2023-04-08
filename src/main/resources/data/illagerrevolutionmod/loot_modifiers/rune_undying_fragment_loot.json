@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/buried_treasure"
+    }
+  ],
+  "addition": "illagerrevolutionmod:rune_fragment_undying",
+  "type": "illagerrevolutionmod:rune_undying_fragment_loot"
+}
