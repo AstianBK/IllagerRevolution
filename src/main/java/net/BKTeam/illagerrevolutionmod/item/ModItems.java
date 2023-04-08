@@ -111,6 +111,22 @@ public class ModItems {
     //
     //
 
+    public static final RegistryObject<Item> EVOKER_ROBE_ARMOR = ITEMS.register("evoker_robe_armor",
+            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> ILLUSIONER_ROBE_ARMOR = ITEMS.register("illusioner_robe_armor",
+            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> PILLAGER_VEST_ARMOR = ITEMS.register("pillager_vest_armor",
+            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> VINDICATOR_JACKET_ARMOR = ITEMS.register("vindicator_jacket_armor",
+            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+    
     public static final RegistryObject<Item> HELMET_MINER_REINFORCED = ITEMS.register("helmet_miner_reinforced",
             ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGIUM, EquipmentSlot.HEAD,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
