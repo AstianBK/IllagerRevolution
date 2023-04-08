@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -14,14 +15,14 @@ import net.BKTeam.illagerrevolutionmod.effect.init_effect;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 
-public class ArrowBeast extends AbstractArrow {
+public class ArrowBeast extends Arrow {
 
-    public ArrowBeast(EntityType<? extends AbstractArrow> p_36721_, Level p_36722_) {
+    public ArrowBeast(EntityType<? extends Arrow> p_36721_, Level p_36722_) {
         super(p_36721_, p_36722_);
     }
 
     public ArrowBeast(Level pLevel, LivingEntity pShooter) {
-        super(ModEntityTypes.ARROWBEAST.get(),pShooter,pLevel);
+        super(pLevel,pShooter);
     }
 
     @Override
@@ -32,17 +33,16 @@ public class ArrowBeast extends AbstractArrow {
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
-        if(pResult.getEntity() instanceof LivingEntity livingEntity){
-            int ampliEffect=livingEntity.hasEffect(init_effect.BLEEDING.get()) ? livingEntity.getEffect(init_effect.BLEEDING.get()).getAmplifier() : 0;
-            int ampliBleeding=0;
-            if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==1){
-                ampliBleeding=2;
-            }else if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==0){
-                ampliBleeding=1;
-            }
-            livingEntity.addEffect(new MobEffectInstance(init_effect.BLEEDING.get(),100,ampliBleeding));
-            if(this.level.random.nextInt(1,9)==1){
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON,100,0));
+        if(!this.level.isClientSide){
+            if(pResult.getEntity() instanceof LivingEntity livingEntity){
+                int ampliEffect=livingEntity.hasEffect(init_effect.BLEEDING.get()) ? livingEntity.getEffect(init_effect.BLEEDING.get()).getAmplifier() : 0;
+                int ampliBleeding=0;
+                if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==1){
+                    ampliBleeding=2;
+                }else if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==0){
+                    ampliBleeding=1;
+                }
+                livingEntity.addEffect(new MobEffectInstance(init_effect.BLEEDING.get(),100,ampliBleeding));
             }
         }
     }
