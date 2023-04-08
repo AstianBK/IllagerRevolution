@@ -5,6 +5,7 @@ import net.BKTeam.illagerrevolutionmod.block.entity.custom.RuneTableEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.RunedSword;
 import net.BKTeam.illagerrevolutionmod.item.custom.SwordRuneBladeItem;
+import net.BKTeam.illagerrevolutionmod.item.custom.VariantRuneBladeItem;
 import net.BKTeam.illagerrevolutionmod.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -21,11 +23,10 @@ import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class RuneTableMenu extends AbstractContainerMenu {
-    private final Level level;
-    private final CraftingContainer core=new CraftingContainer(this,2,1);
+    private final CraftingContainer core=new CraftingContainer(this,2,2);
     ContainerLevelAccess callable;
-    private Player player;
-    private ResultContainer resultContainer;
+    private final Player player;
+    private final ResultContainer resultContainer=new ResultContainer();
 
     public RuneTableMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
         this(pContainerId, inv,ContainerLevelAccess.NULL );
@@ -35,7 +36,6 @@ public class RuneTableMenu extends AbstractContainerMenu {
         super(ModMenuTypes.RUNE_TABLE_MENU.get(), pContainerId);
         checkContainerSize(inv, 4);
         this.callable = callable;
-        this.level = inv.player.level;
         this.player=inv.player;
 
         addPlayerInventory(inv);
@@ -53,13 +53,13 @@ public class RuneTableMenu extends AbstractContainerMenu {
                     return stack.is(ModItems.RUSTIC_CHISEL.get());
                 }
         });
-        this.addSlot(new Slot(this.core, 2, 77, 17){
+        this.addSlot(new Slot(this.core, 2, 77, 18){
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                     return stack.getItem() instanceof RunedSword;
                 }
         });
-        this.addSlot(new ModResultSlot(inv.player,core,inv , 3, 80, 60));
+        this.addSlot(new ModResultSlot(inv.player,core,resultContainer , 3, 80, 60));
 
     }
 
@@ -71,14 +71,15 @@ public class RuneTableMenu extends AbstractContainerMenu {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
-    private static final int TE_INVENTORY_SLOT_COUNT = 3;
+    private static final int TE_INVENTORY_SLOT_COUNT = 4;
 
-    protected void updateCraftingResult(int id, Level level, Player player, CraftingContainer pCore, ResultContainer resultContainer){
+    protected void updateCraftingResult(int id, Level level, Player player, CraftingContainer pCore,ResultContainer resultContainer){
         if(!level.isClientSide){
-            ServerPlayer serverPlayer=(ServerPlayer) player;
             ItemStack result=ItemStack.EMPTY;
             recipeResult(pCore);
-            result=recipeResult(pCore);
+            if(hasRecipe()){
+                result=recipeResult(pCore);
+            }
             resultContainer.setItem(3,result);
         }
     }
@@ -86,7 +87,7 @@ public class RuneTableMenu extends AbstractContainerMenu {
     @Override
     public void slotsChanged(Container pInventory) {
         callable.execute((lol,los) ->{
-            updateCraftingResult(this.containerId,lol,player,core,resultContainer);
+            this.updateCraftingResult(this.containerId,lol,player,core,resultContainer);
         });
     }
 
@@ -98,8 +99,21 @@ public class RuneTableMenu extends AbstractContainerMenu {
         });
     }
 
+    private boolean hasRecipe() {
+        boolean hasRecipe2 = core.getItem(2).getItem() instanceof VariantRuneBladeItem && core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_FLESH.get();
+        boolean hasChisel = core.getItem(1).getItem() == ModItems.RUSTIC_CHISEL.get();
+        boolean hasRecipe1= core.getItem(2).getItem() instanceof SwordRuneBladeItem && core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get() ;
+
+        return (hasRecipe1 || hasRecipe2) && hasChisel;
+    }
+
     private ItemStack recipeResult(CraftingContainer pCore){
-        return new ItemStack(pCore.getItem(2).getItem() instanceof SwordRuneBladeItem ? ModItems.ILLAGIUM_ALT_RUNED_BLADE.get() : ModItems.ILLAGIUM_RUNED_BLADE.get());
+        ItemStack stack=new ItemStack(pCore.getItem(2).getItem() instanceof SwordRuneBladeItem ? ModItems.ILLAGIUM_ALT_RUNED_BLADE.get() : ModItems.ILLAGIUM_RUNED_BLADE.get());
+        EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(pCore.getItem(2)),stack);
+        stack.setHoverName(pCore.getItem(2).getHoverName());
+        stack.setDamageValue(pCore.getItem(2).getDamageValue());
+
+        return stack;
 
     }
     @Override

@@ -17,8 +17,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ModResultSlot extends Slot {
     CraftingContainer core;
-    ResultContainer resultContainer;
-    private Player player;
+    private final Player player;
     private int amountCrafted;
 
     public ModResultSlot(Player player,CraftingContainer core,Container container, int index, int x, int y) {
@@ -41,14 +40,19 @@ public class ModResultSlot extends Slot {
     }
 
     @Override
-    protected void onQuickCraft(ItemStack pStack, int pAmount) {
-        this.amountCrafted += pAmount;
-        this.checkTakeAchievements(pStack);
+    public void setChanged() {
+        super.setChanged();
     }
 
     @Override
-    public boolean mayPickup(Player playerIn) {
-        return super.mayPickup(playerIn);
+    protected void onSwapCraft(int pNumItemsCrafted) {
+        this.amountCrafted+=pNumItemsCrafted;
+    }
+
+    @Override
+    protected void onQuickCraft(ItemStack pStack, int pAmount) {
+        this.amountCrafted += pAmount;
+        this.checkTakeAchievements(pStack);
     }
 
     @Override
@@ -56,7 +60,7 @@ public class ModResultSlot extends Slot {
         if(this.amountCrafted > 0){
             pStack.onCraftedBy(this.player.level,this.player,this.amountCrafted);
         }
-        player.playSound(ModSounds.DEATH_MARK_SOUND.get(),1.0f,1.0f);
+        player.playSound(ModSounds.RUNE_TABLE_USE.get(),1.0f,1.0f);
         super.checkTakeAchievements(pStack);
     }
 
@@ -68,22 +72,23 @@ public class ModResultSlot extends Slot {
             ItemStack stack=core.getItem(0);
             ItemStack stack1=core.getItem(1);
             ItemStack stack2=core.getItem(2);
-            stack.shrink(0);
+            stack.shrink(1);
             stack1.shrink(1);
-            stack2.shrink(2);
+            stack2.shrink(1);
         }
         super.onTake(pPlayer, pStack);
     }
 
     private boolean hasRecipe() {
-        boolean hasItemInWaterSlot = core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get() || core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_FLESH.get();
+        boolean hasItemInZeroSlot = core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get() || core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_FLESH.get();
         boolean hasItemInFirstSlot = core.getItem(1).getItem() == ModItems.RUSTIC_CHISEL.get();
-        boolean hasItemInSecondSlot = core.getItem(2).getItem()instanceof RunedSword;
+        boolean hasItemInSecondSlot = core.getItem(2).getItem() instanceof RunedSword;
 
-        return hasItemInWaterSlot && hasItemInFirstSlot && hasItemInSecondSlot;
+        return hasItemInZeroSlot && hasItemInFirstSlot && hasItemInSecondSlot;
     }
 
     private boolean hasNotReachedStackLimit() {
         return core.getItem(3).getCount() < core.getItem(3).getMaxStackSize();
     }
+
 }
