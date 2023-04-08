@@ -1,12 +1,13 @@
 {
   "type": "minecraft:smithing",
   "base": {
-    "item": "illagerrevolutionmod:scrapper_armor_iron"
+    "item": "minecraft:iron_shovel"
   },
   "addition": {
     "item": "illagerrevolutionmod:illagium"
   },
   "result": {
-    "item": "illagerrevolutionmod:scrapper_armor_illagium"
+    "item": "illagerrevolutionmod:illagium_mace",
+    "count": 1
   }
 }

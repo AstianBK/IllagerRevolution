@@ -1,23 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "###",
-    "iii",
-    " L "
+    "#",
+    "L"
   ],
   "key": {
     "#": {
-      "item": "minecraft:iron_nugget"
-    },
-    "i": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:stone"
     },
     "L": {
       "item": "minecraft:leather"
     }
   },
   "result": {
-    "item": "illagerrevolutionmod:claws_armor_iron",
+    "item": "illagerrevolutionmod:rustic_chisel",
     "count": 1
   }
 }

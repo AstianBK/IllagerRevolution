@@ -1,23 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "  #",
-    "ii ",
-    "I  "
-  ],
-  "key": {
-    "#": {
-      "item": "minecraft:diamond_helmet"
-    },
-    "i": {
-      "item": "minecraft:diamond_ingot"
-    },
-    "I": {
-      "item": "minecraft:diamond_boots"
-    }
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "illagerrevolutionmod:scrapper_armor_iron"
+  },
+  "addition": {
+    "item": "minecraft:diamond"
   },
   "result": {
-    "item": "illagerrevolutionmod:scrapper_armor_diamond",
-    "count": 1
+    "item": "illagerrevolutionmod:scrapper_armor_diamond"
   }
 }

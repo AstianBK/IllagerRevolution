@@ -1,12 +1,13 @@
 {
   "type": "minecraft:smithing",
   "base": {
-    "item": "illagerrevolutionmod:scrapper_armor_iron"
+    "item": "illagerrevolutionmod:goggles_miner"
   },
   "addition": {
     "item": "illagerrevolutionmod:illagium"
   },
   "result": {
-    "item": "illagerrevolutionmod:scrapper_armor_illagium"
+    "item": "illagerrevolutionmod:goggles_miner_reinforced",
+    "count": 1
   }
 }
