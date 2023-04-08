@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.event;
 
 
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
+import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -21,8 +22,6 @@ import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.Goggles_Miner_ReinforcedRenderer;
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.Helmet_Miner_ReinforcedRenderer;
 import net.BKTeam.illagerrevolutionmod.entity.custom.*;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorGogglesItem;
-import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
 import net.BKTeam.illagerrevolutionmod.particle.custom.*;
 import software.bernie.example.GeckoLibMod;
 import software.bernie.geckolib3.GeckoLib;
