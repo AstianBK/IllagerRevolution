@@ -71,9 +71,6 @@ public class RuneTableBlock extends BaseEntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof RuneTableEntity) {
-                ((RuneTableEntity) blockEntity).drops();
-            }
         }
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
@@ -98,12 +95,6 @@ public class RuneTableBlock extends BaseEntityBlock {
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new RuneTableEntity(pPos, pState);
     }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ModBlockEntities.RUNE_TABLE_ENTITY.get(),
-                RuneTableEntity::tick);
-    }
 }
+
 

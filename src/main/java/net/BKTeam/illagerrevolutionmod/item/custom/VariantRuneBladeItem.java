@@ -7,6 +7,7 @@ import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -83,12 +84,12 @@ public class VariantRuneBladeItem extends RunedSword{
                     BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextDouble(-1.0d,1.0d),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextDouble(-1.0d,1.0d));
                     FallenKnight fallenKnight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
                     fallenKnight.setIdOwner(pPlayer.getUUID());
-                    //fallenKnight.spawnAnim();
                     fallenKnight.finalizeSpawn((ServerLevelAccessor) pLevel,pLevel.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED,null,null);
                     fallenKnight.setDispawnTimer(1200,pPlayer,false);
                     fallenKnight.moveTo(pos1,0.0f,0.0f);
                     pLevel.addFreshEntity(fallenKnight);
                     fallenKnight.addEntityOfList();
+                    pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),4.0f,1.0f);
                 }
                 if (!pPlayer.getAbilities().instabuild && cc>2){
                     pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-3);

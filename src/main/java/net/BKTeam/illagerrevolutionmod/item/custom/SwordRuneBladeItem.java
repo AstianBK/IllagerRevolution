@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +22,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
@@ -28,6 +32,7 @@ import net.BKTeam.illagerrevolutionmod.procedures.Events;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

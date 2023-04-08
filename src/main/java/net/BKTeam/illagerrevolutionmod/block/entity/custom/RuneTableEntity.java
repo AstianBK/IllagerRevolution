@@ -5,9 +5,13 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.RunedSword;
 import net.BKTeam.illagerrevolutionmod.item.custom.SwordRuneBladeItem;
 import net.BKTeam.illagerrevolutionmod.screen.RuneTableMenu;
+import net.BKTeam.illagerrevolutionmod.screen.slot.ModResultSlot;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.Containers;
@@ -16,7 +20,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -36,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.beans.EventHandler;
 import java.util.Random;
 
@@ -61,7 +66,7 @@ public class RuneTableEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new RuneTableMenu(pContainerId, pInventory, this);
+        return new RuneTableMenu(pContainerId, pInventory, ContainerLevelAccess.create(pPlayer.level,this.worldPosition));
     }
 
     @Nonnull
@@ -98,60 +103,5 @@ public class RuneTableEntity extends BlockEntity implements MenuProvider {
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
     }
 
-    public void drops() {
-        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inventory.setItem(i, itemHandler.getStackInSlot(i));
-        }
-
-        Containers.dropContents(this.level, this.worldPosition, inventory);
-    }
-
-
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, RuneTableEntity pBlockEntity) {
-        if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity) && pBlockEntity.itemHandler.extractItem(3,1,true).isEmpty()) {
-            craftItem(pBlockEntity);
-        }
-    }
-
-    private static void craftItem(RuneTableEntity entity) {
-        ItemStack stack = new ItemStack(entity.itemHandler.getStackInSlot(2).getItem() instanceof SwordRuneBladeItem ? ModItems.ILLAGIUM_ALT_RUNED_BLADE.get() : ModItems.ILLAGIUM_RUNED_BLADE.get());
-        ItemStack stack1 = entity.itemHandler.getStackInSlot(2);
-        if(stack.getItem() instanceof SwordRuneBladeItem){
-            if(entity.itemHandler.getStackInSlot(0).is(ModItems.RUNE_TABLET_UNDYING_BONE.get())){
-                EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(stack1), stack);
-                stack.setHoverName(stack1.getHoverName());
-                stack.setDamageValue(stack1.getDamageValue());
-                entity.itemHandler.insertItem(3,stack,true);
-                stack1.shrink(1);
-                entity.itemHandler.extractItem(0, 1, false);
-                entity.itemHandler.extractItem(1, 1, false);
-                entity.itemHandler.setStackInSlot(3,stack);
-
-            }
-        }else if(entity.itemHandler.getStackInSlot(0).is(ModItems.RUNE_TABLET_UNDYING_FLESH.get())){
-            entity.itemHandler.extractItem(0, 1, false);
-            entity.itemHandler.extractItem(1, 1, false);
-
-            EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(stack1), stack);
-            stack.setHoverName(stack1.getHoverName());
-            stack.setDamageValue(stack1.getDamageValue());
-            stack1.shrink(1);
-            entity.itemHandler.setStackInSlot(3,stack);
-        }
-
-    }
-
-    private static boolean hasRecipe(RuneTableEntity entity) {
-        boolean hasItemInWaterSlot = entity.itemHandler.getStackInSlot(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get() || entity.itemHandler.getStackInSlot(0).getItem() == ModItems.RUNE_TABLET_UNDYING_FLESH.get();
-        boolean hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == ModItems.RUSTIC_CHISEL.get();
-        boolean hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() instanceof RunedSword;
-
-        return hasItemInWaterSlot && hasItemInFirstSlot && hasItemInSecondSlot;
-    }
-
-    private static boolean hasNotReachedStackLimit(RuneTableEntity entity) {
-        return entity.itemHandler.getStackInSlot(3).getCount() < entity.itemHandler.getStackInSlot(3).getMaxStackSize();
-    }
 
 }
