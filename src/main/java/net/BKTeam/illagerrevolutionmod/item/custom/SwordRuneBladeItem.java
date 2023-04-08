@@ -158,6 +158,8 @@ public class SwordRuneBladeItem extends RunedSword {
             pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2"));
 
             pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.soulward"));
+
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.charged"+this.souls));
         } else {
             pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1"));
             pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2"));
