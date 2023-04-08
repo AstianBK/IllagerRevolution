@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.item;
 
+import net.BKTeam.illagerrevolutionmod.entity.client.armor.EvokerPlayerArmorRenderer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -112,19 +113,19 @@ public class ModItems {
     //
 
     public static final RegistryObject<Item> EVOKER_ROBE_ARMOR = ITEMS.register("evoker_robe_armor",
-            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+            ()-> new ArmorEvokerRobeItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> ILLUSIONER_ROBE_ARMOR = ITEMS.register("illusioner_robe_armor",
-            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+            ()-> new ArmorIllusionerRobeItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> PILLAGER_VEST_ARMOR = ITEMS.register("pillager_vest_armor",
-            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+            ()-> new ArmorPillagerVestItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> VINDICATOR_JACKET_ARMOR = ITEMS.register("vindicator_jacket_armor",
-            ()-> new IllagiumArmorItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+            ()-> new ArmorVindicatorJacketItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
     
     public static final RegistryObject<Item> HELMET_MINER_REINFORCED = ITEMS.register("helmet_miner_reinforced",
