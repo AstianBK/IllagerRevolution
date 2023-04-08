@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "entries": [
+    "illagerrevolutionmod:rune_flesh_fragment_loot",
+    "illagerrevolutionmod:rune_bone_fragment_loot",
+    "illagerrevolutionmod:rune_undying_fragment_loot"
+  ]
+}
