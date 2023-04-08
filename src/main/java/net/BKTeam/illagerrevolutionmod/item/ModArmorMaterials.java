@@ -16,7 +16,10 @@ public enum ModArmorMaterials implements ArmorMaterial {
     ILLAGIUM("illagium", 50, new int[]{2, 5, 6, 2}, 20, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
         return Ingredient.of(ModItems.ILLAGIUM.get());
     }),
-    BASICILLAGIUM("leather", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> {
+    BASICILLAGIUM("leather", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> {
+        return Ingredient.of(Items.LEATHER);
+    }),
+    ILLAGERARMOR("silk", 10, new int[]{2, 3, 4, 2}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> {
         return Ingredient.of(Items.LEATHER);
     }),
 
