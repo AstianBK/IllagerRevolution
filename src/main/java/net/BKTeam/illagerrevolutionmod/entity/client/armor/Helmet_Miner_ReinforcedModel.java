@@ -14,7 +14,7 @@ public class Helmet_Miner_ReinforcedModel extends AnimatedGeoModel<IllagiumArmor
 
     @Override
     public ResourceLocation getTextureLocation(IllagiumArmorItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/"+object.getMaterial().getName()+"_minerhelmet.png");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/miner_helmet/"+object.getMaterial().getName()+"_minerhelmet.png");
     }
 
     @Override

@@ -14,7 +14,7 @@ public class VindicatorPlayerArmorModel extends AnimatedGeoModel<ArmorVindicator
 
     @Override
     public ResourceLocation getTextureLocation(ArmorVindicatorJacketItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/vindicator_jacket_armor.png");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/vindicator_armor/vindicator_jacket_armor.png");
     }
 
     @Override

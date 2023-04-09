@@ -2,16 +2,25 @@ package net.BKTeam.illagerrevolutionmod.procedures;
 
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
+import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.EvokerFangs;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -33,27 +42,71 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import org.lwjgl.system.CallbackI;
 
 
 import java.util.List;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public class Events {
+    protected static final UUID BASE_ATTACK_DAMAGE_UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
+    protected static final UUID BASE_ATTACK_SPEED_UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event != null && event.getEntity() != null) {
+            Arrow bulletEntity=event.getSource().getDirectEntity() instanceof Arrow ? (Arrow) event.getSource().getDirectEntity() :null;
+            LivingEntity attacker=event.getSource().getEntity() instanceof LivingEntity ? (LivingEntity) event.getSource().getEntity() : null;
             LivingEntity entity=event.getEntityLiving();
-            if(entity instanceof Player player && player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
-                List<FallenKnight> knights=player.level.getEntitiesOfClass(FallenKnight.class,player.getBoundingBox().inflate(50.0d),e->e.getOwner()==player);
-                if(!knights.isEmpty()){
-                    if(Util.checkIsOneLinked(knights)){
-                        player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                        for(FallenKnight knight : knights){
-                            if(knight.itIsLinked()){
-                                knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(knights));
-                            }
+            if(attacker instanceof Player player){
+                if (bulletEntity!=null){
+                    if(player.getMainHandItem().is(Items.CROSSBOW)){
+                        if(hasSetFullArmorPillager(player)){
+                            event.setCanceled(true);
+                            effectFullAmorPillager(player,entity,bulletEntity,event.getAmount());
                         }
+                    }
+                }else if(hasSetFullArmorVindicator(player)){
+                    if(player.getMainHandItem().getItem() instanceof AxeItem){
                         event.setCanceled(true);
+                        entity.hurt(DamageSource.GENERIC, event.getAmount()+2.0f);
+                    }
+                }else if(player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.EVOKER_ROBE_ARMOR.get())){
+                    if(player.level.random.nextFloat() < 0.3f){
+                        player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(100,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
+                        for(int i=0;i<3;i++){
+                               for(int j=0;j<10;j++){
+                                   float f4 = Mth.cos(2*j*10)*(0.5f*i);
+                                   float f5 = Mth.sin(2*j*10)*(0.5f*i);
+                                   EvokerFangs fangs=new EvokerFangs(player.level,entity.getOnPos().getX()+(double)f4,entity.getOnPos().getY()+1.0d,entity.getOnPos().getZ()+(double)f5,0f,5,player);
+                                   player.level.addFreshEntity(fangs);
+                               }
+                        }
+                    }
+                }
+            }
+            if(entity instanceof Player player){
+                if(player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
+                    List<FallenKnight> knights=player.level.getEntitiesOfClass(FallenKnight.class,player.getBoundingBox().inflate(50.0d),e->e.getOwner()==player);
+                    if(!knights.isEmpty()){
+                        if(Util.checkIsOneLinked(knights)){
+                            player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                            for(FallenKnight knight : knights){
+                                if(knight.itIsLinked()){
+                                    knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(knights));
+                                }
+                            }
+                            event.setCanceled(true);
+                        }
+                    }
+                }
+                if(player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.EVOKER_ROBE_ARMOR.get())){
+                    if(player.level.random.nextFloat() < 0.2f){
+                        if(attacker!=null){
+                            player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(1,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
+                            EvokerFangs fangs=new EvokerFangs(player.level,attacker.getOnPos().getX(),attacker.getOnPos().getY()+1.0d,attacker.getOnPos().getZ(),0f,0,player);
+                            player.level.addFreshEntity(fangs);
+                        }
                     }
                 }
             }
@@ -66,6 +119,21 @@ public class Events {
                 }
             }
         }
+    }
+
+    public static boolean hasSetFullArmorPillager(Player player){
+        return player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorPillagerVestItem &&
+                player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof  ArmorPillagerVestItem;
+    }
+
+    public static boolean hasSetFullArmorVindicator(Player player){
+        return player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorVindicatorJacketItem &&
+                player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof  ArmorVindicatorJacketItem;
+    }
+
+    public static void effectFullAmorPillager(Player player,LivingEntity living,Arrow arrow,float amount){
+        living.hurt(DamageSource.arrow(arrow,null),amount+4.0f);
+        arrow.discard();
     }
     public static boolean checkOwnerSoul(List<Soul_Entity> list,LivingEntity owner){
         if(!list.isEmpty()){

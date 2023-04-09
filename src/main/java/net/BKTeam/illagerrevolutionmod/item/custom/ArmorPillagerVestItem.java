@@ -5,7 +5,13 @@ import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -42,5 +48,6 @@ public class ArmorPillagerVestItem extends GeoArmorItem implements IAnimatable {
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         return PlayState.CONTINUE;
     }
+
 
 }

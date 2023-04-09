@@ -14,7 +14,7 @@ public class PillagerPlayerArmorModel extends AnimatedGeoModel<ArmorPillagerVest
 
     @Override
     public ResourceLocation getTextureLocation(ArmorPillagerVestItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/pillager_vest_armor.png");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/pillager_armor/pillager_vest_armor.png");
     }
 
     @Override

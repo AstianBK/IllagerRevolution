@@ -14,7 +14,7 @@ public class Goggles_Miner_ReinforcedModel extends AnimatedGeoModel<ArmorGoggles
 
     @Override
     public ResourceLocation getTextureLocation(ArmorGogglesItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/"+object.getMaterial().getName()+"_goggles.png");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/goggles/"+object.getMaterial().getName()+"_goggles.png");
     }
 
     @Override

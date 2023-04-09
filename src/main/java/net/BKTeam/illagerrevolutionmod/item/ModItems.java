@@ -124,8 +124,16 @@ public class ModItems {
             ()-> new ArmorPillagerVestItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
+    public static final RegistryObject<Item> PILLAGER_LEGGINS_ARMOR = ITEMS.register("pillager_leggins_armor",
+            ()-> new ArmorPillagerVestItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.LEGS,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
     public static final RegistryObject<Item> VINDICATOR_JACKET_ARMOR = ITEMS.register("vindicator_jacket_armor",
             ()-> new ArmorVindicatorJacketItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> VINDICATOR_LEGGINS_ARMOR = ITEMS.register("vindicator_leggins_armor",
+            ()-> new ArmorVindicatorJacketItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.LEGS,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
     
     public static final RegistryObject<Item> HELMET_MINER_REINFORCED = ITEMS.register("helmet_miner_reinforced",

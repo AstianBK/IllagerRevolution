@@ -14,7 +14,7 @@ public class IllusionerPlayerArmorModel extends AnimatedGeoModel<ArmorIllusioner
 
     @Override
     public ResourceLocation getTextureLocation(ArmorIllusionerRobeItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/illusioner_robe_armor.png");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/illusioner_armor/illusioner_robe_armor.png");
     }
 
     @Override

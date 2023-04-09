@@ -14,7 +14,7 @@ public class EvokerPlayerArmorModel extends AnimatedGeoModel<ArmorEvokerRobeItem
 
     @Override
     public ResourceLocation getTextureLocation(ArmorEvokerRobeItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/evoker_robe_armor.png");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/evoker_armor/silk_evoker_armor.png");
     }
 
     @Override
