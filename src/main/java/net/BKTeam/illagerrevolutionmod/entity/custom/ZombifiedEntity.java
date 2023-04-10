@@ -327,8 +327,9 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         return this.factory;
     }
 
+   
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.STONE_STEP, 0.15F, 1.5F);
+        this.playSound(SoundEvents.ZOMBIE_VILLAGER_STEP, 0.15F, 1.0F);
     }
 
     protected SoundEvent getAmbientSound() {
