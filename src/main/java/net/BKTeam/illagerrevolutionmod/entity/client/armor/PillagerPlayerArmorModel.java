@@ -9,7 +9,7 @@ public class PillagerPlayerArmorModel extends AnimatedGeoModel<ArmorPillagerVest
 
     @Override
     public ResourceLocation getModelLocation(ArmorPillagerVestItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/vindicator_player_armor.geo.json");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/pillager_player_armor.geo.json");
     }
 
     @Override
