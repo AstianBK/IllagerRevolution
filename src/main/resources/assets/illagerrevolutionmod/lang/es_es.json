@@ -20,6 +20,13 @@
   "item.illagerrevolutionmod.goggles_miner_reinforced": "Lentes rastreador de illagium",
   "item.illagerrevolutionmod.helmet_miner": "Casco de minero",
   "item.illagerrevolutionmod.goggles_miner": "Lentes de rastreador",
+  "item.illagerrevolutionmod.evoker_robe_armor": "Tunida de evocador",
+  "item.illagerrevolutionmod.illusioner_robe_armor": "Tunica de ilusionista",
+  "item.illagerrevolutionmod.pillager_vest_armor": "Chaleco de saqueador",
+  "item.illagerrevolutionmod.pillager_leggins_armor": "Pantalones de saqueador",
+  "item.illagerrevolutionmod.vindicator_jacket_armor": "Chaleco de vindicador",
+  "item.illagerrevolutionmod.vindicator_leggins_armor": "Pantalones de vindicador",
+
   "item.illagerrevolutionmod.scrapper_armor_illagium": "Armadura de illagium para rasgador",
   "item.illagerrevolutionmod.scrapper_armor_netherite": "Armadura de netherita para rasgador",
   "item.illagerrevolutionmod.scrapper_armor_diamond": "Armadura de diamante para rasgador",
@@ -61,5 +68,13 @@
 
   "itemGroup.illagerrevolutiontab":"Illager Revolution",
 
-  "sounds.illagerrevolutionmod.tamer_whistle": "Domador de bestias silvando"
+  "sounds.illagerrevolutionmod.tamer_whistle": "Domador de bestias silvando",
+
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5to release a stored soul",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2": "§5hold§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5to raise them as undead followers",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulward": "§5§lSoul Ward:§r §5If fully charged, your blade will protect you from death, consuming all souls in the process"
 }
