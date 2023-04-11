@@ -91,5 +91,29 @@ public class ModEventBusEvents {
         GeoArmorRenderer.registerArmorRenderer(ArmorPillagerVestItem.class, PillagerPlayerArmorRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorVindicatorJacketItem.class, VindicatorPlayerArmorRenderer::new);
     }
+    
+    @SubscribeEvent
+    public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>>
+                                                           event) {
+        event.getRegistry().registerAll(
+                new RuneBoneFragmentLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_bone_fragment_loot")),
+                new RuneFleshFragmentLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_flesh_fragment_loot")),
+                new RuneUndyingFragmentLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_undying_fragment_loot")),
+                new IllusionerRobeLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"illusioner_robe_loot")),
+                new EvokerRobeLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"evoker_robe_loot")),
+                new PillagerVestLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_vest_loot")),
+                new PillagerPantsLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_pants_loot")),
+                new VindicatorJacketLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_jacket_loot")),
+                new VindicatorPantsLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_pants_loot"))
+        );
+    }
 }
-
