@@ -1,6 +1,6 @@
 {
 
-  "block.illagerrevolutionmod.rune_table_block": "Runic Workbench",
+  "block.illagerrevolutionmod.rune_table_block": "Runic Table",
   "item.illagerrevolutionmod.rustic_chisel": "Stone Chisel",
 
   "item.illagerrevolutionmod.rune_fragment_bone": "Rune Fragment",
@@ -25,6 +25,7 @@
   "item.illagerrevolutionmod.illusioner_robe_armor": "Illusioner Robes",
   "item.illagerrevolutionmod.pillager_vest_armor": "Pillager Vest",
   "item.illagerrevolutionmod.pillager_leggins_armor": "Pillager Leggings",
+  "item.illagerrevolutionmod.pillager_boots_armor": "Pillager Boots",
   "item.illagerrevolutionmod.vindicator_jacket_armor": "Vindicator Jacket",
   "item.illagerrevolutionmod.vindicator_leggins_armor": "Vindicator Pants",
 

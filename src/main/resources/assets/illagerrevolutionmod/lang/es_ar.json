@@ -24,6 +24,7 @@
   "item.illagerrevolutionmod.illusioner_robe_armor": "Tunica de ilusionista",
   "item.illagerrevolutionmod.pillager_vest_armor": "Chaleco de saqueador",
   "item.illagerrevolutionmod.pillager_leggins_armor": "Pantalones de saqueador",
+  "item.illagerrevolutionmod.pillager_boots_armor": "Botas de saqueador",
   "item.illagerrevolutionmod.vindicator_jacket_armor": "Chaleco de vindicador",
   "item.illagerrevolutionmod.vindicator_leggins_armor": "Pantalones de vindicador",
 
@@ -46,7 +47,7 @@
 
 
   "effect.illagerrevolutionmod.bleeding": "Herida profunda",
-  "effect.illagerrevolutionmod.death_mark": "Atado a la muerte",
+  "effect.illagerrevolutionmod.death_mark": "Alma Atrapada",
 
 
   "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
@@ -71,11 +72,20 @@
 
   "sounds.illagerrevolutionmod.tamer_whistle": "Domador de bestias silvando",
 
-  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
-  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Runa: Carne Inmortal§r",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Manten §6SHIFT§r para mas informaciòn",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2": "§5§l(MAX 6)",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5to release a stored soul",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2": "§5hold§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5to raise them as undead followers",
-  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulward": "§5§lSoul Ward:§r §5If fully charged, your blade will protect you from death, consuming all souls in the process"
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulward": "§5§lSoul Ward:§r §5If fully charged, your blade will protect you from death, consuming all souls in the process",
+
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1": "§l§5Runa: Hueso Inmortal§r",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2": "Manten §6SHIFT§r para mas informaciòn",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish1": "§5§lSoul Nourish:§r §5Slain mobs will have their souls absorbed into the sword increasing your armor and healing all summoned followers",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5while having at least 3 souls ",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2": "§5to summon a Fallen Knight follower to aid you in battle temporarily",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability"
 }
