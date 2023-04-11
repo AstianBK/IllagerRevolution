@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/woodland_mansion"
+    }
+  ],
+  "addition": "illagerrevolutionmod:evoker_robe_armor",
+  "type": "illagerrevolutionmod:evoker_robe_loot"
+}
