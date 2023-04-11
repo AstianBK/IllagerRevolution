@@ -86,10 +86,10 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 30.0D)
+                .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.FOLLOW_RANGE, 35.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.23f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.22f).build();
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -327,8 +327,9 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         return this.factory;
     }
 
+   
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.STONE_STEP, 0.15F, 1.5F);
+        this.playSound(SoundEvents.ZOMBIE_VILLAGER_STEP, 0.15F, 1.0F);
     }
 
     protected SoundEvent getAmbientSound() {

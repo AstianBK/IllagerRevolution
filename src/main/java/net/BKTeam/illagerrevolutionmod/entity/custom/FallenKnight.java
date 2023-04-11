@@ -84,10 +84,10 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 40.0D)
+                .add(Attributes.MAX_HEALTH, 32.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
-                .add(Attributes.ARMOR,10.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
+                .add(Attributes.ARMOR,8.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 45.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f).build();
@@ -442,7 +442,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             double d0 = this.getAttackReachSqr(entity);
             if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
                 this.resetAttackCooldown();
-                this.goalOwner.playSound(SoundEvents.SKELETON_HURT, 1.0F, 4.0F);
+                this.goalOwner.playSound(SoundEvents.STRAY_HURT, 1.0F, -1.0F);
                 this.goalOwner.doHurtTarget(entity);
                 this.goalOwner.getNavigation().stop();
             }
@@ -461,8 +461,25 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
 
     }
 
+    
     @Override
     public AnimationFactory getFactory() {
         return this.factory;
+    }
+    
+    protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
+        this.playSound(SoundEvents.STRAY_STEP, 0.15F, 1.0F);
+    }
+
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.STRAY_AMBIENT;
+    }
+
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.STRAY_DEATH;
+    }
+
+    protected float getSoundVolume() {
+        return 0.2F;
     }
 }

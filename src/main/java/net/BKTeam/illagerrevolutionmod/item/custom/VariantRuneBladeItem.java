@@ -118,4 +118,23 @@ public class VariantRuneBladeItem extends RunedSword{
         }
         return super.use(pLevel,pPlayer,pUsedHand);
     }
+    
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        if(Screen.hasShiftDown()) {
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish1"));
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2"));
+
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1"));
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2"));
+
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1"));
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2"));
+
+        } else {
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1"));
+            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2"));
+
+        }
+    }
 }
