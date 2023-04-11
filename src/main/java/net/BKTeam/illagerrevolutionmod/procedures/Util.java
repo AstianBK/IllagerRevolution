@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
+import net.BKTeam.illagerrevolutionmod.ModConstants;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
@@ -192,6 +193,7 @@ public class Util {
         List<BlockPos> pos=blockPosList(livingEntity,number);
         for(int i=0;i<number;i++){
             ZombifiedEntity zombie=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),level);
+            zombie.setIdSoul(ModConstants.LIST_NAME_ZOMBIFIED.get(zombie.level.random.nextInt(0,4)));
             zombie.spawnAnim();
             zombie.addEffect(new MobEffectInstance(init_effect.DEATH_MARK.get(),999999,0));
             zombie.moveTo(pos.get(i),0.0f,0.0f);
