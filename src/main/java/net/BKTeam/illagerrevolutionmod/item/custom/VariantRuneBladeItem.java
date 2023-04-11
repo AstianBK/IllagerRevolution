@@ -8,8 +8,11 @@ import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -22,9 +25,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
