@@ -127,6 +127,10 @@ public class ModItems {
     public static final RegistryObject<Item> PILLAGER_LEGGINS_ARMOR = ITEMS.register("pillager_leggins_armor",
             ()-> new ArmorPillagerVestItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.LEGS,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+    
+    public static final RegistryObject<Item> PILLAGER_BOOTS_ARMOR = ITEMS.register("pillager_boots_armor",
+            ()-> new ArmorPillagerVestItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.FEET,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> VINDICATOR_JACKET_ARMOR = ITEMS.register("vindicator_jacket_armor",
             ()-> new ArmorVindicatorJacketItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.CHEST,
