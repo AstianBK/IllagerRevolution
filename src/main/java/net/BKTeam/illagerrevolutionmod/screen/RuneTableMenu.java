@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,19 +48,19 @@ public class RuneTableMenu extends AbstractContainerMenu {
                 return stack.is(ModItems.RUNE_TABLET_UNDYING_BONE.get()) || stack.is(ModItems.RUNE_TABLET_UNDYING_FLESH.get());
             }
         });
-        this.addSlot(new Slot(this.core, 1, 17, 17){
+        this.addSlot(new Slot(this.core, 1, 17, 18){
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                    return stack.is(ModItems.RUSTIC_CHISEL.get());
+                    return stack.is(Items.LAPIS_LAZULI);
                 }
         });
-        this.addSlot(new Slot(this.core, 2, 77, 18){
+        this.addSlot(new Slot(this.core, 2, 79, 17){
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                     return stack.getItem() instanceof RunedSword;
                 }
         });
-        this.addSlot(new ModResultSlot(inv.player,core,resultContainer , 3, 80, 60));
+        this.addSlot(new ModResultSlot(inv.player,core,resultContainer , 3, 79, 60));
 
     }
 
@@ -101,7 +102,7 @@ public class RuneTableMenu extends AbstractContainerMenu {
 
     private boolean hasRecipe() {
         boolean hasRecipe2 = core.getItem(2).getItem() instanceof VariantRuneBladeItem && core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_FLESH.get();
-        boolean hasChisel = core.getItem(1).getItem() == ModItems.RUSTIC_CHISEL.get();
+        boolean hasChisel = core.getItem(1).getItem() == Items.LAPIS_LAZULI;
         boolean hasRecipe1= core.getItem(2).getItem() instanceof SwordRuneBladeItem && core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get() ;
 
         return (hasRecipe1 || hasRecipe2) && hasChisel;

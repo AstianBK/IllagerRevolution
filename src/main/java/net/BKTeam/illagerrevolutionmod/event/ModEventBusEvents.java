@@ -3,17 +3,21 @@ package net.BKTeam.illagerrevolutionmod.event;
 
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
+import net.BKTeam.illagerrevolutionmod.event.loot.*;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,6 +35,8 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 import software.bernie.geckolib3.world.storage.GeckoLibIdTracker;
 import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
+
+import javax.annotation.Nonnull;
 
 import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
 
@@ -91,5 +97,31 @@ public class ModEventBusEvents {
         GeoArmorRenderer.registerArmorRenderer(ArmorPillagerVestItem.class, PillagerPlayerArmorRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorVindicatorJacketItem.class, VindicatorPlayerArmorRenderer::new);
     }
+    
+    @SubscribeEvent
+    public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>>
+                                                           event) {
+        event.getRegistry().registerAll(
+                new RuneBoneFragmentLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_bone_fragment_loot")),
+                new RuneFleshFragmentLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_flesh_fragment_loot")),
+                new RuneUndyingFragmentLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_undying_fragment_loot")),
+                new IllusionerRobeLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"illusioner_robe_loot")),
+                new EvokerRobeLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"evoker_robe_loot")),
+                new PillagerVestLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_vest_loot")),
+                new PillagerPantsLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_pants_loot")),
+                new PillagerBootsLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_boots_loot")),
+                new VindicatorJacketLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_jacket_loot")),
+                new VindicatorPantsLootDrop.Serializer().setRegistryName
+                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_pants_loot"))
+        );
+    }
 }
-

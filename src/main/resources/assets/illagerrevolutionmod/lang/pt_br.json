@@ -1,0 +1,90 @@
+{
+  "block.illagerrevolutionmod.rune_table_block": "Mesa rúnica",
+  "item.illagerrevolutionmod.rustic_chisel": "Cinzel de pedra",
+
+  "item.illagerrevolutionmod.rune_fragment_bone": "Estilhaço Rúnico",
+  "item.illagerrevolutionmod.rune_fragment_flesh": "Estilhaço Rúnico",
+  "item.illagerrevolutionmod.rune_fragment_undying": "Estilhaço Rúnico",
+  "item.illagerrevolutionmod.rune_tablet_undying_bone": "Tablete rúnico",
+  "item.illagerrevolutionmod.rune_tablet_undying_flesh": "Tablete rúnico",
+
+
+  "item.illagerrevolutionmod.illagerminer_spawn_egg": "Gerar illager mineiro",
+  "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Gerar illager rastreador",
+  "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Gerar illager domador de feras",
+  "item.illagerrevolutionmod.scrapper_spawn_egg": "Gerar Estripador",
+  "item.illagerrevolutionmod.blade_knight_spawn_egg": "Gerar illager cavaleiro da espada",
+
+
+  "item.illagerrevolutionmod.helmet_miner_reinforced": "Capacete Mineração de Illagium",
+  "item.illagerrevolutionmod.goggles_miner_reinforced": "Lentes rastreador de Illagium",
+  "item.illagerrevolutionmod.helmet_miner": "Capacete de Mineração",
+  "item.illagerrevolutionmod.goggles_miner": "Lentes de rastreador",
+  "item.illagerrevolutionmod.evoker_robe_armor": "Manto do invocador",
+  "item.illagerrevolutionmod.illusioner_robe_armor": "Manto do ilusionista",
+  "item.illagerrevolutionmod.pillager_vest_armor": "Peitoral de saqueador",
+  "item.illagerrevolutionmod.pillager_leggins_armor": "Calças de saqueador",
+  "item.illagerrevolutionmod.pillager_boots_armor": "Botas de saqueador",
+  "item.illagerrevolutionmod.vindicator_jacket_armor": "Peitoral de vingador",
+  "item.illagerrevolutionmod.vindicator_leggins_armor": "Calças de vingador",
+
+  "item.illagerrevolutionmod.scrapper_armor_illagium": "Armadura de illagium para estripador",
+  "item.illagerrevolutionmod.scrapper_armor_netherite": "Armadura de netherita para estripador",
+  "item.illagerrevolutionmod.scrapper_armor_diamond": "Armadura de diamante para estripador",
+  "item.illagerrevolutionmod.scrapper_armor_gold": "Armadura de ouro para estripador",
+  "item.illagerrevolutionmod.scrapper_armor_iron": "Armadura de ferro para estripador",
+  "item.illagerrevolutionmod.claws_armor_illagium": "Garras de illagium para estripador",
+  "item.illagerrevolutionmod.claws_armor_netherite": "Garras de netherita para estripador",
+  "item.illagerrevolutionmod.claws_armor_diamond": "Garras de diamante para estripador",
+  "item.illagerrevolutionmod.claws_armor_gold": "Garras de ouro para estripador",
+  "item.illagerrevolutionmod.claws_armor_iron": "Garras de ferro para estripador",
+
+
+  "item.illagerrevolutionmod.encrusted_lapis": "Lapislàzuli embutido",
+  "item.illagerrevolutionmod.illagium": "Lingote de illagium",
+  "item.illagerrevolutionmod.scraper_claw": "Garra de estripador",
+
+
+  "effect.illagerrevolutionmod.deep_wound": "Ferida profunda",
+  "effect.illagerrevolutionmod.death_mark": "Alma Presa",
+
+
+  "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
+  "item.illagerrevolutionmod.illagium_cleaver": "Espada de illagium",
+  "item.illagerrevolutionmod.illagium_helberd": "Machado de illagium",
+  "item.illagerrevolutionmod.illagium_hammer": "Martelo de illagium",
+  "item.illagerrevolutionmod.illagium_scythe": "Foice de illagium",
+  "item.illagerrevolutionmod.illagium_mace": "Malho de illagium",
+  "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
+
+  "enchantment.illagerrevolutionmod.serrated_edge": "Borda irregular",
+  "enchantment.illagerrevolutionmod.wary_lenses": "Òculos cautelosos",
+
+  "entity.illagerrevolutionmod.raker": "Estripador",
+  "entity.illagerrevolutionmod.illagerminer": "Mineiro illager",
+  "entity.illagerrevolutionmod.illagerminerbadlands": "Illager rastreador",
+  "entity.illagerrevolutionmod.blade_knight": "Illager cavaleiro da espada",
+  "entity.illagerrevolutionmod.illagerbeasttamer": "Illager domador de feras",
+  "entity.illagerrevolutionmod.zombified": "Illager zombi",
+
+  "itemGroup.illagerrevolutiontab":"Illager Revolution",
+
+  "sounds.illagerrevolutionmod.tamer_whistle": "domador de feras assobio",
+
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Runa: Carne Inmortal§r",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Manten §6SHIFT§r para mas informaciòn",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5to release a stored soul",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2": "§5hold§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5to raise them as undead followers",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulward": "§5§lSoul Ward:§r §5If fully charged, your blade will protect you from death, consuming all souls in the process",
+
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1": "§l§5Runa: Hueso Inmortal§r",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2": "Manten §6SHIFT§r para mas informaciòn",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish1": "§5§lSoul Nourish:§r §5Slain mobs will have their souls absorbed into the sword increasing your armor and healing all summoned followers",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5while having at least 3 souls ",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2": "§5to summon a Fallen Knight follower to aid you in battle temporarily",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability"
+}

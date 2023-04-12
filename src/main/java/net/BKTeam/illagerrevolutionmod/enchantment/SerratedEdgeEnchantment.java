@@ -41,14 +41,14 @@ public class SerratedEdgeEnchantment extends Enchantment {
     @Override
     public void doPostAttack(LivingEntity pAttacker, Entity pTarget, int pLevel) {
         LivingEntity livingEntity= (LivingEntity) pTarget;
-        int ampliEffect=livingEntity.hasEffect(init_effect.BLEEDING.get()) ? livingEntity.getEffect(init_effect.BLEEDING.get()).getAmplifier() : 0;
+        int ampliEffect=livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) ? livingEntity.getEffect(init_effect.DEEP_WOUND.get()).getAmplifier() : 0;
         int ampliBleeding=0;
-        if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==1){
+        if(livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) && ampliEffect==1){
             ampliBleeding=2;
-        }else if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==0){
+        }else if(livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) && ampliEffect==0){
             ampliBleeding=1;
         }
-        livingEntity.addEffect(new MobEffectInstance(init_effect.BLEEDING.get(),160,ampliBleeding));
+        livingEntity.addEffect(new MobEffectInstance(init_effect.DEEP_WOUND.get(),160,ampliBleeding));
 
     }
 }

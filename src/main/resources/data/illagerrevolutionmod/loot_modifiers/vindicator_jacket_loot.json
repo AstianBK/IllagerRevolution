@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/woodland_mansion"
+    }
+  ],
+  "addition": "illagerrevolutionmod:vindicator_jacket_armor",
+  "type": "illagerrevolutionmod:vindicator_jacket_loot"
+}

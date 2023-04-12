@@ -45,6 +45,9 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_LAUGH =
             registerSoundEvent("blade_knight_laugh");
 
+        public static final RegistryObject<SoundEvent> FALLEN_KNIGHT_REVIVE =
+                registerSoundEvent("fallen_knight_revive");
+
         public static final RegistryObject<SoundEvent> DEATH_MARK_SOUND =
             registerSoundEvent("death_mark_sound");
 

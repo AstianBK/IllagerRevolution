@@ -81,10 +81,6 @@ public class ModItems {
             ()->new Soul_WitherItem(new Item.Properties().stacksTo(1)));
 
 
-    public static final RegistryObject<Item> FALLEN_KNIGHT_SPAWN_EGG = ITEMS.register("fallen_knight_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntityTypes.FALLEN_KNIGHT,0x948e8d, 0x573f2c,
-                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
-
     public static final RegistryObject<Item> ILLAGERMINERBADLANDS_SPAWN_EGG = ITEMS.register("illagerminerbadlands_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGERMINERBADLANDS,0x948e8d, 0x573f2c,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
@@ -126,6 +122,10 @@ public class ModItems {
 
     public static final RegistryObject<Item> PILLAGER_LEGGINS_ARMOR = ITEMS.register("pillager_leggins_armor",
             ()-> new ArmorPillagerVestItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.LEGS,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+    
+    public static final RegistryObject<Item> PILLAGER_BOOTS_ARMOR = ITEMS.register("pillager_boots_armor",
+            ()-> new ArmorPillagerVestItem(ModArmorMaterials.ILLAGERARMOR, EquipmentSlot.FEET,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> VINDICATOR_JACKET_ARMOR = ITEMS.register("vindicator_jacket_armor",

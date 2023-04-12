@@ -90,7 +90,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
                 .add(Attributes.MAX_HEALTH, 32.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
                 .add(Attributes.ARMOR,8.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 45.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f).build();
@@ -259,7 +259,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.entityData.set(UNARMED,b);
         this.unarmedTimer= b ? 10 : 0;
         if (b){
-            this.level.playSound(null,this, ModSounds.SOUL_RELEASE.get(), SoundSource.AMBIENT,1.0f,1.0f);
+            this.level.playSound(null,this, SoundEvents.SKELETON_DEATH, SoundSource.AMBIENT,1.0f,1.0f);
         }
     }
     public boolean itIsLinked() {
@@ -274,7 +274,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.entityData.set(REARMED,b);
         this.rearmedTimer= b ? 20 : 0;
         if (b){
-            this.level.playSound(null,this, ModSounds.SOUL_RELEASE.get(), SoundSource.AMBIENT,1.0f,1.0f);
+            this.level.playSound(null,this, ModSounds.FALLEN_KNIGHT_REVIVE.get(), SoundSource.AMBIENT,1.5f,1.0f);
         }
     }
 

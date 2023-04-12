@@ -14,10 +14,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class RuneUndyingFragmentLootDrop extends LootModifier {
+public class PillagerVestLootDrop extends LootModifier {
     private final Item addition;
 
-    protected RuneUndyingFragmentLootDrop(LootItemCondition[] conditionsIn, Item addition) {
+    protected PillagerVestLootDrop(LootItemCondition[] conditionsIn, Item addition) {
         super(conditionsIn);
         this.addition = addition;
     }
@@ -31,18 +31,18 @@ public class RuneUndyingFragmentLootDrop extends LootModifier {
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<RuneUndyingFragmentLootDrop> {
+    public static class Serializer extends GlobalLootModifierSerializer<PillagerVestLootDrop> {
 
         @Override
-        public RuneUndyingFragmentLootDrop read(ResourceLocation name, JsonObject object,
-                                              LootItemCondition[] conditionsIn) {
+        public PillagerVestLootDrop read(ResourceLocation name, JsonObject object,
+                                          LootItemCondition[] conditionsIn) {
             Item addition = ForgeRegistries.ITEMS.getValue(
                     new ResourceLocation(GsonHelper.getAsString(object, "addition")));
-            return new RuneUndyingFragmentLootDrop(conditionsIn, addition);
+            return new PillagerVestLootDrop(conditionsIn, addition);
         }
 
         @Override
-        public JsonObject write(RuneUndyingFragmentLootDrop instance) {
+        public JsonObject write(PillagerVestLootDrop instance) {
             JsonObject json = makeConditions(instance.conditions);
             json.addProperty("addition", ForgeRegistries.ITEMS.getKey(instance.addition).toString());
             return json;
