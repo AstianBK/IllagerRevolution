@@ -22,10 +22,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
@@ -34,11 +31,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class VariantRuneBladeItem extends RunedSword{
-    private final int defense;
+    private double defense;
     private final float attackDamage;
     private final float attackSpeed;
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
-    private static final UUID ARMOR_RUNE_BLADE_ITEM=UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E");
+    private static final UUID ARMOR_RUNE_BLADE_ITEM=UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
     public VariantRuneBladeItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
         this.defense=0;
@@ -47,12 +44,14 @@ public class VariantRuneBladeItem extends RunedSword{
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)pAttackSpeedModifier, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ARMOR, new AttributeModifier(ARMOR_RUNE_BLADE_ITEM, "Armor modifier",this.defense, AttributeModifier.Operation.ADDITION));
         this.defaultModifiers=builder.build();
     }
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
+        super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
         CompoundTag nbt = null;
         if(entity instanceof Player){
+            this.defense=(double)this.souls*1.5d;
+
             if (this.souls <= 6) {
                 nbt = itemStack.getOrCreateTag();
             }
@@ -60,7 +59,11 @@ public class VariantRuneBladeItem extends RunedSword{
                 nbt.putInt("CustomModelData", this.souls);
             }
         }
-        super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
+        return super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class VariantRuneBladeItem extends RunedSword{
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.attackSpeed , AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ARMOR, new AttributeModifier(ARMOR_RUNE_BLADE_ITEM, "armor modifier", (double)this.defense+(double)this.souls*1.5d, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ARMOR, new AttributeModifier(ARMOR_RUNE_BLADE_ITEM, "armor modifier", this.defense, AttributeModifier.Operation.ADDITION));
         if(slot == EquipmentSlot.MAINHAND) {
             return builder.build();
         }
@@ -100,6 +103,7 @@ public class VariantRuneBladeItem extends RunedSword{
                     pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-3);
                 }
             }else {
+                pPlayer.sendMessage(Component.nullToEmpty(String.valueOf(pPlayer.getAttribute(Attributes.ARMOR).getValue())),pPlayer.getUUID());
                 if (!pLevel.isClientSide && flag2) {
                     List<FallenKnight> knights=((INecromancerEntity)pPlayer).getBondedMinions();
                     boolean flag= Util.checkCanLink(knights);

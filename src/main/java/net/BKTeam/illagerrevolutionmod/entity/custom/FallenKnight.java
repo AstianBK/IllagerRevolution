@@ -4,10 +4,12 @@ import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
@@ -32,6 +34,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -348,7 +351,6 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         this.setLink(pCompound.getBoolean("ItIsLinked"));
         this.setDamageLink(pCompound.getBoolean("damageLink"));
         this.updateListLinked();
-        this.updateTimerDispawn();
     }
 
     public void removeEntityOfList(){
@@ -378,10 +380,11 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     }
 
     private void updateListLinked(){
-        if(this.getOwner()!=null){
+        if(this.getIdOwner()!=null){
             if(this.itIsLinked()){
                 if(this.getOwner() instanceof INecromancerEntity entity){
                     entity.getBondedMinions().add(this);
+                    this.dispawnTimer=150;
                 }
             }
         }
@@ -389,12 +392,6 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
             if(this.getNecromancer() instanceof Blade_KnightEntity bk){
                 bk.getKnights().add(this);
             }
-        }
-    }
-    private void updateTimerDispawn(){
-        if(this.getOwner()!=null){
-            this.dispawnTimer=300;
-            this.isEndless=true;
         }
     }
     private <E extends IAnimatable>PlayState predicate(AnimationEvent<E> event) {

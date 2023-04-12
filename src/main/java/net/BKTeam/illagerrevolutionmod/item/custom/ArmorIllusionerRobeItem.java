@@ -5,7 +5,10 @@ import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -43,4 +46,15 @@ public class ArmorIllusionerRobeItem extends GeoArmorItem implements IAnimatable
         return PlayState.CONTINUE;
     }
 
+    @Override
+    public void onArmorTick(ItemStack stack, Level level, Player player) {
+        if(player.getHealth() < player.getMaxHealth()*20/100 ){
+            if(player.hasEffect(MobEffects.INVISIBILITY)){
+                player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,99999999));
+            }
+        }else if (player.hasEffect( MobEffects.INVISIBILITY)){
+            player.removeEffect(MobEffects.INVISIBILITY);
+        }
+        super.onArmorTick(stack, level, player);
+    }
 }

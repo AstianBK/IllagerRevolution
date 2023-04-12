@@ -13,17 +13,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.EvokerFangs;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -42,11 +37,9 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
-import org.lwjgl.system.CallbackI;
 
 
 import java.util.List;
-import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public class Events {
@@ -64,6 +57,11 @@ public class Events {
                             event.setCanceled(true);
                             effectFullAmorPillager(player,entity,bulletEntity,event.getAmount());
                         }
+                    }else if(player.getMainHandItem().is(Items.BOW)){
+                        if(player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.ILLUSIONER_ROBE_ARMOR.get())){
+                            entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION,200,0));
+                            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,100,0));
+                        }
                     }
                 }else if(hasSetFullArmorVindicator(player)){
                     if(player.getMainHandItem().getItem() instanceof AxeItem){
@@ -71,22 +69,16 @@ public class Events {
                         entity.hurt(DamageSource.GENERIC, event.getAmount()+2.0f);
                     }
                 }else if(player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.EVOKER_ROBE_ARMOR.get())){
-                    if(player.level.random.nextFloat() < 0.3f){
-                        player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(100,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
-                        for(int i=0;i<3;i++){
-                               for(int j=0;j<10;j++){
-                                   float f4 = Mth.cos(2*j*10)*(0.5f*i);
-                                   float f5 = Mth.sin(2*j*10)*(0.5f*i);
-                                   EvokerFangs fangs=new EvokerFangs(player.level,entity.getOnPos().getX()+(double)f4,entity.getOnPos().getY()+1.0d,entity.getOnPos().getZ()+(double)f5,0f,5,player);
-                                   player.level.addFreshEntity(fangs);
-                               }
-                        }
+                    if(player.level.random.nextFloat() < 0.2f){
+                        player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(1,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
+                        EvokerFangs fangs=new EvokerFangs(player.level,entity.getOnPos().getX(),entity.getOnPos().getY()+1.0d,entity.getOnPos().getZ(),0f,0,player);
+                        player.level.addFreshEntity(fangs);
                     }
                 }
             }
             if(entity instanceof Player player){
                 if(player.getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
-                    List<FallenKnight> knights=player.level.getEntitiesOfClass(FallenKnight.class,player.getBoundingBox().inflate(50.0d),e->e.getOwner()==player);
+                    List <FallenKnight> knights= player.level.getEntitiesOfClass(FallenKnight.class,player.getBoundingBox().inflate(50.0d),e -> e.getOwner()==player);
                     if(!knights.isEmpty()){
                         if(Util.checkIsOneLinked(knights)){
                             player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -100,11 +92,15 @@ public class Events {
                     }
                 }
                 if(player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.EVOKER_ROBE_ARMOR.get())){
-                    if(player.level.random.nextFloat() < 0.2f){
-                        if(attacker!=null){
-                            player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(1,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
-                            EvokerFangs fangs=new EvokerFangs(player.level,attacker.getOnPos().getX(),attacker.getOnPos().getY()+1.0d,attacker.getOnPos().getZ(),0f,0,player);
-                            player.level.addFreshEntity(fangs);
+                    if(player.level.random.nextFloat() < 0.3f){
+                        player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(100,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
+                        for(int i=0;i<3;i++){
+                            for(int j=0;j<10;j++){
+                                float f4 = Mth.cos(2*j*10)*(0.5f*i);
+                                float f5 = Mth.sin(2*j*10)*(0.5f*i);
+                                EvokerFangs fangs=new EvokerFangs(player.level,attacker.getOnPos().getX()+(double)f4,attacker.getOnPos().getY()+1.0d,attacker.getOnPos().getZ()+(double)f5,0f,5,player);
+                                player.level.addFreshEntity(fangs);
+                            }
                         }
                     }
                 }
@@ -186,7 +182,7 @@ public class Events {
             i=percentDamageForEnchantmentLevel(EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING,itemStack));
         }
         int maxHurt= (int) (itemStack.getMaxDamage()+(itemStack.getMaxDamage()*(i)));
-        itemStack.hurtAndBreak(maxHurt*j/100,player,e-> e.broadcastBreakEvent(EquipmentSlot.HEAD));
+        itemStack.hurtAndBreak(maxHurt*j/100,player,e -> e.broadcastBreakEvent(EquipmentSlot.HEAD));
     }
     private static float percentDamageForEnchantmentLevel(int pLevel){
         float i;

@@ -117,6 +117,7 @@ public class ReanimatedEntity extends Monster {
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         UUID uuid;
+        UUID uuid2;
         if (pCompound.hasUUID("Owner")) {
             uuid = pCompound.getUUID("Owner");
         } else {
@@ -127,12 +128,12 @@ public class ReanimatedEntity extends Monster {
             this.setIdOwner(uuid);
         }
         if (pCompound.hasUUID("IdNecromancer")) {
-            uuid = pCompound.getUUID("IdNecromancer");
+            uuid2 = pCompound.getUUID("IdNecromancer");
         } else {
             String s = pCompound.getString("IdNecromancer");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
+            uuid2 = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
         }
-        if (uuid != null) {
+        if (uuid2 != null) {
             this.setIdNecromancer(pCompound.getUUID("IdNecromancer"));
         }
     }
