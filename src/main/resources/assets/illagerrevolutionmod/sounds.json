@@ -76,6 +76,13 @@
     ]
   },
 
+  "fallen_knight_revive": {
+    "subtitle": "sounds.illagerrevolutionmod.fallen_knight_revive",
+    "sounds": [
+      "illagerrevolutionmod:fallen_knight_revive"
+    ]
+  },
+
   "bleeding_proc": {
     "subtitle": "sounds.illagerrevolutionmod.bleeding_proc",
     "sounds": [
