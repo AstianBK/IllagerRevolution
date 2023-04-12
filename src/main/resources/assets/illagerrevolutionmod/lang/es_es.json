@@ -24,7 +24,7 @@
   "item.illagerrevolutionmod.illusioner_robe_armor": "Tunica de ilusionista",
   "item.illagerrevolutionmod.pillager_vest_armor": "Chaleco de saqueador",
   "item.illagerrevolutionmod.pillager_leggins_armor": "Pantalones de saqueador",
-  "item.illagerrevolutionmod.pillager_boots_armor": "Pillager Boots",
+  "item.illagerrevolutionmod.pillager_boots_armor": "Botas de saqueador",
   "item.illagerrevolutionmod.vindicator_jacket_armor": "Chaleco de vindicador",
   "item.illagerrevolutionmod.vindicator_leggins_armor": "Pantalones de vindicador",
 
@@ -45,7 +45,7 @@
   "item.illagerrevolutionmod.scraper_claw": "Garra de rasgador",
 
 
-  "effect.illagerrevolutionmod.bleeding": "Herida profunda",
+  "effect.illagerrevolutionmod.deep_wound": "Herida profunda",
   "effect.illagerrevolutionmod.death_mark": "Alma Atrapada",
 
 
