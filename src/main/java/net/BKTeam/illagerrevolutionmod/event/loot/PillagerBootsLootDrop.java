@@ -14,10 +14,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class RuneUndyingFragmentLootDrop extends LootModifier {
+public class PillagerBootsLootDrop extends LootModifier {
     private final Item addition;
 
-    protected RuneUndyingFragmentLootDrop(LootItemCondition[] conditionsIn, Item addition) {
+    protected PillagerBootsLootDrop(LootItemCondition[] conditionsIn, Item addition) {
         super(conditionsIn);
         this.addition = addition;
     }
@@ -25,24 +25,24 @@ public class RuneUndyingFragmentLootDrop extends LootModifier {
     @Nonnull
     @Override
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-        if(context.getRandom().nextInt(0,10)==1) {
+        if(context.getRandom().nextInt(0,5)==1) {
             generatedLoot.add(new ItemStack(addition, 1));
         }
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<RuneUndyingFragmentLootDrop> {
+    public static class Serializer extends GlobalLootModifierSerializer<PillagerBootsLootDrop> {
 
         @Override
-        public RuneUndyingFragmentLootDrop read(ResourceLocation name, JsonObject object,
-                                              LootItemCondition[] conditionsIn) {
+        public PillagerBootsLootDrop read(ResourceLocation name, JsonObject object,
+                                          LootItemCondition[] conditionsIn) {
             Item addition = ForgeRegistries.ITEMS.getValue(
                     new ResourceLocation(GsonHelper.getAsString(object, "addition")));
-            return new RuneUndyingFragmentLootDrop(conditionsIn, addition);
+            return new PillagerBootsLootDrop(conditionsIn, addition);
         }
 
         @Override
-        public JsonObject write(RuneUndyingFragmentLootDrop instance) {
+        public JsonObject write(PillagerBootsLootDrop instance) {
             JsonObject json = makeConditions(instance.conditions);
             json.addProperty("addition", ForgeRegistries.ITEMS.getKey(instance.addition).toString());
             return json;

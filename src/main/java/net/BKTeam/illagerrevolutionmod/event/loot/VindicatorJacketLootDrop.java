@@ -25,7 +25,7 @@ public class VindicatorJacketLootDrop extends LootModifier {
     @Nonnull
     @Override
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-        if(context.getRandom().nextFloat() > 0.05f) {
+        if(context.getRandom().nextInt(0,7)==1) {
             generatedLoot.add(new ItemStack(addition, 1));
         }
         return generatedLoot;
