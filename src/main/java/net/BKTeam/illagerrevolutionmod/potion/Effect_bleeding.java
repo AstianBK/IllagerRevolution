@@ -33,7 +33,7 @@ public class Effect_bleeding extends MobEffect {
 
     @Override
     public @NotNull String getDescriptionId() {
-        return "effect.illagerrevolutionmod.bleeding";
+        return "effect.illagerrevolutionmod.deep_wound";
     }
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
@@ -52,15 +52,15 @@ public class Effect_bleeding extends MobEffect {
             entity.level.playSound(null,entity.blockPosition(),SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.AMBIENT,8.0f,-2.0f);
             entity.level.playSound(null,entity.blockPosition(),ModSounds.BLEEDING_PROC.get(), SoundSource.AMBIENT,2.0f,1.0f);
             entity.hurt(DamageSource.GENERIC,7);
-            entity.removeEffect(init_effect.BLEEDING.get());
+            entity.removeEffect(init_effect.DEEP_WOUND.get());
         }
     }
 
     @SubscribeEvent
     public static void onLivingHeal(LivingHealEvent event){
         LivingEntity entity=event.getEntityLiving();
-        if(entity.hasEffect(init_effect.BLEEDING.get())){
-            int ampli=entity.getEffect(init_effect.BLEEDING.get()).getAmplifier();
+        if(entity.hasEffect(init_effect.DEEP_WOUND.get())){
+            int ampli=entity.getEffect(init_effect.DEEP_WOUND.get()).getAmplifier();
             if(ampli==1){
                 event.setCanceled(true);
             }
