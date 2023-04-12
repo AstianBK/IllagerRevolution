@@ -118,7 +118,8 @@ public class Events {
 
     public static boolean hasSetFullArmorPillager(Player player){
         return player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorPillagerVestItem &&
-                player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof  ArmorPillagerVestItem;
+                player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof  ArmorPillagerVestItem &&
+                player.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof  ArmorPillagerVestItem;
     }
 
     public static boolean hasSetFullArmorVindicator(Player player){
