@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -81,7 +82,7 @@ public class ModResultSlot extends Slot {
 
     private boolean hasRecipe() {
         boolean hasItemInZeroSlot = core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_BONE.get() || core.getItem(0).getItem() == ModItems.RUNE_TABLET_UNDYING_FLESH.get();
-        boolean hasItemInFirstSlot = core.getItem(1).getItem() == ModItems.RUSTIC_CHISEL.get();
+        boolean hasItemInFirstSlot = core.getItem(1).getItem() == Items.LAPIS_LAZULI;
         boolean hasItemInSecondSlot = core.getItem(2).getItem() instanceof RunedSword;
 
         return hasItemInZeroSlot && hasItemInFirstSlot && hasItemInSecondSlot;
