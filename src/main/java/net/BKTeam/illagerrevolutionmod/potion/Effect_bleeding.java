@@ -46,7 +46,7 @@ public class Effect_bleeding extends MobEffect {
             if ((entity.isSprinting() || (!(entity instanceof Player || entity instanceof AbstractSkeleton || entity instanceof AbstractGolem || entity instanceof Blaze || entity instanceof Vex || entity instanceof WitherBoss))) ) {
                 entity.hurt(DamageSource.GENERIC, 1);
                 bleedingParticle(entity);
-            }else{
+            }else if(!(entity instanceof Player)){
                 entity.removeEffect(this);
             }
         }else {
