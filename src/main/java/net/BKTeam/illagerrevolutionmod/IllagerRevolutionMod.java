@@ -88,9 +88,7 @@ public class IllagerRevolutionMod {
     
     private void clientSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(ModEntityTypes::registerWaveMembers);
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.RUNE_TABLE_BLOCK.get(), RenderType.translucent());
 
-        MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -110,6 +108,10 @@ public class IllagerRevolutionMod {
         event.enqueueWork(() -> {
             OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PLAYER_HEALTH_ELEMENT, IllagerRevolutionMod.MOD_ID + ":hearts", new Hearts_Effect());
         });
+
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.RUNE_TABLE_BLOCK.get(), RenderType.translucent());
+
+        MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
     private void RuleSetup(FMLCommonSetupEvent event){
         event.enqueueWork(()->{
