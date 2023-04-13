@@ -30,7 +30,7 @@ public class Hearts_Effect implements IIngameOverlay {
         if (!gui.shouldDrawSurvivalElements()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if(player.hasEffect(init_effect.BLEEDING.get()) || player.hasEffect(init_effect.DEATH_MARK.get())){
+        if(player.hasEffect(init_effect.DEEP_WOUND.get()) || player.hasEffect(init_effect.DEATH_MARK.get())){
             mStack.pushPose();
             mStack.translate(0, 0, 0.01);
 
@@ -72,7 +72,7 @@ public class Hearts_Effect implements IIngameOverlay {
 
             gui.left_height += extraHealthRows * extraRowHeight;
 
-            String s1=player.hasEffect(init_effect.BLEEDING.get()) ? "" : "2";
+            String s1=player.hasEffect(init_effect.DEEP_WOUND.get()) ? "" : "2";
             RenderSystem.setShaderTexture(0, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/gui/icons"+s1+".png"));
 
             for (int i = absorptionHearts + hearts; i > absorptionHearts + hearts; -- i) {

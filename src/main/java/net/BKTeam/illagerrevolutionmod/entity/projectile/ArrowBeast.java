@@ -35,14 +35,14 @@ public class ArrowBeast extends Arrow {
         super.onHitEntity(pResult);
         if(!this.level.isClientSide){
             if(pResult.getEntity() instanceof LivingEntity livingEntity){
-                int ampliEffect=livingEntity.hasEffect(init_effect.BLEEDING.get()) ? livingEntity.getEffect(init_effect.BLEEDING.get()).getAmplifier() : 0;
+                int ampliEffect=livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) ? livingEntity.getEffect(init_effect.DEEP_WOUND.get()).getAmplifier() : 0;
                 int ampliBleeding=0;
-                if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==1){
+                if(livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) && ampliEffect==1){
                     ampliBleeding=2;
-                }else if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==0){
+                }else if(livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) && ampliEffect==0){
                     ampliBleeding=1;
                 }
-                livingEntity.addEffect(new MobEffectInstance(init_effect.BLEEDING.get(),100,ampliBleeding));
+                livingEntity.addEffect(new MobEffectInstance(init_effect.DEEP_WOUND.get(),100,ampliBleeding));
             }
         }
     }

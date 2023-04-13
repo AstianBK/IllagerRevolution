@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -15,6 +16,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.EvokerFangs;
@@ -70,9 +72,16 @@ public class Events {
                     }
                 }else if(player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.EVOKER_ROBE_ARMOR.get())){
                     if(player.level.random.nextFloat() < 0.2f){
+                        for(int i=0;i<9;i++){
+                            float f = (float)Mth.atan2(entity.getZ() - player.getZ(), entity.getX() - player.getX());
+                            double d2 = 1.25D * (double)(i + 1);
+                            double f1 = Mth.cos(f)*d2;
+                            double f2 = Mth.sin(f)*d2;
+                            EvokerFangs fangs=new EvokerFangs(player.level,player.getOnPos().getX()+f1,player.getOnPos().getY()+1.0d,player.getOnPos().getZ()+f2,0f,10,player);
+                            player.level.addFreshEntity(fangs);
+                        }
                         player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(1,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
-                        EvokerFangs fangs=new EvokerFangs(player.level,entity.getOnPos().getX(),entity.getOnPos().getY()+1.0d,entity.getOnPos().getZ(),0f,0,player);
-                        player.level.addFreshEntity(fangs);
+
                     }
                 }
             }
@@ -93,13 +102,15 @@ public class Events {
                 }
                 if(player.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.EVOKER_ROBE_ARMOR.get())){
                     if(player.level.random.nextFloat() < 0.3f){
-                        player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(100,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
-                        for(int i=0;i<3;i++){
-                            for(int j=0;j<10;j++){
-                                float f4 = Mth.cos(2*j*10)*(0.5f*i);
-                                float f5 = Mth.sin(2*j*10)*(0.5f*i);
-                                EvokerFangs fangs=new EvokerFangs(player.level,attacker.getOnPos().getX()+(double)f4,attacker.getOnPos().getY()+1.0d,attacker.getOnPos().getZ()+(double)f5,0f,5,player);
-                                player.level.addFreshEntity(fangs);
+                        if(attacker!=null){
+                            player.getItemBySlot(EquipmentSlot.CHEST).hurtAndBreak(100,player,e->e.broadcastBreakEvent(EquipmentSlot.CHEST));
+                            for(int i=0;i<3;i++){
+                                for(int j=0;j<10;j++){
+                                    float f4 = Mth.cos(2*j*10)*(0.5f*i);
+                                    float f5 = Mth.sin(2*j*10)*(0.5f*i);
+                                    EvokerFangs fangs=new EvokerFangs(player.level,attacker.getOnPos().getX()+(double)f4,attacker.getOnPos().getY()+1.0d,attacker.getOnPos().getZ()+(double)f5,0f,5,player);
+                                    player.level.addFreshEntity(fangs);
+                                }
                             }
                         }
                     }

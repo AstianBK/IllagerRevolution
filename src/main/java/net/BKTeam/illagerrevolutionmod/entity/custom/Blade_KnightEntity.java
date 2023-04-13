@@ -75,7 +75,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
 
     @Override
     public boolean canBeAffected(MobEffectInstance pPotioneffect) {
-        if(pPotioneffect.getEffect()==init_effect.BLEEDING.get()){
+        if(pPotioneffect.getEffect()==init_effect.DEEP_WOUND.get()){
             return this.isLowLife();
         }
         return pPotioneffect.getEffect() != init_effect.DEATH_MARK.get() && super.canBeAffected(pPotioneffect);

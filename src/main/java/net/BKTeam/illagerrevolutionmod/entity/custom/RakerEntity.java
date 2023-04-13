@@ -104,7 +104,7 @@ public class RakerEntity extends TamableAnimal implements IAnimatable, IHasInven
             if (pEntity instanceof LivingEntity livingEntity) {
                 ItemStack armor;
                 int timeBleeding=60;
-                int ampliEffect=livingEntity.hasEffect(init_effect.BLEEDING.get()) ? livingEntity.getEffect(init_effect.BLEEDING.get()).getAmplifier() : 0;
+                int ampliEffect=livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) ? livingEntity.getEffect(init_effect.DEEP_WOUND.get()).getAmplifier() : 0;
                 int ampliBleeding=0;
                 if(!this.getItemBySlot(EquipmentSlot.LEGS).isEmpty()){
                     armor=this.getItemBySlot(EquipmentSlot.LEGS);
@@ -113,12 +113,12 @@ public class RakerEntity extends TamableAnimal implements IAnimatable, IHasInven
                         timeBleeding+=rakerArmorItem.getAddBleeding();
                     }
                 }
-                if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==1){
+                if(livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) && ampliEffect==1){
                     ampliBleeding=2;
-                }else if(livingEntity.hasEffect(init_effect.BLEEDING.get()) && ampliEffect==0){
+                }else if(livingEntity.hasEffect(init_effect.DEEP_WOUND.get()) && ampliEffect==0){
                     ampliBleeding=1;
                 }
-                livingEntity.addEffect(new MobEffectInstance(init_effect.BLEEDING.get(), timeBleeding,ampliBleeding));
+                livingEntity.addEffect(new MobEffectInstance(init_effect.DEEP_WOUND.get(), timeBleeding,ampliBleeding));
             }
             return super.doHurtTarget(pEntity);
         }
