@@ -28,7 +28,7 @@ public class LinkedLayer extends GeoLayerRenderer<FallenKnight> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, FallenKnight entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if(entityLivingBaseIn.getIdOwner()!=null){
+        if(entityLivingBaseIn.getOwner()!=null){
             if(entityLivingBaseIn.getOwner().getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
                 if(entityLivingBaseIn.itIsLinked() && entityLivingBaseIn.isArmed()){
                     float f=!entityLivingBaseIn.getDamageLink() ? 0.1f : 1.0f;

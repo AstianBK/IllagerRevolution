@@ -29,7 +29,6 @@ public class EscapeMinerGoal<T extends LivingEntity> extends AvoidEntityGoal {
     @Override
     public void start() {
         super.start();
-        Minecraft mc=Minecraft.getInstance();
         if(this.goalOwner instanceof IllagerMinerEntity) {
             boolean flag1 = this.goalOwner.hasEffect(MobEffects.INVISIBILITY);
             if (!this.goalOwner.level.isClientSide && ((IllagerMinerEntity) this.goalOwner).fistUseInvi) {
@@ -39,7 +38,7 @@ public class EscapeMinerGoal<T extends LivingEntity> extends AvoidEntityGoal {
                         double x1 = this.goalOwner.getX();
                         double x2 = this.goalOwner.getY();
                         double x3 = this.goalOwner.getZ();
-                        mc.particleEngine.createParticle(ParticleTypes.LARGE_SMOKE, x1, x2, x3, this.goalOwner.getRandom().nextFloat(-0.1f, 0.1f), 0.1f, this.goalOwner.getRandom().nextFloat(-0.1f, 0.1f));
+                        this.goalOwner.level.addParticle(ParticleTypes.LARGE_SMOKE, x1, x2, x3, this.goalOwner.getRandom().nextFloat(-0.1f, 0.1f), 0.1f, this.goalOwner.getRandom().nextFloat(-0.1f, 0.1f));
                     }
                 }
             }

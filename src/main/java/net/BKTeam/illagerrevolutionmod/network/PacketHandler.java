@@ -18,9 +18,13 @@ public class PacketHandler {
 
     public static void registerMessages() {
         int index = 0;
-        MOD_CHANNEL.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode, PacketEffectSwordRuned::new,
-                PacketEffectSwordRuned::handle);
-        MOD_CHANNEL.registerMessage(index++,ClientRakerScreenOpenPacket.class,ClientRakerScreenOpenPacket::write,ClientRakerScreenOpenPacket::read,ClientRakerScreenOpenPacket::handle);    }
+        MOD_CHANNEL.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode,
+                PacketEffectSwordRuned::new, PacketEffectSwordRuned::handle);
+        MOD_CHANNEL.registerMessage(index++,ClientRakerScreenOpenPacket.class,ClientRakerScreenOpenPacket::write,
+                ClientRakerScreenOpenPacket::read,ClientRakerScreenOpenPacket::handle);
+        MOD_CHANNEL.registerMessage(index++,PacketBleedingEffect.class,PacketBleedingEffect::encode,
+                PacketBleedingEffect::new,PacketBleedingEffect::handle);
+    }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
         MOD_CHANNEL.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);

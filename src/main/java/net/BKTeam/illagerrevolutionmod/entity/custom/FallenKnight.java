@@ -380,7 +380,7 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
     }
 
     private void updateListLinked(){
-        if(this.getIdOwner()!=null){
+        if(this.getOwner()!=null){
             if(this.itIsLinked()){
                 if(this.getOwner() instanceof INecromancerEntity entity){
                     entity.getBondedMinions().add(this);

@@ -1,6 +1,10 @@
 package net.BKTeam.illagerrevolutionmod.potion;
 
+import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
+import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,6 +18,7 @@ import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
@@ -45,12 +50,16 @@ public class Effect_bleeding extends MobEffect {
         if(amplifier < 2){
             if ((entity.isSprinting() || (!(entity instanceof Player || entity instanceof AbstractSkeleton || entity instanceof AbstractGolem || entity instanceof Blaze || entity instanceof Vex || entity instanceof WitherBoss))) ) {
                 entity.hurt(DamageSource.GENERIC, 1);
-                bleedingParticle(entity);
+                if(entity.level.isClientSide){
+                    bleedingParticle(entity);
+                }
             }else if(!(entity instanceof Player)){
                 entity.removeEffect(this);
             }
         }else {
-            BleedingProcSummon(entity);
+            if(entity.level.isClientSide){
+                sendProcBleeding(entity);
+            }
             entity.level.playSound(null,entity.blockPosition(),SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.AMBIENT,8.0f,-2.0f);
             entity.level.playSound(null,entity.blockPosition(),ModSounds.BLEEDING_PROC.get(), SoundSource.AMBIENT,2.0f,1.0f);
             entity.hurt(DamageSource.GENERIC,7);
@@ -68,23 +77,19 @@ public class Effect_bleeding extends MobEffect {
             }
         }
     }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public void BleedingProcSummon(Entity entity){
-        Minecraft mc = Minecraft.getInstance();
-        mc.particleEngine.createTrackingEmitter(entity, ModParticles.BLOOD_PARTICLES.get(), 17);
-    }
-
-    @OnlyIn(Dist.CLIENT)
     public void bleedingParticle(Entity entity){
-        Minecraft mc=Minecraft.getInstance();
-        if(mc.level!=null && mc.level.random.nextInt(0,6)==1){
+        if(entity.level.random.nextInt(0,6)==1){
             double xp=entity.getX()+entity.level.random.nextDouble(-0.4d,0.4d);
             double yp=entity.getY()+entity.level.random.nextDouble(0.0d,2.0d);
             double zp=entity.getZ()+entity.level.random.nextDouble(-0.4d,0.4d);
-            mc.level.addParticle(ModParticles.BLOOD_PARTICLES.get(), xp, yp ,zp,  0.0f, -0.3f,0.0f);
+            entity.level.addParticle(ModParticles.BLOOD_PARTICLES.get(), xp, yp ,zp,  0.0f, -0.3f,0.0f);
         }
+    }
+    public static void sendProcBleeding(LivingEntity livingEntity) {
+        if (livingEntity instanceof ServerPlayer player) {
+            PacketHandler.sendToPlayer(new PacketBleedingEffect(player), player);
+        }
+        PacketHandler.sendToAllTracking(new PacketBleedingEffect(livingEntity), livingEntity);
     }
 
 }
