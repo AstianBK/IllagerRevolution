@@ -1,5 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import ca.weblite.objc.Message;
+import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
+import net.BKTeam.illagerrevolutionmod.setup.Messages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -163,10 +166,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
         @Override
         public void start() {
             super.start();
-            Minecraft mc=Minecraft.getInstance();
-            if(mc.level!=null){
-                mc.level.addParticle(ParticleTypes.NOTE,IllagerBeastTamerEntity.this.getX(),IllagerBeastTamerEntity.this.getY()+IllagerBeastTamerEntity.this.getBbHeight()+0.3D,IllagerBeastTamerEntity.this.getZ(),0.0f,0.1f,0.0f);
-            }
+            Messages.sendToAllTracking(new PacketWhistle(IllagerBeastTamerEntity.this),IllagerBeastTamerEntity.this);
         }
 
         @Nullable
@@ -174,6 +174,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
         protected SoundEvent getSpellPrepareSound() {
             return ModSounds.TAMER_WHISTLE.get();
         }
+
         public void stop() {
             super.stop();
             IllagerBeastTamerEntity.this.setIsCastingSpell(SpellcasterIllager.IllagerSpell.NONE);
@@ -187,25 +188,14 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
         protected void performSpellCasting() {
             ServerLevel serverlevel = (ServerLevel)IllagerBeastTamerEntity.this.level;
 
-
             BlockPos blockpos = IllagerBeastTamerEntity.this.blockPosition().offset(-2 + IllagerBeastTamerEntity.this.random.nextInt(5), 1, -2 + IllagerBeastTamerEntity.this.random.nextInt(5));
             RakerEntity raker = ModEntityTypes.RAKER.get().create(IllagerBeastTamerEntity.this.level);
             raker.moveTo(blockpos, 0.0F, 0.0F);
             raker.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
             serverlevel.addFreshEntityWithPassengers(raker);
             raker.setOwner(IllagerBeastTamerEntity.this);
-
-
-
         }
     }
-
-
-
-    public void aiStep() {
-        super.aiStep();
-    }
-
 
 
     @Override

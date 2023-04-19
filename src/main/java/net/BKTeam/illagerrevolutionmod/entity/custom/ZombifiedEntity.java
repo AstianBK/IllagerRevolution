@@ -294,9 +294,8 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         }
         if(this.getIsSpawned()){
             Minecraft mc=Minecraft.getInstance();
-            if(mc.level!=null){
-                mc.particleEngine.destroy(this.getOnPos(),this.getBlockStateOn());
-            }
+            mc.particleEngine.destroy(this.getOnPos(),this.getBlockStateOn());
+
             this.animSpawnTimer--;
         }
         if(this.getIsSpawned() && this.animSpawnTimer==0){
@@ -315,7 +314,6 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     public void spawnAnim() {
         this.setIsSpawned(true);
         Minecraft mc=Minecraft.getInstance();
-        mc.particleEngine.destroy(this.getOnPos(),this.getBlockStateOn());
         super.spawnAnim();
     }
 

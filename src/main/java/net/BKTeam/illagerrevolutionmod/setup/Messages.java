@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.setup;
 
 import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
+import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,6 +43,11 @@ public class Messages {
                 .decoder(PacketBleedingEffect::new)
                 .encoder(PacketBleedingEffect::encode)
                 .consumer(PacketBleedingEffect::handle)
+                .add();
+        net.messageBuilder(PacketWhistle.class,id(),NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(PacketWhistle::new)
+                .encoder(PacketWhistle::encode)
+                .consumer(PacketWhistle::handle)
                 .add();
 
 }

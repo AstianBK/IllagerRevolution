@@ -29,9 +29,6 @@ public class PacketSyncSoulBkToClient {
         ctx.enqueueWork(() -> {
             Minecraft.getInstance().player.getAttribute(SoulTick.SOUL).setBaseValue(playerSoul);
 
-            // Here we are client side.
-            // Be very careful not to access client-only classes here! (like Minecraft) because
-            // this packet needs to be available server-side too
             ClientSoulData.set(playerSoul);
         });
         return true;

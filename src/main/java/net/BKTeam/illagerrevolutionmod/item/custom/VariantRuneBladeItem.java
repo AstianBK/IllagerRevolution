@@ -103,7 +103,6 @@ public class VariantRuneBladeItem extends RunedSword{
                     pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-3);
                 }
             }else {
-                pPlayer.sendMessage(Component.nullToEmpty(String.valueOf(pPlayer.getAttribute(Attributes.ARMOR).getValue())),pPlayer.getUUID());
                 if (!pLevel.isClientSide && flag2) {
                     List<FallenKnight> knights=((INecromancerEntity)pPlayer).getBondedMinions();
                     boolean flag= Util.checkCanLink(knights);
