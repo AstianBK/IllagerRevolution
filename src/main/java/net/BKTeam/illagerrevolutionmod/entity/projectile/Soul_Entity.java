@@ -155,14 +155,6 @@ public class Soul_Entity extends ThrowableItemProjectile {
     public void spawUndead(ServerLevel world, LivingEntity pSummoner, Entity Source){
         String undead=this.getSoul();
         boolean flag1= Event_Death.hasNameSoul(undead);
-        Minecraft mc=Minecraft.getInstance();
-        if(mc.level!=null){
-            for(int j=0;j<300;j+=10){
-                float f4 = Mth.cos(j)*0.8f;
-                float f5 = Mth.sin(j)*0.8f;
-                double yf=0.01f*j;
-                mc.level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX()+ (double) f4, this.blockPosition().getY() , this.getZ() + (double) f5,  0.0f, 0.1f,0.0f);
-            }
         if(flag1){
             ZombifiedEntity entity=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),world);
             BlockPos blockpos = Source.blockPosition();
@@ -194,5 +186,4 @@ public class Soul_Entity extends ThrowableItemProjectile {
         this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED,0.35F, -1.5F);
         discard();
     }
-}
 }
