@@ -21,7 +21,7 @@ public class ModParticles {
     public static final RegistryObject<SimpleParticleType> SMOKE_BK_PARTICLES =
             PARTICLE_TYPES.register("smokebk", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> BLOOD_PARTICLES =
-            PARTICLE_TYPES.register("bloodbk", () -> new SimpleParticleType(true));
+            PARTICLE_TYPES.register("bloodbk", () -> new SimpleParticleType(false));
 
     public static final RegistryObject<SimpleParticleType> RUNE_SOUL_PARTICLES =
             PARTICLE_TYPES.register("rune_soul", () -> new SimpleParticleType(true));

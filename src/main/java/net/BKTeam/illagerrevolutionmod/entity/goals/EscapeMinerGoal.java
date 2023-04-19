@@ -29,25 +29,6 @@ public class EscapeMinerGoal<T extends LivingEntity> extends AvoidEntityGoal {
     @Override
     public void start() {
         super.start();
-        if(this.goalOwner instanceof IllagerMinerEntity) {
-            boolean flag1 = this.goalOwner.hasEffect(MobEffects.INVISIBILITY);
-            if (!this.goalOwner.level.isClientSide && ((IllagerMinerEntity) this.goalOwner).fistUseInvi) {
-                if (!flag1) {
-                    this.goalOwner.playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(this.goalOwner.getRandom().nextFloat() * 0.4F + 0.8F));
-                    for (int i = 0; i < 24; i++) {
-                        double x1 = this.goalOwner.getX();
-                        double x2 = this.goalOwner.getY();
-                        double x3 = this.goalOwner.getZ();
-                        this.goalOwner.level.addParticle(ParticleTypes.LARGE_SMOKE, x1, x2, x3, this.goalOwner.getRandom().nextFloat(-0.1f, 0.1f), 0.1f, this.goalOwner.getRandom().nextFloat(-0.1f, 0.1f));
-                    }
-                }
-            }
-            if(((IllagerMinerEntity) this.goalOwner).fistUseInvi){
-                this.goalOwner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 100, 1));
-                ((IllagerMinerEntity) this.goalOwner).fistUseInvi=false;
-            }
-
-        }
         this.goalOwner.playSound(SoundEvents.WITCH_CELEBRATE, 1.0F, -2.5F / (this.goalOwner.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 

@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.network;
 
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +14,7 @@ public class PacketHandler {
     private static final String PROTOCOL_VERSION = "1";
 
     public static final SimpleChannel MOD_CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(ModConstants.MOD_ID, ModConstants.CHANNEL_NAME), () -> PROTOCOL_VERSION,
+            new ResourceLocation(IllagerRevolutionMod.MOD_ID, ModConstants.CHANNEL_NAME), () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void registerMessages() {
@@ -22,8 +23,6 @@ public class PacketHandler {
                 PacketEffectSwordRuned::new, PacketEffectSwordRuned::handle);
         MOD_CHANNEL.registerMessage(index++,ClientRakerScreenOpenPacket.class,ClientRakerScreenOpenPacket::write,
                 ClientRakerScreenOpenPacket::read,ClientRakerScreenOpenPacket::handle);
-        MOD_CHANNEL.registerMessage(index++,PacketBleedingEffect.class,PacketBleedingEffect::encode,
-                PacketBleedingEffect::new,PacketBleedingEffect::handle);
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {

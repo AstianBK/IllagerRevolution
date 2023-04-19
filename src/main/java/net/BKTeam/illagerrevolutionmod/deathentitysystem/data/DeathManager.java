@@ -7,9 +7,7 @@ import net.BKTeam.illagerrevolutionmod.deathentitysystem.network.PacketSyncSoulB
 import net.BKTeam.illagerrevolutionmod.setup.Messages;
 
 public class DeathManager {
-    private static int count=0;
     public static void tick(Level level){
-        count++;
 
         level.players().forEach(player -> {
             if (player instanceof ServerPlayer serverPlayer) {

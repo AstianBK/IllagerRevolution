@@ -4,6 +4,8 @@ import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
+import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;

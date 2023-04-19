@@ -47,10 +47,11 @@ public class Event_Death {
             LivingEntity entity=event.getEntityLiving();
 
             if(entity instanceof  Player){
+                ItemStack stack=entity.getMainHandItem().copy();
                 if (entity.isDeadOrDying() && checkSword(pSource,entity)){
                     event.setCanceled(true);
-                    sendRunedBladePacket(entity.getMainHandItem(),entity);
-                    giveUseStatAndCriterion(entity.getMainHandItem(),(ServerPlayer) entity);
+                    sendRunedBladePacket(stack,entity);
+                    giveUseStatAndCriterion(stack,(ServerPlayer) entity);
                 }
             }
         }
@@ -136,8 +137,8 @@ public class Event_Death {
                 souce.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 souce.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 5));
                 souce.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 3));
-                souce.level.broadcastEntityEvent(souce, (byte)35);
-            }
+                //souce.level.broadcastEntityEvent(souce, (byte)35);
+        }
             return itemstack != null ;
         }
     }

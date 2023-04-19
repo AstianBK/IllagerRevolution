@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ModConstants {
-    public static final String MOD_ID = "illagium_runed_blade";
     public static final String CHANNEL_NAME = "main_channel";
     public static final String LEFT_HAND_BONE_IDENT = "itemHandLeft";
     public static final String RIGHT_HAND_BONE_IDENT = "itemHandRight";

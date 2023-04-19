@@ -74,6 +74,7 @@ public class IllagerRevolutionMod {
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::RuleSetup);
 
+        Messages.register();
         PacketHandler.registerMessages();
         setupD();
 
@@ -130,7 +131,6 @@ public class IllagerRevolutionMod {
                     Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                     AbstractIllager::checkMobSpawnRules);
         });
-        Messages.register();
     }
     public static void setupD() {
         IEventBus bus = MinecraftForge.EVENT_BUS;

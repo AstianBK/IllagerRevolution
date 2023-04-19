@@ -1,8 +1,10 @@
 package net.BKTeam.illagerrevolutionmod.potion;
 
+import ca.weblite.objc.Message;
 import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.setup.Messages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -50,14 +52,16 @@ public class Effect_bleeding extends MobEffect {
         if(amplifier < 2){
             if ((entity.isSprinting() || (!(entity instanceof Player || entity instanceof AbstractSkeleton || entity instanceof AbstractGolem || entity instanceof Blaze || entity instanceof Vex || entity instanceof WitherBoss))) ) {
                 entity.hurt(DamageSource.GENERIC, 1);
-                if(entity.level.isClientSide){
-                    bleedingParticle(entity);
-                }
+                double xp=entity.getX()+entity.level.random.nextDouble(-0.4d,0.4d);
+                double yp=entity.getY()+entity.level.random.nextDouble(0.0d,2.0d);
+                double zp=entity.getZ()+entity.level.random.nextDouble(-0.4d,0.4d);
+                entity.level.addParticle(ModParticles.BLOOD_PARTICLES.get(), xp, yp ,zp,  0.0f, -0.3f,0.0f);
+
             }else if(!(entity instanceof Player)){
                 entity.removeEffect(this);
             }
         }else {
-            if(entity.level.isClientSide){
+            if(!entity.level.isClientSide){
                 sendProcBleeding(entity);
             }
             entity.level.playSound(null,entity.blockPosition(),SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.AMBIENT,8.0f,-2.0f);
@@ -77,19 +81,13 @@ public class Effect_bleeding extends MobEffect {
             }
         }
     }
-    public void bleedingParticle(Entity entity){
-        if(entity.level.random.nextInt(0,6)==1){
-            double xp=entity.getX()+entity.level.random.nextDouble(-0.4d,0.4d);
-            double yp=entity.getY()+entity.level.random.nextDouble(0.0d,2.0d);
-            double zp=entity.getZ()+entity.level.random.nextDouble(-0.4d,0.4d);
-            entity.level.addParticle(ModParticles.BLOOD_PARTICLES.get(), xp, yp ,zp,  0.0f, -0.3f,0.0f);
-        }
-    }
+
     public static void sendProcBleeding(LivingEntity livingEntity) {
         if (livingEntity instanceof ServerPlayer player) {
-            PacketHandler.sendToPlayer(new PacketBleedingEffect(player), player);
+            Messages.sendToPlayer(new PacketBleedingEffect(player), player);
         }
-        PacketHandler.sendToAllTracking(new PacketBleedingEffect(livingEntity), livingEntity);
+        Messages.sendToAllTracking(new PacketBleedingEffect(livingEntity),livingEntity);
+
     }
 
 }

@@ -192,7 +192,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
             RakerEntity raker = ModEntityTypes.RAKER.get().create(IllagerBeastTamerEntity.this.level);
             raker.moveTo(blockpos, 0.0F, 0.0F);
             raker.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
-            IllagerBeastTamerEntity.this.level.addFreshEntity(raker);
+            serverlevel.addFreshEntityWithPassengers(raker);
             raker.setOwner(IllagerBeastTamerEntity.this);
 
 

@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -9,6 +10,8 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -22,6 +25,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -104,7 +109,25 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
     @Override
     public void setHasItem(boolean pBoolean) {
         super.setHasItem(pBoolean);
-        this.fistUseInvi=pBoolean;
+        if(pBoolean){
+            //bombSmoke();
+            this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,150));
+        }
+    }
+
+    /*public void bombSmoke(){
+        this.playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(this.getRandom().nextFloat() * 0.4F + 0.8F));
+        for (int i = 0; i < 24; i++) {
+            double x1 = this.getX();
+            double x2 = this.getY();
+            double x3 = this.getZ();
+            this.level.addParticle(ParticleTypes.LARGE_SMOKE, x1, x2, x3, this.getRandom().nextFloat(-0.1f, 0.1f), 0.1f, this.getRandom().nextFloat(-0.1f, 0.1f));
+        }
+    }*/
+
+    @Override
+    public void tick() {
+        super.tick();
     }
 
     @Override
