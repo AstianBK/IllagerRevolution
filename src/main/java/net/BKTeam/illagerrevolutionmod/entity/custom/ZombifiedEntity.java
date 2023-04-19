@@ -8,7 +8,9 @@ import net.BKTeam.illagerrevolutionmod.entity.goals.SpawnReanimatedGoal;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.network.PacketSpawnedZombified;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
+import net.BKTeam.illagerrevolutionmod.setup.Messages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
@@ -293,9 +295,9 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
             this.setAttacking(false);
         }
         if(this.getIsSpawned()){
-            Minecraft mc=Minecraft.getInstance();
-            mc.particleEngine.destroy(this.getOnPos(),this.getBlockStateOn());
-
+            if(!this.level.isClientSide){
+                Messages.sendToAllTracking(new PacketSpawnedZombified(this),this);
+            }
             this.animSpawnTimer--;
         }
         if(this.getIsSpawned() && this.animSpawnTimer==0){
@@ -313,7 +315,6 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     @Override
     public void spawnAnim() {
         this.setIsSpawned(true);
-        Minecraft mc=Minecraft.getInstance();
         super.spawnAnim();
     }
 

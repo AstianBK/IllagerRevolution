@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.setup;
 
 import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
+import net.BKTeam.illagerrevolutionmod.network.PacketSpawnedZombified;
 import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -48,6 +49,11 @@ public class Messages {
                 .decoder(PacketWhistle::new)
                 .encoder(PacketWhistle::encode)
                 .consumer(PacketWhistle::handle)
+                .add();
+        net.messageBuilder(PacketSpawnedZombified.class,id(),NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(PacketSpawnedZombified::new)
+                .encoder(PacketSpawnedZombified::encode)
+                .consumer(PacketSpawnedZombified::handle)
                 .add();
 
 }
