@@ -39,6 +39,6 @@ public class PacketSpawnedZombified {
     @OnlyIn(Dist.CLIENT)
     private void handleEffect() {
         Minecraft mc = Minecraft.getInstance();
-        mc.particleEngine.destroy(entity.getOnPos(),entity.getFeetBlockState());
+        mc.particleEngine.destroy(entity.getOnPos(),entity.level.getBlockState(entity.getOnPos()));
     }
 }
