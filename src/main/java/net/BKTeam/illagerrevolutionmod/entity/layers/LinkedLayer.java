@@ -36,9 +36,9 @@ public class LinkedLayer extends GeoLayerRenderer<FallenKnight> {
                     float f2=!entityLivingBaseIn.getDamageLink() ? 0.4f : 0.0f;
 
                     tick=(float) entityLivingBaseIn.tickCount+partialTicks;
-                    model.getModelLocation(entityLivingBaseIn);
-                    model.getAnimationFileLocation(entityLivingBaseIn);
-                    model.getTextureLocation(entityLivingBaseIn);
+                    model.getModelResource(entityLivingBaseIn);
+                    model.getAnimationResource(entityLivingBaseIn);
+                    model.getTextureResource(entityLivingBaseIn);
                     renderCopyModel(this.model,LINKED_ARMOR,matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,f,f1,f2);
                 }
             }

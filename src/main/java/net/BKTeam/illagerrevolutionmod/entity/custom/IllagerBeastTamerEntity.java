@@ -1,7 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
-import net.BKTeam.illagerrevolutionmod.setup.Messages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -162,7 +162,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
         @Override
         public void start() {
             super.start();
-            Messages.sendToAllTracking(new PacketWhistle(IllagerBeastTamerEntity.this),IllagerBeastTamerEntity.this);
+            PacketHandler.sendToAllTracking(new PacketWhistle(IllagerBeastTamerEntity.this),IllagerBeastTamerEntity.this);
         }
 
         @Nullable

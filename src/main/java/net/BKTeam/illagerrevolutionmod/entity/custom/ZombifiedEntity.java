@@ -8,9 +8,9 @@ import net.BKTeam.illagerrevolutionmod.entity.goals.SpawnReanimatedGoal;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSpawnedZombified;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
-import net.BKTeam.illagerrevolutionmod.setup.Messages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
@@ -296,7 +296,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         }
         if(this.getIsSpawned()){
             if(!this.level.isClientSide){
-                Messages.sendToAllTracking(new PacketSpawnedZombified(this),this);
+                PacketHandler.sendToAllTracking(new PacketSpawnedZombified(this),this);
             }
             this.animSpawnTimer--;
         }

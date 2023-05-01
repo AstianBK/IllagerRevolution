@@ -22,7 +22,7 @@ public class Rune_SoulParticles extends TextureSheetParticle {
         this.lifetime = 20;
         this.hasPhysics = false;
         this.setSpriteFromAge(sprites);
-        this.setColor(Mth.randomBetween(new Random(),0.01f,0.114f),Mth.randomBetween(new Random(),0.6f,0.73f),Mth.randomBetween(new Random(),0.4f,0.52f));
+        this.setColor(0.01f,0.6f,0.52f);
     }
 
     @Override

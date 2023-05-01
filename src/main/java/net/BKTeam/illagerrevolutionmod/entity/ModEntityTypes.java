@@ -15,7 +15,7 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.*;
 
 public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-            DeferredRegister.create(ForgeRegistries.ENTITIES, IllagerRevolutionMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, IllagerRevolutionMod.MOD_ID);
 
     public static final RegistryObject<EntityType<IllagerMinerBadlandsEntity>> ILLAGERMINERBADLANDS =
             ENTITY_TYPES.register("illagerminerbadlands",

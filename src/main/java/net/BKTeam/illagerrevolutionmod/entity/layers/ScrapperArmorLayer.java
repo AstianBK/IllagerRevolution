@@ -27,15 +27,15 @@ public class ScrapperArmorLayer extends GeoLayerRenderer<RakerEntity> {
         ItemStack itemstack =entityLivingBaseIn.getItemBySlot(EquipmentSlot.CHEST);
         ItemStack itemstack1 = entityLivingBaseIn.getItemBySlot(EquipmentSlot.LEGS);
         if (itemstack.getItem() instanceof RakerArmorItem armor) {
-            this.model.getModelLocation(entityLivingBaseIn);
-            this.model.getTextureLocation(entityLivingBaseIn);
-            this.model.getAnimationFileLocation(entityLivingBaseIn);
+            this.model.getModelResource(entityLivingBaseIn);
+            this.model.getTextureResource(entityLivingBaseIn);
+            this.model.getAnimationResource(entityLivingBaseIn);
             this.renderCopyModel(this.model,armor.getArmorTexture(),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
         if(itemstack1.getItem() instanceof RakerArmorItem armorItem){
-            this.model.getModelLocation(entityLivingBaseIn);
-            this.model.getTextureLocation(entityLivingBaseIn);
-            this.model.getAnimationFileLocation(entityLivingBaseIn);
+            this.model.getModelResource(entityLivingBaseIn);
+            this.model.getTextureResource(entityLivingBaseIn);
+            this.model.getAnimationResource(entityLivingBaseIn);
             this.renderCopyModel(this.model,armorItem.getArmorTexture(),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
 
