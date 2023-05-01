@@ -3,22 +3,22 @@ package net.BKTeam.illagerrevolutionmod.event;
 
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
-import net.BKTeam.illagerrevolutionmod.event.loot.*;
+import net.BKTeam.illagerrevolutionmod.gui.Hearts_Effect;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,18 +26,9 @@ import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.*;
 import net.BKTeam.illagerrevolutionmod.particle.custom.*;
-import software.bernie.example.GeckoLibMod;
-import software.bernie.geckolib3.GeckoLib;
-import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-import software.bernie.geckolib3.resource.GeckoLibCache;
-import software.bernie.geckolib3.util.GeckoLibUtil;
-import software.bernie.geckolib3.world.storage.GeckoLibIdTracker;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
-import javax.annotation.Nonnull;
-
+import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
 
 
@@ -56,25 +47,25 @@ public class ModEventBusEvents {
 
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
+    public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
         ParticleEngine manager = Minecraft.getInstance().particleEngine;
         if(SMOKE_BK_PARTICLES.isPresent()){
-            manager.register(SMOKE_BK_PARTICLES.get(), Bk_SmokeParticles.Factory::new);
+            event.register(SMOKE_BK_PARTICLES.get(), Bk_SmokeParticles.Factory::new);
         }
         if (BKSOULS_PARTICLES.isPresent()){
-            manager.register(BKSOULS_PARTICLES.get(), BKSoulsParticles.Factory::new);
+            event.register(BKSOULS_PARTICLES.get(), BKSoulsParticles.Factory::new);
         }
         if(SOUL_PROJECTILE_PARTICLES.isPresent()){
-            manager.register(SOUL_PROJECTILE_PARTICLES.get(), Soul_ProjectilePParticles.Factory::new);
+            event.register(SOUL_PROJECTILE_PARTICLES.get(), Soul_ProjectilePParticles.Factory::new);
         }
         if (RUNE_CURSED_PARTICLES.isPresent()){
-            manager.register(RUNE_CURSED_PARTICLES.get(), Rune_CursedParticles.Factory::new);
+            event.register(RUNE_CURSED_PARTICLES.get(), Rune_CursedParticles.Factory::new);
         }
         if(RUNE_SOUL_PARTICLES.isPresent()){
-            manager.register(RUNE_SOUL_PARTICLES.get(), Rune_SoulParticles.Factory::new);
+            event.register(RUNE_SOUL_PARTICLES.get(), Rune_SoulParticles.Factory::new);
         }
         if(BLOOD_PARTICLES.isPresent()){
-            manager.register(BLOOD_PARTICLES.get(), BloodBK_Particles.Factory::new);
+            event.register(BLOOD_PARTICLES.get(), BloodBK_Particles.Factory::new);
         }
     }
 
@@ -97,31 +88,26 @@ public class ModEventBusEvents {
         GeoArmorRenderer.registerArmorRenderer(ArmorPillagerVestItem.class, PillagerPlayerArmorRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorVindicatorJacketItem.class, VindicatorPlayerArmorRenderer::new);
     }
-    
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @OnlyIn(Dist.CLIENT)
+    public static void registerGui(RegisterGuiOverlaysEvent event){
+        event.registerAbove(VanillaGuiOverlay.PLAYER_HEALTH.id(), "hearts",new Hearts_Effect());
+    }
+
     @SubscribeEvent
-    public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>>
-                                                           event) {
-        event.getRegistry().registerAll(
-                new RuneBoneFragmentLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_bone_fragment_loot")),
-                new RuneFleshFragmentLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_flesh_fragment_loot")),
-                new RuneUndyingFragmentLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_undying_fragment_loot")),
-                new IllusionerRobeLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"illusioner_robe_loot")),
-                new EvokerRobeLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"evoker_robe_loot")),
-                new PillagerVestLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_vest_loot")),
-                new PillagerPantsLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_pants_loot")),
-                new PillagerBootsLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_boots_loot")),
-                new VindicatorJacketLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_jacket_loot")),
-                new VindicatorPantsLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_pants_loot"))
-        );
+    public static void registerRulesSpawn(SpawnPlacementRegisterEvent event){
+        event.register(ILLAGERMINER.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(ILLAGERMINERBADLANDS.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(ILLAGERBEASTTAMER.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 }

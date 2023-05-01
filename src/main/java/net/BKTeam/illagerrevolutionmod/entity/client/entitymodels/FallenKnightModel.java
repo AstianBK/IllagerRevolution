@@ -15,19 +15,19 @@ public class FallenKnightModel<I extends Monster> extends AnimatedGeoModel<Falle
     protected static final ResourceLocation ANIMATION_RESLOC = new ResourceLocation(IllagerRevolutionMod.MOD_ID,
             "animations/fallen_knight.animation.json");
     @Override
-    public ResourceLocation getModelLocation(FallenKnight object) {
+    public ResourceLocation getModelResource(FallenKnight object) {
         return MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(FallenKnight object) {
+    public ResourceLocation getTextureResource(FallenKnight object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
                 "textures/entity/fallen_knight/fallen_knight.png");
 
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(FallenKnight animatable) {
+    public ResourceLocation getAnimationResource(FallenKnight animatable) {
         return ANIMATION_RESLOC;
     }
 }

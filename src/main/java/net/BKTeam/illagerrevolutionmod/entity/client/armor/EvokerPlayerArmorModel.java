@@ -8,17 +8,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class EvokerPlayerArmorModel extends AnimatedGeoModel<ArmorEvokerRobeItem> {
 
     @Override
-    public ResourceLocation getModelLocation(ArmorEvokerRobeItem object) {
+    public ResourceLocation getModelResource(ArmorEvokerRobeItem object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/evoker_player_armor.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ArmorEvokerRobeItem object) {
+    public ResourceLocation getTextureResource(ArmorEvokerRobeItem object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/evoker_armor/evoker_armor.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(ArmorEvokerRobeItem animatable) {
+    public ResourceLocation getAnimationResource(ArmorEvokerRobeItem animatable) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "animations/illager_player_armor.animation.json");
     }
 }

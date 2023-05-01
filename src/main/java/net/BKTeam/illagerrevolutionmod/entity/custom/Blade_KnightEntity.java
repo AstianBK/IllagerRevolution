@@ -62,6 +62,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 
 
 public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable, InventoryCarrier{
@@ -158,6 +159,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     @Override
     public void tick() {
         super.tick();
+        Random random1 = new Random();
         if (level.random.nextInt(14) == 0 && this.isCastingSpell()) {
             if(this.isCastingSpell()){
                 for(int i=0;i<301;i+=30){
@@ -191,7 +193,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
                         Util.spawFallenKnightBack(this.level,this,2);
                     }
                     for (int i=0;i<6;i++){
-                        Vec3 pos=new Vec3(this.getX()+this.level.getRandom().nextDouble(-3.0d,3.0d),this.getY()+3.0D,this.getZ()+this.level.getRandom().nextDouble(-3.0d,3.0d));
+                        Vec3 pos=new Vec3(this.getX()+random1.nextDouble(-3.0d,3.0d),this.getY()+3.0D,this.getZ()+random1.nextDouble(-3.0d,3.0d));
                         Player player=this.level.getNearestPlayer(this,40.0D);
                         if(player!=null){
                             Soul_Projectile soul_projectile=new Soul_Projectile(player,player.level,this);
@@ -203,7 +205,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
                 ParticleOptions particle=ModParticles.BKSOULS_PARTICLES.get();
                 level.playLocalSound(this.getX(),this.getY(),this.getZ(),SoundEvents.SOUL_ESCAPE,SoundSource.HOSTILE,5.0f,-5.0f,false);
                 for(int i=0;i<5;i++){
-                    this.level.addParticle(particle, this.getX(), this.getY() , this.getZ(),  this.level.getRandom().nextFloat(-0.1f,0.1f), this.level.getRandom().nextFloat(0.1f,0.15f),this.level.getRandom().nextFloat(-0.1f,0.1f));
+                    this.level.addParticle(particle, this.getX(), this.getY() , this.getZ(),  random1.nextFloat(-0.1f,0.1f), random1.nextFloat(0.1f,0.15f),random1.nextFloat(-0.1f,0.1f));
                 }
             }
             if(this.lowHealtTimer==0){
@@ -561,7 +563,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     }
 
     @Override
-    public Container getInventory() {
+    public SimpleContainer getInventory() {
         return this.inventory;
     }
 

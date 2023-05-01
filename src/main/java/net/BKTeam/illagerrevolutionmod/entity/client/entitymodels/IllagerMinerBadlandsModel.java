@@ -10,17 +10,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class IllagerMinerBadlandsModel extends AnimatedGeoModel<IllagerMinerBadlandsEntity> {
     @Override
-    public ResourceLocation getModelLocation(IllagerMinerBadlandsEntity object) {
+    public ResourceLocation getModelResource(IllagerMinerBadlandsEntity object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/illagerminerbadlands.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(IllagerMinerBadlandsEntity object) {
+    public ResourceLocation getTextureResource(IllagerMinerBadlandsEntity object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(IllagerMinerBadlandsEntity animatable) {
+    public ResourceLocation getAnimationResource(IllagerMinerBadlandsEntity animatable) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "animations/illagerminerbadlands.animation.json");
     }
     @SuppressWarnings({ "unchecked", "rawtypes" })

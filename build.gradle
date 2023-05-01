@@ -24,7 +24,7 @@
         add sourceSets.main, 'illagerrevolution.refmap.json'
     }
 
-    version = '1.0 - 1.18.2'
+    version = '1.0 - 1.19.2'
     group = 'net.sangrebk.illagerrevolution'
     archivesBaseName = 'illagerrevolution'
 
@@ -35,7 +35,7 @@
     println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
     minecraft {
 
-        mappings channel: 'parchment', version: '1.18.1-2022.03.06-1.18.2'
+        mappings channel: 'parchment', version: '1.18.1-2022.03.06-1.19.2'
 
         runs {
             client {
@@ -104,9 +104,9 @@
 
     dependencies {
 
-        minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
+        minecraft 'net.minecraftforge:forge:1.19.2-43.2.8'
         annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-        implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.18:3.0.57')
+        implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.40')
     }
 
     jar {

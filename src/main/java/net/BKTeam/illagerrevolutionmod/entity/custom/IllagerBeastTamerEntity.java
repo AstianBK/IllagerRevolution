@@ -1,16 +1,12 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
-import ca.weblite.objc.Message;
 import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
 import net.BKTeam.illagerrevolutionmod.setup.Messages;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.Container;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -215,7 +211,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
 
 
     @Override
-    public Container getInventory() {
+    public SimpleContainer getInventory() {
         return inventory;
     }
 

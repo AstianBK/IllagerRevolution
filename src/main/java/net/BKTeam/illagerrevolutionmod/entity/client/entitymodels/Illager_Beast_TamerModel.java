@@ -27,17 +27,17 @@ public class Illager_Beast_TamerModel<I extends AbstractIllager> extends Animate
     }
 
     @Override
-    public ResourceLocation getModelLocation(IllagerBeastTamerEntity object) {
+    public ResourceLocation getModelResource(IllagerBeastTamerEntity object) {
         return MODEL_RESLOC;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(IllagerBeastTamerEntity  object) {
+    public ResourceLocation getTextureResource(IllagerBeastTamerEntity  object) {
         return TEXTURE_DEFAULT;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(IllagerBeastTamerEntity  animatable) {
+    public ResourceLocation getAnimationResource(IllagerBeastTamerEntity  animatable) {
         return ANIMATION_RESLOC;
     }
 

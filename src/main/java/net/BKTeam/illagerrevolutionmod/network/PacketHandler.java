@@ -1,32 +1,58 @@
 package net.BKTeam.illagerrevolutionmod.network;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.deathentitysystem.network.PacketSyncSoulBkToClient;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
-import net.BKTeam.illagerrevolutionmod.ModConstants;
 
 public class PacketHandler {
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "1.0";
 
-    public static final SimpleChannel MOD_CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(IllagerRevolutionMod.MOD_ID, ModConstants.CHANNEL_NAME), () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+    public static SimpleChannel MOD_CHANNEL;
 
     public static void registerMessages() {
+        SimpleChannel channel=NetworkRegistry.ChannelBuilder.named(
+                        new ResourceLocation(IllagerRevolutionMod.MOD_ID, "messages"))
+                .networkProtocolVersion(()-> PROTOCOL_VERSION)
+                .clientAcceptedVersions(s -> true)
+                .serverAcceptedVersions(s -> true)
+                .simpleChannel();
+
+        MOD_CHANNEL=channel;
+
         int index = 0;
-        MOD_CHANNEL.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode,
+
+        channel.messageBuilder(PacketSyncSoulBkToClient.class,index++)
+                .consumerNetworkThread(PacketSyncSoulBkToClient::handle)
+                .encoder(PacketSyncSoulBkToClient::toBytes)
+                .decoder(PacketSyncSoulBkToClient::new).
+                add();
+
+        channel.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode,
                 PacketEffectSwordRuned::new, PacketEffectSwordRuned::handle);
-        MOD_CHANNEL.registerMessage(index++,ClientRakerScreenOpenPacket.class,ClientRakerScreenOpenPacket::write,
+
+        channel.registerMessage(index++,ClientRakerScreenOpenPacket.class,ClientRakerScreenOpenPacket::write,
                 ClientRakerScreenOpenPacket::read,ClientRakerScreenOpenPacket::handle);
+
+        channel.registerMessage(index++, PacketProcBleedingEffect.class, PacketProcBleedingEffect::encode,
+                PacketProcBleedingEffect::new, PacketProcBleedingEffect::handle);
+
+        channel.registerMessage(index++, PacketBleedingEffect.class, PacketBleedingEffect::encode,
+                PacketBleedingEffect::new, PacketBleedingEffect::handle);
+
+        channel.registerMessage(index++, PacketWhistle.class, PacketWhistle::encode,
+                PacketWhistle::new, PacketWhistle::handle);
+
+        channel.registerMessage(index++, PacketSpawnedZombified.class, PacketSpawnedZombified::encode,
+                PacketSpawnedZombified::new, PacketSpawnedZombified::handle);
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
-        MOD_CHANNEL.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+        MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),message);
     }
 
     public static <MSG> void sendToAllTracking(MSG message, LivingEntity entity) {

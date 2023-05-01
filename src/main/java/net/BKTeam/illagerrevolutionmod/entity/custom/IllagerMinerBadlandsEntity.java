@@ -8,7 +8,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.Container;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -360,7 +359,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     }
 
     @Override
-    public @NotNull Container getInventory() {
+    public SimpleContainer getInventory() {
         return this.inventory;
     }
 }

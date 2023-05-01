@@ -8,17 +8,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class Helmet_Miner_ReinforcedModel extends AnimatedGeoModel<IllagiumArmorItem> {
 
     @Override
-    public ResourceLocation getModelLocation(IllagiumArmorItem object) {
+    public ResourceLocation getModelResource(IllagiumArmorItem object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/helmet_miner.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(IllagiumArmorItem object) {
+    public ResourceLocation getTextureResource(IllagiumArmorItem object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/models/armor/miner_helmet/"+object.getMaterial().getName()+"_minerhelmet.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(IllagiumArmorItem animatable) {
+    public ResourceLocation getAnimationResource(IllagiumArmorItem animatable) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "animations/leather_minerhelmet.animation.json");
     }
 }

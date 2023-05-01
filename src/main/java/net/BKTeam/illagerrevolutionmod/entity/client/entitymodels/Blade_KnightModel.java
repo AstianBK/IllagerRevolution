@@ -28,24 +28,6 @@ public class Blade_KnightModel<I extends AbstractIllager> extends AnimatedGeoMod
     }
 
     @Override
-    public ResourceLocation getModelLocation(Blade_KnightEntity object) {
-        return MODEL_RESLOC;
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(Blade_KnightEntity object) {
-        if(!object.isFase2()){
-            return TEXTURE_DEFAULT;
-        }
-        return TEXTURE_HURT;
-    }
-
-    @Override
-    public ResourceLocation getAnimationFileLocation(Blade_KnightEntity animatable) {
-        return ANIMATION_RESLOC;
-    }
-
-    @Override
     public void setCustomAnimations(Blade_KnightEntity entity, int instanceId, AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, instanceId, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("bipedHead");
@@ -55,5 +37,23 @@ public class Blade_KnightModel<I extends AbstractIllager> extends AnimatedGeoMod
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
+    }
+
+    @Override
+    public ResourceLocation getModelResource(Blade_KnightEntity object) {
+        return MODEL_RESLOC;
+    }
+
+    @Override
+    public ResourceLocation getTextureResource(Blade_KnightEntity object) {
+        if(!object.isFase2()){
+            return TEXTURE_DEFAULT;
+        }
+        return TEXTURE_HURT;
+    }
+
+    @Override
+    public ResourceLocation getAnimationResource(Blade_KnightEntity animatable) {
+        return ANIMATION_RESLOC;
     }
 }

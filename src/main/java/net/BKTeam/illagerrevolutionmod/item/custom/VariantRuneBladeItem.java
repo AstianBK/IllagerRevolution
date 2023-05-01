@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -89,7 +88,7 @@ public class VariantRuneBladeItem extends RunedSword{
             if(!flag1 ){
                 if(!pLevel.isClientSide && flag2 && cc>2 ){
                     BlockPos pos=pPlayer.getOnPos();
-                    BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextDouble(-1.0d,1.0d),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextDouble(-1.0d,1.0d));
+                    BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextInt(-1,1),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextInt(-1,1));
                     FallenKnight fallenKnight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
                     fallenKnight.setIdOwner(pPlayer.getUUID());
                     fallenKnight.finalizeSpawn((ServerLevelAccessor) pLevel,pLevel.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED,null,null);
@@ -130,18 +129,18 @@ public class VariantRuneBladeItem extends RunedSword{
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         if(Screen.hasShiftDown()) {
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish1"));
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2"));
 
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1"));
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2"));
 
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1"));
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2"));
 
         } else {
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1"));
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2"));
 
         }
     }

@@ -44,6 +44,7 @@ import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
 
 import java.util.List;
+import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class Events {
@@ -53,7 +54,7 @@ public class Events {
         if (event != null && event.getEntity() != null) {
             Arrow bulletEntity=event.getSource().getDirectEntity() instanceof Arrow ? (Arrow) event.getSource().getDirectEntity() :null;
             LivingEntity attacker=event.getSource().getEntity() instanceof LivingEntity ? (LivingEntity) event.getSource().getEntity() : null;
-            LivingEntity entity=event.getEntityLiving();
+            LivingEntity entity=event.getEntity();
             if(attacker instanceof Player player){
                 if (bulletEntity!=null){
                     if(player.getMainHandItem().is(Items.CROSSBOW)){
@@ -119,11 +120,12 @@ public class Events {
                 }
             }
             if(entity.hasEffect(init_effect.DEATH_MARK.get() ) && entity.level.random.nextInt(0,7)==1){
+                Random random=new Random();
                 for (int i=0;i<3;i++){
-                    double xp=entity.getX()+entity.getRandom().nextDouble(-1.0,1.0);
-                    double yp=entity.getY()+entity.getRandom().nextDouble(0.0d,2.0d);
-                    double zp=entity.getZ()+entity.getRandom().nextDouble(-1.0,1.0);
-                    entity.level.addParticle(ModParticles.RUNE_SOUL_PARTICLES.get(),xp,yp,zp,entity.getRandom().nextFloat(-0.1f,0.1f),-0.1F,entity.getRandom().nextFloat(-0.1f,0.1f));
+                    double xp=entity.getX()+random.nextDouble(-1.0,1.0);
+                    double yp=entity.getY()+random.nextDouble(0.0d,2.0d);
+                    double zp=entity.getZ()+random.nextDouble(-1.0,1.0);
+                    entity.level.addParticle(ModParticles.RUNE_SOUL_PARTICLES.get(),xp,yp,zp,random.nextFloat(-0.1f,0.1f),-0.1F,random.nextFloat(-0.1f,0.1f));
                 }
             }
         }
@@ -167,7 +169,7 @@ public class Events {
     }
     @SubscribeEvent
     public static void onLeftClick(PlayerInteractEvent.RightClickItem event){
-        LivingEntity livingEntity = event.getEntityLiving();
+        LivingEntity livingEntity = event.getEntity();
         if(livingEntity instanceof ServerPlayer player){
             ItemStack helmet=player.getItemBySlot(EquipmentSlot.HEAD);
             if(checkHelmetMiner(helmet.getItem()) && !player.hasEffect(MobEffects.LUCK)){
@@ -211,8 +213,8 @@ public class Events {
         return  i;
     }
     @SubscribeEvent
-    public static void onEntityTick(LivingEvent.LivingUpdateEvent event) {
-        LivingEntity entity=event.getEntityLiving();
+    public static void onEntityTick(LivingEvent.LivingTickEvent event) {
+        LivingEntity entity=event.getEntity();
         Level world = entity.level;
         if (!(entity.hasEffect(init_effect.DEATH_MARK.get())) && Util.entitydeterminar(entity)!=null) {
             if (!world.getEntitiesOfClass(Blade_KnightEntity.class, AABB.ofSize(new Vec3(entity.getX(),entity.getY(),entity.getZ()), 50, 50, 50), e -> true).isEmpty()) {

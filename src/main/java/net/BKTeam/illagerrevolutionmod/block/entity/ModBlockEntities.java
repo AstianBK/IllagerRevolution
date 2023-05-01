@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, IllagerRevolutionMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, IllagerRevolutionMod.MOD_ID);
 
     public static final RegistryObject<BlockEntityType<RuneTableEntity>> RUNE_TABLE_ENTITY =
             BLOCK_ENTITIES.register("rune_table_entity", () ->

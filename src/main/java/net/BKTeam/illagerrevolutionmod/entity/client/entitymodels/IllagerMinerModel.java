@@ -27,17 +27,17 @@ public class IllagerMinerModel<I extends AbstractIllager> extends AnimatedGeoMod
     }
 
     @Override
-    public ResourceLocation getModelLocation(IllagerMinerEntity object) {
+    public ResourceLocation getModelResource(IllagerMinerEntity object) {
         return MODEL_RESLOC;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(IllagerMinerEntity object) {
+    public ResourceLocation getTextureResource(IllagerMinerEntity object) {
         return TEXTURE_DEFAULT;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(IllagerMinerEntity animatable) {
+    public ResourceLocation getAnimationResource(IllagerMinerEntity animatable) {
         return ANIMATION_RESLOC;
     }
     @SuppressWarnings({ "unchecked", "rawtypes" })

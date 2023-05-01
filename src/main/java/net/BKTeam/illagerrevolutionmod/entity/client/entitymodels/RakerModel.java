@@ -12,17 +12,17 @@ public class RakerModel extends AnimatedGeoModel<RakerEntity> {
     ResourceLocation TEXTURE_REGULAR = IllagerRevolutionMod.rl("textures/entity/raker/raker.png");
 
         @Override
-        public ResourceLocation getModelLocation(RakerEntity object) {
+        public ResourceLocation getModelResource(RakerEntity object) {
             return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/raker.geo.json");
         }
 
         @Override
-        public ResourceLocation getTextureLocation(RakerEntity object) {
+        public ResourceLocation getTextureResource(RakerEntity object) {
                 return TEXTURE_REGULAR;
         }
 
         @Override
-        public ResourceLocation getAnimationFileLocation(RakerEntity animatable) {
+        public ResourceLocation getAnimationResource(RakerEntity animatable) {
             return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "animations/raker.animation.json");
         }@SuppressWarnings({ "unchecked", "rawtypes" })
     @Override

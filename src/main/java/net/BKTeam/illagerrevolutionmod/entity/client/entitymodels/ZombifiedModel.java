@@ -14,12 +14,12 @@ public class ZombifiedModel<I extends Monster> extends AnimatedGeoModel<Zombifie
     protected static final ResourceLocation ANIMATION_RESLOC = new ResourceLocation(IllagerRevolutionMod.MOD_ID,
             "animations/zombified_entity.animation.json");
     @Override
-    public ResourceLocation getModelLocation(ZombifiedEntity object) {
+    public ResourceLocation getModelResource(ZombifiedEntity object) {
         return MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ZombifiedEntity object) {
+    public ResourceLocation getTextureResource(ZombifiedEntity object) {
         if(object.isHasSoul()){
             return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
                     "textures/entity/zombified/zombified_"+object.getnameSoul()+".png");
@@ -30,7 +30,7 @@ public class ZombifiedModel<I extends Monster> extends AnimatedGeoModel<Zombifie
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(ZombifiedEntity animatable) {
+    public ResourceLocation getAnimationResource(ZombifiedEntity animatable) {
         return ANIMATION_RESLOC;
     }
 }

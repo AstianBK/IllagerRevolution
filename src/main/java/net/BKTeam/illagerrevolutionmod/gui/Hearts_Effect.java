@@ -12,21 +12,21 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.effect.init_effect;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 import java.util.Random;
 
 
 @OnlyIn(Dist.CLIENT)
-public class Hearts_Effect implements IIngameOverlay {
+public class Hearts_Effect implements IGuiOverlay {
     long healthBlinkTime = 0;
     long lastHealthTime = 0;
 
     @Override
-    public void render(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, PoseStack mStack, float partialTick, int screenWidth, int screenHeight) {
         if (!gui.shouldDrawSurvivalElements()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
@@ -64,13 +64,13 @@ public class Hearts_Effect implements IIngameOverlay {
             int extraHealthRows = totalHealthRows - healthRows;
             int extraRowHeight = Mth.clamp(10 - (healthRows - 2), 3, 10);
 
-            int left = width / 2 - 91;
-            int top = height - ((ForgeIngameGui)Minecraft.getInstance().gui).left_height + healthRows * rowHeight;
+            int left = screenWidth / 2 - 91;
+            int top = screenHeight - ((ForgeGui)Minecraft.getInstance().gui).leftHeight + healthRows * rowHeight;
             if (rowHeight != 10){
                 top += 10 - rowHeight;
             }
 
-            gui.left_height += extraHealthRows * extraRowHeight;
+            gui.leftHeight += extraHealthRows * extraRowHeight;
 
             String s1=player.hasEffect(init_effect.DEEP_WOUND.get()) ? "" : "2";
             RenderSystem.setShaderTexture(0, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/gui/icons"+s1+".png"));
@@ -100,6 +100,5 @@ public class Hearts_Effect implements IIngameOverlay {
             }
             mStack.popPose();
         }
-
     }
 }

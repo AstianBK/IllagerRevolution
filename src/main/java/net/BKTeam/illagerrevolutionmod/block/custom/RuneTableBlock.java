@@ -81,7 +81,7 @@ public class RuneTableBlock extends BaseEntityBlock {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             if(entity instanceof RuneTableEntity) {
-                NetworkHooks.openGui(((ServerPlayer)pPlayer), (RuneTableEntity)entity, pPos);
+                NetworkHooks.openScreen(((ServerPlayer)pPlayer), (RuneTableEntity)entity, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }

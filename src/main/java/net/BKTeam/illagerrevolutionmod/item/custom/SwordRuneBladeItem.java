@@ -7,7 +7,6 @@ import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -151,17 +150,17 @@ public class SwordRuneBladeItem extends RunedSword {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         if(Screen.hasShiftDown()) {
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1"));
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2"));
 
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1"));
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2"));
 
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.soulward"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_runed_blade.soulward"));
 
         } else {
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1"));
-            pTooltipComponents.add(new TranslatableComponent("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2"));
 
         }
     }

@@ -33,6 +33,7 @@ import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
 import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -44,7 +45,7 @@ public class Event_Death {
         if (event != null && event.getEntity() != null) {
             upSouls(event.getEntity().level,event.getEntity(),event.getSource().getEntity());
             DamageSource pSource=event.getSource();
-            LivingEntity entity=event.getEntityLiving();
+            LivingEntity entity=event.getEntity();
 
             if(entity instanceof  Player){
                 ItemStack stack=entity.getMainHandItem().copy();
@@ -69,7 +70,7 @@ public class Event_Death {
                 .getEntitiesOfClass(Blade_KnightEntity.class, AABB.ofSize(new Vec3((entity.getX()), (entity.getY()), (entity.getZ())), 100, 100, 100), e -> true)
                 .isEmpty() && !(assasin instanceof Zombie)) {
             boolean flag=true;
-            String name=entity.getType().getRegistryName().getPath();
+            String name=entity.getName().getString();
             if(_livEnt instanceof ZombifiedEntity zombified_evokerEntity){
                 name=zombified_evokerEntity.getIdSoul();
                 flag=!(zombified_evokerEntity.getOwner() instanceof Player);
@@ -86,13 +87,14 @@ public class Event_Death {
                             flag1=!(((ZombifiedEntity)undead).getOwner() instanceof Player);
                         }
                         if (flag1){
+                            Random random = new Random();
                             undead.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,600,1));
                             undead.heal(undead.getMaxHealth()-undead.getHealth());
                             undead.level.addParticle(ParticleTypes.HEART,undead.getX(),undead.getY()+undead.getBbHeight()+0.5d,undead.getZ(),0.0d,0.1d,0.0d);
                             for(int j=0;j<5;j++){
-                                double xp=undead.getX()+undead.getRandom().nextDouble(-1.0,1.0);
-                                double yp=undead.getY()+undead.getRandom().nextDouble(0.5d,2.0d);
-                                double zp=undead.getZ()+undead.getRandom().nextDouble(-1.0,1.0);
+                                double xp=undead.getX()+random.nextDouble(-1.0,1.0);
+                                double yp=undead.getY()+random.nextDouble(0.5d,2.0d);
+                                double zp=undead.getZ()+random.nextDouble(-1.0,1.0);
                                 undead.level.addParticle(ParticleTypes.TOTEM_OF_UNDYING,undead.getX()+xp,undead.getY()+yp,undead.getZ()+zp,0.0d,0.2d,0.0d);
                             }
                         }

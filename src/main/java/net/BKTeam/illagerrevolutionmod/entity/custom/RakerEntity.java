@@ -188,7 +188,7 @@ public class RakerEntity extends TamableAnimal implements IAnimatable, IHasInven
                 }
                 this.heal(3.0f);
                 playSound(SoundEvents.CAT_EAT, 1.0F, -1.0F);
-                this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
+                this.gameEvent(GameEvent.ENTITY_INTERACT, player);
                 return InteractionResult.SUCCESS;
             }
         }
@@ -214,7 +214,7 @@ public class RakerEntity extends TamableAnimal implements IAnimatable, IHasInven
         if (this.isTame() && this.isOwnedBy(player) && !player.isSecondaryUseActive() ) {
             if(player instanceof IOpenRakerContainer){
                 this.openInventory(player);
-                this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
+                this.gameEvent(GameEvent.ENTITY_INTERACT, player);
                 this.updateContainerEquipment();
                 return InteractionResult.SUCCESS;
             }

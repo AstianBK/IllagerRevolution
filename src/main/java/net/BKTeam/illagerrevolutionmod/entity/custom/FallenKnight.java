@@ -168,7 +168,6 @@ public class FallenKnight extends ReanimatedEntity implements IAnimatable, IHasI
         return this.dispawnTimer;
     }
 
-    @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(this.level.random.nextFloat() < 0.5 ? Items.STONE_SWORD : Items.STONE_AXE));
     }

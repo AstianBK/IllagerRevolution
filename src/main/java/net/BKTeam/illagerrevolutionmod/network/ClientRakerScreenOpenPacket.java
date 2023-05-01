@@ -1,11 +1,11 @@
 package net.BKTeam.illagerrevolutionmod.network;
 
+import net.BKTeam.illagerrevolutionmod.entity.custom.RakerEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
-import net.BKTeam.illagerrevolutionmod.entity.custom.RakerEntity;
 
 import java.util.function.Supplier;
 

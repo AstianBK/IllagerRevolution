@@ -54,7 +54,7 @@ public class Illager_Beast_TamerRenderer extends ExtendedGeoEntityRenderer<Illag
     public ItemStack getHeldItemForBone(String boneName, IllagerBeastTamerEntity currentEntity) {
         switch (boneName) {
             case RIGHT_HAND_BONE_IDENT:
-                return mainHand;
+                return currentEntity.getMainHandItem();
             case POTION_BONE_IDENT:
                 break;
         }
@@ -74,11 +74,11 @@ public class Illager_Beast_TamerRenderer extends ExtendedGeoEntityRenderer<Illag
     public void preRenderItem(PoseStack stack, ItemStack item, String boneName, IllagerBeastTamerEntity currentEntity,
                               IBone bone) {
 
-        if (item == this.mainHand || item == this.offHand) {
+        if (item == currentEntity.getMainHandItem() || item == currentEntity.getOffhandItem()) {
             stack.mulPose(Vector3f.XP.rotationDegrees(270F));
             boolean shieldFlag = item.getItem() instanceof ShieldItem;
 
-            if (item == this.mainHand) {
+            if (item == currentEntity.getMainHandItem()) {
                 if (shieldFlag) {
                     stack.translate(0, 0.125, -15);
                    }else {
@@ -106,31 +106,6 @@ public class Illager_Beast_TamerRenderer extends ExtendedGeoEntityRenderer<Illag
 
     protected void postRenderItem(PoseStack stack, ItemStack item, String boneName,
                                   IllagerBeastTamerEntity currentEntity, IBone bone) {
-
-        if (item == this.mainHand || item == this.offHand) {
-
-            stack.mulPose(Vector3f.XP.rotationDegrees(270F));
-            boolean shieldFlag = item.getItem() instanceof ShieldItem;
-
-            if (item == this.mainHand) {
-                if (shieldFlag) {
-                    stack.translate(0, 0.125, -15);
-                }else {
-
-                }
-            } else {
-                if (shieldFlag) {
-                    stack.translate(0, 0.125, 0.25);
-                    stack.mulPose(Vector3f.YP.rotationDegrees(180));
-                }else {
-
-                }
-
-            }
-            // stack.mulPose(Vector3f.YP.rotationDegrees(180));
-
-            // stack.scale(0.75F, 0.75F, 0.75F);
-        }
 
     }
 
