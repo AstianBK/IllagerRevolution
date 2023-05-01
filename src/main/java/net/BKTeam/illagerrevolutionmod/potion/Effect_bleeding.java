@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.potion;
 
 import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketProcBleedingEffect;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -44,7 +45,7 @@ public class Effect_bleeding extends MobEffect {
             if ((entity.isSprinting() || (!(entity instanceof Player || entity instanceof AbstractSkeleton || entity instanceof AbstractGolem || entity instanceof Blaze || entity instanceof Vex || entity instanceof WitherBoss))) ) {
                 entity.hurt(DamageSource.GENERIC, 1);
                 if(!entity.level.isClientSide){
-                    PacketHandler.sendToAllTracking(new PacketBleedingEffect(entity),entity);
+                    sendBleeding(entity);
                 }
             }else if(!(entity instanceof Player)){
                 entity.removeEffect(this);
@@ -70,12 +71,19 @@ public class Effect_bleeding extends MobEffect {
             }
         }
     }
-
-    public static void sendProcBleeding(LivingEntity livingEntity) {
+    public static void sendBleeding(LivingEntity livingEntity) {
         if (livingEntity instanceof ServerPlayer player) {
             PacketHandler.sendToPlayer(new PacketBleedingEffect(player), player);
         }
         PacketHandler.sendToAllTracking(new PacketBleedingEffect(livingEntity),livingEntity);
+
+    }
+
+    public static void sendProcBleeding(LivingEntity livingEntity) {
+        if (livingEntity instanceof ServerPlayer player) {
+            PacketHandler.sendToPlayer(new PacketProcBleedingEffect(player), player);
+        }
+        PacketHandler.sendToAllTracking(new PacketProcBleedingEffect(livingEntity),livingEntity);
 
     }
 
