@@ -1,8 +1,9 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.NewMinerGoggles01.default": {
+		"animation.visor.idle": {
 			"loop": true
 		}
-	}
+	},
+	"geckolib_format_version": 2
 }
