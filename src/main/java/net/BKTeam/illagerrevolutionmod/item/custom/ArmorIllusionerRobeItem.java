@@ -9,6 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -48,13 +50,15 @@ public class ArmorIllusionerRobeItem extends GeoArmorItem implements IAnimatable
 
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {
-        if(player.getHealth() < player.getMaxHealth()*20/100 ){
-            if(player.hasEffect(MobEffects.INVISIBILITY)){
-                player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,99999999));
-            }
-        }else if (player.hasEffect( MobEffects.INVISIBILITY)){
-            player.removeEffect(MobEffects.INVISIBILITY);
-        }
         super.onArmorTick(stack, level, player);
+    }
+
+    @SubscribeEvent
+    private static void renderEvent(RenderLivingEvent<?,?> event){
+        if(event.getEntity() instanceof Player player){
+            if(player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorIllusionerRobeItem){
+                event.setCanceled(true);
+            }
+        }
     }
 }

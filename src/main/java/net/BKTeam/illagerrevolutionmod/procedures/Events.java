@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.procedures;
 
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.item.custom.ArmorIllusionerRobeItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
@@ -28,6 +29,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
