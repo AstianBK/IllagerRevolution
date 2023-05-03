@@ -49,6 +49,9 @@ public class PacketHandler {
 
         channel.registerMessage(index++, PacketSpawnedZombified.class, PacketSpawnedZombified::encode,
                 PacketSpawnedZombified::new, PacketSpawnedZombified::handle);
+
+        channel.registerMessage(index++, PacketSmoke.class, PacketSmoke::encode,
+                PacketSmoke::new, PacketSmoke::handle);
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {

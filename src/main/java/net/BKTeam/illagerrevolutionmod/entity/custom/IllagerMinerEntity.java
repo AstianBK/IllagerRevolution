@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -104,20 +106,12 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
     public void setHasItem(boolean pBoolean) {
         super.setHasItem(pBoolean);
         if(pBoolean){
-            //bombSmoke();
+            if(!this.level.isClientSide){
+                PacketHandler.sendToAllTracking(new PacketSmoke(this),this);
+            }
             this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,150));
         }
     }
-
-    /*public void bombSmoke(){
-        this.playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(this.getRandom().nextFloat() * 0.4F + 0.8F));
-        for (int i = 0; i < 24; i++) {
-            double x1 = this.getX();
-            double x2 = this.getY();
-            double x3 = this.getZ();
-            this.level.addParticle(ParticleTypes.LARGE_SMOKE, x1, x2, x3, this.getRandom().nextFloat(-0.1f, 0.1f), 0.1f, this.getRandom().nextFloat(-0.1f, 0.1f));
-        }
-    }*/
 
     @Override
     public void tick() {

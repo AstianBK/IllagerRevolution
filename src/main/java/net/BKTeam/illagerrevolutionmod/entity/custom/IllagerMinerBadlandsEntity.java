@@ -54,7 +54,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     private final int[] listRob =new int[5];
 
-    private boolean useLantern;
+    private boolean useArena;
 
     private int robTimer;
 
@@ -73,7 +73,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         super(entityType, level);
         this.robTimer=0;
         this.attackTimer=0;
-        this.useLantern=false;
+        this.useArena =false;
         for (int i=0;i<5;i++) {
             this.listRob[i]=0;
         }
@@ -143,27 +143,26 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         }else {
                 int cc=this.robTimer;
                 if(pEntity instanceof ServerPlayer player && cc==0){
-                int i=0;
-                if(this.getRandom().nextInt(2)==1){
-                    while(i<player.getInventory().getContainerSize() && !this.isHasItems()){
-                        ItemStack itemstack=player.getInventory().getItem(i);
-                        if(Util.isItemRob(itemstack.getItem())){
-                            int rCount=this.getRandom().nextInt(1,5);
-                            if(rCount>itemstack.getCount()){
-                                rCount=itemstack.getCount();
+                    int i=0;
+                    if(this.getRandom().nextInt(2)==1){
+                        while(i<player.getInventory().getContainerSize() && !this.isHasItems()){
+                            ItemStack itemstack=player.getInventory().getItem(i);
+                            if(Util.isItemRob(itemstack.getItem())){
+                                int rCount=this.getRandom().nextInt(1,5);
+                                if(rCount>itemstack.getCount()){
+                                    rCount=itemstack.getCount();
+                                }
+                                this.setAttacklantern(true);
+                                this.setHasItem(true);
+                                this.listRob[Util.mineralId(itemstack.getItem())]+=rCount;
+                                itemstack.shrink(rCount);
+                                this.robTimer=500;
                             }
-                            this.setAttacklantern(true);
-                            this.setHasItem(true);
-                            this.listRob[Util.mineralId(itemstack.getItem())]+=rCount;
-                            itemstack.shrink(rCount);
-                            this.robTimer=500;
+                            i++;
                         }
-                        i++;
                     }
-
                 }
-            }
-            return super.doHurtTarget(pEntity);
+                return super.doHurtTarget(pEntity);
         }
 
     }
@@ -256,6 +255,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     public boolean isHasItems(){
         return this.entityData.get(HAS_ITEM);
     }
+
     public void setHasItem(boolean pBoolean){
         this.entityData.set(HAS_ITEM,pBoolean);
     }
@@ -280,16 +280,16 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
                     if(!this.isHasItems() && !this.isAttackLantern()){
                         this.doHurtTarget(this.getTarget());
                     }else{
-                        this.useLantern=true;
+                        this.useArena =true;
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,50,1));
-                        this.getTarget().setSecondsOnFire(5);
+                        this.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,1));
                     }
                 }
             }else{
                 this.setAttacking(false);
-                if(this.useLantern){
+                if(this.useArena){
                     this.setAttacklantern(false);
-                    this.useLantern=false;
+                    this.useArena=false;
                 }
             }
         }

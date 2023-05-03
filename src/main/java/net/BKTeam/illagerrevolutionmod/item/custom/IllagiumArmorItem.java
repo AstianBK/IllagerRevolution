@@ -1,15 +1,25 @@
 package net.BKTeam.illagerrevolutionmod.item.custom;
 
 import com.google.common.collect.ImmutableMap;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -23,10 +33,6 @@ import java.util.Map;
 
 public class IllagiumArmorItem extends GeoArmorItem implements IAnimatable {
     private AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
-    private static final Map<ArmorMaterial, MobEffectInstance> MATERIAL_TO_EFFECT_MAP =
-            (new ImmutableMap.Builder<ArmorMaterial, MobEffectInstance>())
-                    .put(ModArmorMaterials.ILLAGIUM, new MobEffectInstance(MobEffects.UNLUCK, 0, 0)).build();
 
     public IllagiumArmorItem(ModArmorMaterials material, EquipmentSlot slot, Properties settings) {
         super(material, slot, settings);
@@ -48,63 +54,69 @@ public class IllagiumArmorItem extends GeoArmorItem implements IAnimatable {
         return PlayState.CONTINUE;
     }
 
-    @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if(!world.isClientSide()) {
-            if(hasFullSuitOfArmorOn(player)) {
-                evaluateArmorEffects(player);
+
+
+
+    @SubscribeEvent
+    public static void onLeftClick(PlayerInteractEvent.RightClickItem event){
+        LivingEntity livingEntity = event.getEntity();
+        if(livingEntity instanceof ServerPlayer player){
+            ItemStack helmet=player.getItemBySlot(EquipmentSlot.HEAD);
+            if(checkHelmetMiner(helmet.getItem())){
+                if(!player.hasEffect(MobEffects.LUCK)){
+                    if(event.getItemStack().getItem()== Items.EMERALD){
+                        ItemStack itemStack=event.getItemStack();
+                        itemStack.shrink(1);
+                        hurtHelmet(helmet,player);
+                        player.addEffect(new MobEffectInstance(MobEffects.LUCK,150,0));
+                        player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,140,1));
+                        SoundEvent Sound=player.level.getRandom().nextInt(0,2)==1 ? SoundEvents.AMETHYST_CLUSTER_BREAK:SoundEvents.AMETHYST_CLUSTER_HIT;
+                        event.getEntity().level.playSound(null,event.getEntity().blockPosition(),Sound, SoundSource.AMBIENT,1.0f,-1.0f);
+                    }
+                }
+                if(!player.hasEffect(MobEffects.INVISIBILITY)){
+                    if(event.getItemStack().getItem()== Items.AMETHYST_SHARD){
+                        if(!player.level.isClientSide){
+                            PacketHandler.sendToPlayer(new PacketSmoke(player),player);
+                        }
+                        player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,150,0));
+                        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,140,1));
+                        ItemStack itemStack=event.getItemStack();
+                        itemStack.shrink(1);
+                        hurtHelmet(helmet,player);
+                        SoundEvent Sound=player.level.getRandom().nextInt(0,2)==1 ? SoundEvents.AMETHYST_CLUSTER_BREAK:SoundEvents.AMETHYST_CLUSTER_HIT;
+                        event.getEntity().level.playSound(null,event.getEntity().blockPosition(),Sound, SoundSource.AMBIENT,1.0f,-1.0f);
+                    }
+                }
             }
         }
     }
 
-    private void evaluateArmorEffects(Player player) {
-        for (Map.Entry<ArmorMaterial, MobEffectInstance> entry : MATERIAL_TO_EFFECT_MAP.entrySet()) {
-            ArmorMaterial mapArmorMaterial = entry.getKey();
-            MobEffectInstance mapStatusEffect = entry.getValue();
-
-            if(hasCorrectArmorOn(mapArmorMaterial, player)) {
-                addStatusEffectForMaterial(player, mapArmorMaterial, mapStatusEffect);
-            }
-        }
+    private static boolean checkHelmetMiner(Item item){
+        return item instanceof IllagiumArmorItem;
     }
 
-    private void addStatusEffectForMaterial(Player player, ArmorMaterial mapArmorMaterial,
-                                            MobEffectInstance mapStatusEffect) {
-        boolean hasPlayerEffect = player.hasEffect(mapStatusEffect.getEffect());
+    private static void hurtHelmet(ItemStack itemStack, Player player){
+        float i=0;
+        int j=((IllagiumArmorItem)itemStack.getItem()).getMaterial()== ModArmorMaterials.ILLAGIUM ? 2 : 10;
 
-        if(hasCorrectArmorOn(mapArmorMaterial, player) && !hasPlayerEffect) {
-            player.addEffect(new MobEffectInstance(mapStatusEffect.getEffect(),
-                    mapStatusEffect.getDuration(), mapStatusEffect.getAmplifier()));
-
-            //if(new Random().nextFloat() > 0.6f) { // 40% of damaging the armor! Possibly!
-            //    player.getInventory().hurtArmor(DamageSource.MAGIC, 1f, new int[]{0, 1, 2, 3});
-            //}
+        if(EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING,itemStack) !=0){
+            i=percentDamageForEnchantmentLevel(EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING,itemStack));
         }
+        int maxHurt= (int) (itemStack.getMaxDamage()+(itemStack.getMaxDamage()*(i)));
+        itemStack.hurtAndBreak(maxHurt*j/100,player,e -> e.broadcastBreakEvent(EquipmentSlot.HEAD));
     }
 
-    private boolean hasFullSuitOfArmorOn(Player player) {
-        ItemStack boots = player.getInventory().getArmor(0);
-        ItemStack leggings = player.getInventory().getArmor(1);
-        ItemStack breastplate = player.getInventory().getArmor(2);
-        ItemStack helmet = player.getInventory().getArmor(3);
-
-        return !helmet.isEmpty() && !breastplate.isEmpty()
-                && !leggings.isEmpty() && !boots.isEmpty();
-    }
-
-    private boolean hasCorrectArmorOn(ArmorMaterial material, Player player) {
-        for (ItemStack armorStack: player.getInventory().armor) {
-            if(!(armorStack.getItem() instanceof ArmorItem)) {
-                return false;
-            }
+    private static float percentDamageForEnchantmentLevel(int pLevel){
+        float i;
+        if(pLevel==1){
+            i=0.25f;
         }
-
-        ArmorItem boots = ((ArmorItem)player.getInventory().getArmor(0).getItem());
-        ArmorItem leggings = ((ArmorItem)player.getInventory().getArmor(1).getItem());
-        ArmorItem breastplate = ((ArmorItem)player.getInventory().getArmor(2).getItem());
-        ArmorItem helmet = ((ArmorItem)player.getInventory().getArmor(3).getItem());
-
-        return helmet.getMaterial() == material && breastplate.getMaterial() == material &&
-                leggings.getMaterial() == material && boots.getMaterial() == material;
+        else if(pLevel==2) {
+            i = 0.364f;
+        }else {
+            i=0.429f;
+        }
+        return  i;
     }
 }
