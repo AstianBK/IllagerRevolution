@@ -1,8 +1,10 @@
 package net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers;
 
+import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import net.minecraft.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -19,9 +21,21 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.ExtendedGeoEntityRenderer;
 
+import java.util.Map;
+
 import static net.BKTeam.illagerrevolutionmod.ModConstants.*;
 
 public class IllagerMinerBadlandsRenderer extends ExtendedGeoEntityRenderer<IllagerMinerBadlandsEntity> {
+
+    private static final Map<IllagerMinerBadlandsEntity.Variant, ResourceLocation> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(IllagerMinerBadlandsEntity.Variant.class), (p_114874_) -> {
+        p_114874_.put(IllagerMinerBadlandsEntity.Variant.BROWN, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png"));
+        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKPURPLE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer2.png"));
+        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKGREEN, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer3.png"));
+        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKBLUE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer4.png"));
+        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKGRAY, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer5.png"));
+        p_114874_.put(IllagerMinerBadlandsEntity.Variant.GRAY, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer6.png"));
+    });
+
     public IllagerMinerBadlandsRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new IllagerMinerBadlandsModel());
         this.shadowRadius = 0.5f;
@@ -29,7 +43,7 @@ public class IllagerMinerBadlandsRenderer extends ExtendedGeoEntityRenderer<Illa
 
     @Override
     public ResourceLocation getTextureLocation(IllagerMinerBadlandsEntity instance) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png");
+        return LOCATION_BY_VARIANT.get(instance.getIdVariant());
     }
 
     @Override
@@ -84,10 +98,7 @@ public class IllagerMinerBadlandsRenderer extends ExtendedGeoEntityRenderer<Illa
                 if (shieldFlag) {
                     stack.translate(0, 0.125, 0.25);
                     stack.mulPose(Vector3f.YP.rotationDegrees(180));
-                }else {
-
                 }
-
             }
             // stack.mulPose(Vector3f.YP.rotationDegrees(180));
 

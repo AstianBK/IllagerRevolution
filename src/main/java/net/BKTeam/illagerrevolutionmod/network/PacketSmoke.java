@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,9 +44,12 @@ public class PacketSmoke {
     private void handlePlayActivateAnimation() {
         Minecraft mc = Minecraft.getInstance();
         Random random = new Random();
-        double xp=entity.getX()+random.nextDouble(-0.4d,0.4d);
-        double yp=entity.getY();
-        double zp=entity.getZ()+random.nextDouble(-0.4d,0.4d);
-        mc.particleEngine.createParticle(ParticleTypes.SMOKE, xp, yp ,zp,  0.0f, 0.3f,0.0f);
+        entity.playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(random.nextFloat() * 0.4F + 0.8F));
+        for (int i = 0; i < 24; i++) {
+            double x1 = entity.getX();
+            double x2 = entity.getY();
+            double x3 = entity.getZ();
+            mc.particleEngine.createParticle(ParticleTypes.LARGE_SMOKE, x1, x2, x3,random.nextFloat(-0.1f, 0.1f), 0.1f, random.nextFloat(-0.1f, 0.1f));
+        }
     }
 }

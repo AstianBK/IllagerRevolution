@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.horse.Variant;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -45,6 +46,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EnumSet;
 
 
@@ -69,6 +72,10 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     private static final EntityDataAccessor<Boolean> ATTACKLANTERN =
             SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Integer> ID_VARIANT =
+            SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.INT);
+
     public IllagerMinerBadlandsEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
         super(entityType, level);
         this.robTimer=0;
@@ -83,6 +90,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         if(!(this instanceof  IllagerMinerEntity)){
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
+            this.setIdVariant(this.level.random.nextInt(0,6));
         }
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
@@ -165,9 +173,6 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
                 return super.doHurtTarget(pEntity);
         }
 
-    }
-    protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
     }
 
     public boolean isAttackLantern(){
@@ -260,6 +265,17 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         this.entityData.set(HAS_ITEM,pBoolean);
     }
 
+    public int getTypeIdVariant(){
+        return this.entityData.get(ID_VARIANT);
+    }
+    public Variant getIdVariant(){
+        return Variant.byId(this.getTypeIdVariant() & 255);
+    }
+
+    public void setIdVariant(int pId){
+        this.entityData.set(ID_VARIANT,pId);
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -307,6 +323,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         pCompound.putBoolean("hasItem",this.isHasItems());
         pCompound.putBoolean("attackLantern",this.isAttackLantern());
         pCompound.putBoolean("attacking",this.isAttacking());
+        pCompound.putInt("id_Variant",this.getTypeIdVariant());
         for (int i=0;i<5;i++){
             String s1=Integer.toString(i);
             pCompound.putInt("count"+s1,this.listRob[i]);
@@ -319,6 +336,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         this.setHasItem(pCompound.getBoolean("hasItem"));
         this.setAttacklantern(pCompound.getBoolean("attackLantern"));
         this.setAttacking(pCompound.getBoolean("attacking"));
+        this.setIdVariant(pCompound.getInt("id_Variant"));
         for (int i=0;i<5;i++){
             String s1=Integer.toString(i);
             this.listRob[i]=pCompound.getInt("count"+s1);
@@ -330,6 +348,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         this.entityData.define(HAS_ITEM,false);
         this.entityData.define(ATTACKLANTERN,false);
         this.entityData.define(ATTACKING,false);
+        this.entityData.define(ID_VARIANT,0);
         super.defineSynchedData();
     }
 
@@ -361,5 +380,29 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     @Override
     public SimpleContainer getInventory() {
         return this.inventory;
+    }
+
+    public enum Variant {
+        BROWN(0),
+        DARKPURPLE(1),
+        DARKGREEN(2),
+        DARKBLUE(3),
+        DARKGRAY(4),
+        GRAY(5);
+
+        private static final Variant[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(IllagerMinerBadlandsEntity.Variant::getId)).toArray(Variant[]::new);
+        private final int id;
+
+        private Variant(int p_30984_) {
+            this.id = p_30984_;
+        }
+
+        public int getId() {
+            return this.id;
+        }
+
+        public static IllagerMinerBadlandsEntity.Variant byId(int p_30987_) {
+            return BY_ID[p_30987_ % BY_ID.length];
+        }
     }
 }

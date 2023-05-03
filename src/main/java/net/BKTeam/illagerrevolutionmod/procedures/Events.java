@@ -7,6 +7,7 @@ import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -169,7 +170,66 @@ public class Events {
         }
         return false;
     }
+    @SubscribeEvent
+    public static void onLeftClick(PlayerInteractEvent.RightClickItem event){
+        LivingEntity livingEntity = event.getEntity();
+        if(livingEntity instanceof ServerPlayer player){
+            ItemStack helmet=player.getItemBySlot(EquipmentSlot.HEAD);
+            ItemStack itemStack=event.getItemStack();
+            if(checkHelmetMiner(helmet.getItem())){
+                if(!player.hasEffect(MobEffects.LUCK)){
+                    if(itemStack.getItem()== Items.EMERALD){
+                        itemStack.shrink(1);
+                        hurtHelmet(helmet,player);
+                        player.addEffect(new MobEffectInstance(MobEffects.LUCK,150,0));
+                        player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,140,1));
+                        SoundEvent Sound=player.level.getRandom().nextInt(0,2)==1 ? SoundEvents.AMETHYST_CLUSTER_BREAK:SoundEvents.AMETHYST_CLUSTER_HIT;
+                        event.getEntity().level.playSound(null,event.getEntity().blockPosition(),Sound, SoundSource.AMBIENT,1.0f,-1.0f);
+                    }
+                }
+                if(!player.hasEffect(MobEffects.INVISIBILITY)){
+                    if(itemStack.getItem() == Items.AMETHYST_SHARD){
+                        if(!player.level.isClientSide){
+                            PacketHandler.sendToPlayer(new PacketSmoke(player),player);
+                        }
+                        player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,150,0));
+                        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,140,1));
+                        itemStack.shrink(1);
+                        hurtHelmet(helmet,player);
+                        SoundEvent Sound=player.level.getRandom().nextInt(0,2)==1 ? SoundEvents.AMETHYST_CLUSTER_BREAK:SoundEvents.AMETHYST_CLUSTER_HIT;
+                        event.getEntity().level.playSound(null,event.getEntity().blockPosition(),Sound, SoundSource.AMBIENT,1.0f,-1.0f);
+                    }
+                }
+            }
+        }
+    }
 
+    private static boolean checkHelmetMiner(Item item){
+        return item== ModItems.HELMET_MINER.get() || item==ModItems.HELMET_MINER_REINFORCED.get();
+    }
+
+    private static void hurtHelmet(ItemStack itemStack, Player player){
+        float i=0;
+        int j=((IllagiumArmorItem)itemStack.getItem()).getMaterial()== ModArmorMaterials.ILLAGIUM ? 2 : 10;
+
+        if(EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING,itemStack) !=0){
+            i=percentDamageForEnchantmentLevel(EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING,itemStack));
+        }
+        int maxHurt= (int) (itemStack.getMaxDamage()+(itemStack.getMaxDamage()*(i)));
+        itemStack.hurtAndBreak(maxHurt*j/100,player,e -> e.broadcastBreakEvent(EquipmentSlot.HEAD));
+    }
+    private static float percentDamageForEnchantmentLevel(int pLevel){
+        float i;
+        if(pLevel==1){
+            i=0.25f;
+        }
+        else if(pLevel==2) {
+            i = 0.364f;
+        }else {
+            i=0.429f;
+        }
+        return  i;
+    }
     @SubscribeEvent
     public static void onEntityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity=event.getEntity();
