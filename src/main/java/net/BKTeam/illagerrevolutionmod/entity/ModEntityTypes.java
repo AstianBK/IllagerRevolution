@@ -17,9 +17,9 @@ public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, IllagerRevolutionMod.MOD_ID);
 
-    public static final RegistryObject<EntityType<IllagerMinerBadlandsEntity>> ILLAGERMINERBADLANDS =
+    public static final RegistryObject<EntityType<IllagerScavengerEntity>> ILLAGERMINERBADLANDS =
             ENTITY_TYPES.register("illagerminerbadlands",
-                    () -> EntityType.Builder.of(IllagerMinerBadlandsEntity::new, MobCategory.MONSTER)
+                    () -> EntityType.Builder.of(IllagerScavengerEntity::new, MobCategory.MONSTER)
                             .sized(0.60f, 2.0f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "illagerminerbadlands").toString()));
 

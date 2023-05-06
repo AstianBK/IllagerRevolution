@@ -2,8 +2,13 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
+import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
@@ -14,6 +19,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.InventoryCarrier;
@@ -35,20 +41,39 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.EnumSet;
 
-public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IAnimatable, InventoryCarrier {
+
+public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, InventoryCarrier {
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(5);
     public boolean fistUseInvi;
     public boolean animIdle2;
-    private int animIdle2Timer;
+    private int attackTimer;
+    public int robTimer;
+    private final int[] listRob =new int[5];
+
+    private static final EntityDataAccessor<Boolean> HAS_ITEM =
+            SynchedEntityData.defineId(IllagerScavengerEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Boolean> ATTACKING =
+            SynchedEntityData.defineId(IllagerScavengerEntity.class, EntityDataSerializers.BOOLEAN);
 
     public IllagerMinerEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
         super(entityType, level);
         this.fistUseInvi = false;
         this.animIdle2 = false;
-        this.animIdle2Timer = 0;
+        this.attackTimer = 0;
+        this.robTimer = 0;
+        for (int i=0;i<5;i++) {
+            this.listRob[i]=0;
+        }
+    }
+
+    @Override
+    public void applyRaidBuffs(int pWave, boolean p_37845_) {
+
     }
 
     @Nullable
@@ -102,9 +127,61 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
 
     }
 
+    public void setAttacking(boolean attacking){
+        this.entityData.set(ATTACKING,attacking);
+        this.attackTimer = isAttacking() ? 10 : 0;
+    }
+
+    public boolean isAttacking(){
+        return this.entityData.get(ATTACKING);
+    }
+
+    public boolean isHasItems(){
+        return this.entityData.get(HAS_ITEM);
+    }
+
+
     @Override
+    protected void dropAllDeathLoot(DamageSource pDamageSource) {
+        for(int i=0;i<5;i++){
+            if(this.listRob[i]!=0){
+                ItemStack stack=new ItemStack(Util.selectItem(i));
+                stack.setCount(this.listRob[i]);
+                this.spawnAtLocation(stack);
+            }
+        }
+        super.dropAllDeathLoot(pDamageSource);
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity pEntity) {
+        if(!super.doHurtTarget(pEntity)){
+            return false;
+        }else {
+            int cc=this.robTimer;
+            if(pEntity instanceof ServerPlayer player && cc==0){
+                int i=0;
+                if(this.getRandom().nextInt(2)==1){
+                    while(i<player.getInventory().getContainerSize() && !this.isHasItems()){
+                        ItemStack itemstack=player.getInventory().getItem(i);
+                        if(Util.isItemRob(itemstack.getItem())){
+                            int rCount=this.getRandom().nextInt(1,5);
+                            if(rCount>itemstack.getCount()){
+                                rCount=itemstack.getCount();
+                            }
+                            this.setHasItem(true);
+                            this.listRob[Util.mineralId(itemstack.getItem())]+=rCount;
+                            itemstack.shrink(rCount);
+                            this.robTimer=500;
+                        }
+                        i++;
+                    }
+                }
+            }
+            return super.doHurtTarget(pEntity);
+        }
+    }
     public void setHasItem(boolean pBoolean) {
-        super.setHasItem(pBoolean);
         if(pBoolean){
             if(!this.level.isClientSide){
                 PacketHandler.sendToAllTracking(new PacketSmoke(this),this);
@@ -158,5 +235,32 @@ public class IllagerMinerEntity extends IllagerMinerBadlandsEntity implements IA
     @Override
     public SimpleContainer getInventory() {
         return this.inventory;
+    }
+
+    static class MinerAttackGoal extends MeleeAttackGoal {
+        private final IllagerMinerEntity goalOwner;
+
+        public MinerAttackGoal(IllagerMinerEntity entity, double speedModifier, boolean followWithoutLineOfSight) {
+            super(entity, speedModifier, followWithoutLineOfSight);
+            this.goalOwner = entity;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+        }
+
+        @Override
+        protected void checkAndPerformAttack(@NotNull LivingEntity entity, double distance) {
+            double d0 = this.getAttackReachSqr(entity);
+            if (distance <= d0 && this.getTicksUntilNextAttack() <= 0 && this.goalOwner.attackTimer<=0 && !this.goalOwner.isAttacking()) {
+                this.resetAttackCooldown();
+                this.goalOwner.getNavigation().stop();
+                this.goalOwner.getLookControl().setLookAt(entity,180,180);
+                this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
+            }
+        }
+
+        @Override
+        protected void resetAttackCooldown() {
+            super.resetAttackCooldown();
+            this.goalOwner.setAttacking(true);
+        }
     }
 }

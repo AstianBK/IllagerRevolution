@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import net.BKTeam.illagerrevolutionmod.entity.layers.ScavengerJunkArmorLayer;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,8 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
-import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.IllagerMinerBadlandsModel;
-import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerMinerBadlandsEntity;
+import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.IllagerScavengerModel;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerScavengerEntity;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -25,24 +26,25 @@ import java.util.Map;
 
 import static net.BKTeam.illagerrevolutionmod.ModConstants.*;
 
-public class IllagerMinerBadlandsRenderer extends ExtendedGeoEntityRenderer<IllagerMinerBadlandsEntity> {
+public class IllagerScavengerRenderer extends ExtendedGeoEntityRenderer<IllagerScavengerEntity> {
 
-    private static final Map<IllagerMinerBadlandsEntity.Variant, ResourceLocation> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(IllagerMinerBadlandsEntity.Variant.class), (p_114874_) -> {
-        p_114874_.put(IllagerMinerBadlandsEntity.Variant.BROWN, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png"));
-        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKPURPLE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer2.png"));
-        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKGREEN, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer3.png"));
-        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKBLUE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer4.png"));
-        p_114874_.put(IllagerMinerBadlandsEntity.Variant.DARKGRAY, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer5.png"));
-        p_114874_.put(IllagerMinerBadlandsEntity.Variant.GRAY, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer6.png"));
+    private static final Map<IllagerScavengerEntity.Variant, ResourceLocation> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(IllagerScavengerEntity.Variant.class), (p_114874_) -> {
+        p_114874_.put(IllagerScavengerEntity.Variant.BROWN, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png"));
+        p_114874_.put(IllagerScavengerEntity.Variant.DARKPURPLE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer2.png"));
+        p_114874_.put(IllagerScavengerEntity.Variant.DARKGREEN, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer3.png"));
+        p_114874_.put(IllagerScavengerEntity.Variant.DARKBLUE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer4.png"));
+        p_114874_.put(IllagerScavengerEntity.Variant.DARKGRAY, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer5.png"));
+        p_114874_.put(IllagerScavengerEntity.Variant.GRAY, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer6.png"));
     });
 
-    public IllagerMinerBadlandsRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new IllagerMinerBadlandsModel());
+    public IllagerScavengerRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new IllagerScavengerModel());
         this.shadowRadius = 0.5f;
+        this.addLayer(new ScavengerJunkArmorLayer(this,new IllagerScavengerModel()));
     }
 
     @Override
-    public ResourceLocation getTextureLocation(IllagerMinerBadlandsEntity instance) {
+    public ResourceLocation getTextureLocation(IllagerScavengerEntity instance) {
         return LOCATION_BY_VARIANT.get(instance.getIdVariant());
     }
 
@@ -53,13 +55,13 @@ public class IllagerMinerBadlandsRenderer extends ExtendedGeoEntityRenderer<Illa
 
     @Nullable
     @Override
-    protected ResourceLocation getTextureForBone(String boneName, IllagerMinerBadlandsEntity currentEntity) {
+    protected ResourceLocation getTextureForBone(String boneName, IllagerScavengerEntity currentEntity) {
         return null;
     }
 
     @Nullable
     @Override
-    protected ItemStack getHeldItemForBone(String boneName, IllagerMinerBadlandsEntity currentEntity) {
+    protected ItemStack getHeldItemForBone(String boneName, IllagerScavengerEntity currentEntity) {
         switch (boneName) {
             case RIGHT_HAND_BONE_IDENT:
                 return currentEntity.getMainHandItem();
@@ -76,13 +78,13 @@ public class IllagerMinerBadlandsRenderer extends ExtendedGeoEntityRenderer<Illa
 
     @Nullable
     @Override
-    protected BlockState getHeldBlockForBone(String boneName, IllagerMinerBadlandsEntity currentEntity) {
+    protected BlockState getHeldBlockForBone(String boneName, IllagerScavengerEntity currentEntity) {
         return null;
 
     }
 
     @Override
-    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, IllagerMinerBadlandsEntity currentEntity, IBone bone) {
+    protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, IllagerScavengerEntity currentEntity, IBone bone) {
         if (item == currentEntity.getMainHandItem() || item == currentEntity.getOffhandItem()) {
 
             stack.mulPose(Vector3f.XP.rotationDegrees(270F));
@@ -107,22 +109,22 @@ public class IllagerMinerBadlandsRenderer extends ExtendedGeoEntityRenderer<Illa
     }
 
     @Override
-    protected void preRenderBlock(PoseStack matrixStack, BlockState block, String boneName, IllagerMinerBadlandsEntity currentEntity) {
+    protected void preRenderBlock(PoseStack matrixStack, BlockState block, String boneName, IllagerScavengerEntity currentEntity) {
 
     }
 
     @Override
-    protected void postRenderItem(PoseStack stack, ItemStack item, String boneName, IllagerMinerBadlandsEntity currentEntity, IBone bone) {
+    protected void postRenderItem(PoseStack stack, ItemStack item, String boneName, IllagerScavengerEntity currentEntity, IBone bone) {
 
     }
 
     @Override
-    protected void postRenderBlock(PoseStack matrixStack, BlockState block, String boneName, IllagerMinerBadlandsEntity currentEntity) {
+    protected void postRenderBlock(PoseStack matrixStack, BlockState block, String boneName, IllagerScavengerEntity currentEntity) {
 
     }
 
     @Override
-    public RenderType getRenderType(IllagerMinerBadlandsEntity animatable, float partialTicks, PoseStack stack,
+    public RenderType getRenderType(IllagerScavengerEntity animatable, float partialTicks, PoseStack stack,
                                     MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                                     ResourceLocation textureLocation) {
         stack.scale(1, 1, 1);

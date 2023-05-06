@@ -1,14 +1,13 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
+import net.BKTeam.illagerrevolutionmod.api.IAplastarCapability;
+import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
+import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorIllusionerRobeItem;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
-import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
+import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -20,7 +19,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.EvokerFangs;
@@ -30,9 +31,9 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,7 +42,6 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.Blade_KnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
 import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
-import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
@@ -51,6 +51,32 @@ import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class Events {
+
+    @SubscribeEvent
+    public static void finalizeEffectPotion(MobEffectEvent.Remove event){
+        if(event.getEntity()!=null && event.getEffect()==init_effect.APLASTAR.get()){
+            if(!event.getEntity().level.isClientSide){
+                LivingEntity entity=event.getEntity();
+                IAplastarCapability capability=CapabilityHandler.getEntityCapability(entity,CapabilityHandler.APLASTAR_CAPABILITY);
+                if(capability!=null){
+                    capability.removeAttributeAmor(entity,event.getEffectInstance());
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void initEffectPotion(MobEffectEvent.Added event){
+        if(event.getEntity()!=null && event.getEffectInstance().getEffect()==init_effect.APLASTAR.get()){
+            if(!event.getEntity().level.isClientSide){
+                LivingEntity entity=event.getEntity();
+                IAplastarCapability capability=CapabilityHandler.getEntityCapability(entity,CapabilityHandler.APLASTAR_CAPABILITY);
+                if(capability!=null){
+                    capability.updateAttributeArmor(entity,event.getEffectInstance());
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
@@ -149,6 +175,7 @@ public class Events {
         living.hurt(DamageSource.arrow(arrow,null),amount+4.0f);
         arrow.discard();
     }
+
     public static boolean checkOwnerSoul(List<Soul_Entity> list,LivingEntity owner){
         if(!list.isEmpty()){
             Entity entity=null;
@@ -171,14 +198,23 @@ public class Events {
         return false;
     }
     @SubscribeEvent
-    public static void onLeftClick(PlayerInteractEvent.RightClickItem event){
+    public static void onRightClick(PlayerInteractEvent.RightClickItem event){
         LivingEntity livingEntity = event.getEntity();
+        if(event.getItemStack().getItem()==ModItems.JUNK_AXE.get()){
+            ItemStack stack = event.getItemStack();
+            IItemCapability capability = CapabilityHandler.getItemCapability(stack,CapabilityHandler.SWORD_CAPABILITY);
+            if(capability!=null){
+                if(capability.getTier()<3){
+                    capability.setTier(capability.getTier()+1);
+                }
+            }
+        }
         if(livingEntity instanceof ServerPlayer player){
             ItemStack helmet=player.getItemBySlot(EquipmentSlot.HEAD);
             ItemStack itemStack=event.getItemStack();
             if(checkHelmetMiner(helmet.getItem())){
                 if(!player.hasEffect(MobEffects.LUCK)){
-                    if(itemStack.getItem()== Items.EMERALD){
+                    if(itemStack.getItem() == Items.EMERALD){
                         itemStack.shrink(1);
                         hurtHelmet(helmet,player);
                         player.addEffect(new MobEffectInstance(MobEffects.LUCK,150,0));

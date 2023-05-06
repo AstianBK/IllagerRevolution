@@ -37,7 +37,7 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
-        event.put(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerMinerBadlandsEntity.setAttributes());
+        event.put(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerScavengerEntity.setAttributes());
         event.put(ModEntityTypes.RAKER.get(), RakerEntity.setAttributes());
         event.put(ModEntityTypes.ILLAGERMINER.get(), IllagerMinerEntity.setAttributes());
         event.put(ModEntityTypes.ILLAGERBEASTTAMER.get(), IllagerBeastTamerEntity.setAttributes());

@@ -1,5 +1,9 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
+import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketSand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,24 +18,21 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.horse.Variant;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.BKTeam.illagerrevolutionmod.entity.goals.EscapeMinerGoal;
 import net.BKTeam.illagerrevolutionmod.entity.goals.HurtByTargetGoalIllager;
-import net.BKTeam.illagerrevolutionmod.entity.goals.NearestAttackableTargetGoalIllager;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +50,13 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.UUID;
 
 
-public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnimatable, InventoryCarrier {
+public class IllagerScavengerEntity extends AbstractIllager implements IAnimatable, InventoryCarrier {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(6);
+    private static final UUID SCAVENGER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 
     private final int[] listRob =new int[5];
 
@@ -65,18 +68,21 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
 
     private static final EntityDataAccessor<Boolean> HAS_ITEM =
-            SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.BOOLEAN);
+            SynchedEntityData.defineId(IllagerScavengerEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final EntityDataAccessor<Boolean> ATTACKING =
-            SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.BOOLEAN);
+            SynchedEntityData.defineId(IllagerScavengerEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final EntityDataAccessor<Boolean> ATTACKLANTERN =
-            SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.BOOLEAN);
+            SynchedEntityData.defineId(IllagerScavengerEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final EntityDataAccessor<Integer> ID_VARIANT =
-            SynchedEntityData.defineId(IllagerMinerBadlandsEntity.class, EntityDataSerializers.INT);
+            SynchedEntityData.defineId(IllagerScavengerEntity.class, EntityDataSerializers.INT);
 
-    public IllagerMinerBadlandsEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
+    private static final EntityDataAccessor<Integer> ARMOR_TIER =
+            SynchedEntityData.defineId(IllagerScavengerEntity.class, EntityDataSerializers.INT);
+
+    public IllagerScavengerEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
         super(entityType, level);
         this.robTimer=0;
         this.attackTimer=0;
@@ -88,10 +94,8 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        if(!(this instanceof  IllagerMinerEntity)){
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
-            this.setIdVariant(this.level.random.nextInt(0,6));
-        }
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.JUNK_AXE.get()));
+        this.setIdVariant(this.level.random.nextInt(0,6));
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
@@ -107,8 +111,10 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        if(this.level.getRandom().nextFloat() < 0.2 && !(this instanceof IllagerMinerEntity)){
-            this.spawnAtLocation(ModItems.GOGGLES_MINER.get());
+        if(this.level.getRandom().nextFloat() < 0.2){
+            ItemStack item =new ItemStack(ModItems.GOGGLES_MINER.get());
+            item.setDamageValue(item.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(item.getMaxDamage() - 3, 1))));
+            this.spawnAtLocation(item);
         }
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
     }
@@ -116,8 +122,8 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 25.0D)
-                .add(Attributes.ARMOR,10.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 7.0D)
+                .add(Attributes.ARMOR,5.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 2.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 35.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
@@ -126,7 +132,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isAttackLantern()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk"+(this.isHasItems() ? "3" : ""), ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk"+(this.isUpgrading() ? "3" : ""), ILoopType.EDefaultLoopTypes.LOOP));
         }
         else if (this.isAttacking() && this.isAttackLantern()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.attack2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
@@ -150,55 +156,42 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
             return false;
         }else {
                 int cc=this.robTimer;
-                if(pEntity instanceof ServerPlayer player && cc==0){
-                    int i=0;
+                if(pEntity instanceof ServerPlayer && cc==0){
                     if(this.getRandom().nextInt(2)==1){
-                        while(i<player.getInventory().getContainerSize() && !this.isHasItems()){
-                            ItemStack itemstack=player.getInventory().getItem(i);
-                            if(Util.isItemRob(itemstack.getItem())){
-                                int rCount=this.getRandom().nextInt(1,5);
-                                if(rCount>itemstack.getCount()){
-                                    rCount=itemstack.getCount();
-                                }
-                                this.setAttacklantern(true);
-                                this.setHasItem(true);
-                                this.listRob[Util.mineralId(itemstack.getItem())]+=rCount;
-                                itemstack.shrink(rCount);
-                                this.robTimer=500;
-                            }
-                            i++;
+                        if(this.getArmorTierValue()<3){
+                            this.setArmorTier(this.getArmorTierValue()+1);
+                            this.setUpgrading(true);
                         }
+                        this.robTimer=200;
                     }
                 }
                 return super.doHurtTarget(pEntity);
         }
-
     }
 
     public boolean isAttackLantern(){
         return this.entityData.get(ATTACKLANTERN);
     }
-    public void setAttacklantern(boolean pboolean){
+
+    public void setAttackArena(boolean pboolean){
         this.entityData.set(ATTACKLANTERN,pboolean);
     }
-
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1,new MinerAttackGoal(this,1.1d,false));
-        this.goalSelector.addGoal(0,new EscapeMinerGoal<>(this, Player.class,8.0f,1.1D,1.5D));
         this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.7f));
         this.targetSelector.addGoal(4, new HurtByTargetGoalIllager(this));
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoalIllager<>(this, Player.class, true, true));
+        this.targetSelector.addGoal(2,new NearestAttackableTargetGoal(this, Player.class,true,true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
         this.goalSelector.addGoal(6, new FloatGoal(this));
     }
     static class MinerAttackGoal extends MeleeAttackGoal {
-        private final IllagerMinerBadlandsEntity goalOwner;
+        private final IllagerScavengerEntity goalOwner;
 
-        public MinerAttackGoal(IllagerMinerBadlandsEntity entity, double speedModifier, boolean followWithoutLineOfSight) {
+        public MinerAttackGoal(IllagerScavengerEntity entity, double speedModifier, boolean followWithoutLineOfSight) {
             super(entity, speedModifier, followWithoutLineOfSight);
             this.goalOwner = entity;
             this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
@@ -257,23 +250,56 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         data.addAnimationController(new AnimationController(this, "controller",
                 0, this::predicate));
     }
-    public boolean isHasItems(){
+    public boolean isUpgrading(){
         return this.entityData.get(HAS_ITEM);
     }
 
-    public void setHasItem(boolean pBoolean){
+    public void setUpgrading(boolean pBoolean){
         this.entityData.set(HAS_ITEM,pBoolean);
     }
 
     public int getTypeIdVariant(){
         return this.entityData.get(ID_VARIANT);
     }
+
     public Variant getIdVariant(){
         return Variant.byId(this.getTypeIdVariant() & 255);
     }
 
     public void setIdVariant(int pId){
         this.entityData.set(ID_VARIANT,pId);
+    }
+
+    public ArmorTier getArmorTier(){
+        return ArmorTier.byId(this.getArmorTierValue() & 255);
+    }
+
+    public int getArmorTierValue(){
+        return this.entityData.get(ARMOR_TIER);
+    }
+
+    public void setArmorTier(int pTier){
+        this.entityData.set(ARMOR_TIER,pTier);
+        if(this.getArmorTier()!=ArmorTier.NONE){
+            if (!this.level.isClientSide) {
+                this.getAttribute(Attributes.ARMOR).removeModifier(SCAVENGER_ARMOR_UUID);
+                int i = (pTier*5)+this.getArmorValue();
+                if (i != 0) {
+                    this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(SCAVENGER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
+                }
+                this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(2+(pTier*2));
+                this.upgradeWeapon(pTier);
+            }
+        }
+    }
+
+    public void upgradeWeapon(int pTier){
+        if(!this.level.isClientSide){
+            IItemCapability capability= CapabilityHandler.getItemCapability(this.getMainHandItem(),CapabilityHandler.SWORD_CAPABILITY);
+            if(capability!=null){
+                capability.setTier(pTier);
+            }
+        }
     }
 
     @Override
@@ -287,16 +313,14 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         if(this.isAttacking()){
             --this.attackTimer;
             if(this.attackTimer!=0){
-                if(this instanceof IllagerMinerEntity){
-                    if(this.attackTimer==4 && this.getTarget()!=null){
-                        this.doHurtTarget(this.getTarget());
-                        this.setAttacklantern(false);
-                    }
-                }else if(this.attackTimer==4 && this.getTarget()!=null){
-                    if(!this.isHasItems() && !this.isAttackLantern()){
+                if(this.attackTimer==7 && this.getTarget()!=null){
+                    if(!this.isAttackLantern()){
                         this.doHurtTarget(this.getTarget());
                     }else{
                         this.useArena =true;
+                        if(!this.level.isClientSide){
+                            PacketHandler.sendToPlayer(new PacketSand(this.getTarget()), (ServerPlayer) this.getTarget());
+                        }
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,50,1));
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,1));
                     }
@@ -304,26 +328,30 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
             }else{
                 this.setAttacking(false);
                 if(this.useArena){
-                    this.setAttacklantern(false);
+                    this.setAttackArena(false);
                     this.useArena=false;
                 }
             }
         }
-        if(this.isHasItems()){
+
+        if(this.isUpgrading()){
             this.robTimer--;
         }
-        if(this.robTimer==0 && this.isHasItems()){
-            this.setHasItem(false);
+
+        if(this.robTimer==0 && this.isUpgrading()){
+            this.setUpgrading(false);
         }
+
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putBoolean("hasItem",this.isHasItems());
+        pCompound.putBoolean("upgrade",this.isUpgrading());
         pCompound.putBoolean("attackLantern",this.isAttackLantern());
         pCompound.putBoolean("attacking",this.isAttacking());
-        pCompound.putInt("id_Variant",this.getTypeIdVariant());
+        pCompound.putInt("idVariant",this.getTypeIdVariant());
+        pCompound.putInt("armorTier",this.getArmorTierValue());
         for (int i=0;i<5;i++){
             String s1=Integer.toString(i);
             pCompound.putInt("count"+s1,this.listRob[i]);
@@ -333,10 +361,11 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.setHasItem(pCompound.getBoolean("hasItem"));
-        this.setAttacklantern(pCompound.getBoolean("attackLantern"));
+        this.setUpgrading(pCompound.getBoolean("hasItem"));
+        this.setAttackArena(pCompound.getBoolean("attackLantern"));
         this.setAttacking(pCompound.getBoolean("attacking"));
-        this.setIdVariant(pCompound.getInt("id_Variant"));
+        this.setIdVariant(pCompound.getInt("idVariant"));
+        this.setArmorTier(pCompound.getInt("armorTier"));
         for (int i=0;i<5;i++){
             String s1=Integer.toString(i);
             this.listRob[i]=pCompound.getInt("count"+s1);
@@ -349,6 +378,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         this.entityData.define(ATTACKLANTERN,false);
         this.entityData.define(ATTACKING,false);
         this.entityData.define(ID_VARIANT,0);
+        this.entityData.define(ARMOR_TIER,0);
         super.defineSynchedData();
     }
 
@@ -390,10 +420,10 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         DARKGRAY(4),
         GRAY(5);
 
-        private static final Variant[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(IllagerMinerBadlandsEntity.Variant::getId)).toArray(Variant[]::new);
+        private static final Variant[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(IllagerScavengerEntity.Variant::getId)).toArray(Variant[]::new);
         private final int id;
 
-        private Variant(int p_30984_) {
+        Variant(int p_30984_) {
             this.id = p_30984_;
         }
 
@@ -401,8 +431,31 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
             return this.id;
         }
 
-        public static IllagerMinerBadlandsEntity.Variant byId(int p_30987_) {
+        public static IllagerScavengerEntity.Variant byId(int p_30987_) {
             return BY_ID[p_30987_ % BY_ID.length];
         }
+    }
+
+    public enum ArmorTier {
+        NONE(0),
+        LOW_ARMOR(1),
+        MEDIUM_ARMOR(2),
+        HEAVY_ARMOR(3);
+
+        private static final ArmorTier[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(ArmorTier::getId)).toArray(ArmorTier[]::new);
+        private final int id;
+
+        ArmorTier(int p_30984_) {
+            this.id = p_30984_;
+        }
+
+        public int getId() {
+            return this.id;
+        }
+
+        public static IllagerScavengerEntity.ArmorTier byId(int p_30987_) {
+            return BY_ID[p_30987_ % BY_ID.length];
+        }
+
     }
 }

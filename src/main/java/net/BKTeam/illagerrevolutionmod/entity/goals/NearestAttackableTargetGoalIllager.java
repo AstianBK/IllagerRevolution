@@ -1,9 +1,10 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerMinerEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerMinerBadlandsEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerScavengerEntity;
 
 public class NearestAttackableTargetGoalIllager<T extends LivingEntity> extends   NearestAttackableTargetGoal<T> {
 
@@ -13,6 +14,6 @@ public class NearestAttackableTargetGoalIllager<T extends LivingEntity> extends 
 
     @Override
     public boolean canUse() {
-        return super.canUse() && this.mob instanceof IllagerMinerBadlandsEntity entity && !entity.isHasItems();
+        return super.canUse() && this.mob instanceof IllagerMinerEntity entity && !entity.isHasItems();
     }
 }

@@ -2,30 +2,30 @@ package net.BKTeam.illagerrevolutionmod.entity.client.entitymodels;
 
 import net.minecraft.resources.ResourceLocation;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
-import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerMinerBadlandsEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerScavengerEntity;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class IllagerMinerBadlandsModel extends AnimatedGeoModel<IllagerMinerBadlandsEntity> {
+public class IllagerScavengerModel extends AnimatedGeoModel<IllagerScavengerEntity> {
     @Override
-    public ResourceLocation getModelResource(IllagerMinerBadlandsEntity object) {
+    public ResourceLocation getModelResource(IllagerScavengerEntity object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/illagerminerbadlands.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(IllagerMinerBadlandsEntity object) {
+    public ResourceLocation getTextureResource(IllagerScavengerEntity object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(IllagerMinerBadlandsEntity animatable) {
+    public ResourceLocation getAnimationResource(IllagerScavengerEntity animatable) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "animations/illagerminerbadlands.animation.json");
     }
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public void setCustomAnimations(IllagerMinerBadlandsEntity entity, int instanceId, AnimationEvent customPredicate) {
+    public void setCustomAnimations(IllagerScavengerEntity entity, int instanceId, AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, instanceId, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("bipedHead");
 

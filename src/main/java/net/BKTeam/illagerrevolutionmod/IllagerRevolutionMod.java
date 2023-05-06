@@ -3,14 +3,17 @@ package net.BKTeam.illagerrevolutionmod;
 import com.mojang.logging.LogUtils;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
+import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.screen.ModMenuTypes;
 import net.BKTeam.illagerrevolutionmod.screen.RuneTableScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -62,6 +65,7 @@ public class IllagerRevolutionMod {
         init_effect.REGISTRY.register(eventBus);
         Init_enchantment.REGISTRY.register(eventBus);
         eventBus.addListener(this::clientSetup);
+        eventBus.addListener(CapabilityHandler::registerCapabilities);
 
         PacketHandler.registerMessages();
         setupD();
@@ -69,6 +73,9 @@ public class IllagerRevolutionMod {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT,()->()->{
             eventBus.addListener(this::registerRenderers);
         });
+
+        MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class,CapabilityHandler::attachItemCapability);
+        MinecraftForge.EVENT_BUS.addGenericListener(LivingEntity.class,CapabilityHandler::attachEntityCapability);
 
         DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, IllagerRevolutionMod.MOD_ID);
         ATTRIBUTES.register("soul",()->SoulTick.SOUL);
@@ -82,7 +89,7 @@ public class IllagerRevolutionMod {
 
     @OnlyIn(Dist.CLIENT)
     private void registerRenderers(FMLCommonSetupEvent event){
-        EntityRenderers.register(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerMinerBadlandsRenderer::new);
+        EntityRenderers.register(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerScavengerRenderer::new);
         EntityRenderers.register(RAKER.get(), RakerRenderer::new);
         EntityRenderers.register(ModEntityTypes.ILLAGERMINER.get(), IllagerMinerRenderer::new);
         EntityRenderers.register(ModEntityTypes.ILLAGERBEASTTAMER.get(), Illager_Beast_TamerRenderer::new);

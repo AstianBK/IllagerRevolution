@@ -52,6 +52,9 @@ public class PacketHandler {
 
         channel.registerMessage(index++, PacketSmoke.class, PacketSmoke::encode,
                 PacketSmoke::new, PacketSmoke::handle);
+
+        channel.registerMessage(index++, PacketSand.class, PacketSand::encode,
+                PacketSand::new, PacketSand::handle);
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
