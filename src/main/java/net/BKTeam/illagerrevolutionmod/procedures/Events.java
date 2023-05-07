@@ -200,15 +200,6 @@ public class Events {
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickItem event){
         LivingEntity livingEntity = event.getEntity();
-        if(event.getItemStack().getItem()==ModItems.JUNK_AXE.get()){
-            ItemStack stack = event.getItemStack();
-            IItemCapability capability = CapabilityHandler.getItemCapability(stack,CapabilityHandler.SWORD_CAPABILITY);
-            if(capability!=null){
-                if(capability.getTier()<3){
-                    capability.setTier(capability.getTier()+1);
-                }
-            }
-        }
         if(livingEntity instanceof ServerPlayer player){
             ItemStack helmet=player.getItemBySlot(EquipmentSlot.HEAD);
             ItemStack itemStack=event.getItemStack();

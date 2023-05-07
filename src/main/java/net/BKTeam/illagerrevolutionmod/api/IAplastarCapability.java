@@ -14,4 +14,6 @@ public interface IAplastarCapability extends INBTSerializable<CompoundTag> {
     void onTick(LivingEntity entity, MobEffectInstance instance);
     boolean hasChanged(int armor);
     void removeAttributeAmor(LivingEntity living,MobEffectInstance effect);
+    void setInitialArmor(int initialArmor);
+    int getInitialArmor();
 }

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -86,10 +87,12 @@ public class IllagerScavengerRenderer extends ExtendedGeoEntityRenderer<IllagerS
     @Override
     protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, IllagerScavengerEntity currentEntity, IBone bone) {
         if (item == currentEntity.getMainHandItem() || item == currentEntity.getOffhandItem()) {
+            CompoundTag nbt;
+            nbt=item.getOrCreateTag();
+            nbt.putInt("CustomModelData",currentEntity.getArmorTierValue());
 
             stack.mulPose(Vector3f.XP.rotationDegrees(270F));
             boolean shieldFlag = item.getItem() instanceof ShieldItem;
-
             if (item == currentEntity.getMainHandItem()) {
                 if (shieldFlag) {
                     stack.translate(0, 0.125, -15);
@@ -102,9 +105,7 @@ public class IllagerScavengerRenderer extends ExtendedGeoEntityRenderer<IllagerS
                     stack.mulPose(Vector3f.YP.rotationDegrees(180));
                 }
             }
-            // stack.mulPose(Vector3f.YP.rotationDegrees(180));
 
-            // stack.scale(0.75F, 0.75F, 0.75F);
         }
     }
 

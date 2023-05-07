@@ -29,6 +29,7 @@ public class AplastarCapability implements IAplastarCapability {
     private static final UUID NATURAL_ARMOR_MODIFIER_UUID = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
     public static ResourceLocation LOCATION = new ResourceLocation(IllagerRevolutionMod.MOD_ID,"aplastar_effect");
     int oldArmorTotal = 0;
+    int initialArmor = 0;
 
     @Override
     public void setOldArmorTotal(int pArmorTotal) {
@@ -61,9 +62,8 @@ public class AplastarCapability implements IAplastarCapability {
 
     @Override
     public void onTick(LivingEntity entity,MobEffectInstance instance) {
-        if(!hasChanged(entity.getArmorValue())){
-            updateAttributeArmor(entity,instance);
-        }
+        updateAttributeArmor(entity,instance);
+
     }
 
     @Override
@@ -91,9 +91,19 @@ public class AplastarCapability implements IAplastarCapability {
     }
 
     @Override
+    public void setInitialArmor(int pInitialArmor) {
+        initialArmor = pInitialArmor;
+    }
+
+    @Override
+    public int getInitialArmor() {
+        return initialArmor;
+    }
+
+    @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag=new CompoundTag();
-        tag.putInt("oldArmorTotal",getOldArmorTotal());
+        tag.putInt("initialArmor",getInitialArmor());
         return tag;
     }
 

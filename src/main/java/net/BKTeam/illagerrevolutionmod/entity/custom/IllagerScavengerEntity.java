@@ -22,12 +22,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -47,18 +49,13 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.UUID;
+import java.util.*;
 
 
 public class IllagerScavengerEntity extends AbstractIllager implements IAnimatable, InventoryCarrier {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(6);
     private static final UUID SCAVENGER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
-
-    private final int[] listRob =new int[5];
 
     private boolean useArena;
 
@@ -87,9 +84,6 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         this.robTimer=0;
         this.attackTimer=0;
         this.useArena =false;
-        for (int i=0;i<5;i++) {
-            this.listRob[i]=0;
-        }
     }
     @Nullable
     @Override
@@ -162,7 +156,13 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                             this.setArmorTier(this.getArmorTierValue()+1);
                             this.setUpgrading(true);
                         }
+                        this.setAttackArena(true);
                         this.robTimer=200;
+                        for(ItemStack stack : pEntity.getArmorSlots()){
+                            if(stack.getItem() instanceof ArmorItem ){
+                                stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(Objects.requireNonNull(stack.getEquipmentSlot())));
+                            }
+                        }
                     }
                 }
                 return super.doHurtTarget(pEntity);
@@ -182,9 +182,9 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         super.registerGoals();
         this.goalSelector.addGoal(1,new MinerAttackGoal(this,1.1d,false));
         this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.7f));
-        this.targetSelector.addGoal(4, new HurtByTargetGoalIllager(this));
+        this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(2,new NearestAttackableTargetGoal(this, Player.class,true,true));
+        this.targetSelector.addGoal(2,new NearestAttackableTargetGoal<>(this, Player.class,true,true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
         this.goalSelector.addGoal(6, new FloatGoal(this));
     }
@@ -229,13 +229,6 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     @Override
     protected void dropAllDeathLoot(DamageSource pDamageSource) {
-        for(int i=0;i<5;i++){
-            if(this.listRob[i]!=0){
-                ItemStack stack=new ItemStack(Util.selectItem(i));
-                stack.setCount(this.listRob[i]);
-                this.spawnAtLocation(stack);
-            }
-        }
         super.dropAllDeathLoot(pDamageSource);
     }
 
@@ -308,6 +301,16 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     }
 
     @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if(this.getArmorTier()==ArmorTier.HEAVY_ARMOR){
+            if (pSource.getEntity() instanceof  LivingEntity living){
+                living.hurt(DamageSource.MAGIC,3f);
+            }
+        }
+        return super.hurt(pSource, pAmount);
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
         if(this.isAttacking()){
@@ -352,10 +355,6 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         pCompound.putBoolean("attacking",this.isAttacking());
         pCompound.putInt("idVariant",this.getTypeIdVariant());
         pCompound.putInt("armorTier",this.getArmorTierValue());
-        for (int i=0;i<5;i++){
-            String s1=Integer.toString(i);
-            pCompound.putInt("count"+s1,this.listRob[i]);
-        }
     }
 
     @Override
@@ -366,10 +365,6 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         this.setAttacking(pCompound.getBoolean("attacking"));
         this.setIdVariant(pCompound.getInt("idVariant"));
         this.setArmorTier(pCompound.getInt("armorTier"));
-        for (int i=0;i<5;i++){
-            String s1=Integer.toString(i);
-            this.listRob[i]=pCompound.getInt("count"+s1);
-        }
     }
 
     @Override

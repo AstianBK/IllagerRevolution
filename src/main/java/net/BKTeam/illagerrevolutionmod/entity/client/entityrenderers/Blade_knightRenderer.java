@@ -84,17 +84,12 @@ public class Blade_knightRenderer extends ExtendedGeoEntityRenderer<Blade_Knight
             if (item == currentEntity.getMainHandItem()) {
                 if (shieldFlag) {
                     stack.translate(0, 0.125, -15);
-                }else {
-
                 }
             } else {
                 if (shieldFlag) {
                     stack.translate(0, 0.125, 0.25);
                     stack.mulPose(Vector3f.YP.rotationDegrees(120.0f));
-                }else {
-
                 }
-
             }
             nbt=item.getOrCreateTag();
             if(currentEntity.isLowLife()){
