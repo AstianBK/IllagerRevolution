@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class ItemCapability implements IItemCapability {
     public static ResourceLocation LOCATION = new ResourceLocation(IllagerRevolutionMod.MOD_ID,"sword_tier");
     int tier=0;
+    int countHit=0;
     @Override
     public void setTier(int pTier) {
         tier=pTier;
@@ -27,15 +28,27 @@ public class ItemCapability implements IItemCapability {
     }
 
     @Override
+    public int getCountHit() {
+        return countHit;
+    }
+
+    @Override
+    public void setCountHit(int pCount) {
+        countHit=pCount;
+    }
+
+    @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag=new CompoundTag();
         tag.putInt("swordTier",getTier());
+        tag.putInt("countHit",getCountHit());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         setTier(nbt.getInt("swordTier"));
+        setCountHit(nbt.getInt("countHit"));
     }
 
     public static class SwordProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag>{

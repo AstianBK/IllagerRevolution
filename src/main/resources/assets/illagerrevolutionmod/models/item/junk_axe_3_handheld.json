@@ -1,9 +1,9 @@
 {
   "parent": "item/handheld",
-  "textures": {
-    "layer0": "illagerrevolutionmod:item/illagium_runed_blade_charged1"
-  },
 
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/junk_axe_3"
+  },
   "display": {
     "thirdperson_righthand": {
       "rotation": [ 0, -90, 55 ],

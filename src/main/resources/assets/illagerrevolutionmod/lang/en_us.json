@@ -89,6 +89,24 @@
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5while having at least 3 souls ",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2": "§5to summon a Fallen Knight follower to aid you in battle temporarily",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
-  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability"
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability",
 
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip10": "§l§5 0 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip11": "§l§5 1 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip12": "§l§5 2 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip13": "§l§5 3 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip14": "§l§5 4 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip15": "§l§5 5 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip16": "§l§5 6 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip17": "§l§5 7 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip18": "§l§5 8 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip19": "§l§5 9 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip110": "§l§5 10 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip111": "§l§5 11 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip112": "§l§5 12 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip113": "§l§5 13 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip114": "§l§5 14 hits remaining §r",
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip115": "§l§5 15 hits remaining §r",
+
+  "tooltip.illagerrevolutionmod.junk_axe.fleshtooltip2": "Hold §6SHIFT§r for more info"
 }

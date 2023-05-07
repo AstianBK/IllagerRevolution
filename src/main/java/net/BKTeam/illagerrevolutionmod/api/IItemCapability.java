@@ -6,4 +6,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 public interface  IItemCapability extends INBTSerializable<CompoundTag> {
     void setTier(int pTier);
     int getTier();
+    int getCountHit();
+    void setCountHit(int pCount);
 }
