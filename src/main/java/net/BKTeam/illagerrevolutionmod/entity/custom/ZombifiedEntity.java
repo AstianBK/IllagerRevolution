@@ -247,7 +247,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
             double d0 = this.getAttackReachSqr(entity);
             if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
                 this.resetAttackCooldown();
-                this.goalOwner.playSound(SoundEvents.ZOMBIE_HURT, 1.0F, 1.0F);
+                this.goalOwner.playSound(SoundEvents.HUSK_HURT, 1.0F, 1.0F);
                 this.goalOwner.doHurtTarget(entity);
                 this.goalOwner.getNavigation().stop();
             }
@@ -330,7 +330,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
 
    
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.ZOMBIE_VILLAGER_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.HUSK_STEP, 0.15F, 1.0F);
     }
 
     protected SoundEvent getAmbientSound() {
@@ -338,7 +338,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     }
 
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ZOMBIE_HURT;
+        return SoundEvents.HUSK_HURT;
     }
 
     protected SoundEvent getDeathSound() {
