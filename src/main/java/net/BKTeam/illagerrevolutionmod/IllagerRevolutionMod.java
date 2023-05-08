@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.event.loot.LootModifiers;
 import net.BKTeam.illagerrevolutionmod.screen.ModMenuTypes;
 import net.BKTeam.illagerrevolutionmod.screen.RuneTableScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -61,6 +62,7 @@ public class IllagerRevolutionMod {
         ModBlockEntities.register(eventBus);
         ModBlocks.register(eventBus);
         ModMenuTypes.register(eventBus);
+        LootModifiers.register(eventBus);
         
         
         init_effect.REGISTRY.register(eventBus);

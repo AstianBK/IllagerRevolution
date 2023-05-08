@@ -34,9 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.BKTeam.illagerrevolutionmod.entity.goals.HurtByTargetGoalIllager;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
-import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -236,7 +234,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     @Override
     public SoundEvent getCelebrateSound() {
-        return null;
+        return SoundEvents.WITCH_CELEBRATE;
     }
 
 

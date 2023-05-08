@@ -85,7 +85,7 @@ public class JunkAxeItem extends AxeItem {
                 IItemCapability capability = CapabilityHandler.getItemCapability(pPlayer.getMainHandItem(),CapabilityHandler.SWORD_CAPABILITY);
                 if(capability!=null){
                     if(capability.getTier()<3){
-                        pPlayer.level.playSound(pPlayer,pPlayer, SoundEvents.SMITHING_TABLE_USE, SoundSource.AMBIENT,1.0f,1.0f);
+                        pPlayer.level.playSound(null,pPlayer, SoundEvents.SMITHING_TABLE_USE, SoundSource.AMBIENT,1.0f,1.0f);
                         capability.setTier(capability.getTier()+1);
                         capability.setCountHit(15);
                     }
@@ -110,8 +110,8 @@ public class JunkAxeItem extends AxeItem {
                             this.count_hit=capability.getCountHit();
                             if(this.count_hit==0){
                                 capability.setTier(capability.getTier()-1);
-                                capability.setCountHit(15);
-                                player.level.playSound(player,player.blockPosition(),SoundEvents.LADDER_BREAK,SoundSource.AMBIENT,1.0f,1.0f);
+                                capability.setCountHit(capability.getTier()==0 ? 0 : 15);
+                                player.level.playSound(null,player ,SoundEvents.LADDER_BREAK,SoundSource.AMBIENT,1.0f,1.0f);
                             }
                         }
                     }

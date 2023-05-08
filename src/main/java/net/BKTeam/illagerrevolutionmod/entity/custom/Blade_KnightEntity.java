@@ -559,7 +559,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     }
     @Override
     protected SoundEvent getCastingSoundEvent() {
-        return null;
+        return SoundEvents.EVOKER_PREPARE_SUMMON;
     }
 
     @Override

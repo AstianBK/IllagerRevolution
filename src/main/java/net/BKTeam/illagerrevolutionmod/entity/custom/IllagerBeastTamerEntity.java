@@ -201,7 +201,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
 
     @Override
     protected SoundEvent getCastingSoundEvent() {
-        return null;
+        return SoundEvents.EVOKER_PREPARE_SUMMON;
     }
 
     @Override

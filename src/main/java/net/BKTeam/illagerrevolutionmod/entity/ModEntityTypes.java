@@ -80,5 +80,6 @@ public class ModEntityTypes {
     public static void registerWaveMembers() {
         Raid.RaiderType.create("blade_knight", BLADE_KNIGHT.get(), new int[]{0, 0, 0, 0, 1, 0, 0, 1});
         Raid.RaiderType.create("illagerbeasttamer", ILLAGERBEASTTAMER.get(), new int[]{0, 0, 1, 0, 2, 0, 2, 3});
+        Raid.RaiderType.create("illagerminerbadlands",ILLAGERMINERBADLANDS.get(),new int[]{1, 1 ,0, 2, 3, 0, 3, 4});
     }
 }

@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.entity.goals.EscapeMinerGoal;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
@@ -19,10 +20,17 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -182,6 +190,7 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
         }
     }
     public void setHasItem(boolean pBoolean) {
+        this.entityData.set(HAS_ITEM,pBoolean);
         if(pBoolean){
             if(!this.level.isClientSide){
                 PacketHandler.sendToAllTracking(new PacketSmoke(this),this);
@@ -191,13 +200,26 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void aiStep() {
+        super.aiStep();
+        if(this.isAttacking()){
+            this.attackTimer--;
+        }
+        if(this.attackTimer<0 && this.isAttacking()){
+            this.setAttacking(false);
+        }
+        if(this.isHasItems()){
+            this.robTimer--;
+        }
+
+        if(this.robTimer==0 && this.isHasItems()){
+            this.setHasItem(false);
+        }
     }
 
     @Override
     public SoundEvent getCelebrateSound() {
-        return null;
+        return SoundEvents.WITCH_CELEBRATE;
     }
 
 
@@ -237,6 +259,50 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
         return this.inventory;
     }
 
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new MinerAttackGoal(this, 1.1d, false));
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.7f));
+        this.goalSelector.addGoal(0, new EscapeMinerGoal<>(this, Player.class, 10.0f, 1.0d, 1.5d));
+        this.targetSelector.addGoal(4, new HurtByTargetGoal(this){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && (this.mob instanceof  IllagerMinerEntity miner && !miner.isHasItems());
+            }
+        });
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, true){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && (this.mob instanceof IllagerMinerEntity miner && !miner.isHasItems());
+            }
+        });
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
+        this.goalSelector.addGoal(6, new FloatGoal(this));
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING,false);
+        this.entityData.define(HAS_ITEM,false);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("hasItem",this.isHasItems());
+        pCompound.putBoolean("isAttacking",this.isAttacking());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setAttacking(pCompound.getBoolean("isAttacking"));
+        this.setHasItem(pCompound.getBoolean("hasItem"));
+    }
+
     static class MinerAttackGoal extends MeleeAttackGoal {
         private final IllagerMinerEntity goalOwner;
 
@@ -252,6 +318,7 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
             if (distance <= d0 && this.getTicksUntilNextAttack() <= 0 && this.goalOwner.attackTimer<=0 && !this.goalOwner.isAttacking()) {
                 this.resetAttackCooldown();
                 this.goalOwner.getNavigation().stop();
+                this.goalOwner.doHurtTarget(entity);
                 this.goalOwner.getLookControl().setLookAt(entity,180,180);
                 this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
             }
