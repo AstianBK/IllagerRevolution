@@ -69,10 +69,6 @@ public class AplastarCapability implements IAplastarCapability {
     public void onTick(LivingEntity entity,MobEffectInstance instance) {
 
         if(hasChanged()){
-            if(entity instanceof  Player player ){
-                player.sendSystemMessage(Component.nullToEmpty(String.valueOf(oldArmorTotal)));
-                player.sendSystemMessage(Component.nullToEmpty(String.valueOf(ArmorTotal)));
-            }
             updateAttributeArmor(entity,instance);
         }else {
             setArmorTotal(entity.getArmorValue());
@@ -88,9 +84,6 @@ public class AplastarCapability implements IAplastarCapability {
     public void removeAttributeAmor(LivingEntity living,MobEffectInstance effect) {
         if(living!=null) {
             if (!living.level.isClientSide) {
-                if(living instanceof Player player){
-                    player.sendSystemMessage(Component.nullToEmpty("Entro"));
-                }
                 for(ItemStack itemStack: living.getArmorSlots() ){
                     if(itemStack.getItem() instanceof ArmorItem armorItem) {
                         living.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()]);
