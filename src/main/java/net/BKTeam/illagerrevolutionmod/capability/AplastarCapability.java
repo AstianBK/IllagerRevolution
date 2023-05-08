@@ -2,16 +2,16 @@ package net.BKTeam.illagerrevolutionmod.capability;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.api.IAplastarCapability;
-import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
 import net.BKTeam.illagerrevolutionmod.effect.init_effect;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,7 +29,8 @@ public class AplastarCapability implements IAplastarCapability {
     private static final UUID NATURAL_ARMOR_MODIFIER_UUID = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
     public static ResourceLocation LOCATION = new ResourceLocation(IllagerRevolutionMod.MOD_ID,"aplastar_effect");
     int oldArmorTotal = 0;
-    int initialArmor = 0;
+    int ArmorTotal = 0;
+    double[] armorForItem = new double[4];
 
     @Override
     public void setOldArmorTotal(int pArmorTotal) {
@@ -47,69 +48,84 @@ public class AplastarCapability implements IAplastarCapability {
             if (!living.level.isClientSide) {
                 for(ItemStack itemStack: living.getArmorSlots() ){
                     if(itemStack.getItem() instanceof ArmorItem armorItem) {
+                        armorForItem[armorItem.getSlot().getIndex()]=armorItem.getDefense();
                         double armor = (double) armorItem.getDefense() / 2;
-                        effect.getEffect().addAttributeModifier(Attributes.ARMOR, ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()].toString() , armor, AttributeModifier.Operation.ADDITION);
+                        living.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()]);
+                        living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()],"aplastar modifier" , armor, AttributeModifier.Operation.ADDITION));
                     }
                 }
                 if(living.getAttributes().hasModifier(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID)){
                     double armor = living.getAttributes().getModifierValue(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID) / 2;
-                    effect.getEffect().addAttributeModifier(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID.toString(),armor, AttributeModifier.Operation.ADDITION);
+                    living.getAttribute(Attributes.ARMOR).removeModifier(NATURAL_ARMOR_MODIFIER_UUID);
+                    living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(NATURAL_ARMOR_MODIFIER_UUID,"natural armor",armor, AttributeModifier.Operation.ADDITION));
                 }
             }
             oldArmorTotal=living.getArmorValue();
+            ArmorTotal=living.getArmorValue();
         }
     }
 
     @Override
     public void onTick(LivingEntity entity,MobEffectInstance instance) {
-        updateAttributeArmor(entity,instance);
 
+        if(hasChanged()){
+            if(entity instanceof  Player player ){
+                player.sendSystemMessage(Component.nullToEmpty(String.valueOf(oldArmorTotal)));
+                player.sendSystemMessage(Component.nullToEmpty(String.valueOf(ArmorTotal)));
+            }
+            updateAttributeArmor(entity,instance);
+        }else {
+            setArmorTotal(entity.getArmorValue());
+        }
     }
 
     @Override
-    public boolean hasChanged(int armor) {
-        return oldArmorTotal == armor;
+    public boolean hasChanged() {
+        return oldArmorTotal != ArmorTotal;
     }
 
     @Override
     public void removeAttributeAmor(LivingEntity living,MobEffectInstance effect) {
-        if(living!=null && effect.getEffect()==init_effect.APLASTAR.get()) {
+        if(living!=null) {
             if (!living.level.isClientSide) {
+                if(living instanceof Player player){
+                    player.sendSystemMessage(Component.nullToEmpty("Entro"));
+                }
                 for(ItemStack itemStack: living.getArmorSlots() ){
                     if(itemStack.getItem() instanceof ArmorItem armorItem) {
-                        double armor = (double) armorItem.getDefense();
                         living.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()]);
-                        living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()],"aplastar modifier", armor, AttributeModifier.Operation.ADDITION));
+                        living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()],"aplastar modifier", armorItem.getDefense() , AttributeModifier.Operation.ADDITION));
                     }
                 }
                 if(living.getAttributes().hasModifier(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID)){
                     double armor = living.getAttributes().getModifierValue(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID) * 2;
-                    effect.getEffect().addAttributeModifier(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID.toString(),armor, AttributeModifier.Operation.ADDITION);
+                    living.getAttribute(Attributes.ARMOR).removeModifier(NATURAL_ARMOR_MODIFIER_UUID);
+                    living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(NATURAL_ARMOR_MODIFIER_UUID,"natural Armor",armor, AttributeModifier.Operation.ADDITION));
                 }
             }
         }
     }
 
     @Override
-    public void setInitialArmor(int pInitialArmor) {
-        initialArmor = pInitialArmor;
+    public void setArmorTotal(int pInitialArmor) {
+        ArmorTotal = pInitialArmor;
     }
 
     @Override
-    public int getInitialArmor() {
-        return initialArmor;
+    public int getArmorTotal() {
+        return ArmorTotal;
     }
 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag=new CompoundTag();
-        tag.putInt("initialArmor",getInitialArmor());
+        tag.putInt("armorTotal", getArmorTotal());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        setOldArmorTotal(nbt.getInt("oldArmorTotal"));
+        setArmorTotal(nbt.getInt("armorTotal"));
     }
     public static class AplastarProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 

@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -32,10 +33,23 @@ public class AplastarEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        IAplastarCapability capability= CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.APLASTAR_CAPABILITY);
-        if(capability!=null){
-            capability.onTick(pLivingEntity,pLivingEntity.getEffect(this));
+        if(!pLivingEntity.level.isClientSide){
+            IAplastarCapability capability= CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.APLASTAR_CAPABILITY);
+            if(capability!=null){
+                capability.onTick(pLivingEntity,pLivingEntity.getEffect(this));
+            }
         }
         super.applyEffectTick(pLivingEntity, pAmplifier);
+    }
+
+    @Override
+    public void removeAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
+        if(!pLivingEntity.level.isClientSide){
+            IAplastarCapability capability= CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.APLASTAR_CAPABILITY);
+            if(capability!=null){
+                capability.removeAttributeAmor(pLivingEntity,pLivingEntity.getEffect(this));
+            }
+        }
+        super.removeAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier);
     }
 }

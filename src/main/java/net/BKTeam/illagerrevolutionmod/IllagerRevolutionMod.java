@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.projectile.*;
@@ -75,7 +76,7 @@ public class IllagerRevolutionMod {
         });
 
         MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class,CapabilityHandler::attachItemCapability);
-        MinecraftForge.EVENT_BUS.addGenericListener(LivingEntity.class,CapabilityHandler::attachEntityCapability);
+        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,CapabilityHandler::attachEntityCapability);
 
         DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, IllagerRevolutionMod.MOD_ID);
         ATTRIBUTES.register("soul",()->SoulTick.SOUL);

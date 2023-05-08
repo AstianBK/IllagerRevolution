@@ -54,15 +54,6 @@ public class Events {
 
     @SubscribeEvent
     public static void finalizeEffectPotion(MobEffectEvent.Remove event){
-        if(event.getEntity()!=null && event.getEffect()==init_effect.APLASTAR.get()){
-            if(!event.getEntity().level.isClientSide){
-                LivingEntity entity=event.getEntity();
-                IAplastarCapability capability=CapabilityHandler.getEntityCapability(entity,CapabilityHandler.APLASTAR_CAPABILITY);
-                if(capability!=null){
-                    capability.removeAttributeAmor(entity,event.getEffectInstance());
-                }
-            }
-        }
     }
 
     @SubscribeEvent
@@ -72,7 +63,7 @@ public class Events {
                 LivingEntity entity=event.getEntity();
                 IAplastarCapability capability=CapabilityHandler.getEntityCapability(entity,CapabilityHandler.APLASTAR_CAPABILITY);
                 if(capability!=null){
-                    capability.updateAttributeArmor(entity,event.getEffectInstance());
+                    capability.setArmorTotal(capability.getArmorTotal());
                 }
             }
         }

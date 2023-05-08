@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.capability;
 import net.BKTeam.illagerrevolutionmod.api.IAplastarCapability;
 import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,8 +29,10 @@ public class CapabilityHandler {
         }
     }
 
-    public static void attachEntityCapability(AttachCapabilitiesEvent<LivingEntity> event){
-        event.addCapability(AplastarCapability.LOCATION,new AplastarCapability.AplastarProvider());
+    public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event){
+        if(event.getObject() instanceof LivingEntity){
+            event.addCapability(AplastarCapability.LOCATION,new AplastarCapability.AplastarProvider());
+        }
     }
 
     @Nullable
@@ -41,9 +44,11 @@ public class CapabilityHandler {
     }
 
     @Nullable
-    public static <T> T getEntityCapability(LivingEntity entity, Capability<T> capability){
+    public static <T> T getEntityCapability(Entity entity, Capability<T> capability){
         if(entity!=null){
-            return entity.getCapability(capability).isPresent() ? entity.getCapability(capability).orElseThrow(() -> new IllegalArgumentException("Lazy optional must not be empty")) : null;
+            if(entity.isAlive()){
+                return entity.getCapability(capability).isPresent() ? entity.getCapability(capability).orElseThrow(() -> new IllegalArgumentException("Lazy optional must not be empty")) : null;
+            }
         }
         return null;
     }
