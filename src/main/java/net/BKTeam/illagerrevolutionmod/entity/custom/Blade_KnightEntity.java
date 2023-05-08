@@ -99,9 +99,11 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 90.0D)
-                .add(Attributes.ATTACK_DAMAGE, 6.0D)
+                .add(Attributes.ATTACK_DAMAGE, 8.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.10D)
+                .add(Attributes.ARMOR, 0.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 36.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
     }
@@ -542,7 +544,9 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
             this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.36D);
             this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(0.25D);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(12.0D);
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
+            this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(3.0D);
+            this.getAttribute(Attributes.ARMOR).setBaseValue(10.0D);
             this.removeEffect(MobEffects.FIRE_RESISTANCE);
         }
     }

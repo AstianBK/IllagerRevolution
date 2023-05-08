@@ -60,9 +60,6 @@ public class ModItems {
 
     public static final RegistryObject<Item> ENCRUSTED_LAPIS = ITEMS.register("encrusted_lapis",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
-    
-    public static final RegistryObject<Item> RUSTIC_CHISEL = ITEMS.register("rustic_chisel",()->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SCRAPER_CLAW = ITEMS.register("scraper_claw",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));

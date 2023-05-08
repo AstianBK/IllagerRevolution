@@ -26,7 +26,7 @@ public class EscapeMinerGoal<T extends LivingEntity> extends AvoidEntityGoal {
     @Override
     public void start() {
         super.start();
-        this.goalOwner.playSound(SoundEvents.WITCH_CELEBRATE, 1.0F, -2.5F / (this.goalOwner.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.goalOwner.playSound(SoundEvents.VINDICATOR_CELEBRATE, 0.35F, 1.0F / (this.goalOwner.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 
     @Override
