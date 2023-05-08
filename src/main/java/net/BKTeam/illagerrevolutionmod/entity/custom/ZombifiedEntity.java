@@ -247,7 +247,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
             double d0 = this.getAttackReachSqr(entity);
             if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
                 this.resetAttackCooldown();
-                this.goalOwner.playSound(SoundEvents.ZOMBIE_HURT, 1.0F, 4.0F);
+                this.goalOwner.playSound(SoundEvents.ZOMBIE_HURT, 1.0F, 1.0F);
                 this.goalOwner.doHurtTarget(entity);
                 this.goalOwner.getNavigation().stop();
             }
