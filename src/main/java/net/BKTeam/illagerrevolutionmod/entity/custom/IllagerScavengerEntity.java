@@ -160,7 +160,9 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                         this.robTimer=200;
                         for(ItemStack stack : pEntity.getArmorSlots()){
                             if(stack.getItem() instanceof ArmorItem ){
-                                stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(Objects.requireNonNull(stack.getEquipmentSlot())));
+                                if(!stack.isEmpty()){
+                                    stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(stack.getEquipmentSlot()));
+                                }
                             }
                         }
                     }
