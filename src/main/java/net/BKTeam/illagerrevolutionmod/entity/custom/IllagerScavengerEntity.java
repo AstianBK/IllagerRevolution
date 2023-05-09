@@ -115,7 +115,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 25.0D)
                 .add(Attributes.ARMOR,5.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 3.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 35.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.30f).build();
@@ -304,7 +304,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     public boolean hurt(DamageSource pSource, float pAmount) {
         if(this.getArmorTier()==ArmorTier.HEAVY_ARMOR){
             if (pSource.getEntity() instanceof  LivingEntity living){
-                living.hurt(DamageSource.MAGIC,2f);
+                living.hurt(DamageSource.MAGIC,1f);
             }
         }
         return super.hurt(pSource, pAmount);
@@ -324,7 +324,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                         if(!this.level.isClientSide){
                             PacketHandler.sendToPlayer(new PacketSand(this.getTarget()), (ServerPlayer) this.getTarget());
                         }
-                        this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,50,1));
+                        this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,30,1));
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,1));
                     }
                 }
