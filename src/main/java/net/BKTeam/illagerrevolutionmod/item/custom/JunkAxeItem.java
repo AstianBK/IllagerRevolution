@@ -67,8 +67,8 @@ public class JunkAxeItem extends AxeItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier"+stack.getItem().getName(stack), (double)this.attackDamage+(double)this.upgrade*6, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)this.attackSpeed-0.25f*this.upgrade , AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier"+stack.getItem().getName(stack), (double)this.attackDamage+(double)this.upgrade*7, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)this.attackSpeed-2.3f*this.upgrade , AttributeModifier.Operation.ADDITION));
         if(slot == EquipmentSlot.MAINHAND) {
             return builder.build();
         }
@@ -125,7 +125,7 @@ public class JunkAxeItem extends AxeItem {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         if(Screen.hasShiftDown()){
-            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe.fleshtooltip1"+this.count_hit));
+            pTooltipComponents.add(Component.translatable("Remaining Hits:"+this.count_hit));
             CompoundTag nbt = null;
             IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
             if(capability!=null){
@@ -146,7 +146,7 @@ public class JunkAxeItem extends AxeItem {
             if(nbt!=null){
                 nbt.putInt("CustomModelData",this.upgrade);
             }
-            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe.fleshtooltip2"));
+            pTooltipComponents.add(Component.translatable("Press SHIFT"));
         }
 
     }
