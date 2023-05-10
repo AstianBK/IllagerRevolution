@@ -99,7 +99,7 @@
 				}
 			}
 		},
-		"animation.illagerminer.walk": {
+		"animation.illagerminer.walk1": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {

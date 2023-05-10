@@ -72,9 +72,9 @@ public class JunkAxeItem extends AxeItem {
             if(this.upgrade==3){
                 cc = 6.9d;
             }else if(this.upgrade==2){
-                cc = 6.5d;
+                cc = 6.8d;
             }else if(this.upgrade==1){
-                cc = 6.0d;
+                cc = 6.5d;
             }
         }
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier"+stack.getItem().getName(stack), (double)this.attackDamage+(double)this.upgrade*6, AttributeModifier.Operation.ADDITION));

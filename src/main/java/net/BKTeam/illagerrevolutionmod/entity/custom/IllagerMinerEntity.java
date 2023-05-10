@@ -119,9 +119,8 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
     }
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-
         if (event.isMoving() && !this.isAggressive() && !this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk"+(this.isHasItems() ? "3" : ""), ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk"+(this.isHasItems() ? "3" : "1"), ILoopType.EDefaultLoopTypes.LOOP));
 
         }else if (this.isAggressive() && event.isMoving() && !this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminer.walk2", ILoopType.EDefaultLoopTypes.LOOP));
@@ -137,7 +136,7 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
 
     public void setAttacking(boolean attacking){
         this.entityData.set(ATTACKING,attacking);
-        this.attackTimer = isAttacking() ? 10 : 0;
+        this.attackTimer = attacking ? 10 : 0;
     }
 
     public boolean isAttacking(){

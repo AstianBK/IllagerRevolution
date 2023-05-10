@@ -126,7 +126,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isAttackLantern()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk"+(this.isUpgrading() ? "3" : ""), ILoopType.EDefaultLoopTypes.LOOP));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk", ILoopType.EDefaultLoopTypes.LOOP));
         }
         else if (this.isAttacking() && this.isAttackLantern()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.attack2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
@@ -136,10 +136,8 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         }
         else if (this.isAggressive() && event.isMoving() && !this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk2", ILoopType.EDefaultLoopTypes.LOOP));
-        } else if (this.isSprinting() && event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.walk3", ILoopType.EDefaultLoopTypes.LOOP));
-
-        } else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        }
+        else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.illagerminerbadlands.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
 
     }
@@ -248,7 +246,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     }
     public void setAttacking(boolean attacking){
         this.entityData.set(ATTACKING,attacking);
-        this.attackTimer = isAttacking() ? 10 : 0;
+        this.attackTimer = isAttacking() ? 20 : 0;
     }
     public boolean isAttacking(){
         return this.entityData.get(ATTACKING);
@@ -308,6 +306,9 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                     this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(SCAVENGER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
                 }
                 this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(2+(pTier*2));
+                if(pTier==3){
+                    this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2d);
+                }
                 this.upgradeWeapon(pTier);
             }
         }
@@ -320,11 +321,6 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                 capability.setTier(pTier);
             }
         }
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
     }
 
     @Override
@@ -343,12 +339,12 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         if(this.isAttacking()){
             --this.attackTimer;
             if(this.attackTimer!=0){
-                if(this.attackTimer==7 && this.getTarget()!=null){
+                if(this.attackTimer==10 && this.getTarget()!=null){
                     if(!this.isAttackLantern()){
                         this.doHurtTarget(this.getTarget());
                     }else{
                         this.useArena =true;
-                        if(!this.level.isClientSide){
+                        if(!this.level.isClientSide && this.getTarget() instanceof ServerPlayer){
                             PacketHandler.sendToPlayer(new PacketSand(this,this.getTarget()), (ServerPlayer) this.getTarget());
                         }
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,30,1));
@@ -387,7 +383,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.setUpgrading(pCompound.getBoolean("hasItem"));
+        this.setUpgrading(pCompound.getBoolean("upgrade"));
         this.setAttackArena(pCompound.getBoolean("attackLantern"));
         this.setAttacking(pCompound.getBoolean("attacking"));
         this.setIdVariant(pCompound.getInt("idVariant"));
