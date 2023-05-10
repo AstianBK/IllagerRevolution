@@ -212,7 +212,7 @@ public class ModItems {
             ()->new VariantRuneBladeItem(ModTiers.ILLAGIUM,5,-2.5F,props()));
 
     public static final RegistryObject<Item> JUNK_AXE = ITEMS.register("junk_axe",
-            ()->new JunkAxeItem(ModTiers.ILLAGIUM,5,-0.775F,props()));
+            ()->new JunkAxeItem(ModTiers.JUNK,0,3.5F,props()));
 
     private static Item.Properties props() {
         return new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
