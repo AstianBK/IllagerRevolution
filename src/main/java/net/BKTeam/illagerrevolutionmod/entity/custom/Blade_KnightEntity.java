@@ -207,10 +207,7 @@ public class Blade_KnightEntity extends SpellcasterKnight implements IAnimatable
                 ParticleOptions particle=ModParticles.BKSOULS_PARTICLES.get();
                 level.playLocalSound(this.getX(),this.getY(),this.getZ(),SoundEvents.SOUL_ESCAPE,SoundSource.HOSTILE,5.0f,-5.0f,false);
                 for(int i=0;i<5;i++){
-                    float f = this.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
-                    float f1 = Mth.cos(f);
-                    float f2 = Mth.sin(f);
-                    this.level.addParticle(particle, this.getX()+f2, this.getY() , this.getZ()+f1,  random1.nextFloat(-0.1f,0.1f), random1.nextFloat(0.1f,0.15f),random1.nextFloat(-0.1f,0.1f));
+                    this.level.addParticle(particle, this.getX(), this.getY() , this.getZ(),  random1.nextFloat(-0.1f,0.1f), random1.nextFloat(0.1f,0.15f),random1.nextFloat(-0.1f,0.1f));
                 }
             }
             if(this.lowHealtTimer==0){
