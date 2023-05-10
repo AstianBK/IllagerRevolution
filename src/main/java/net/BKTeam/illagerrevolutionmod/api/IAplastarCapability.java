@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public interface IAplastarCapability extends INBTSerializable<CompoundTag> {
-    void setOldArmorTotal(int pArmorTotal);
-    int getOldArmorTotal();
+    void setArmorNatural(double pArmorNatural);
+    double getArmorNatural();
     void updateAttributeArmor(LivingEntity entity, MobEffectInstance instance);
     void onTick(LivingEntity entity, MobEffectInstance instance);
     boolean hasChanged();

@@ -53,10 +53,6 @@ import java.util.Random;
 public class Events {
 
     @SubscribeEvent
-    public static void finalizeEffectPotion(MobEffectEvent.Remove event){
-    }
-
-    @SubscribeEvent
     public static void initEffectPotion(MobEffectEvent.Added event){
         if(event.getEntity()!=null && event.getEffectInstance().getEffect()==init_effect.APLASTAR.get()){
             if(!event.getEntity().level.isClientSide){

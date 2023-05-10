@@ -67,8 +67,18 @@ public class JunkAxeItem extends AxeItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        double cc = 0;
+        if(this.upgrade>0){
+            if(this.upgrade==3){
+                cc = 6.9d;
+            }else if(this.upgrade==2){
+                cc = 6.5d;
+            }else if(this.upgrade==1){
+                cc = 6.0d;
+            }
+        }
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier"+stack.getItem().getName(stack), (double)this.attackDamage+(double)this.upgrade*6, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)this.attackSpeed-0.25f*this.upgrade , AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)this.attackSpeed-cc , AttributeModifier.Operation.ADDITION));
         if(slot == EquipmentSlot.MAINHAND) {
             return builder.build();
         }
@@ -87,11 +97,12 @@ public class JunkAxeItem extends AxeItem {
                     if(capability.getTier()<3){
                         pPlayer.level.playSound(null,pPlayer, SoundEvents.SMITHING_TABLE_USE, SoundSource.AMBIENT,1.0f,1.0f);
                         capability.setTier(capability.getTier()+1);
+                        this.upgrade=capability.getTier();
                         capability.setCountHit(15);
                     }
                 }
             }
-            if(!pPlayer.getAbilities().instabuild){
+            if(!pPlayer.getAbilities().instabuild && this.upgrade<3){
                 itemStack.shrink(1);
             }
         }

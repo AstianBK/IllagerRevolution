@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -144,29 +146,54 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     @Override
     public boolean doHurtTarget(Entity pEntity) {
-        if(!super.doHurtTarget(pEntity)){
-            return false;
-        }else {
-                int cc=this.robTimer;
-                if(pEntity instanceof ServerPlayer && cc==0){
-                    if(this.getRandom().nextInt(2)==1){
-                        if(this.getArmorTierValue()<3){
-                            this.setArmorTier(this.getArmorTierValue()+1);
-                            this.setUpgrading(true);
-                        }
-                        this.setAttackArena(true);
-                        this.robTimer=200;
-                        for(ItemStack stack : pEntity.getArmorSlots()){
-                            if(stack.getItem() instanceof ArmorItem ){
-                                if(!stack.isEmpty()){
-                                    stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(stack.getEquipmentSlot()));
-                                }
+        int cc=this.robTimer;
+        if(pEntity instanceof ServerPlayer && cc==0){
+            if(this.getRandom().nextInt(2)==1){
+                boolean flag = false;
+                for(ItemStack stack : pEntity.getArmorSlots()){
+                    if(stack.getItem() instanceof ArmorItem armorItem ){
+                        switch (armorItem.getSlot()){
+                            case HEAD -> {
+                                flag=true;
+                                stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(EquipmentSlot.HEAD));
+                            }
+                            case CHEST -> {
+                                flag=true;
+                                stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(EquipmentSlot.CHEST));
+                            }
+                            case LEGS -> {
+                                flag=true;
+                                stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(EquipmentSlot.LEGS));
+                            }
+                            case FEET -> {
+                                flag=true;
+                                stack.hurtAndBreak(40,(LivingEntity)pEntity,e-> e.broadcastBreakEvent(EquipmentSlot.FEET));
                             }
                         }
                     }
                 }
-                return super.doHurtTarget(pEntity);
+                if(((Player)pEntity).isBlocking()){
+                    flag=true;
+                    for (InteractionHand hand : InteractionHand.values()){
+                        ItemStack itemStack = ((ServerPlayer) pEntity).getItemInHand(hand);
+                        if (hand == InteractionHand.MAIN_HAND) {
+                            if (itemStack.getItem() instanceof ShieldItem) {
+                                itemStack.hurtAndBreak(40, (LivingEntity) pEntity, e -> e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                            }
+                        } else {
+                            itemStack.hurtAndBreak(40, (LivingEntity) pEntity, e -> e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        }
+                    }
+                }
+                if(this.getArmorTierValue()<3 && flag){
+                    this.setArmorTier(this.getArmorTierValue()+1);
+                }
+                this.setUpgrading(true);
+                this.setAttackArena(true);
+                this.robTimer=200;
+            }
         }
+        return super.doHurtTarget(pEntity);
     }
 
     public boolean isAttackLantern(){
@@ -322,7 +349,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                     }else{
                         this.useArena =true;
                         if(!this.level.isClientSide){
-                            PacketHandler.sendToPlayer(new PacketSand(this.getTarget()), (ServerPlayer) this.getTarget());
+                            PacketHandler.sendToPlayer(new PacketSand(this,this.getTarget()), (ServerPlayer) this.getTarget());
                         }
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,50,1));
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,1));

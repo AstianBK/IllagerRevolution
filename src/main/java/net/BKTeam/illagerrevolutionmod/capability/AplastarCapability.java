@@ -31,15 +31,16 @@ public class AplastarCapability implements IAplastarCapability {
     int oldArmorTotal = 0;
     int ArmorTotal = 0;
     double[] armorForItem = new double[4];
+    double armorNatural = 0;
 
     @Override
-    public void setOldArmorTotal(int pArmorTotal) {
-        oldArmorTotal =pArmorTotal;
+    public void setArmorNatural(double pArmorNatural) {
+        armorNatural =pArmorNatural;
     }
 
     @Override
-    public int getOldArmorTotal() {
-        return oldArmorTotal;
+    public double getArmorNatural() {
+        return armorNatural;
     }
 
     @Override
@@ -55,11 +56,14 @@ public class AplastarCapability implements IAplastarCapability {
                     }
                 }
                 if(living.getAttributes().hasModifier(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID)){
-                    double armor = living.getAttributes().getModifierValue(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID) / 2;
+                    double armor = living.getAttributes().getModifierValue(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID) /2;
+                    armorNatural=living.getAttributes().getModifierValue(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID);
                     living.getAttribute(Attributes.ARMOR).removeModifier(NATURAL_ARMOR_MODIFIER_UUID);
                     living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(NATURAL_ARMOR_MODIFIER_UUID,"natural armor",armor, AttributeModifier.Operation.ADDITION));
                 }
             }
+            checkArmor0(living);
+
             oldArmorTotal=living.getArmorValue();
             ArmorTotal=living.getArmorValue();
         }
@@ -67,7 +71,6 @@ public class AplastarCapability implements IAplastarCapability {
 
     @Override
     public void onTick(LivingEntity entity,MobEffectInstance instance) {
-
         if(hasChanged()){
             updateAttributeArmor(entity,instance);
         }else {
@@ -78,6 +81,31 @@ public class AplastarCapability implements IAplastarCapability {
     @Override
     public boolean hasChanged() {
         return oldArmorTotal != ArmorTotal;
+    }
+
+    public void checkArmor0(LivingEntity living){
+        if(living.getArmorValue()<1.0d){
+            for(ItemStack itemStack: living.getArmorSlots() ){
+                if(itemStack.getItem() instanceof ArmorItem armorItem) {
+                    if(armorItem.getDefense()<1.0d){
+                        double armor = 0;
+                        living.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()]);
+                        living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()],"aplastar modifier" , armor, AttributeModifier.Operation.ADDITION));
+
+                    }else {
+                        double armor = 1;
+                        living.getAttribute(Attributes.ARMOR).removeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()]);
+                        living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(ARMOR_MODIFIER_UUID_PER_SLOT[armorItem.getSlot().getIndex()],"aplastar modifier" , armor, AttributeModifier.Operation.ADDITION));
+
+                    }
+                }
+            }
+            if(living.getAttributes().hasModifier(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID)){
+                double armor = 1;
+                living.getAttribute(Attributes.ARMOR).removeModifier(NATURAL_ARMOR_MODIFIER_UUID);
+                living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(NATURAL_ARMOR_MODIFIER_UUID,"natural armor",armor, AttributeModifier.Operation.ADDITION));
+            }
+        }
     }
 
     @Override
@@ -91,7 +119,7 @@ public class AplastarCapability implements IAplastarCapability {
                     }
                 }
                 if(living.getAttributes().hasModifier(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID)){
-                    double armor = living.getAttributes().getModifierValue(Attributes.ARMOR,NATURAL_ARMOR_MODIFIER_UUID) * 2;
+                    double armor = armorNatural;
                     living.getAttribute(Attributes.ARMOR).removeModifier(NATURAL_ARMOR_MODIFIER_UUID);
                     living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(NATURAL_ARMOR_MODIFIER_UUID,"natural Armor",armor, AttributeModifier.Operation.ADDITION));
                 }
@@ -112,14 +140,15 @@ public class AplastarCapability implements IAplastarCapability {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag=new CompoundTag();
-        tag.putInt("armorTotal", getArmorTotal());
+        tag.putDouble("armorNatural", getArmorNatural());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        setArmorTotal(nbt.getInt("armorTotal"));
+        setArmorNatural(nbt.getDouble("armorNatural"));
     }
+
     public static class AplastarProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 
         private final LazyOptional<IAplastarCapability> instance = LazyOptional.of(AplastarCapability::new);

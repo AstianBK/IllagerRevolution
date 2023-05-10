@@ -1,14 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.item.custom;
 
-import com.google.common.collect.ImmutableMap;
 import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -21,8 +15,6 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.item.GeoArmorItem;
 import software.bernie.geckolib3.util.GeckoLibUtil;
-
-import java.util.Map;
 
 public class ArmorIllusionerRobeItem extends GeoArmorItem implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
@@ -47,13 +39,10 @@ public class ArmorIllusionerRobeItem extends GeoArmorItem implements IAnimatable
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
     public static void renderEvent(RenderLivingEvent.Pre<?,?> event){
-        if(event.getEntity() instanceof Player player){
-            if(player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorIllusionerRobeItem){
-                if(player.getHealth()<player.getMaxHealth()*20/100){
-                    event.setCanceled(true);
-                }
+        if(event.getEntity().getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorIllusionerRobeItem){
+            if(event.getEntity().getHealth()<event.getEntity().getMaxHealth()*20/100){
+                event.setCanceled(true);
             }
         }
     }
