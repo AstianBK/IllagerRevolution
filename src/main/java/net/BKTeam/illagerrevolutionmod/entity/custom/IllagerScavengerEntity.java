@@ -348,6 +348,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                         if(!this.level.isClientSide && this.getTarget() instanceof ServerPlayer){
                             sendPacketSand(this,this.getTarget());
                         }
+                        this.playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(random.nextFloat() * 0.4F + 0.8F));
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,30,1));
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,1));
                     }

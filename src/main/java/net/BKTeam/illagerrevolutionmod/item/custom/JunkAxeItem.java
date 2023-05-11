@@ -50,7 +50,7 @@ public class JunkAxeItem extends AxeItem {
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         CompoundTag nbt = null;
         LivingEntity livingEntity= (LivingEntity) pEntity;
-        if(pIsSelected && !Screen.hasShiftDown()){
+        if(pIsSelected){
             if(!livingEntity.level.isClientSide){
                 IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
                 if(capability!=null){

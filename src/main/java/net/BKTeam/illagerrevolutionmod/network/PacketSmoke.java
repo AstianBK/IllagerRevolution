@@ -44,7 +44,6 @@ public class PacketSmoke {
     private void handlePlayActivateAnimation() {
         Minecraft mc = Minecraft.getInstance();
         Random random = new Random();
-        entity.playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(random.nextFloat() * 0.4F + 0.8F));
         for (int i = 0; i < 24; i++) {
             double x1 = entity.getX();
             double x2 = entity.getY();

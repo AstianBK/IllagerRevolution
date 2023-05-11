@@ -205,6 +205,7 @@ public class Events {
                 }
                 if(!player.hasEffect(MobEffects.INVISIBILITY)){
                     if(itemStack.getItem() == Items.AMETHYST_SHARD){
+                        Random random=new Random();
                         if(!player.level.isClientSide){
                             sendSmoke(player);
                         }
@@ -214,6 +215,7 @@ public class Events {
                         hurtHelmet(helmet,player);
                         SoundEvent Sound=player.level.getRandom().nextInt(0,2)==1 ? SoundEvents.AMETHYST_CLUSTER_BREAK:SoundEvents.AMETHYST_CLUSTER_HIT;
                         event.getEntity().level.playSound(null,event.getEntity().blockPosition(),Sound, SoundSource.AMBIENT,1.0f,-1.0f);
+                        event.getEntity().playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(random.nextFloat() * 0.4F + 0.8F));
                     }
                 }
             }

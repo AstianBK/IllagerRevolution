@@ -52,7 +52,6 @@ public class PacketSand {
         Minecraft mc = Minecraft.getInstance();
         Random random = new Random();
         assert mc.level!=null;
-        target.playSound(SoundEvents.FIRE_EXTINGUISH,5.0f,-1.0f/(random.nextFloat() * 0.4F + 0.8F));
         for (int i = 0; i < 20; i++) {
             double x1 = target.getX() + random.nextDouble(-0.3d,0.3d);
             double x2 = target.getY() + target.getBbHeight() - 0.2d;
