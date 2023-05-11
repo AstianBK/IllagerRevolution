@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -194,6 +195,7 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
             if(!this.level.isClientSide){
                 PacketHandler.sendToAllTracking(new PacketSmoke(this),this);
             }
+            this.level.playSound(null,this,SoundEvents.FIRE_EXTINGUISH, SoundSource.AMBIENT,5.0f,-1.0f/(random.nextFloat() * 0.4F + 0.8F));
             this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,150));
         }
     }

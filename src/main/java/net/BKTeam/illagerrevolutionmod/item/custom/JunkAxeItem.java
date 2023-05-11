@@ -51,14 +51,16 @@ public class JunkAxeItem extends AxeItem {
         CompoundTag nbt = null;
         LivingEntity livingEntity= (LivingEntity) pEntity;
         if(pIsSelected && !Screen.hasShiftDown()){
-            IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
-            if(capability!=null){
-                this.upgrade = capability.getTier();
-                this.count_hit = capability.getCountHit();
-                nbt=pStack.getOrCreateTag();
-            }
-            if (nbt != null){
-                nbt.putInt("CustomModelData",this.upgrade);
+            if(!livingEntity.level.isClientSide){
+                IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
+                if(capability!=null){
+                    this.upgrade = capability.getTier();
+                    this.count_hit = capability.getCountHit();
+                    nbt=pStack.getOrCreateTag();
+                }
+                if (nbt != null){
+                    nbt.putInt("CustomModelData",this.upgrade);
+                }
             }
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
@@ -138,24 +140,33 @@ public class JunkAxeItem extends AxeItem {
         if(Screen.hasShiftDown()){
             pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe.fleshtooltip1"+this.count_hit));
             CompoundTag nbt = null;
-            IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
-            if(capability!=null){
-                this.upgrade = capability.getTier();
-                this.count_hit = capability.getCountHit();
-                nbt=pStack.getOrCreateTag();
+            if(pLevel!=null){
+                if(!pLevel.isClientSide){
+                    IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
+                    if(capability!=null){
+                        this.upgrade = capability.getTier();
+                        this.count_hit = capability.getCountHit();
+                        nbt=pStack.getOrCreateTag();
+                    }
+                    if(nbt!=null){
+                        nbt.putInt("CustomModelData",this.upgrade);
+                    }
+                }
             }
-            if(nbt!=null){
-                nbt.putInt("CustomModelData",this.upgrade);
-            }
+
         }else {
-            CompoundTag nbt = null;
-            IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
-            if(capability!=null){
-                this.upgrade = capability.getTier();
-                nbt=pStack.getOrCreateTag();
-            }
-            if(nbt!=null){
-                nbt.putInt("CustomModelData",this.upgrade);
+            if(pLevel!=null){
+                if(!pLevel.isClientSide){
+                    CompoundTag nbt = null;
+                    IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
+                    if(capability!=null){
+                        this.upgrade = capability.getTier();
+                        nbt=pStack.getOrCreateTag();
+                    }
+                    if(nbt!=null){
+                        nbt.putInt("CustomModelData",this.upgrade);
+                    }
+                }
             }
             pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe.fleshtooltip2"));
         }

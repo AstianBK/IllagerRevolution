@@ -76,7 +76,6 @@ public class Effect_bleeding extends MobEffect {
             PacketHandler.sendToPlayer(new PacketBleedingEffect(player), player);
         }
         PacketHandler.sendToAllTracking(new PacketBleedingEffect(livingEntity),livingEntity);
-
     }
 
     public static void sendProcBleeding(LivingEntity livingEntity) {

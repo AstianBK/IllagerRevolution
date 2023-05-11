@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
+import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.minecraft.server.level.ServerPlayer;
@@ -184,6 +185,7 @@ public class Events {
         }
         return false;
     }
+
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickItem event){
         LivingEntity livingEntity = event.getEntity();
@@ -204,7 +206,7 @@ public class Events {
                 if(!player.hasEffect(MobEffects.INVISIBILITY)){
                     if(itemStack.getItem() == Items.AMETHYST_SHARD){
                         if(!player.level.isClientSide){
-                            PacketHandler.sendToPlayer(new PacketSmoke(player),player);
+                            sendSmoke(player);
                         }
                         player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,150,0));
                         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,140,1));
@@ -216,6 +218,13 @@ public class Events {
                 }
             }
         }
+    }
+
+    public static void sendSmoke(LivingEntity livingEntity) {
+        if (livingEntity instanceof ServerPlayer player) {
+            PacketHandler.sendToPlayer(new PacketSmoke(player), player);
+        }
+        PacketHandler.sendToAllTracking(new PacketSmoke(livingEntity),livingEntity);
     }
 
     private static boolean checkHelmetMiner(Item item){

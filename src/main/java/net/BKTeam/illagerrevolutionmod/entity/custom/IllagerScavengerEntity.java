@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSand;
 import net.minecraft.core.BlockPos;
@@ -345,7 +346,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                     }else{
                         this.useArena =true;
                         if(!this.level.isClientSide && this.getTarget() instanceof ServerPlayer){
-                            PacketHandler.sendToPlayer(new PacketSand(this,this.getTarget()), (ServerPlayer) this.getTarget());
+                            sendPacketSand(this,this.getTarget());
                         }
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,30,1));
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,1));
@@ -368,6 +369,13 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
             this.setUpgrading(false);
         }
 
+    }
+
+    public static void sendPacketSand(LivingEntity livingEntity,LivingEntity target) {
+        if (target instanceof ServerPlayer player) {
+            PacketHandler.sendToPlayer(new PacketSand(livingEntity,target), player);
+        }
+        PacketHandler.sendToAllTracking(new PacketSand(livingEntity,target),livingEntity);
     }
 
     @Override
