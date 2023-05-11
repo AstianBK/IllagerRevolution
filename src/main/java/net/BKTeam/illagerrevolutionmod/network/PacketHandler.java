@@ -55,6 +55,9 @@ public class PacketHandler {
 
         channel.registerMessage(index++, PacketSand.class, PacketSand::encode,
                 PacketSand::new, PacketSand::handle);
+
+        channel.registerMessage(index++, PacketSyncItemCapability.class, PacketSyncItemCapability::encode,
+                PacketSyncItemCapability::new, PacketSyncItemCapability::handle);
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {

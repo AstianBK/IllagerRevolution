@@ -154,8 +154,6 @@ public class Events {
         if(event.getEntity().getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorIllusionerRobeItem){
             if(event.getEntity().getHealth()<event.getEntity().getMaxHealth()*20/100){
                 event.setCanceled(true);
-                event.getEntity().addEffect(new MobEffectInstance(MobEffects.ABSORPTION,100,1));
-                event.getEntity().level.playSound(null,event.getEntity(),SoundEvents.ILLUSIONER_CAST_SPELL,SoundSource.AMBIENT,1.0f,1.0f);
             }
         }
     }

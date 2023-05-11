@@ -5,10 +5,14 @@ import com.google.common.collect.Multimap;
 import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
+import net.BKTeam.illagerrevolutionmod.network.PacketSyncItemCapability;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -61,6 +65,7 @@ public class JunkAxeItem extends AxeItem {
                 if (nbt != null){
                     nbt.putInt("CustomModelData",this.upgrade);
                 }
+                sendCapability(pStack,livingEntity);
             }
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
@@ -79,7 +84,7 @@ public class JunkAxeItem extends AxeItem {
                 cc = 6.5d;
             }
         }
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier"+stack.getItem().getName(stack), (double)this.attackDamage+(double)this.upgrade*6, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage+(double)this.upgrade*6, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)this.attackSpeed-cc , AttributeModifier.Operation.ADDITION));
         if(slot == EquipmentSlot.MAINHAND) {
             return builder.build();
@@ -101,6 +106,7 @@ public class JunkAxeItem extends AxeItem {
                         capability.setTier(capability.getTier()+1);
                         this.upgrade=capability.getTier();
                         capability.setCountHit(15);
+                        sendCapability(pPlayer.getMainHandItem(),pPlayer);
                     }
                 }
             }
@@ -126,6 +132,7 @@ public class JunkAxeItem extends AxeItem {
                                 capability.setCountHit(capability.getTier()==0 ? 0 : 15);
                                 player.level.playSound(null,player ,SoundEvents.LADDER_BREAK,SoundSource.AMBIENT,1.0f,1.0f);
                             }
+                            sendCapability(pStack,player);
                         }
                     }
                 }
@@ -156,20 +163,24 @@ public class JunkAxeItem extends AxeItem {
 
         }else {
             if(pLevel!=null){
-                if(!pLevel.isClientSide){
-                    CompoundTag nbt = null;
-                    IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
-                    if(capability!=null){
-                        this.upgrade = capability.getTier();
-                        nbt=pStack.getOrCreateTag();
-                    }
-                    if(nbt!=null){
-                        nbt.putInt("CustomModelData",this.upgrade);
-                    }
+                CompoundTag nbt = null;
+                IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
+                if(capability!=null){
+                    this.upgrade = capability.getTier();
+                    nbt=pStack.getOrCreateTag();
+                }
+                if(nbt!=null){
+                    nbt.putInt("CustomModelData",this.upgrade);
                 }
             }
             pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe.fleshtooltip2"));
         }
+    }
 
+    public static void sendCapability(ItemStack stack,LivingEntity livingEntity) {
+        if (livingEntity instanceof ServerPlayer player) {
+            PacketHandler.sendToPlayer(new PacketSyncItemCapability(stack), player);
+        }
+        PacketHandler.sendToAllTracking(new PacketSyncItemCapability(stack),livingEntity);
     }
 }
