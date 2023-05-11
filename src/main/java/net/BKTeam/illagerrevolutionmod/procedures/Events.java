@@ -32,6 +32,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
@@ -144,6 +145,17 @@ public class Events {
                     double zp=entity.getZ()+random.nextDouble(-1.0,1.0);
                     entity.level.addParticle(ModParticles.RUNE_SOUL_PARTICLES.get(),xp,yp,zp,random.nextFloat(-0.1f,0.1f),-0.1F,random.nextFloat(-0.1f,0.1f));
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderEvent(RenderLivingEvent.Pre<?,?> event){
+        if(event.getEntity().getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorIllusionerRobeItem){
+            if(event.getEntity().getHealth()<event.getEntity().getMaxHealth()*20/100){
+                event.setCanceled(true);
+                event.getEntity().addEffect(new MobEffectInstance(MobEffects.ABSORPTION,100,1));
+                event.getEntity().level.playSound(null,event.getEntity(),SoundEvents.ILLUSIONER_CAST_SPELL,SoundSource.AMBIENT,1.0f,1.0f);
             }
         }
     }

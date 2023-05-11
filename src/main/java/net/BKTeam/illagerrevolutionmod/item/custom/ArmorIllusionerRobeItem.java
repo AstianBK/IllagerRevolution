@@ -37,13 +37,4 @@ public class ArmorIllusionerRobeItem extends GeoArmorItem implements IAnimatable
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         return PlayState.CONTINUE;
     }
-
-    @SubscribeEvent
-    public static void renderEvent(RenderLivingEvent.Pre<?,?> event){
-        if(event.getEntity().getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorIllusionerRobeItem){
-            if(event.getEntity().getHealth()<event.getEntity().getMaxHealth()*20/100){
-                event.setCanceled(true);
-            }
-        }
-    }
 }
