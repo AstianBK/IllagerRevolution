@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.api.IAplastarCapability;
 import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.capability.ItemCapability;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.network.PacketBleedingEffect;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
@@ -229,6 +231,13 @@ public class Events {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event){
+        if(event.getObject().getItem() == ModItems.JUNK_AXE.get()){
+            event.addCapability(ItemCapability.LOCATION,new ItemCapability.SwordProvider());
         }
     }
 

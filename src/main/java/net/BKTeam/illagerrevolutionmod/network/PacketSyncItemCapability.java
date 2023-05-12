@@ -51,9 +51,7 @@ public class PacketSyncItemCapability {
         context.get().setPacketHandled(true);
     }
 
-    @OnlyIn(Dist.CLIENT)
     private void consume() {
-        Minecraft mc = Minecraft.getInstance();
         if(stack!=null){
             stack.getCapability(CapabilityHandler.SWORD_CAPABILITY).ifPresent((s) ->  {
                 ((INBTSerializable<CompoundTag>)s).deserializeNBT(tag);
