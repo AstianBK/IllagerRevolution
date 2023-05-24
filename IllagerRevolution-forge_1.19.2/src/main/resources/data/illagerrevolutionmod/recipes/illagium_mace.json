@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:iron_shovel"
+  },
+  "addition": {
+    "item": "illagerrevolutionmod:illagium"
+  },
+  "result": {
+    "item": "illagerrevolutionmod:illagium_mace",
+    "count": 1
+  }
+}

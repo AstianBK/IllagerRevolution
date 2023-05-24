@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "illagerrevolutionmod:rune_fragment_flesh"
+  },
+  "result": "minecraft:stone",
+  "experience": 60,
+  "cookingtime": 250
+}

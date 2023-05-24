@@ -1,0 +1,95 @@
+{
+
+  "block.illagerrevolutionmod.rune_table_block": "Runic Table",
+
+  "item.illagerrevolutionmod.rune_fragment_bone": "Rune Fragment",
+  "item.illagerrevolutionmod.rune_fragment_flesh": "Rune Fragment",
+  "item.illagerrevolutionmod.rune_fragment_undying": "Rune Fragment",
+  "item.illagerrevolutionmod.rune_tablet_undying_bone": "Rune Tablet",
+  "item.illagerrevolutionmod.rune_tablet_undying_flesh": "Rune Tablet",
+
+
+  "item.illagerrevolutionmod.illagerminer_spawn_egg": "Illager Miner Spawn Egg",
+  "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Illager Scavenger Spawn Egg",
+  "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Illager Beast Tamer Spawn Egg",
+  "item.illagerrevolutionmod.scrapper_spawn_egg": "Raker Spawn Egg",
+  "item.illagerrevolutionmod.blade_knight_spawn_egg": "Blade Knight Illager Spawn Egg",
+
+
+  "item.illagerrevolutionmod.helmet_miner_reinforced": "Illagium Miner Helmet",
+  "item.illagerrevolutionmod.goggles_miner_reinforced": "Illagium Scavenger Visor",
+  "item.illagerrevolutionmod.helmet_miner": "Miner Helmet",
+  "item.illagerrevolutionmod.goggles_miner": "Scavenger Visor",
+  "item.illagerrevolutionmod.evoker_robe_armor": "Evoker Robes",
+  "item.illagerrevolutionmod.illusioner_robe_armor": "Illusioner Robes",
+  "item.illagerrevolutionmod.pillager_vest_armor": "Pillager Vest",
+  "item.illagerrevolutionmod.pillager_leggins_armor": "Pillager Leggings",
+  "item.illagerrevolutionmod.pillager_boots_armor": "Pillager Boots",
+  "item.illagerrevolutionmod.vindicator_jacket_armor": "Vindicator Jacket",
+  "item.illagerrevolutionmod.vindicator_leggins_armor": "Vindicator Pants",
+
+
+  "item.illagerrevolutionmod.scrapper_armor_illagium": "Illagium Raker Armor",
+  "item.illagerrevolutionmod.scrapper_armor_netherite": "Netherite Raker Armor",
+  "item.illagerrevolutionmod.scrapper_armor_diamond": "Diamond Raker Armor",
+  "item.illagerrevolutionmod.scrapper_armor_gold": "Gold Raker Armor",
+  "item.illagerrevolutionmod.scrapper_armor_iron": "Iron Raker Armor",
+  "item.illagerrevolutionmod.claws_armor_illagium": "Illagium Raker Claws",
+  "item.illagerrevolutionmod.claws_armor_netherite": "Netherite Raker Claws",
+  "item.illagerrevolutionmod.claws_armor_diamond": "Diamond Raker Claws",
+  "item.illagerrevolutionmod.claws_armor_gold": "Gold Raker Claws",
+  "item.illagerrevolutionmod.claws_armor_iron": "Iron Raker Claws",
+
+
+  "item.illagerrevolutionmod.encrusted_lapis": "Encrusted Lapis",
+  "item.illagerrevolutionmod.illagium": "Illagium Ingot",
+  "item.illagerrevolutionmod.scraper_claw": "Raker Claw",
+
+
+  "effect.illagerrevolutionmod.deep_wound": "Deep Wound",
+  "effect.illagerrevolutionmod.death_mark": "Death Bound",
+  "effect.illagerrevolutionmod.mauled": "Mauled",
+
+
+  "item.illagerrevolutionmod.illagium_runed_blade": "§eIllagium Runed Blade§r",
+  "item.illagerrevolutionmod.illagium_alt_runed_blade": "§eIllagium Runed Blade§r",
+  "item.illagerrevolutionmod.illagium_cleaver": "Illagium Blade",
+  "item.illagerrevolutionmod.illagium_helberd": "Illagium War Axe",
+  "item.illagerrevolutionmod.illagium_hammer": "Illagium Hammer",
+  "item.illagerrevolutionmod.illagium_scythe": "Illagium Scythe",
+  "item.illagerrevolutionmod.illagium_mace": "Illagium Spade",
+  "item.illagerrevolutionmod.junk_axe": "Junk Axe",
+  "item.illagerrevolutionmod.arrow_beast": "Claw Arrow",
+
+  "enchantment.illagerrevolutionmod.serrated_edge": "Serrated Edge",
+  "enchantment.illagerrevolutionmod.wary_lenses": "Wary Lenses",
+
+  "entity.illagerrevolutionmod.raker": "Raker",
+  "entity.illagerrevolutionmod.illagerminer": "Illager Miner",
+  "entity.illagerrevolutionmod.illagerminerbadlands": "Illager Scavenger",
+  "entity.illagerrevolutionmod.blade_knight": "Illager Blade Knight",
+  "entity.illagerrevolutionmod.illagerbeasttamer": "Illager Beast Tamer",
+  "entity.illagerrevolutionmod.zombified": "Zombified Illager",
+
+  "itemGroup.illagerrevolutiontab": "Illager Revolution",
+
+  "sounds.illagerrevolutionmod.tamer_whistle": "Beast Tamer Whistling",
+
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5to release a stored soul",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2": "§5hold§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5to raise them as undead followers",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulward": "§5§lSoul Ward:§r §5If fully charged, your blade will protect you from death, consuming all souls in the process",
+
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1": "§l§5Undying Bone Rune§r",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2": "Hold §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish1": "§5§lSoul Nourish:§r §5Slain mobs will have their souls absorbed into the sword increasing your armor and healing all summoned followers",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5while having at least 3 souls ",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2": "§5to summon a Fallen Knight follower to aid you in battle temporarily",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability"
+
+}

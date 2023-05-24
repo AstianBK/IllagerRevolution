@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "item": "illagerrevolutionmod:scraper_claw"
+    },
+    "title": "Cat Whisperer",
+    "description": "You tamed a Raker, hope it was worth all the bites and scratches!",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "illagerrevolutionmod:illagerrevolutionmod",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "illagerrevolutionmod:raker"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  }
+}
