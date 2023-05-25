@@ -51,21 +51,12 @@ public class JunkAxeItem extends AxeItem {
 
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        CompoundTag nbt = null;
+        CompoundTag nbt = pStack.getOrCreateTag();
         LivingEntity livingEntity= (LivingEntity) pEntity;
         if(pIsSelected){
-            if(!livingEntity.level.isClientSide){
-                IItemCapability capability= CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
-                if(capability!=null){
-                    this.upgrade = capability.getTier();
-                    this.count_hit = capability.getCountHit();
-                    nbt=pStack.getOrCreateTag();
-                }
-                if (nbt != null){
-                    nbt.putInt("CustomModelData",this.upgrade);
-                }
-                sendCapability(pStack,livingEntity);
-            }
+            this.upgrade=nbt.getInt("upgrade");
+            this.count_hit=nbt.getInt("countHit");
+            nbt.putInt("CustomModelData",this.upgrade);
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
     }
@@ -83,7 +74,6 @@ public class JunkAxeItem extends AxeItem {
                     cc = 6.7D;
                 }
             }
-
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage+(double)this.upgrade*7, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)this.attackSpeed-cc , AttributeModifier.Operation.ADDITION));
         if(slot == EquipmentSlot.MAINHAND) {
@@ -98,16 +88,14 @@ public class JunkAxeItem extends AxeItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if(pPlayer.getOffhandItem().is(Items.IRON_INGOT) || pPlayer.getOffhandItem().is(ModItems.ILLAGIUM.get())){
             ItemStack itemStack = pPlayer.getOffhandItem();
-            if(!pPlayer.level.isClientSide){
-                IItemCapability capability = CapabilityHandler.getItemCapability(pPlayer.getMainHandItem(),CapabilityHandler.SWORD_CAPABILITY);
-                if(capability!=null){
-                    if(capability.getTier()<3){
-                        pPlayer.level.playSound(null,pPlayer, SoundEvents.SMITHING_TABLE_USE, SoundSource.AMBIENT,1.0f,1.0f);
-                        capability.setTier(capability.getTier()+1);
-                        capability.setCountHit(15);
-                        sendCapability(pPlayer.getMainHandItem(),pPlayer);
-                    }
-                }
+            boolean flag=false;
+            CompoundTag nbt = pPlayer.getMainHandItem().getOrCreateTag();
+            if(this.upgrade<3){
+                this.upgrade++;
+                this.count_hit=15;
+                nbt.putInt("upgrade",this.upgrade);
+                nbt.putInt("countHit",this.count_hit);
+
             }
             if(!pPlayer.getAbilities().instabuild){
                 itemStack.shrink(1);
@@ -118,33 +106,39 @@ public class JunkAxeItem extends AxeItem {
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        if(!pAttacker.level.isClientSide){
-            if(pAttacker instanceof Player player){
-                IItemCapability capability = CapabilityHandler.getItemCapability(pStack,CapabilityHandler.SWORD_CAPABILITY);
-                if(capability!=null){
-                    if(capability.getTier()>0){
-                        if(this.count_hit>0){
-                            capability.setCountHit(this.count_hit-1);
-                            this.count_hit=capability.getCountHit();
-                            if(this.count_hit==0){
-                                capability.setTier(capability.getTier()-1);
-                                capability.setCountHit(capability.getTier()==0 ? 0 : 15);
-                                player.level.playSound(null,player ,SoundEvents.SHIELD_BREAK,SoundSource.AMBIENT,1.0f,1.0f);
-                            }
-                            sendCapability(pStack,player);
-                        }
-                    }
+        if(pAttacker instanceof Player player){
+            if(this.count_hit>0){
+                CompoundTag nbt = pStack.getOrCreateTag();
+                this.count_hit=this.count_hit-1;
+                nbt.putInt("countHit",this.count_hit);
+                if(this.count_hit==0){
+                    this.upgrade=this.upgrade-1;
+                    nbt.putInt("upgrade",this.upgrade);
                 }
             }
-
         }
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
-    public static void sendCapability(ItemStack stack,LivingEntity livingEntity) {
-        if (livingEntity instanceof ServerPlayer player) {
-            PacketHandler.sendToPlayer(new PacketSyncItemCapability(stack), player);
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        if(Screen.hasShiftDown()){
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe.fleshtooltip1"+this.count_hit));
+            CompoundTag nbt = pStack.getOrCreateTag();
+            if(pLevel!=null){
+                this.upgrade=nbt.getInt("upgrade");
+                nbt.putInt("CustomModelData",this.upgrade);
+            }
+
+        }else {
+            if(pLevel!=null){
+                CompoundTag nbt = pStack.getOrCreateTag();
+                this.upgrade=nbt.getInt("upgrade");
+                nbt.putInt("CustomModelData",this.upgrade);
+            }
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe.fleshtooltip"+2));
         }
-        PacketHandler.sendToAllTracking(new PacketSyncItemCapability(stack),livingEntity);
     }
+
+
 }

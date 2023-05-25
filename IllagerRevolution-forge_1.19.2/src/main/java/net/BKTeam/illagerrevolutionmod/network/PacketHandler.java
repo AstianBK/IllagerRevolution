@@ -67,4 +67,8 @@ public class PacketHandler {
     public static <MSG> void sendToAllTracking(MSG message, LivingEntity entity) {
         MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
     }
+
+    public static <MSG> void sendToAllTrackingAndSelf(MSG message, LivingEntity entity) {
+        MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
+    }
 }

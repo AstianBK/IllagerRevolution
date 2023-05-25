@@ -9,9 +9,9 @@ public class ModTiers {
             1f, 15, BlockTags.NEEDS_IRON_TOOL,
             () -> Ingredient.of(ModItems.ILLAGIUM.get()));
     
-       // public static final ForgeTier JUNK = new ForgeTier(0, 350, 1.0f,
-           // 0f, 0, BlockTags.NEEDS_IRON_TOOL,
-            //() -> Ingredient.of(ModItems.JUNK_AXE.get()));
+       public static final ForgeTier JUNK = new ForgeTier(0, 350, 1.0f,
+               0f, 0, BlockTags.NEEDS_IRON_TOOL,
+            () -> Ingredient.of(ModItems.JUNK_AXE.get()));
 
 
 

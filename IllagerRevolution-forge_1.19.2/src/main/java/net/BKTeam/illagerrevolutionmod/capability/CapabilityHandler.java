@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.capability;
 
 import net.BKTeam.illagerrevolutionmod.api.IMauledCapability;
 import net.BKTeam.illagerrevolutionmod.api.IItemCapability;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -22,11 +23,11 @@ public class CapabilityHandler {
         event.register(IMauledCapability.class);
     }
 
-    /*public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event){
+    public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event){
         if(event.getObject().getItem() == ModItems.JUNK_AXE.get()){
             event.addCapability(ItemCapability.LOCATION,new ItemCapability.SwordProvider());
         }
-    }*/
+    }
 
     public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject() instanceof LivingEntity){
