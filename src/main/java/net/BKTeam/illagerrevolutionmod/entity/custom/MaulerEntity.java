@@ -178,8 +178,10 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public void attackG(Player player) {
-        if(this.mauledTimer<=0){
-            this.setIsMauled(true);
+        if(!this.level.isClientSide){
+            if(this.mauledTimer<=0){
+                this.setIsMauled(true);
+            }
         }
         super.attackG(player);
     }

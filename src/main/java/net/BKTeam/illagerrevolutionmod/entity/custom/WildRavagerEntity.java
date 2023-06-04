@@ -305,24 +305,22 @@ public class WildRavagerEntity extends MountEntity{
     @Override
     public void attackG(Player player) {
         if(!this.level.isClientSide){
-            if(this.attackTick<0){
-                if(this.getPassengers().size()<2){
-                    boolean flag=false;
-                    this.attackTick=10;
-                    this.level.broadcastEntityEvent(this, (byte)4);
-                    this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
-                    float f = this.yBodyRot * ((float)Math.PI / 180F);
-                    float f1 = Mth.sin(f);
-                    float f2 = Mth.cos(f);
-                    float f3 = 0.5f;
-                    BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY()+1.5d,this.getZ()+(f3*f2));
-                    for(LivingEntity living : this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(2.5d))){
-                        if(living!=this && living!=player && !flag){
-                            flag=true;
-                            living.hurt(DamageSource.mobAttack(this), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
-                        }else if(flag){
-                            break;
-                        }
+            if(this.attackTick<=0){
+                boolean flag=false;
+                this.attackTick=10;
+                this.level.broadcastEntityEvent(this, (byte)4);
+                this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
+                float f = this.yBodyRot * ((float)Math.PI / 180F);
+                float f1 = Mth.sin(f);
+                float f2 = Mth.cos(f);
+                float f3 = 0.5f;
+                BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY()+1.5d,this.getZ()+(f3*f2));
+                for(LivingEntity living : this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(2.5d))){
+                    if(living!=this && living!=player && !flag){
+                        flag=true;
+                        living.hurt(DamageSource.mobAttack(this), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+                    }else if(flag){
+                        break;
                     }
                 }
             }
