@@ -90,8 +90,8 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15.0D)
                 .add(Attributes.ATTACK_DAMAGE, 13.0D)
-                .add(Attributes.FOLLOW_RANGE, 30.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.41f)
+                .add(Attributes.FOLLOW_RANGE, 35.D)
+                .add(Attributes.MOVEMENT_SPEED, 0.42f)
                 .build();
 
     }

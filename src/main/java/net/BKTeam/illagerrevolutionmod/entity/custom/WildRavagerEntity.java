@@ -108,7 +108,13 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(Attributes.MOVEMENT_SPEED, 0.3D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 12.0D).add(Attributes.ATTACK_KNOCKBACK, 1.5D).add(Attributes.FOLLOW_RANGE, 32.0D);
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 90.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.75D)
+                .add(Attributes.ATTACK_DAMAGE, 12.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
+                .add(Attributes.FOLLOW_RANGE, 32.0D);
     }
 
 
@@ -237,8 +243,10 @@ public class WildRavagerEntity extends MountEntity{
                     if (!pPlayer.getAbilities().instabuild) {
                         stack.shrink(1);
                     }
+                    playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
                     return InteractionResult.SUCCESS;
                 }
+
             }else if(stack.is(Items.WATER_BUCKET) && this.isPainted()){
                 this.setPainted(false);
                 this.setColor(DyeColor.WHITE);
@@ -248,7 +256,9 @@ public class WildRavagerEntity extends MountEntity{
                     pPlayer.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
                     pPlayer.setItemSlot(EquipmentSlot.MAINHAND,stack);
                 }
+                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
+
             }else if(stack.is(Items.SADDLE)){
                 this.setIsSaddled(true);
                 if (!pPlayer.getAbilities().instabuild) {
@@ -280,6 +290,7 @@ public class WildRavagerEntity extends MountEntity{
                                 this.setSitting(true);
                             }
                         }
+                        playSound(SoundEvents.HORSE_EAT, 1.0F, -1.5F);
                         return InteractionResult.SUCCESS;
                     }
                 }

@@ -74,11 +74,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 15.0D)
-                .add(Attributes.ATTACK_DAMAGE, 13.0D)
+                .add(Attributes.MAX_HEALTH, 25.0D)
+                .add(Attributes.ATTACK_DAMAGE, 7.0D)
                 .add(Attributes.FOLLOW_RANGE, 30.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.41f)
-                .add(Attributes.JUMP_STRENGTH,0.70d)
+                .add(Attributes.MOVEMENT_SPEED, 0.38f)
+                .add(Attributes.JUMP_STRENGTH,0.60d)
                 .build();
     }
 
@@ -121,7 +121,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
     @Override
     public boolean isFood(ItemStack pStack) {
-        return pStack.is(Items.BEEF);
+        return pStack.is(Items.ROTTEN_FLESH);
     }
 
     @Override
@@ -237,6 +237,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if (!pPlayer.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
+                    playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -249,6 +250,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     pPlayer.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
                     pPlayer.setItemSlot(EquipmentSlot.MAINHAND,itemstack);
                 }
+                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
             }
             if(itemstack.is(Items.BONE)){
