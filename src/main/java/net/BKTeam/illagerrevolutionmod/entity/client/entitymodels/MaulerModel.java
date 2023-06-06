@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.client.entitymodels;
 
 import com.google.common.collect.Maps;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MaulerEntity;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
@@ -15,11 +16,11 @@ import java.util.Map;
 public class MaulerModel extends AnimatedGeoModel<MaulerEntity> {
 
     private static final Map<MaulerEntity.Variant, ResourceLocation> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(MaulerEntity.Variant.class), (p_114874_) -> {
-        p_114874_.put(MaulerEntity.Variant.BROWN, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler1.png"));
-        p_114874_.put(MaulerEntity.Variant.BLONDE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler2.png"));
-        p_114874_.put(MaulerEntity.Variant.GINGER, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler3.png"));
-        p_114874_.put(MaulerEntity.Variant.BLUE, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler4.png"));
-        p_114874_.put(MaulerEntity.Variant.ALBINO, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler5.png"));
+        p_114874_.put(MaulerEntity.Variant.VARIANT1, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler1.png"));
+        p_114874_.put(MaulerEntity.Variant.VARIANT2, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler2.png"));
+        p_114874_.put(MaulerEntity.Variant.VARIANT3, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler3.png"));
+        p_114874_.put(MaulerEntity.Variant.VARIANT4, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler4.png"));
+        p_114874_.put(MaulerEntity.Variant.VARIANT5, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/mauler/mauler5.png"));
     });
 
     @Override

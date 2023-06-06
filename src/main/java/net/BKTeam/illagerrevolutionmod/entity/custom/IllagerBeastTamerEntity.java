@@ -31,6 +31,7 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.ArrowBeast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -68,6 +69,15 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
         super(entityType, level);
 
     }
+    private   <E extends IAnimatable> PlayState predicateSit(AnimationEvent<E> event) {
+        if (this.isPassenger()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.sit", ILoopType.EDefaultLoopTypes.LOOP));
+        }else {
+            event.getController().clearAnimationCache();
+        }
+        return PlayState.CONTINUE;
+
+    }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
 
         if (event.isMoving() && !this.isAggressive() && !this.isCastingSpell()) {
@@ -76,7 +86,6 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
         else if (this.isCastingSpell()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.summon", ILoopType.EDefaultLoopTypes.LOOP));
         }
-
         else if (this.isWieldingTwoHandedWeapon() && event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.walk2", ILoopType.EDefaultLoopTypes.LOOP));
         }
@@ -84,7 +93,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.attack1", ILoopType.EDefaultLoopTypes.LOOP));
 
         }
-        else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        else event.getController().setAnimation(new AnimationBuilder().addAnimation(this.isPassenger()?"animation.beasttamerillager.sit" : "animation.beasttamerillager.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
 
     }
@@ -99,25 +108,43 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
     }
 
+    @Override
+    public boolean isPassenger() {
+        if(this.getVehicle()!=null){
+            return this.getVehicle().isAlive();
+        }
+        return false;
+    }
+
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
+        if(this.level.random.nextFloat()<0.70f){
+            WildRavagerEntity ravager=new WildRavagerEntity(ModEntityTypes.WILD_RAVANGER.get(),this.level);
+            ravager.setPos(this.getX(),this.getY(),this.getZ());
+            ravager.finalizeSpawn((ServerLevelAccessor) this.level,this.level.getCurrentDifficultyAt(this.blockPosition()),MobSpawnType.MOB_SUMMONED,null,null);
+            this.level.addFreshEntity(ravager);
+            this.startRiding(ravager);
+            ravager.setOwner(this);
+        }
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    @Override
+    public double getMyRidingOffset() {
+        return this.isCastingSpell() ? super.getMyRidingOffset()-0.5d : super.getMyRidingOffset()+0.3d;
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractGolem.class, true, true));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(4, new RandomStrollGoal(this, 1));
-        if(!this.isWieldingTwoHandedWeapon()){
-            this.goalSelector.addGoal(1,new AvoidEntityGoal<>(this,Player.class,5.0f,1.3D,1.3D));
-        }
+        this.goalSelector.addGoal(1,new AvoidEntityGoal<>(this,Player.class,5.0f,1.3D,1.3D));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
@@ -183,13 +210,24 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
 
         protected void performSpellCasting() {
             ServerLevel serverlevel = (ServerLevel)IllagerBeastTamerEntity.this.level;
-
-            BlockPos blockpos = IllagerBeastTamerEntity.this.blockPosition().offset(-2 + IllagerBeastTamerEntity.this.random.nextInt(5), 1, -2 + IllagerBeastTamerEntity.this.random.nextInt(5));
-            RakerEntity raker = ModEntityTypes.RAKER.get().create(IllagerBeastTamerEntity.this.level);
-            raker.moveTo(blockpos, 0.0F, 0.0F);
-            raker.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
-            serverlevel.addFreshEntityWithPassengers(raker);
-            raker.setOwner(IllagerBeastTamerEntity.this);
+            if(IllagerBeastTamerEntity.this.level.random.nextFloat()<0.50f){
+                BlockPos blockpos = IllagerBeastTamerEntity.this.blockPosition().offset(-2 + IllagerBeastTamerEntity.this.random.nextInt(5), 1, -2 + IllagerBeastTamerEntity.this.random.nextInt(5));
+                RakerEntity raker = ModEntityTypes.RAKER.get().create(IllagerBeastTamerEntity.this.level);
+                raker.moveTo(blockpos, 0.0F, 0.0F);
+                raker.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
+                serverlevel.addFreshEntityWithPassengers(raker);
+                raker.setOwner(IllagerBeastTamerEntity.this);
+            }else {
+                BlockPos blockpos = IllagerBeastTamerEntity.this.blockPosition().offset(-2 + IllagerBeastTamerEntity.this.random.nextInt(5), 1, -2 + IllagerBeastTamerEntity.this.random.nextInt(5));
+                MaulerEntity mauler = ModEntityTypes.MAULER.get().create(IllagerBeastTamerEntity.this.level);
+                mauler.moveTo(blockpos, 0.0F, 0.0F);
+                mauler.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
+                serverlevel.addFreshEntityWithPassengers(mauler);
+                mauler.setOwner(IllagerBeastTamerEntity.this);
+                if(serverlevel.random.nextFloat()<0.50f){
+                    IllagerBeastTamerEntity.this.startRiding(mauler);
+                }
+            }
         }
     }
 
@@ -235,8 +273,10 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
-                10, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller",
+                0, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller_Sit",
+                0, this::predicateSit));
 
     }
 

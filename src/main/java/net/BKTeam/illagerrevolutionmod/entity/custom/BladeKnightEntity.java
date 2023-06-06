@@ -216,9 +216,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 this.setStartAnimationLowHealth(false);
             }
         }
-        if(this.isPassenger()){
-            this.dismountTo(this.getX(),this.getY(),this.getZ());
-        }
     }
 
     public List<FallenKnightEntity> getKnights() {

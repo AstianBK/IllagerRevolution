@@ -43,7 +43,7 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
 
     public boolean allowStandSliding;
     private int standCounter;
-
+    private Mob owner;
 
 
     protected MountEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
@@ -136,9 +136,6 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
 
     public void setIsSaddled(boolean pBoolean){
         this.entityData.set(SADDLED,pBoolean);
-        if(pBoolean){
-            this.equipSaddle(SoundSource.AMBIENT);
-        }
     }
 
     public void travel(Vec3 pTravelVector) {
@@ -154,10 +151,6 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
                 }
             }
         }else {
-            Entity entity = this.getFirstPassenger();
-            if (entity instanceof LivingEntity) {
-                return (LivingEntity)entity;
-            }
         }
         return null;
     }
@@ -259,9 +252,6 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("isSaddled",this.isSaddled());
         pCompound.putBoolean("isStanding",this.isStanding());
-        if (!this.inventory.getItem(0).isEmpty()) {
-            pCompound.put("SaddleItem", this.inventory.getItem(0).save(new CompoundTag()));
-        }
 
     }
     public void attackC(Player player){
@@ -305,5 +295,9 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
             this.playSound(SoundEvents.HORSE_SADDLE, 0.5F, 1.0F);
         }
 
+    }
+
+    public void setOwner(IllagerBeastTamerEntity illagerBeastTamerEntity) {
+        this.owner=illagerBeastTamerEntity;
     }
 }

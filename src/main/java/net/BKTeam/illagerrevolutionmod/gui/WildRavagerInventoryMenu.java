@@ -23,19 +23,7 @@ public class WildRavagerInventoryMenu extends AbstractContainerMenu {
         p_39658_.startOpen(p_39657_.player);
         this.addSlot(new Slot(p_39658_, 0, 8, 36) {
             public boolean mayPlace(ItemStack p_39690_) {
-                return p_39690_.getItem() instanceof SaddleItem;
-            }
-            public boolean isActive() {
-                return true;
-            }
-
-            public int getMaxStackSize() {
-                return 1;
-            }
-        });
-        this.addSlot(new Slot(p_39658_, 1, 8, 54) {
-            public boolean mayPlace(ItemStack p_39690_) {
-                return p_39690_.getItem() instanceof BeastArmorItem maulerArmorItem && maulerArmorItem.getEquipmetSlot().equals(EquipmentSlot.LEGS) && maulerArmorItem.getName().equals("wild_ravager");
+                return p_39690_.getItem() instanceof SaddleItem || mauler.isArmor(p_39690_);
             }
             public boolean isActive() {
                 return true;
@@ -71,15 +59,11 @@ public class WildRavagerInventoryMenu extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(itemstack1, i, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            }else if (this.getSlot(1).mayPlace(itemstack1) && !this.getSlot(1).hasItem()) {
-                    if (!this.moveItemStackTo(itemstack1, 1,2, false)) {
-                        return ItemStack.EMPTY;
-                    }
             }else if (this.getSlot(0).mayPlace(itemstack1)) {
                 if (!this.moveItemStackTo(itemstack1, 0,1, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (i <= 2 || !this.moveItemStackTo(itemstack1, 2, i, false)) {
+            } else if (i <= 1 || !this.moveItemStackTo(itemstack1, 1, i, false)) {
                 int j = i + 27;
                 int k = j + 9;
                 if (pIndex >= j && pIndex < k) {

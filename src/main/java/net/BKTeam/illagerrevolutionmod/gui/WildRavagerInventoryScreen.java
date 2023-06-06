@@ -33,7 +33,6 @@ public class WildRavagerInventoryScreen extends AbstractContainerScreen<WildRava
         this.blit(pPoseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         if (this.raker.isTame()) {
             this.blit(pPoseStack, i + 7, j + 35, 0, this.imageHeight + 54, 18, 18);
-            this.blit(pPoseStack, i + 7, j + 53, 18, this.imageHeight + 54, 18, 18);
         }
         InventoryScreen.renderEntityInInventory(i + 51, j + 60, 17, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.raker);
     }

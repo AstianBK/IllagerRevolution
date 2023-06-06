@@ -34,6 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -49,10 +50,13 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.UUID;
 
 public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHasInventory, ContainerListener {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final SimpleContainer inventory= new SimpleContainer(3);
     private int attackTimer;
     Mob owner;
     private static final UUID RAKER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
@@ -217,9 +221,6 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
         if (this.isTame() && this.isOwnedBy(player) && !player.isSecondaryUseActive() ) {
             if(player instanceof IOpenBeatsContainer && itemstack.is(Items.BONE)){
                 this.openInventory(player);
-                player.sendSystemMessage(Component.nullToEmpty("Posee armadura :"+this.inventory.getItem(1)));
-                player.sendSystemMessage(Component.nullToEmpty("Posee armadura :"+this.getItemBySlot(EquipmentSlot.LEGS)));
-                player.sendSystemMessage(Component.nullToEmpty("es armadura :"+this.isArmor(this.getItemBySlot(EquipmentSlot.LEGS))));
                 this.gameEvent(GameEvent.ENTITY_INTERACT, player);
                 this.updateContainerEquipment();
                 return InteractionResult.SUCCESS;
@@ -349,8 +350,6 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
         return this.entityData.get(ATTACKING);
     }
 
-    private final SimpleContainer inventory= new SimpleContainer(3);
-
     @Override
     public void setTame(boolean tamed) {
         super.setTame(tamed);
@@ -461,6 +460,5 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
     public AgeableMob getBreedOffspring(@NotNull ServerLevel p_146743_, @NotNull AgeableMob p_146744_) {
         return null;
     }
-
 }
 

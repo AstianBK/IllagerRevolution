@@ -18,7 +18,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -51,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public class WildRavagerEntity extends MountEntity{
@@ -59,6 +63,9 @@ public class WildRavagerEntity extends MountEntity{
     };
     private static final EntityDataAccessor<Boolean> SADDLED =
             SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final UUID WILD_RAVAGER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
+
     private int attackTick;
     private int stunnedTick;
     private int roarTick;
@@ -111,7 +118,7 @@ public class WildRavagerEntity extends MountEntity{
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 90.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 0.75D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.10D)
                 .add(Attributes.ATTACK_DAMAGE, 12.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
@@ -129,7 +136,7 @@ public class WildRavagerEntity extends MountEntity{
         pCompound.putInt("AttackTick", this.attackTick);
         pCompound.putInt("StunTick", this.stunnedTick);
         pCompound.putInt("RoarTick", this.roarTick);
-        ItemStack itemStackHead = this.getItemBySlot(EquipmentSlot.LEGS);
+        ItemStack itemStackHead = this.getContainer().getItem(0);
         if(!itemStackHead.isEmpty()){
             CompoundTag headCompoundNBT = new CompoundTag();
             itemStackHead.save(headCompoundNBT);
@@ -146,13 +153,10 @@ public class WildRavagerEntity extends MountEntity{
         if(!compoundNBT.isEmpty()) {
             if(this.isArmor(ItemStack.of(pCompound.getCompound("ChestRavagerArmor")))){
                 ItemStack stack = ItemStack.of(pCompound.getCompound("ChestRavagerArmor"));
-                this.setItemSlot(EquipmentSlot.LEGS,stack);
+                this.getContainer().setItem(0,stack);
             }
         }
-    }
-
-    public SoundEvent getCelebrateSound() {
-        return SoundEvents.RAVAGER_CELEBRATE;
+        this.updateContainerEquipment();
     }
 
     protected PathNavigation createNavigation(Level pLevel) {
@@ -259,18 +263,24 @@ public class WildRavagerEntity extends MountEntity{
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
 
-            }else if(stack.is(Items.SADDLE)){
-                this.setIsSaddled(true);
+            }else if(stack.is(Items.SADDLE) || this.isArmor(stack)){
+                if(stack.getItem() instanceof BeastArmorItem armorItem){
+                    this.setItemSlot(armorItem.getEquipmetSlot(),stack);
+                }else {
+                    this.setIsSaddled(true);
+                    this.inventory.setItem(0,stack);
+                }
                 if (!pPlayer.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
+                this.updateContainerEquipment();
                 return InteractionResult.CONSUME;
             }else if(stack.is(Items.BONE)){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
                     this.updateContainerEquipment();
-                    pPlayer.sendSystemMessage(Component.nullToEmpty("Posee armadura :"+this.getItemBySlot(EquipmentSlot.LEGS)));
+                    pPlayer.sendSystemMessage(Component.nullToEmpty("Posee armadura :"+this.getContainer().getItem(0)));
                     return InteractionResult.SUCCESS;
                 }
             }else if(stack.is(Items.HAY_BLOCK)){
@@ -341,17 +351,35 @@ public class WildRavagerEntity extends MountEntity{
 
     @Override
     public void containerChanged(Container pInvBasic) {
-        ItemStack legs= this.getItemBySlot(EquipmentSlot.LEGS);
-        ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
+        ItemStack saddle= this.getContainer().getItem(0);
+        this.updateContainerEquipment();
+        ItemStack saddle1= this.getContainer().getItem(0);
         if(this.tickCount >20){
-            if ((this.isArmor(legs1) && legs!=legs1)){
+            if ((this.isArmor(saddle1) && saddle!=saddle1)){
                 this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
-                this.updateContainerEquipment();
             }
         }
     }
 
-    private boolean isArmor(ItemStack chest1) {
+    @Override
+    protected void updateContainerEquipment() {
+        if (!this.level.isClientSide) {
+            ItemStack stack = this.getContainer().getItem(0);
+            boolean flag = !stack.isEmpty();
+            this.getAttribute(Attributes.ARMOR).removeModifier(WILD_RAVAGER_ARMOR_UUID);
+            if(flag){
+                int i = ((BeastArmorItem)stack.getItem()).getArmorValue();
+                if (i != 0) {
+                    this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(WILD_RAVAGER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
+                }
+            }
+            boolean flag1 = flag && (this.isArmor(stack) || stack.is(Items.SADDLE));
+            this.setIsSaddled(flag1);
+        }
+        super.updateContainerEquipment();
+    }
+
+    public boolean isArmor(ItemStack chest1) {
         return chest1.getItem() instanceof BeastArmorItem armorItem && armorItem.getName().equals("wild_ravager");
     }
 
@@ -362,6 +390,9 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     private boolean canBeControlledBy(Entity p_219063_) {
+        if(this.isTame() && p_219063_ instanceof LivingEntity){
+            return this.isOwnedBy((LivingEntity) p_219063_);
+        }
         return !this.isNoAi() && p_219063_ instanceof LivingEntity;
     }
 
@@ -477,6 +508,7 @@ public class WildRavagerEntity extends MountEntity{
             for(Entity livingentity : livingEntityList) {
                 if(livingentity instanceof LivingEntity && livingentity!=this){
                     livingentity.hurt(DamageSource.mobAttack(this), 6.0F);
+                    ((LivingEntity) livingentity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,0));
                     this.strongKnockback(livingentity);
                 }else if(livingentity instanceof Projectile projectile){
                     projectile.shoot(projectile.getX()-this.getX(),projectile.getY()-this.getY(),projectile.getZ()-this.getZ(),1f,0.1f);
