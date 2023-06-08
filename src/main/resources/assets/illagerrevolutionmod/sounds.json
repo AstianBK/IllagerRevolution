@@ -20,6 +20,27 @@
     ]
   },
 
+  "mauler_bark": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_bark",
+    "sounds": [
+      "illagerrevolutionmod:mauler_bark"
+    ]
+  },
+
+  "mauler_snarl": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_snarl",
+    "sounds": [
+      "illagerrevolutionmod:mauler_snarl"
+    ]
+  },
+
+  "mauler_bite": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_bite",
+    "sounds": [
+      "illagerrevolutionmod:mauler_bite"
+    ]
+  },
+
   "soul_absorb": {
     "subtitle": "sounds.illagerrevolutionmod.soul_absorb",
     "sounds": [
