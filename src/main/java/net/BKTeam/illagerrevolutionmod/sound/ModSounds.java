@@ -24,6 +24,15 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> RAKER_MEOW =
             registerSoundEvent("raker_meow");
 
+        public static final RegistryObject<SoundEvent> MAULER_BARK =
+                registerSoundEvent("mauler_bark");
+
+        public static final RegistryObject<SoundEvent> MAULER_SNARL =
+                registerSoundEvent("mauler_snarl");
+
+        public static final RegistryObject<SoundEvent> MAULER_BITE =
+                registerSoundEvent("mauler_bite");
+
         public static final RegistryObject<SoundEvent> SOUL_ABSORB =
             registerSoundEvent("soul_absorb");
 
