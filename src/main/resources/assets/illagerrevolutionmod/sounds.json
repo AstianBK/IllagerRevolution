@@ -34,6 +34,27 @@
     ]
   },
 
+  "scrounger_ambient1": {
+    "subtitle": "sounds.illagerrevolutionmod.scrounger_ambient1",
+    "sounds": [
+      "illagerrevolutionmod:scrounger_ambient1"
+    ]
+  },
+
+  "scrounger_ambient2": {
+    "subtitle": "sounds.illagerrevolutionmod.scrounger_ambient2",
+    "sounds": [
+      "illagerrevolutionmod:scrounger_ambient2"
+    ]
+  },
+
+  "scrounger_hurt": {
+    "subtitle": "sounds.illagerrevolutionmod.scrounger_hurt",
+    "sounds": [
+      "illagerrevolutionmod:scrounger_hurt"
+    ]
+  },
+
   "mauler_bite": {
     "subtitle": "sounds.illagerrevolutionmod.mauler_bite",
     "sounds": [
