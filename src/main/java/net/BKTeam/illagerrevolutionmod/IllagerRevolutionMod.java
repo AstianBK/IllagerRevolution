@@ -103,6 +103,7 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(SOUL_ENTITY.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(ARROWBEAST.get(), ArrowBeastRender::new);
         EntityRenderers.register(MAULER.get(), MaulerRenderer::new);
+        EntityRenderers.register(SCROUNGER.get(), ScroungerRenderer::new);
 
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }

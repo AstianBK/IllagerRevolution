@@ -71,6 +71,10 @@ public class PacketHandler {
         channel.registerMessage(index++, ClientRavagerScreenOpenPacket.class, ClientRavagerScreenOpenPacket::write,
                 ClientRavagerScreenOpenPacket::read, ClientRavagerScreenOpenPacket::handle);
 
+        channel.registerMessage(index++, ClientScroungerScreenOpenPacket.class, ClientScroungerScreenOpenPacket::write,
+                ClientScroungerScreenOpenPacket::read, ClientScroungerScreenOpenPacket::handle);
+
+
         channel.registerMessage(index++, PacketSyncItemCapability.class, PacketSyncItemCapability::encode,
                 PacketSyncItemCapability::new, PacketSyncItemCapability::handle);
     }

@@ -55,7 +55,7 @@ public class ModEventBusEvents {
         event.put(ModEntityTypes.FALLEN_KNIGHT.get(), FallenKnightEntity.setAttributes());
         event.put(MAULER.get(), MaulerEntity.setAttributes());
         event.put(WILD_RAVANGER.get(), WildRavagerEntity.createAttributes().build());
-
+        event.put(SCROUNGER.get(),ScroungerEntity.setAttributes());
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     @OnlyIn(Dist.CLIENT)

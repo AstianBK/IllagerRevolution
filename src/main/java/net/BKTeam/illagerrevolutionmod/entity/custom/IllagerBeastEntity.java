@@ -1,24 +1,33 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-public class IllagerBeastEntity extends TamableAnimal {
+public class IllagerBeastEntity extends TamableAnimal implements ContainerListener, IAnimatable {
 
 
     private static final EntityDataAccessor<Boolean> SITTING =
@@ -109,6 +118,10 @@ public class IllagerBeastEntity extends TamableAnimal {
         return super.finalizeSpawn(p_146746_, p_146747_, p_146748_, p_146749_, p_146750_);
     }
 
+    public Beast getTypeBeast(){
+        return null;
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -125,9 +138,55 @@ public class IllagerBeastEntity extends TamableAnimal {
     }
 
 
+    @Override
+    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        ItemStack itemstack=this.getItemInHand(pHand);
+        if(!itemstack.isEmpty()){
+            if(itemstack.getItem() instanceof DyeItem dyeItem){
+                this.setPainted(true);
+                if (dyeItem.getDyeColor()!=this.getColor()){
+                    this.setColor(dyeItem.getDyeColor());
+                    if (!pPlayer.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
+                    return InteractionResult.SUCCESS;
+                }
+            }
+            else if(itemstack.is(Items.WATER_BUCKET) && this.isPainted()){
+                this.setPainted(false);
+                this.setColor(DyeColor.WHITE);
+                if (!pPlayer.getAbilities().instabuild) {
+                    itemstack.shrink(1);
+                    itemstack=new ItemStack(Items.BUCKET);
+                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,itemstack);
+                }
+                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
+                return InteractionResult.CONSUME;
+            }
+        }
+        return super.mobInteract(pPlayer, pHand);
+    }
+
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel p_146743_, AgeableMob p_146744_) {
+        return null;
+    }
+
+    @Override
+    public void containerChanged(Container pInvBasic) {
+
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
         return null;
     }
 

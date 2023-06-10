@@ -2,10 +2,9 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -14,15 +13,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -30,7 +30,6 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,9 +49,6 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Random;
 import java.util.UUID;
 
 public class MaulerEntity extends MountEntity implements IAnimatable {
@@ -62,6 +58,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public final AnimationFactory factory= GeckoLibUtil.createFactory(this);
 
+    protected SimpleContainer inventory = new SimpleContainer(2);
+
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(MaulerEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -69,15 +67,19 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             SynchedEntityData.defineId(MaulerEntity.class, EntityDataSerializers.BOOLEAN);
 
     public int attackTimer;
+
     public int mauledTimer;
 
     private int mauledAttackTimer;
+
+    private int catchedTimer;
 
     public MaulerEntity(EntityType<? extends MountEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
         this.attackTimer=0;
         this.mauledTimer=0;
         this.mauledAttackTimer=0;
+        this.catchedTimer=0;
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
@@ -92,6 +94,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(1,new MaulerMauled(this));
         this.goalSelector.addGoal(2,new MaulerAttackGoal(this,1.2d,true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
@@ -137,6 +140,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
+    public Beast getTypeBeast() {
+        return Beast.MAULER;
+    }
+
+    @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if(this.isVehicle()){
             for (Entity entity : this.getPassengers()){
@@ -154,6 +162,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             if(this.getPassengers().size()<2){
                 boolean flag=false;
                 this.setAttacking(true);
+                this.level.broadcastEntityEvent(this, (byte) 8);
                 this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
                 float f1 = Mth.sin(f);
@@ -171,6 +180,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
             }else {
                 this.setAttacking(true);
+                this.level.broadcastEntityEvent(this, (byte) 8);
                 this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
                 if(this.getCatchedEntity()!=null){
                     this.getCatchedEntity().addEffect(new MobEffectInstance(InitEffect.MAULED.get(),100,0));
@@ -183,10 +193,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public void attackG(Player player) {
-        if(!this.level.isClientSide){
-            if(this.mauledTimer<=0 && this.attackTimer<=0){
-                this.setIsMauled(true);
-            }
+        if(this.mauledTimer<=0 && this.attackTimer<=0){
+            this.setIsMauled(true);
+            this.level.broadcastEntityEvent(this, (byte) 4);
         }
         super.attackG(player);
     }
@@ -201,6 +210,16 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
+    public void handleEntityEvent(byte pId) {
+        if(pId==4){
+            this.setIsMauled(true);
+        }else if(pId == 8){
+            this.setAttacking(true);
+        }
+        super.handleEntityEvent(pId);
+    }
+
+    @Override
     public ItemStack getItemBySlot(EquipmentSlot pSlot){
         switch (pSlot.getType()){
             case ARMOR :
@@ -212,33 +231,31 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public void containerChanged(Container pInvBasic) {
-        ItemStack saddle=this.getContainer().getItem(0);
+        boolean flag = this.isSaddled();
         ItemStack legs= this.getItemBySlot(EquipmentSlot.LEGS);
         this.updateContainerEquipment();
-        ItemStack saddle1=this.getContainer().getItem(0);
         ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
         if(this.tickCount >20){
-            if ((this.isArmor(legs1) && legs!=legs1) || (saddle1.is(Items.SADDLE) && saddle1!=saddle)){
+            if ((this.isArmor(legs1) && legs!=legs1) || (!flag && flag!=this.isSaddled())){
                 this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
+                this.updateContainerEquipment();
             }
         }
     }
 
     @Override
-    protected void updateContainerEquipment() {
+    protected void updateContainerEquipment(){
         if (!this.level.isClientSide) {
             ItemStack stack = this.getItemBySlot(EquipmentSlot.LEGS);
-            ItemStack stack1 = this.getContainer().getItem(0);
             boolean flag = !stack.isEmpty();
-            boolean flagS= !stack1.isEmpty() && stack1.is(Items.SADDLE);
             this.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(MAULER_ATTACK_DAMAGE_UUID);
-            if(flag){
-                double i=((BeastArmorItem)stack.getItem()).getDamageValue();
-                if (i != 0){
+            if(flag) {
+                double i = ((BeastArmorItem) stack.getItem()).getDamageValue();
+                if (i != 0) {
                     this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(MAULER_ATTACK_DAMAGE_UUID, "mauler attack bonus", i, AttributeModifier.Operation.MULTIPLY_TOTAL));
                 }
             }
-            this.setIsSaddled(flagS);
+            this.setIsSaddled(!this.getContainer().getItem(0).isEmpty());
         }
         super.updateContainerEquipment();
     }
@@ -264,7 +281,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 return super.mobInteract(pPlayer, pHand);
             }
         }
-        if (!itemstack.isEmpty() && !pPlayer.isSecondaryUseActive()) {
+        if (!itemstack.isEmpty()) {
             if(itemstack.getItem() instanceof DyeItem dyeItem){
                 this.setPainted(true);
                 if (dyeItem.getDyeColor()!=this.getColor()){
@@ -315,8 +332,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                         }
                         return InteractionResult.SUCCESS;
                     }
+                }{
+                    if(!pPlayer.getAbilities().instabuild){
+                        itemstack.shrink(1);
+                    }
+                    if(!this.level.isClientSide){
+                        this.heal(this.getMaxHealth()*0.10f);
+                    }
                 }
-                //return this.fedFood(pPlayer, itemstack);
+                return InteractionResult.CONSUME;
             }
             boolean flag = !this.isSaddled() && itemstack.is(Items.SADDLE);
             if (this.isArmor(itemstack) || flag) {
@@ -390,7 +414,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         if(this.attackTimer==0){
             this.setAttacking(false);
         }
-
+        if(this.catchedTimer>0){
+            this.catchedTimer--;
+        }
         if(this.isMauled()){
             this.mauledTimer--;
             this.mauledAttackTimer--;
@@ -529,9 +555,17 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     public boolean isArmor(ItemStack stack){
-        return stack.getItem() instanceof BeastArmorItem armorItem && armorItem.getName().equals("mauler");
+        return stack.getItem() instanceof BeastArmorItem armorItem && armorItem.getBeast() == Beast.MAULER;
     }
 
+    @Override
+    public boolean doHurtTarget(Entity pEntity) {
+        if(this.level.random.nextFloat() > 0.75F && this.catchedTimer<=0){
+            pEntity.startRiding(this);
+            this.catchedTimer=400;
+        }
+        return super.doHurtTarget(pEntity);
+    }
 
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -607,6 +641,19 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         return this.inventory!=container;
     }
 
+    @Override
+    public SimpleContainer getContainer() {
+        return this.inventory;
+    }
+
+    @Override
+    public void equipSaddle(@Nullable SoundSource p_21748_) {
+        this.inventory.setItem(0, new ItemStack(Items.SADDLE));
+        if (p_21748_ != null) {
+            this.level.playSound((Player)null, this, SoundEvents.HORSE_SADDLE, p_21748_, 0.5F, 1.0F);
+        }
+    }
+
     static class MaulerAttackGoal extends MeleeAttackGoal {
         private final MaulerEntity goalOwner;
 
@@ -636,5 +683,25 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.goalOwner.setAttacking(true);
         }
 
+    }
+
+    static class MaulerMauled extends Goal {
+        private final MaulerEntity mauler;
+
+        MaulerMauled (MaulerEntity mauler){
+            this.mauler=mauler;
+        }
+
+        @Override
+        public void start() {
+            this.mauler.setIsMauled(true);
+            this.mauler.level.broadcastEntityEvent(this.mauler, (byte) 4);
+            super.start();
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.mauler.getCatchedEntity()!=null && this.mauler.level.random.nextFloat() > 0.80F && !this.mauler.isMauled();
+        }
     }
 }

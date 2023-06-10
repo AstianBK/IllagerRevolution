@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.item.custom;
 
+import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
@@ -18,12 +19,12 @@ public class BeastArmorItem extends Item implements IBeastArmorItem {
     private final int extraTime;
     private final EquipmentSlot slot;
 
-    private final String beastName;
+    private final Beast beast;
 
-    public BeastArmorItem(Properties pProperties, int armorValue, String tierarmor, ArmorMaterial armorMaterial, double damage, int extraTime, EquipmentSlot pSlot, String nameBeast) {
-        this(armorValue, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/"+nameBeast+"/armor/"+nameBeast+"_armor_"+pSlot.getName()+"_"+tierarmor+".png"), pProperties, armorMaterial,damage,extraTime,pSlot,nameBeast);
+    public BeastArmorItem(Properties pProperties, int armorValue, ArmorMaterial armorMaterial, double damage, int extraTime, EquipmentSlot pSlot, Beast beast) {
+        this(armorValue, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/"+beast.getBeastName()+"/armor/"+beast.getBeastName()+"_armor_"+pSlot.getName()+"_"+armorMaterial.getName()+".png"), pProperties, armorMaterial,damage,extraTime,pSlot,beast);
     }
-    public BeastArmorItem(int armorValue, ResourceLocation texture, Properties builder, ArmorMaterial armorMaterial, double pDamage, int extraTime, EquipmentSlot slot,String beastName) {
+    public BeastArmorItem(int armorValue, ResourceLocation texture, Properties builder, ArmorMaterial armorMaterial, double pDamage, int extraTime, EquipmentSlot slot,Beast beastName) {
         super(builder);
         this.armorMaterial = armorMaterial;
         this.armorValue = armorValue;
@@ -31,7 +32,7 @@ public class BeastArmorItem extends Item implements IBeastArmorItem {
         this.damage=pDamage;
         this.extraTime=extraTime;
         this.slot=slot;
-        this.beastName=beastName;
+        this.beast=beastName;
     }
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation getArmorTexture() {
@@ -63,8 +64,8 @@ public class BeastArmorItem extends Item implements IBeastArmorItem {
     }
 
     @Override
-    public String getName() {
-        return this.beastName;
+    public Beast getBeast() {
+        return this.beast;
     }
 
 }

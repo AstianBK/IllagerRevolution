@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.api;
 
+import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 
@@ -11,5 +12,5 @@ public interface IBeastArmorItem {
     int getAddBleeding();
     EquipmentSlot getEquipmetSlot();
 
-    String getName();
+    Beast getBeast();
 }

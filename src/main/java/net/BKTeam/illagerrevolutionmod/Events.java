@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -79,6 +80,12 @@ public class Events {
             LivingEntity attacker=event.getSource().getEntity() instanceof LivingEntity ? (LivingEntity) event.getSource().getEntity() : null;
             LivingEntity entity=event.getEntity();
             if(attacker instanceof Player player){
+                List<ScroungerEntity> listBirds=player.level.getEntitiesOfClass(ScroungerEntity.class,player.getBoundingBox().inflate(15.0D),e->e.getOwner()==player);
+                if(!listBirds.isEmpty()){
+                    for(ScroungerEntity scrounger:listBirds){
+                        scrounger.ordenThrow();
+                    }
+                }
                 if (bulletEntity!=null){
                     if(player.getMainHandItem().is(Items.CROSSBOW)){
                         if(hasSetFullArmorPillager(player)){

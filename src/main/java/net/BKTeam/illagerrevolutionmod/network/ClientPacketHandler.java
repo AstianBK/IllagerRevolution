@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.network;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MaulerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.RakerEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.gui.*;
 import net.minecraft.client.Minecraft;
@@ -33,6 +34,15 @@ public class ClientPacketHandler {
 			clientPlayer.containerMenu = rakerInventoryContainer;
 			WildRavagerInventoryScreen rakerInventoryScreen = new WildRavagerInventoryScreen(rakerInventoryContainer, clientPlayer.getInventory(), mauler);
 			Minecraft.getInstance().setScreen(rakerInventoryScreen);
+		}
+	}
+
+	public static void openScroungerInventory(ScroungerEntity scrounger, LocalPlayer clientPlayer, int containerId) {
+		if (scrounger != null) {
+			ScroungerInventoryMenu scroungerInventoryMenu = new ScroungerInventoryMenu(containerId, clientPlayer.getInventory(), ((IHasInventory)scrounger).getContainer(), scrounger);
+			clientPlayer.containerMenu = scroungerInventoryMenu;
+			ScroungerInventoryScreen scroungerInventoryScreen = new ScroungerInventoryScreen(scroungerInventoryMenu, clientPlayer.getInventory(), scrounger);
+			Minecraft.getInstance().setScreen(scroungerInventoryScreen);
 		}
 	}
 }

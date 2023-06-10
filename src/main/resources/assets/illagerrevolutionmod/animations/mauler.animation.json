@@ -391,7 +391,6 @@
 			}
 		},
 		"animation.mauler.attack1": {
-			"loop": "hold_on_last_frame",
 			"animation_length": 0.33333,
 			"bones": {
 				"Chest": {

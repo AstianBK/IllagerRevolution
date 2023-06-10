@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
@@ -29,9 +30,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -54,7 +53,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.UUID;
 
-public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHasInventory, ContainerListener {
+public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHasInventory {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory= new SimpleContainer(3);
     private int attackTimer;
@@ -87,6 +86,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
             }
         }
     }
+
     private boolean hasArmor(){
         return !this.getItemBySlot(EquipmentSlot.LEGS).isEmpty() || !this.getItemBySlot(EquipmentSlot.CHEST).isEmpty();
     }
@@ -188,6 +188,33 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
 
         Item itemForTaming = Items.PUFFERFISH;
 
+        super.mobInteract(player, hand);
+        if(!itemstack.isEmpty()){
+            if(itemstack.getItem() instanceof DyeItem dyeItem){
+                this.setPainted(true);
+                if (dyeItem.getDyeColor()!=this.getColor()){
+                    this.setColor(dyeItem.getDyeColor());
+                    if (!player.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
+                    return InteractionResult.SUCCESS;
+                }
+            }
+            else if(itemstack.is(Items.WATER_BUCKET) && this.isPainted()){
+                this.setPainted(false);
+                this.setColor(DyeColor.WHITE);
+                if (!player.getAbilities().instabuild) {
+                    itemstack.shrink(1);
+                    itemstack=new ItemStack(Items.BUCKET);
+                    player.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+                    player.setItemSlot(EquipmentSlot.MAINHAND,itemstack);
+                }
+                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
+                return InteractionResult.CONSUME;
+            }
+        }
+
         if (this.isTame()) {
             if (this.isFood(itemstack) && health < maxhealth) {
                 if (!player.getAbilities().instabuild) {
@@ -250,6 +277,11 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
         if (!this.level.isClientSide && player instanceof IOpenBeatsContainer) {
             ((IOpenBeatsContainer)player).openRakerInventory(raker, this.inventory);
         }
+    }
+
+    @Override
+    public Beast getTypeBeast() {
+        return Beast.RAKER;
     }
 
     public void addAdditionalSaveData(CompoundTag compound) {
@@ -379,9 +411,10 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
     public void containerChanged(Container pInvBasic) {
         ItemStack chest= this.getItemBySlot(EquipmentSlot.CHEST);
         ItemStack chest1= this.getItemBySlot(EquipmentSlot.CHEST);
+        this.updateContainerEquipment();
         ItemStack legs= this.getItemBySlot(EquipmentSlot.LEGS);
         ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
-        if(this.tickCount >20){
+        if(this.tickCount > 20){
             if ((this.isArmor(chest1) && chest!=chest1) || (this.isArmor(legs1) && legs!=legs1)){
                 this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
                 this.updateContainerEquipment();

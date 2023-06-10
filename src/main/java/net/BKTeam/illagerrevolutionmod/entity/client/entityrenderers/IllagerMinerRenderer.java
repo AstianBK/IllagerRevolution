@@ -59,7 +59,6 @@ public class IllagerMinerRenderer extends ExtendedGeoEntityRenderer<IllagerMiner
                 break;
         }
         return null;
-
     }
     public ItemTransforms.TransformType getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
         return ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;

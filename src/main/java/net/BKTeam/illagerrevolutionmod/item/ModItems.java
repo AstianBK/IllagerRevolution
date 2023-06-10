@@ -157,66 +157,68 @@ public class ModItems {
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_ILLAGIUM = ITEMS.register("wild_ravager_armor_illagium",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1550),20,"illagium",ModArmorMaterials.ILLAGIUM,0.0d,0,EquipmentSlot.LEGS,"wild_ravager"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1550),20,ModArmorMaterials.ILLAGIUM,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_NETHERITE = ITEMS.register("wild_ravager_armor_netherite",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),30,"netherite",ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.LEGS,"wild_ravager"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),30,ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_DIAMOND = ITEMS.register("wild_ravager_armor_diamond",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(700),25,"diamond",ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.LEGS,"wild_ravager"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(700),25,ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_GOLD = ITEMS.register("wild_ravager_armor_gold",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(350),5,"gold",ArmorMaterials.GOLD,0.0d,0,EquipmentSlot.LEGS,"wild_ravager"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(350),5,ArmorMaterials.GOLD,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_IRON = ITEMS.register("wild_ravager_armor_iron",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),10,"iron",ArmorMaterials.IRON,0.0d,0,EquipmentSlot.LEGS,"wild_ravager"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),10,ArmorMaterials.IRON,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> MAULER_ARMOR_ILLAGIUM = ITEMS.register("mauler_armor_illagium",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1550),20,"illagium",ModArmorMaterials.ILLAGIUM,0.0d,0,EquipmentSlot.LEGS,"mauler"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1550),20,ModArmorMaterials.ILLAGIUM,0.0d,0,EquipmentSlot.LEGS,Beast.MAULER));
 
     public static final RegistryObject<Item> MAULER_ARMOR_NETHERITE = ITEMS.register("mauler_armor_netherite",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),30,"netherite",ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.LEGS,"mauler"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),30,ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.LEGS,Beast.MAULER));
 
     public static final RegistryObject<Item> MAULER_ARMOR_DIAMOND = ITEMS.register("mauler_armor_diamond",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(700),25,"diamond",ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.LEGS,"mauler"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(700),25,ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.LEGS,Beast.MAULER));
 
     public static final RegistryObject<Item> MAULER_ARMOR_GOLD = ITEMS.register("mauler_armor_gold",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(350),5,"gold",ArmorMaterials.GOLD,0.0d,0,EquipmentSlot.LEGS,"mauler"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(350),5,ArmorMaterials.GOLD,0.0d,0,EquipmentSlot.LEGS,Beast.MAULER));
 
     public static final RegistryObject<Item> MAULER_ARMOR_IRON = ITEMS.register("mauler_armor_iron",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),10,"iron",ArmorMaterials.IRON,0.0d,0,EquipmentSlot.LEGS,"mauler"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),10,ArmorMaterials.IRON,0.0d,0,EquipmentSlot.LEGS,Beast.MAULER));
 
     public static final RegistryObject<Item> RAKER_ARMOR_ILLAGIUM = ITEMS.register("scrapper_armor_illagium",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1550),20,"illagium",ModArmorMaterials.ILLAGIUM,0.0d,0,EquipmentSlot.CHEST,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1550),20,ModArmorMaterials.ILLAGIUM,0.0d,0,EquipmentSlot.CHEST,Beast.RAKER));
 
     public static final RegistryObject<Item> RAKER_ARMOR_NETHERITE = ITEMS.register("scrapper_armor_netherite",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),30,"netherite",ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.CHEST,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),30,ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.CHEST,Beast.RAKER));
 
     public static final RegistryObject<Item> RAKER_ARMOR_DIAMOND = ITEMS.register("scrapper_armor_diamond",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(700),25,"diamond",ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.CHEST,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(700),25,ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.CHEST,Beast.RAKER));
 
     public static final RegistryObject<Item> RAKER_ARMOR_GOLD = ITEMS.register("scrapper_armor_gold",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(350),5,"gold",ArmorMaterials.GOLD,0.0d,0,EquipmentSlot.CHEST,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(350),5,ArmorMaterials.GOLD,0.0d,0,EquipmentSlot.CHEST,Beast.RAKER));
 
     public static final RegistryObject<Item> RAKER_ARMOR_IRON = ITEMS.register("scrapper_armor_iron",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),10,"iron",ArmorMaterials.IRON,0.0d,0,EquipmentSlot.CHEST,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),10,ArmorMaterials.IRON,0.0d,0,EquipmentSlot.CHEST,Beast.RAKER));
 
 
+    public static final RegistryObject<Item> CHEST_LEATHER = ITEMS.register("chest_leather",()->
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),0,ArmorMaterials.LEATHER,0.0d,0,EquipmentSlot.CHEST,Beast.SCROUNGER));
 
     public static final RegistryObject<Item> CLAWS_ARMOR_ILLAGIUM = ITEMS.register("claws_armor_illagium",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),0,"illagium",ModArmorMaterials.ILLAGIUM,0.5d,60,EquipmentSlot.LEGS,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),0,ModArmorMaterials.ILLAGIUM,0.5d,60,EquipmentSlot.LEGS,Beast.RAKER));
 
     public static final RegistryObject<Item> CLAWS_ARMOR_NETHERITE = ITEMS.register("claws_armor_netherite",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),0,"netherite",ArmorMaterials.NETHERITE,0.8d,70,EquipmentSlot.LEGS,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),0,ArmorMaterials.NETHERITE,0.8d,70,EquipmentSlot.LEGS,Beast.RAKER));
 
     public static final RegistryObject<Item> CLAWS_ARMOR_DIAMOND = ITEMS.register("claws_armor_diamond",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(300),0,"diamond",ArmorMaterials.DIAMOND,0.6d,60,EquipmentSlot.LEGS,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(300),0,ArmorMaterials.DIAMOND,0.6d,60,EquipmentSlot.LEGS,Beast.RAKER));
 
     public static final RegistryObject<Item> CLAWS_ARMOR_GOLD = ITEMS.register("claws_armor_gold",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(100),0,"gold",ArmorMaterials.GOLD,0.2d,40,EquipmentSlot.LEGS,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(100),0,ArmorMaterials.GOLD,0.2d,40,EquipmentSlot.LEGS,Beast.RAKER));
 
     public static final RegistryObject<Item> CLAWS_ARMOR_IRON = ITEMS.register("claws_armor_iron",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(200),0,"iron",ArmorMaterials.IRON,0.3d,50,EquipmentSlot.LEGS,"raker"));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(200),0,ArmorMaterials.IRON,0.3d,50,EquipmentSlot.LEGS,Beast.RAKER));
 
 
 

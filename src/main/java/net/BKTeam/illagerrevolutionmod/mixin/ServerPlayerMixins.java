@@ -6,11 +6,9 @@ import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.entity.custom.*;
 import net.BKTeam.illagerrevolutionmod.gui.MaulerInventoryMenu;
 import net.BKTeam.illagerrevolutionmod.gui.RakerInventoryMenu;
+import net.BKTeam.illagerrevolutionmod.gui.ScroungerInventoryMenu;
 import net.BKTeam.illagerrevolutionmod.gui.WildRavagerInventoryMenu;
-import net.BKTeam.illagerrevolutionmod.network.ClientMaulerScreenOpenPacket;
-import net.BKTeam.illagerrevolutionmod.network.ClientRakerScreenOpenPacket;
-import net.BKTeam.illagerrevolutionmod.network.ClientRavagerScreenOpenPacket;
-import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -78,6 +76,20 @@ public abstract class ServerPlayerMixins extends Player implements IOpenBeatsCon
         ClientRavagerScreenOpenPacket message = new ClientRavagerScreenOpenPacket(this.containerCounter, p_9059_.getId());
         PacketHandler.MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> p_9059_), message);
         this.containerMenu = new WildRavagerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
+        this.containerMenu.addSlotListener(this.containerListener);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+
+    }
+
+    @Override
+    public void openScroungerInventory(ScroungerEntity p_9059_, Container p_9060_) {
+        if (this.containerMenu != this.inventoryMenu) {
+            this.closeContainer();
+        }
+        this.nextContainerCounter();
+        ClientScroungerScreenOpenPacket message = new ClientScroungerScreenOpenPacket(this.containerCounter, p_9059_.getId());
+        PacketHandler.MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> p_9059_), message);
+        this.containerMenu = new ScroungerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
         this.containerMenu.addSlotListener(this.containerListener);
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
 

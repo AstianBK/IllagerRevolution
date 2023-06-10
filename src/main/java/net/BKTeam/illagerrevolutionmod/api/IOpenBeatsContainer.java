@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.api;
 
 import net.BKTeam.illagerrevolutionmod.entity.custom.MaulerEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.minecraft.world.Container;
 import net.BKTeam.illagerrevolutionmod.entity.custom.RakerEntity;
@@ -11,4 +12,6 @@ public interface IOpenBeatsContainer {
 	void openMaulerInventory(MaulerEntity mauler, Container container);
 
 	void openRavagerInventory(WildRavagerEntity ravager, Container container);
+
+	void openScroungerInventory(ScroungerEntity scrounger,Container container);
 }

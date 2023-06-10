@@ -29,7 +29,7 @@ public class ModCreativeModeTab {
         List<Item> itemList= Arrays.asList(ModItems.BLADE_KNIGHT_SPAWN_EGG.get(),ModItems.ILLAGERBEASTTAMER_SPAWN_EGG.get(),ModItems.ILLAGERMINERBADLANDS_SPAWN_EGG.get(),ModItems.ILLAGERMINER_SPAWN_EGG.get(),ModItems.WILD_RAVAGER_SPAWN_EGG.get(),ModItems.MAULER_SPAWN_EGG.get(),
                 ModItems.SCRAPPER_SPAWN_EGG.get(),ModItems.ILLAGIUM.get(),ModItems.ENCRUSTED_LAPIS.get(),ModItems.SCRAPER_CLAW.get()
                 ,ModItems.ILLAGIUM_CLEAVER.get(),ModItems.ILLAGIUM_HAMMER.get(),ModItems.ILLAGIUM_HELBERD.get(),ModItems.ILLAGIUM_MACE.get(),ModItems.ILLAGIUM_SCYTHE.get(),ModItems.ILLAGIUM_RUNED_BLADE.get(),
-                ModItems.ILLAGIUM_ALT_RUNED_BLADE.get(),ModItems.RAKER_ARMOR_IRON.get(),ModItems.RAKER_ARMOR_GOLD.get(),ModItems.RAKER_ARMOR_DIAMOND.get(),ModItems.RAKER_ARMOR_NETHERITE.get(),ModItems.RAKER_ARMOR_ILLAGIUM.get(),
+                ModItems.ILLAGIUM_ALT_RUNED_BLADE.get(),ModItems.CHEST_LEATHER.get(),ModItems.RAKER_ARMOR_IRON.get(),ModItems.RAKER_ARMOR_GOLD.get(),ModItems.RAKER_ARMOR_DIAMOND.get(),ModItems.RAKER_ARMOR_NETHERITE.get(),ModItems.RAKER_ARMOR_ILLAGIUM.get(),
                 ModItems.MAULER_ARMOR_DIAMOND.get(),ModItems.MAULER_ARMOR_NETHERITE.get(),ModItems.MAULER_ARMOR_ILLAGIUM.get(),ModItems.MAULER_ARMOR_IRON.get(),ModItems.MAULER_ARMOR_GOLD.get(),ModItems.WILD_RAVAGER_ARMOR_DIAMOND.get(),
                 ModItems.WILD_RAVAGER_ARMOR_NETHERITE.get(),ModItems.WILD_RAVAGER_ARMOR_ILLAGIUM.get(),ModItems.WILD_RAVAGER_ARMOR_GOLD.get(),ModItems.WILD_RAVAGER_ARMOR_IRON.get(),
                 ModItems.HELMET_MINER.get(),ModItems.HELMET_MINER_REINFORCED.get(),ModItems.JUNK_AXE.get()

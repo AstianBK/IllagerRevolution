@@ -29,6 +29,12 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.0f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "illagerminer").toString()));
 
+    public static final RegistryObject<EntityType<ScroungerEntity>> SCROUNGER =
+            ENTITY_TYPES.register("scrounger",
+                    () -> EntityType.Builder.of(ScroungerEntity::new, MobCategory.MONSTER)
+                            .sized(0.60f, 1.0f)
+                            .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "scrounger").toString()));
+
     public static final RegistryObject<EntityType<RakerEntity>> RAKER = ENTITY_TYPES.register("raker",
             ()-> EntityType.Builder.of(RakerEntity::new, MobCategory.MONSTER)
                 .sized(0.65f,1.0f).
@@ -54,8 +60,6 @@ public class ModEntityTypes {
                     () -> EntityType.Builder.of(IllagerBeastTamerEntity::new, MobCategory.MONSTER)
                             .sized(0.60f, 2.0f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "illagerbeasttamer").toString()));
-
-
 
     public static final RegistryObject<EntityType<ZombifiedEntity>> ZOMBIFIED =
             ENTITY_TYPES.register("zombified",

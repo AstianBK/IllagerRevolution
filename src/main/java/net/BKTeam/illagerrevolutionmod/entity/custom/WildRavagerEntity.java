@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
+import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -64,6 +66,8 @@ public class WildRavagerEntity extends MountEntity{
     private static final EntityDataAccessor<Boolean> SADDLED =
             SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.BOOLEAN);
 
+    protected SimpleContainer inventory = new SimpleContainer(1);
+
     private static final UUID WILD_RAVAGER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 
     private int attackTick;
@@ -79,6 +83,7 @@ public class WildRavagerEntity extends MountEntity{
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(4, new RavagerMeleeAttackGoal());
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.4D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
@@ -112,6 +117,11 @@ public class WildRavagerEntity extends MountEntity{
         this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
         this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
         this.goalSelector.setControlFlag(Goal.Flag.TARGET, flag);
+    }
+
+    @Override
+    public SimpleContainer getContainer() {
+        return this.inventory;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -163,10 +173,22 @@ public class WildRavagerEntity extends MountEntity{
         return new RavagerNavigation(this, pLevel);
     }
 
+    @Override
+    public Beast getTypeBeast() {
+        return Beast.WILD_RAVAGER;
+    }
+
     public int getMaxHeadYRot() {
         return 45;
     }
 
+    @Override
+    public void equipSaddle(@org.jetbrains.annotations.Nullable SoundSource p_21748_) {
+        this.inventory.setItem(0, new ItemStack(Items.SADDLE));
+        if (p_21748_ != null) {
+            this.level.playSound((Player)null, this, SoundEvents.HORSE_SADDLE, p_21748_, 0.5F, 1.0F);
+        }
+    }
 
     public double getPassengersRidingOffset() {
         return ((double)this.getBbHeight());
@@ -188,7 +210,6 @@ public class WildRavagerEntity extends MountEntity{
                 if (f1 <= 0.0F) {
                     f1 *= 0.25F;
                 }
-
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
                     this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)+(this.isImmobile() ? 0.20f : -0.10f ));
@@ -240,30 +261,7 @@ public class WildRavagerEntity extends MountEntity{
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack stack=pPlayer.getMainHandItem();
         if(!stack.isEmpty()){
-            if(stack.getItem() instanceof DyeItem dyeItem){
-                this.setPainted(true);
-                if (dyeItem.getDyeColor()!=this.getColor()){
-                    this.setColor(dyeItem.getDyeColor());
-                    if (!pPlayer.getAbilities().instabuild) {
-                        stack.shrink(1);
-                    }
-                    playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
-                    return InteractionResult.SUCCESS;
-                }
-
-            }else if(stack.is(Items.WATER_BUCKET) && this.isPainted()){
-                this.setPainted(false);
-                this.setColor(DyeColor.WHITE);
-                if (!pPlayer.getAbilities().instabuild) {
-                    stack.shrink(1);
-                    stack=new ItemStack(Items.BUCKET);
-                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
-                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,stack);
-                }
-                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
-                return InteractionResult.CONSUME;
-
-            }else if(stack.is(Items.SADDLE) || this.isArmor(stack)){
+            if(stack.is(Items.SADDLE) || this.isArmor(stack)){
                 if(stack.getItem() instanceof BeastArmorItem armorItem){
                     this.setItemSlot(armorItem.getEquipmetSlot(),stack);
                 }else {
@@ -303,7 +301,20 @@ public class WildRavagerEntity extends MountEntity{
                         playSound(SoundEvents.HORSE_EAT, 1.0F, -1.5F);
                         return InteractionResult.SUCCESS;
                     }
+                }else {
+                    if(!this.level.isClientSide){
+                        this.heal(this.getMaxHealth()*20/100);
+                        playSound(SoundEvents.HORSE_EAT, 1.0F, -1.5F);
+                    }
+                    if(!pPlayer.getAbilities().instabuild){
+                        stack.shrink(1);
+                    }
                 }
+            }
+            return super.mobInteract(pPlayer, pHand);
+        }else{
+            if(pPlayer.isShiftKeyDown()){
+                this.setSitting(!this.isSitting());
             }
         }
         if(!this.isBaby() && this.isTame()){
@@ -316,9 +327,11 @@ public class WildRavagerEntity extends MountEntity{
     public void attackC(Player player) {
         if(!this.level.isClientSide){
             if(!this.isImmobile()){
-                this.level.broadcastEntityEvent(this, (byte)39);
-                this.stunnedTick = 40;
+                this.roarTick=20;
+                this.level.broadcastEntityEvent(this, (byte)40);
+                this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
             }
+
         }
         super.attackC(player);
     }
@@ -344,6 +357,7 @@ public class WildRavagerEntity extends MountEntity{
                         break;
                     }
                 }
+                this.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);
             }
         }
         super.attackG(player);
@@ -367,7 +381,7 @@ public class WildRavagerEntity extends MountEntity{
             ItemStack stack = this.getContainer().getItem(0);
             boolean flag = !stack.isEmpty();
             this.getAttribute(Attributes.ARMOR).removeModifier(WILD_RAVAGER_ARMOR_UUID);
-            if(flag){
+            if(flag && stack.getItem() instanceof BeastArmorItem){
                 int i = ((BeastArmorItem)stack.getItem()).getArmorValue();
                 if (i != 0) {
                     this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(WILD_RAVAGER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
@@ -380,7 +394,7 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     public boolean isArmor(ItemStack chest1) {
-        return chest1.getItem() instanceof BeastArmorItem armorItem && armorItem.getName().equals("wild_ravager");
+        return chest1.getItem() instanceof BeastArmorItem armorItem && armorItem.getBeast() == Beast.WILD_RAVAGER || chest1.is(Items.SADDLE);
     }
 
     @Nullable
@@ -504,7 +518,7 @@ public class WildRavagerEntity extends MountEntity{
 
     private void roar() {
         if (this.isAlive()) {
-            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d),e->e!=this.getOwner() || !this.getOwner().isAlliedTo(e)) :this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
+            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d),e-> e!=this.getOwner() || !this.getOwner().isAlliedTo(e)) :this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
             for(Entity livingentity : livingEntityList) {
                 if(livingentity instanceof LivingEntity && livingentity!=this){
                     livingentity.hurt(DamageSource.mobAttack(this), 6.0F);
@@ -541,6 +555,9 @@ public class WildRavagerEntity extends MountEntity{
             this.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);
         } else if (pId == 39) {
             this.stunnedTick = 40;
+        } else if (pId == 40) {
+            this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
+            this.roarTick = 20;
         }
 
         super.handleEntityEvent(pId);
@@ -573,12 +590,20 @@ public class WildRavagerEntity extends MountEntity{
         return SoundEvents.RAVAGER_HURT;
     }
 
+    public boolean hasArmor(){
+        return !this.getContainer().getItem(0).isEmpty();
+    }
+
     protected SoundEvent getDeathSound() {
         return SoundEvents.RAVAGER_DEATH;
     }
 
     protected void playStepSound(BlockPos pPos, BlockState pBlock) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.15F, 1.0F);
+        if (this.hasArmor()) {
+            this.playSound(SoundEvents.RAVAGER_STEP, 0.15F, 1.0F);
+        } else {
+            this.playSound(SoundEvents.HORSE_STEP, 0.15F, -2.0F);
+        }
     }
 
     public boolean checkSpawnObstruction(LevelReader pLevel) {

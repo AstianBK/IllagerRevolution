@@ -9,7 +9,10 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
     private final ModelPart root;
     private final ModelPart head;
@@ -20,9 +23,12 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
     private final ModelPart leftFrontLeg;
     private final ModelPart neck;
 
+    private final ModelPart body;
+
     public WildRavagerModel(ModelPart pRoot) {
         this.root = pRoot;
         this.neck = pRoot.getChild("neck");
+        this.body = pRoot.getChild("body");
         this.head = this.neck.getChild("head");
         this.mouth = this.head.getChild("mouth");
         this.rightHindLeg = pRoot.getChild("right_hind_leg");
@@ -58,11 +64,22 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
     public void setupAnim(WildRavagerEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         this.head.xRot = pHeadPitch * ((float)Math.PI / 180F);
         this.head.yRot = pNetHeadYaw * ((float)Math.PI / 180F);
+        float f1 = Mth.cos(pAgeInTicks/5.0F)*0.01F;
+        if(pEntity.isSitting()){
+            this.body.xScale=1.0F + f1;
+            this.body.yScale=1.0F + f1;
+            this.body.zScale=1.0F + f1;
+        }else {
+            this.body.xScale=1.0F;
+            this.body.yScale=1.0F;
+            this.body.zScale=1.0F;
+        }
+
         float f = 0.4F * pLimbSwingAmount;
-        this.rightHindLeg.xRot = Mth.cos(pLimbSwing * 0.6662F) * f;
-        this.leftHindLeg.xRot = Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * f;
-        this.rightFrontLeg.xRot = Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * f;
-        this.leftFrontLeg.xRot = Mth.cos(pLimbSwing * 0.6662F) * f;
+        this.rightHindLeg.xRot =!pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F) * f: ((float)Math.PI * 1.5708F);
+        this.leftHindLeg.xRot =!pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * f : (float)Math.PI * 1.5708F;
+        this.rightFrontLeg.xRot =!pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * f : -1.23446F;
+        this.leftFrontLeg.xRot = !pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F) * f : -1.23446F;
     }
 
     public void prepareMobModel(WildRavagerEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick) {
@@ -72,6 +89,31 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
         int k = 20;
         int l = pEntity.getAttackTick();
         int i1 = 10;
+        if(pEntity.isSitting()){
+            this.body.y=14.5F;
+            this.rightHindLeg.y=13.5F;
+            this.leftHindLeg.y=13.5F;
+            this.rightFrontLeg.y=5.5F;
+            this.rightFrontLeg.x=-9.0F;
+            this.rightFrontLeg.z=5.0F;
+            this.leftFrontLeg.y=5.5F;
+            this.leftFrontLeg.x=9.0F;
+            this.leftFrontLeg.z=5.0F;
+            this.rightHindLeg.yRot = 0.56732F;
+            this.leftHindLeg.yRot =  -0.56732F;
+            this.rightFrontLeg.yRot = 0.3926991F;
+            this.leftFrontLeg.yRot = -0.3926991F;
+        }else {
+            this.body.y=1.0F;
+            this.rightHindLeg.yRot = 0.0F;
+            this.leftHindLeg.yRot =  0.0F;
+            this.rightFrontLeg.yRot =0.0F ;
+            this.leftFrontLeg.yRot = 0.0F;
+            this.rightHindLeg.y=-13.0F;
+            this.leftHindLeg.y=-13.0F;
+            this.rightFrontLeg.setPos(-8.0f,-13.0F,-5.0F);
+            this.leftFrontLeg.setPos(8.0f,-13.0F,-5.0F);
+        }
         if (l > 0) {
             float f = Mth.triangleWave((float)l - pPartialTick, 10.0F);
             float f1 = (1.0F + f) * 0.5F;
@@ -90,7 +132,7 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
             float f5 = -1.0F;
             float f6 = -1.0F * Mth.sin(this.neck.xRot);
             this.neck.x = 0.0F;
-            this.neck.y = -7.0F - f6;
+            this.neck.y = pEntity.isSitting() ? 3.0F - f6 :-7.0F - f6;
             this.neck.z = 5.5F;
             boolean flag = i > 0;
             this.neck.xRot = flag ? 0.21991149F : 0.0F;
@@ -103,6 +145,5 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
                 this.mouth.xRot = ((float)Math.PI / 2F) * f7;
             }
         }
-
     }
 }

@@ -6,7 +6,7 @@ import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.MaulerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MaulerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.layers.MaulerArmorLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.MaulerSaddlerLayer;
-import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintMaulerLayer;
+import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintBeastGeckoLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,7 +17,7 @@ public class MaulerRenderer extends GeoEntityRenderer<MaulerEntity> {
 
     public MaulerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager,new MaulerModel());
-        this.addLayer(new WarPaintMaulerLayer(this,new MaulerModel()));
+        this.addLayer(new WarPaintBeastGeckoLayer<>(this,new MaulerModel()));
         this.addLayer(new MaulerSaddlerLayer(this,new MaulerModel()));
         this.addLayer(new MaulerArmorLayer(this,new MaulerModel()));
         this.shadowRadius = 0.5f;

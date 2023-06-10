@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.gui;
 
+import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,7 +35,7 @@ public class RakerInventoryMenu extends AbstractContainerMenu {
         });
         this.addSlot(new Slot(p_39658_, 1, 8, 54) {
             public boolean mayPlace(ItemStack p_39690_) {
-                return p_39690_.getItem() instanceof BeastArmorItem rakerArmorItem && rakerArmorItem.getEquipmetSlot().equals(EquipmentSlot.LEGS) && rakerArmorItem.getName().equals("raker");
+                return p_39690_.getItem() instanceof BeastArmorItem rakerArmorItem && rakerArmorItem.getEquipmetSlot().equals(EquipmentSlot.LEGS) && rakerArmorItem.getBeast() == Beast.RAKER;
             }
             public boolean isActive() {
                 return true;
@@ -46,7 +47,7 @@ public class RakerInventoryMenu extends AbstractContainerMenu {
         });
         this.addSlot(new Slot(p_39658_, 2, 8, 36) {
             public boolean mayPlace(ItemStack p_39690_) {
-                return p_39690_.getItem() instanceof BeastArmorItem rakerArmorItem && rakerArmorItem.getEquipmetSlot()==EquipmentSlot.CHEST && rakerArmorItem.getName().equals("raker");
+                return p_39690_.getItem() instanceof BeastArmorItem rakerArmorItem && rakerArmorItem.getEquipmetSlot()==EquipmentSlot.CHEST && rakerArmorItem.getBeast()==Beast.RAKER;
             }
             public boolean isActive() {
                 return true;

@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers;
 
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
@@ -9,9 +10,11 @@ import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerArmorLayer;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
 import net.minecraft.Util;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,5 +39,10 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
     @Override
     public ResourceLocation getTextureLocation(WildRavagerEntity pEntity) {
         return LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
+    }
+
+    @Override
+    public void render(WildRavagerEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
+        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }
 }

@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MaulerEntity;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -42,11 +43,17 @@ public class MaulerModel extends AnimatedGeoModel<MaulerEntity> {
     public void setCustomAnimations(MaulerEntity entity, int instanceId, AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, instanceId, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("bipedHead");
+        IBone jaw = this.getAnimationProcessor().getBone("Jaw");
+        int i=entity.attackTimer;
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         if (head != null && !entity.isSitting()) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+        }
+        if(i>0){
+            float f7 = Mth.sin(((float)(10 - i) - customPredicate.getPartialTick()) / 20.0F * (float)Math.PI * 0.25F);
+            jaw.setRotationZ(((float)Math.PI / 2F) * f7);
         }
     }
 }

@@ -70,8 +70,10 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
 
     }
     private   <E extends IAnimatable> PlayState predicateSit(AnimationEvent<E> event) {
-        if (this.isPassenger()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.sit", ILoopType.EDefaultLoopTypes.LOOP));
+        if (this.isWieldingTwoHandedWeapon() && !event.isMoving() && isAggressive()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        }else if (this.isCastingSpell()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.summon", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else {
             event.getController().clearAnimationCache();
         }
@@ -80,18 +82,11 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
     }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
 
-        if (event.isMoving() && !this.isAggressive() && !this.isCastingSpell()) {
+        if (event.isMoving() && !this.isAggressive() && !this.isCastingSpell() && !this.isPassenger()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.walk", ILoopType.EDefaultLoopTypes.LOOP));
         }
-        else if (this.isCastingSpell()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.summon", ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        else if (this.isWieldingTwoHandedWeapon() && event.isMoving()){
+        else if (this.isWieldingTwoHandedWeapon() && event.isMoving() && !this.isPassenger()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.walk2", ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        else if (this.isWieldingTwoHandedWeapon() && !event.isMoving() && isAggressive()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.attack1", ILoopType.EDefaultLoopTypes.LOOP));
-
         }
         else event.getController().setAnimation(new AnimationBuilder().addAnimation(this.isPassenger()?"animation.beasttamerillager.sit" : "animation.beasttamerillager.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
@@ -133,7 +128,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
 
     @Override
     public double getMyRidingOffset() {
-        return this.isCastingSpell() ? super.getMyRidingOffset()-0.5d : super.getMyRidingOffset()+0.3d;
+        return super.getMyRidingOffset()+0.3d;
     }
 
     @Override
@@ -173,8 +168,8 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
             if (!super.canUse()) {
                 return false;
             } else {
-                int i = IllagerBeastTamerEntity.this.level.getNearbyEntities(RakerEntity.class, this.vexCountTargeting, IllagerBeastTamerEntity.this, IllagerBeastTamerEntity.this.getBoundingBox().inflate(20.0D)).size();
-                return i<=4;
+                int i = IllagerBeastTamerEntity.this.level.getNearbyEntities(IllagerBeastEntity.class, this.vexCountTargeting, IllagerBeastTamerEntity.this, IllagerBeastTamerEntity.this.getBoundingBox().inflate(20.0D)).size();
+                return i<4;
             }
         }
 
@@ -275,9 +270,8 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController<>(this, "controller",
                 0, this::predicate));
-        data.addAnimationController(new AnimationController<>(this, "controller_Sit",
+        data.addAnimationController(new AnimationController<>(this, "controller_Attack",
                 0, this::predicateSit));
-
     }
 
     @Override

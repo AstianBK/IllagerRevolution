@@ -29,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 
-public class MountEntity extends IllagerBeastEntity implements IHasInventory, PlayerRideableJumping, Saddleable, ContainerListener {
+public class MountEntity extends IllagerBeastEntity implements IHasInventory, PlayerRideableJumping, Saddleable {
 
     private static final EntityDataAccessor<Boolean> STANDING =
             SynchedEntityData.defineId(MountEntity.class, EntityDataSerializers.BOOLEAN);
@@ -37,8 +37,6 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
             SynchedEntityData.defineId(MountEntity.class, EntityDataSerializers.BOOLEAN);
     public int sprintCounter;
     protected boolean isJumping;
-
-    protected SimpleContainer inventory = new SimpleContainer(3);
     protected float playerJumpPendingScale;
 
     public boolean allowStandSliding;
@@ -55,15 +53,7 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Mob.class, 8.0F));
-    }
-
-    @Override
-    public SimpleContainer getContainer() {
-        return this.inventory;
     }
 
 
@@ -125,11 +115,9 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
 
     @Override
     public void equipSaddle(@Nullable SoundSource p_21748_) {
-        this.inventory.setItem(0, new ItemStack(Items.SADDLE));
-        if (p_21748_ != null) {
-            this.level.playSound((Player)null, this, SoundEvents.HORSE_SADDLE, p_21748_, 0.5F, 1.0F);
-        }
+
     }
+
     public boolean isSaddled() {
         return this.entityData.get(SADDLED);
     }
@@ -200,11 +188,6 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
             Vec3 vec33 = this.getDismountLocationInDirection(vec32, pLivingEntity);
             return vec33 != null ? vec33 : this.position();
         }
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        return super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -299,5 +282,10 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
 
     public void setOwner(IllagerBeastTamerEntity illagerBeastTamerEntity) {
         this.owner=illagerBeastTamerEntity;
+    }
+
+    @Override
+    public SimpleContainer getContainer() {
+        return null;
     }
 }
