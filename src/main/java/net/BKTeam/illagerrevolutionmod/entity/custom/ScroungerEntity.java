@@ -63,7 +63,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -181,7 +180,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
             this.helpOwnerTimer--;
         }
         if(this.animThrow<0){
-            this.setIsThrowItem(false,1);
+            this.setIsThrowItem(false);
         }
         this.calculateFlapping();
     }
@@ -311,7 +310,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
             CompoundTag chestCompoundNBT = new CompoundTag();
             itemStackChest.save(chestCompoundNBT);
             compound.put("ChestScroungerArmor", chestCompoundNBT);
-            for(int i = 2 ; i<this.inventory.getContainerSize();i++){
+            for(int i = 2 ; i<7;i++){
                 CompoundTag nbt=new CompoundTag();
                 ItemStack stack = this.inventory.getItem(i);
                 stack.save(nbt);
@@ -324,7 +323,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.setIsThrowItem(compound.getBoolean("isThrowItem"),1);
+        this.setIsThrowItem(compound.getBoolean("isThrowItem"));
         this.setIsAttacking(compound.getBoolean("isAttacking"));
         CompoundTag compoundNBT = compound.getCompound("ChestScroungerArmor");
         if(!compoundNBT.isEmpty()) {
@@ -332,7 +331,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
                 ItemStack stack=ItemStack.of(compound.getCompound("ChestScroungerArmor"));
                 this.setItemSlot(EquipmentSlot.FEET,stack);
             }
-            for (int i = 2 ; i < this.inventory.getContainerSize() ; i++){
+            for (int i = 2 ; i < 7; i++){
                 if(!compound.getCompound("Potion"+i).isEmpty()){
                     ItemStack stack = ItemStack.of(compound.getCompound("Potion"+i));
                     this.inventory.setItem(i,stack);
@@ -404,9 +403,8 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
     }
 
-    public void setIsThrowItem(boolean pBoolean, int pIdSlot){
+    public void setIsThrowItem(boolean pBoolean){
         this.entityData.set(THROW_ITEM,pBoolean);
-        this.setNextPotion(pIdSlot);
         this.animThrow=pBoolean ? 20 : 0;
     }
 
@@ -545,7 +543,8 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
                     ItemStack stack=this.intentPotion(this.getIdPotionIntent(),this.getTargetIntent());
                     int cc=this.getSlotIdItemStack(stack);
                     if(cc!=-1){
-                        this.setIsThrowItem(true,cc);
+                        this.setIsThrowItem(true);
+                        this.setNextPotion(cc);
                     }
                 }
             }
@@ -592,7 +591,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
 
     @Override
     public void performRangedAttack(LivingEntity target, float pDistanceFactor) {
-        ServerLevel levelAccessor= (ServerLevel) this.level;
+        Level levelAccessor=this.level;
         ArrowBeast entityarrow = new ArrowBeast(levelAccessor, this);
         if(this.random.nextFloat() > 0.9){
             entityarrow.addEffect(new MobEffectInstance(MobEffects.POISON,300,0));

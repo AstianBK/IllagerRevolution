@@ -53,7 +53,12 @@ public class ScroungerInventoryMenu extends AbstractContainerMenu {
             this.addSlot(new Slot(p_39658_, 2 + l , 80 + (l * 18), 18){
                 @Override
                 public boolean mayPlace(ItemStack pStack) {
-                    return super.mayPlace(pStack) && pStack.is(Items.SPLASH_POTION);
+                    return super.mayPlace(pStack) && pStack.is(Items.SPLASH_POTION) && pStack.is(Items.LINGERING_POTION);
+                }
+
+                @Override
+                public int getMaxStackSize() {
+                    return 1;
                 }
 
                 @Override
