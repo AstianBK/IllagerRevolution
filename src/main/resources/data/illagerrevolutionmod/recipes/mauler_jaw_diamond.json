@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i  ",
+    "i  ",
+    " ii"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:mauler_armor_diamond",
+    "count": 1
+  }
+}

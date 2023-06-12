@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    "CSC",
+    "# #"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:diamond"
+    },
+    "C": {
+      "item": "minecraft:chain"
+    },
+    "S": {
+      "item": "minecraft:saddle"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:wild_ravager_armor_diamond",
+    "count": 1
+  }
+}
