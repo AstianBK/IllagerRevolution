@@ -16,8 +16,8 @@ public class RakerRenderer extends GeoEntityRenderer<RakerEntity> {
 
     public RakerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager,new RakerModel());
-        this.addLayer(new ScrapperArmorLayer(this,new RakerModel()));
         this.addLayer(new WarPaintBeastGeckoLayer<>(this,new RakerModel()));
+        this.addLayer(new ScrapperArmorLayer(this,new RakerModel()));
         this.shadowRadius = 0.5f;
     }
     @Override

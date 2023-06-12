@@ -15,25 +15,21 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 
-public class PacketSand {
+public class PacketGlowEffect {
     private final Entity entity;
-    private final Entity target;
 
-    public PacketSand(FriendlyByteBuf buf) {
+    public PacketGlowEffect(FriendlyByteBuf buf) {
         Minecraft mc = Minecraft.getInstance();
         assert mc.level != null;
-        this.target = mc.level.getEntity(buf.readInt());
         this.entity = mc.level.getEntity(buf.readInt());
     }
 
-    public PacketSand(Entity pEntity,Entity pTarget){
+    public PacketGlowEffect(Entity pEntity){
         this.entity=pEntity;
-        this.target=pTarget;
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(entity.getId());
-        buf.writeInt(target.getId());
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
@@ -48,15 +44,13 @@ public class PacketSand {
     private void handlePlayActivateAnimation() {
         Minecraft mc = Minecraft.getInstance();
         Random random = new Random();
+        double box=entity.getBbWidth();
+        double xp=entity.getX() + random.nextDouble(-box,box);
+        double yp=entity.getY() + random.nextDouble(0.0d,entity.getBbHeight());
+        double zp=entity.getZ() + random.nextDouble(-box,box);
         assert mc.level!=null;
-        entity.playSound(SoundEvents.SAND_BREAK,5.0f,-1.0f/(random.nextFloat() * 0.4F + 0.8F));
-        for (int i = 0; i < 20; i++) {
-            double x1 = target.getX() + random.nextDouble(-0.3d,0.3d);
-            double x2 = target.getY() + target.getBbHeight() - 0.2d;
-            double x3 = target.getZ() + random.nextDouble(-0.3d,0.3d);
-            Particle particle =mc.particleEngine.createParticle(ParticleTypes.SMOKE, x1, x2, x3,((float)entity.getX()-(float) target.getX())*0.2f, random.nextFloat(-0.2f,0.1f), (entity.getZ()-target.getZ())*0.2d);
-            assert particle != null;
-            particle.setColor(0.9255f,0.8863f,0.7765f);
-        }
+        Particle particle = mc.particleEngine.createParticle(ParticleTypes.GLOW, xp, yp, zp,0.0f, 0.0f, 0.0f);
+        assert particle != null;
+        particle.setColor(1f,1f,1f);
     }
 }

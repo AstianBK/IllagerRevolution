@@ -79,13 +79,18 @@ public class Events {
             Arrow bulletEntity=event.getSource().getDirectEntity() instanceof Arrow ? (Arrow) event.getSource().getDirectEntity() :null;
             LivingEntity attacker=event.getSource().getEntity() instanceof LivingEntity ? (LivingEntity) event.getSource().getEntity() : null;
             LivingEntity entity=event.getEntity();
-            if(attacker instanceof Player player){
-                List<ScroungerEntity> listBirds=player.level.getEntitiesOfClass(ScroungerEntity.class,player.getBoundingBox().inflate(15.0D),e->e.getOwner()==player);
+            if(attacker!=null){
+                List<ScroungerEntity> listBirds=attacker.level.getEntitiesOfClass(ScroungerEntity.class,attacker.getBoundingBox().inflate(15.0D),e->e.getOwner()==attacker || e.getOwnerIllager()==attacker);
                 if(!listBirds.isEmpty()){
                     for(ScroungerEntity scrounger:listBirds){
                         scrounger.ordenThrow();
+                        if(scrounger.nextAttack<=0){
+                            scrounger.ordenAttack(entity,10.0f);
+                        }
                     }
                 }
+            }
+            if(attacker instanceof Player player){
                 if (bulletEntity!=null){
                     if(player.getMainHandItem().is(Items.CROSSBOW)){
                         if(hasSetFullArmorPillager(player)){

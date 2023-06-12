@@ -1,6 +1,9 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.item.Beast;
+import net.BKTeam.illagerrevolutionmod.network.PacketGlowEffect;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -53,8 +56,8 @@ public class IllagerBeastEntity extends TamableAnimal implements ContainerListen
         return this.entityData.get(ID_VARIANT);
     }
 
-    public MaulerEntity.Variant getIdVariant(){
-        return MaulerEntity.Variant.byId(this.getTypeIdVariant() & 255);
+    public IllagerBeastEntity.Variant getIdVariant(){
+        return IllagerBeastEntity.Variant.byId(this.getTypeIdVariant() & 255);
     }
 
     public void setIdVariant(int pId){
@@ -125,48 +128,14 @@ public class IllagerBeastEntity extends TamableAnimal implements ContainerListen
     @Override
     public void tick() {
         super.tick();
-        Random random = new Random();
-        if(this.getIdVariant()==Variant.VARIANT5){
-            double xp=this.getX() - this.getBbWidth() * Mth.sin (this.yBodyRot * Mth.PI/180) + random.nextDouble(-0.4d,0.4d);
-            double yp=this.getY() + random.nextDouble(0.0d,2.0d);
-            double zp=this.getZ() + this.getBbWidth() * Mth.cos (this.yBodyRot * Mth.PI/180) + random.nextDouble(-0.4d,0.4d);
-            this.level.addParticle(ParticleTypes.GLOW,xp,yp,zp,0.0f,0.0f,0.0f);
+        if(!this.level.isClientSide){
+            if(this.getIdVariant()==Variant.VARIANT5 && this.level.random.nextFloat()<0.4f){
+                PacketHandler.sendToAllTracking(new PacketGlowEffect(this),this);
+            }
         }
     }
 
     protected void updateContainerEquipment() {
-    }
-
-
-    @Override
-    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        ItemStack itemstack=this.getItemInHand(pHand);
-        if(!itemstack.isEmpty()){
-            if(itemstack.getItem() instanceof DyeItem dyeItem){
-                this.setPainted(true);
-                if (dyeItem.getDyeColor()!=this.getColor()){
-                    this.setColor(dyeItem.getDyeColor());
-                    if (!pPlayer.getAbilities().instabuild) {
-                        itemstack.shrink(1);
-                    }
-                    playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
-                    return InteractionResult.SUCCESS;
-                }
-            }
-            else if(itemstack.is(Items.WATER_BUCKET) && this.isPainted()){
-                this.setPainted(false);
-                this.setColor(DyeColor.WHITE);
-                if (!pPlayer.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                    itemstack=new ItemStack(Items.BUCKET);
-                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
-                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,itemstack);
-                }
-                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
-                return InteractionResult.CONSUME;
-            }
-        }
-        return super.mobInteract(pPlayer, pHand);
     }
 
     @Nullable

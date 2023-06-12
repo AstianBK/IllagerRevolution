@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,6 +30,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -83,6 +86,8 @@ public class WildRavagerEntity extends MountEntity{
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.targetSelector.addGoal(1,new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2,new OwnerHurtByTargetGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(4, new RavagerMeleeAttackGoal());
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.4D));
@@ -198,7 +203,7 @@ public class WildRavagerEntity extends MountEntity{
     public void travel(Vec3 pTravelVector) {
         if (this.isAlive()) {
             LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
-            if (this.isVehicle() && livingentity != null && this.isTame() && !this.isSitting() && this.isSaddled()) {
+            if (this.isVehicle() && livingentity instanceof Player && this.isTame() && !this.isSitting() && this.isSaddled()) {
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);
@@ -261,41 +266,68 @@ public class WildRavagerEntity extends MountEntity{
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack stack=pPlayer.getMainHandItem();
         if(!stack.isEmpty()){
-            if(stack.is(Items.SADDLE) || this.isArmor(stack)){
-                if(stack.getItem() instanceof BeastArmorItem armorItem){
-                    this.setItemSlot(armorItem.getEquipmetSlot(),stack);
-                }else {
-                    this.setIsSaddled(true);
-                    this.inventory.setItem(0,stack);
+            if(stack.getItem() instanceof DyeItem dyeItem){
+                this.setPainted(true);
+                if (dyeItem.getDyeColor()!=this.getColor()){
+                    this.setColor(dyeItem.getDyeColor());
+                    if (!pPlayer.getAbilities().instabuild) {
+                        stack.shrink(1);
+                    }
+                    playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
+                    return InteractionResult.SUCCESS;
                 }
+            }
+            else if(stack.is(Items.WATER_BUCKET) && this.isPainted()){
+                this.setPainted(false);
+                this.setColor(DyeColor.WHITE);
+                if (!pPlayer.getAbilities().instabuild) {
+                    stack.shrink(1);
+                    stack=new ItemStack(Items.BUCKET);
+                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+                    pPlayer.setItemSlot(EquipmentSlot.MAINHAND,stack);
+                }
+                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
+                return InteractionResult.CONSUME;
+            }
+            if(stack.is(Items.SADDLE) || this.isArmor(stack)){
+                if(!this.level.isClientSide){
+                    if(stack.getItem() instanceof BeastArmorItem){
+                        this.setItemSlot(EquipmentSlot.FEET,stack.copy());
+                    }else {
+                        this.inventory.setItem(0,stack.copy());
+                    }
+                }
+                this.setIsSaddled(true);
                 if (!pPlayer.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
                 this.updateContainerEquipment();
                 return InteractionResult.CONSUME;
-            }else if(stack.is(Items.BONE)){
+            }else if(stack.is(ModItems.BEAST_STAFF.get())){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
                     this.updateContainerEquipment();
-                    pPlayer.sendSystemMessage(Component.nullToEmpty("Posee armadura :"+this.getContainer().getItem(0)));
                     return InteractionResult.SUCCESS;
                 }
             }else if(stack.is(Items.HAY_BLOCK)){
                 if(!this.isTame()){
-                    if (this.level.isClientSide) {
-                        return InteractionResult.CONSUME;
-                    } else {
+                    if(this.stunnedTick>0){
                         if (!pPlayer.getAbilities().instabuild) {
                             stack.shrink(1);
                         }
-                        if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
-                            if (!this.level.isClientSide) {
-                                super.tame(pPlayer);
-                                this.navigation.recomputePath();
-                                this.setTarget(null);
-                                this.level.broadcastEntityEvent(this, (byte)7);
-                                this.setSitting(true);
+                        if(this.level.random.nextFloat()>0.5F){
+                            if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
+                                if (!this.level.isClientSide) {
+                                    super.tame(pPlayer);
+                                    this.navigation.recomputePath();
+                                    this.setTarget(null);
+                                    this.level.broadcastEntityEvent(this, (byte)7);
+                                    this.setSitting(true);
+                                    for(Entity entity : this.getPassengers()){
+                                        entity.stopRiding();
+                                    }
+                                }
                             }
                         }
                         playSound(SoundEvents.HORSE_EAT, 1.0F, -1.5F);
@@ -313,8 +345,9 @@ public class WildRavagerEntity extends MountEntity{
             }
             return super.mobInteract(pPlayer, pHand);
         }else{
-            if(pPlayer.isShiftKeyDown()){
+            if(pPlayer.isShiftKeyDown() && this.isTame()){
                 this.setSitting(!this.isSitting());
+                return InteractionResult.SUCCESS;
             }
         }
         if(!this.isBaby() && this.isTame()){
@@ -339,9 +372,9 @@ public class WildRavagerEntity extends MountEntity{
     @Override
     public void attackG(Player player) {
         if(!this.level.isClientSide){
-            if(this.attackTick<=0){
+            if(!this.isImmobile()){
                 boolean flag=false;
-                this.attackTick=10;
+                this.attackTick=20;
                 this.level.broadcastEntityEvent(this, (byte)4);
                 this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
@@ -507,18 +540,9 @@ public class WildRavagerEntity extends MountEntity{
 
     }
 
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        float newAmount=pAmount;
-        if(this.stunnedTick>0){
-            newAmount = pAmount/2;
-        }
-        return super.hurt(pSource, newAmount);
-    }
-
     private void roar() {
         if (this.isAlive()) {
-            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d),e-> e!=this.getOwner() || !this.getOwner().isAlliedTo(e)) :this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
+            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d),e-> e!=this.getOwner() || e!=this) : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
             for(Entity livingentity : livingEntityList) {
                 if(livingentity instanceof LivingEntity && livingentity!=this){
                     livingentity.hurt(DamageSource.mobAttack(this), 6.0F);
@@ -591,7 +615,7 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     public boolean hasArmor(){
-        return !this.getContainer().getItem(0).isEmpty();
+        return !this.getContainer().getItem(0).isEmpty() && !(this.inventory.getItem(0).getItem() instanceof  SaddleItem);
     }
 
     protected SoundEvent getDeathSound() {

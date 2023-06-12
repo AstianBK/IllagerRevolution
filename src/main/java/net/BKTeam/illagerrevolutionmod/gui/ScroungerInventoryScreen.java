@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.ModConstants;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -26,15 +27,15 @@ public class ScroungerInventoryScreen extends AbstractContainerScreen<ScroungerI
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/gui/containers/scrounger.png"));
+        RenderSystem.setShaderTexture(0, ModConstants.BEAST_INVENTORY);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pPoseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         if (this.scrounger.isTame()) {
-            this.blit(pPoseStack, i + 7, j + 35, 0, this.imageHeight + 54, 18, 18);
+            this.blit(pPoseStack, i + 7, j + 35, 18, this.imageHeight + 36, 18, 18);
         }
         if(!this.scrounger.getContainer().getItem(0).isEmpty()){
-            this.blit(pPoseStack, i + 79, j + 17, 0, this.imageHeight + 36,90, 36);
+            this.blit(pPoseStack, i + 79, j + 17, 0, this.imageHeight + 18,90, 18);
         }
         InventoryScreen.renderEntityInInventory(i + 51, j + 60, 17, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.scrounger);
     }

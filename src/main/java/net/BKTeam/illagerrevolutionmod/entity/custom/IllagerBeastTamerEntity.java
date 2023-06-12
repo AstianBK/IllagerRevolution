@@ -31,7 +31,6 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.ArrowBeast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -44,6 +43,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.List;
+
 public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnimatable, InventoryCarrier, RangedAttackMob {
     private final AnimationFactory factory= GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(1);
@@ -53,7 +54,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
                 .add(Attributes.MAX_HEALTH, 25.0D)
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.FOLLOW_RANGE, 40.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.30f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.3D).build();
 
     }
     public boolean isWieldingTwoHandedWeapon() {
@@ -205,14 +206,14 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
 
         protected void performSpellCasting() {
             ServerLevel serverlevel = (ServerLevel)IllagerBeastTamerEntity.this.level;
-            if(IllagerBeastTamerEntity.this.level.random.nextFloat()<0.50f){
+            if(IllagerBeastTamerEntity.this.level.random.nextFloat()<0.33f){
                 BlockPos blockpos = IllagerBeastTamerEntity.this.blockPosition().offset(-2 + IllagerBeastTamerEntity.this.random.nextInt(5), 1, -2 + IllagerBeastTamerEntity.this.random.nextInt(5));
                 RakerEntity raker = ModEntityTypes.RAKER.get().create(IllagerBeastTamerEntity.this.level);
                 raker.moveTo(blockpos, 0.0F, 0.0F);
                 raker.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
                 serverlevel.addFreshEntityWithPassengers(raker);
                 raker.setOwner(IllagerBeastTamerEntity.this);
-            }else {
+            }else if(IllagerBeastTamerEntity.this.level.random.nextFloat()<0.33f){
                 BlockPos blockpos = IllagerBeastTamerEntity.this.blockPosition().offset(-2 + IllagerBeastTamerEntity.this.random.nextInt(5), 1, -2 + IllagerBeastTamerEntity.this.random.nextInt(5));
                 MaulerEntity mauler = ModEntityTypes.MAULER.get().create(IllagerBeastTamerEntity.this.level);
                 mauler.moveTo(blockpos, 0.0F, 0.0F);
@@ -221,6 +222,23 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
                 mauler.setOwner(IllagerBeastTamerEntity.this);
                 if(serverlevel.random.nextFloat()<0.50f){
                     IllagerBeastTamerEntity.this.startRiding(mauler);
+                }
+            }else {
+                List<AbstractIllager> illagerList = IllagerBeastTamerEntity.this.level.getEntitiesOfClass(AbstractIllager.class,IllagerBeastTamerEntity.this.getBoundingBox().inflate(40.0D));
+                int cc=0;
+                for(AbstractIllager illager : illagerList){
+                    if(illager.isAlive()){
+                        BlockPos blockpos = illager.blockPosition().offset(-2 + illager.level.random.nextInt(5), 1, -2 + illager.level.random.nextInt(5));
+                        ScroungerEntity scrounger = ModEntityTypes.SCROUNGER.get().create(IllagerBeastTamerEntity.this.level);
+                        scrounger.moveTo(blockpos, 0.0F, 0.0F);
+                        scrounger.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
+                        serverlevel.addFreshEntityWithPassengers(scrounger);
+                        scrounger.setOwnerIllager(illager);
+                        cc++;
+                    }
+                    if (cc>2){
+                        break;
+                    }
                 }
             }
         }

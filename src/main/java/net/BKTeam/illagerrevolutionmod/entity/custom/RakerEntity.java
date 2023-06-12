@@ -246,7 +246,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
             }
         }
         if (this.isTame() && this.isOwnedBy(player) && !player.isSecondaryUseActive() ) {
-            if(player instanceof IOpenBeatsContainer && itemstack.is(Items.BONE)){
+            if(player instanceof IOpenBeatsContainer && itemstack.is(ModItems.BEAST_STAFF.get())){
                 this.openInventory(player);
                 this.gameEvent(GameEvent.ENTITY_INTERACT, player);
                 this.updateContainerEquipment();

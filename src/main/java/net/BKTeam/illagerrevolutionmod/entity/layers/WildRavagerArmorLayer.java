@@ -24,11 +24,8 @@ public class WildRavagerArmorLayer <T extends WildRavagerEntity,M extends Entity
 
     private final ResourceLocation TEXTURE_SADDLE = new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/entity/wild_ravager/armor/wild_ravager_armor_saddle.png");
 
-    private final WildRavagerModel model;
-
-    public WildRavagerArmorLayer(RenderLayerParent<T, M> pRenderer, WildRavagerModel model) {
+    public WildRavagerArmorLayer(RenderLayerParent<T, M> pRenderer) {
         super(pRenderer);
-        this.model = model;
     }
 
     @Override

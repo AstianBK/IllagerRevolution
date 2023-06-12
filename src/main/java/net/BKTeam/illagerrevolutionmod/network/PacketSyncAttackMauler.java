@@ -23,7 +23,6 @@ public class PacketSyncAttackMauler {
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(key);
     }
-
     public void handle(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() ->{
             Player player=context.get().getSender();

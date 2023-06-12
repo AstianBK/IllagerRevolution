@@ -30,7 +30,7 @@ public class ScroungerInventoryMenu extends AbstractContainerMenu {
                 return p_39690_.getItem() instanceof BeastArmorItem armorItem && armorItem.getBeast() == Beast.SCROUNGER;
             }
             public boolean isActive() {
-                return true;
+                return p_39659_.isTame();
             }
 
             public int getMaxStackSize() {
@@ -58,7 +58,7 @@ public class ScroungerInventoryMenu extends AbstractContainerMenu {
 
                 @Override
                 public boolean isActive() {
-                    return true;
+                    return !this.container.getItem(0).isEmpty();
                 }
             });
         }

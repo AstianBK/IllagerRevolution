@@ -72,16 +72,8 @@ public class ScroungerRenderer extends ExtendedGeoEntityRenderer<ScroungerEntity
     @Override
     protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, ScroungerEntity currentEntity, IBone bone) {
         if (item == currentEntity.getContainer().getItem(1)) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(270F));
+            stack.mulPose(Vector3f.XP.rotationDegrees(90F));
             boolean shieldFlag = item.getItem() instanceof ShieldItem;
-
-            if (item == currentEntity.getContainer().getItem(1)) {
-                if (shieldFlag) {
-                    stack.translate(0, 0.125, -15);
-                }
-            } else {
-
-            }
             // stack.mulPose(Vector3f.YP.rotationDegrees(180));
 
             // stack.scale(0.75F, 0.75F, 0.75F);

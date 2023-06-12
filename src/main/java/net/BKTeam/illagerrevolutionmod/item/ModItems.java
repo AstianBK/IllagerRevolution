@@ -58,11 +58,20 @@ public class ModItems {
     public static final RegistryObject<Item> ILLAGIUM = ITEMS.register("illagium",
             ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
+    public static final RegistryObject<Item> BEAST_STAFF = ITEMS.register("beast_staff",
+            ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
     public static final RegistryObject<Item> ENCRUSTED_LAPIS = ITEMS.register("encrusted_lapis",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SCRAPER_CLAW = ITEMS.register("scraper_claw",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> SCROUNGER_FEATHER = ITEMS.register("scrounger_feather",
+            ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
+    public static final RegistryObject<Item> MAULER_PELT = ITEMS.register("mauler_pelt",
+            ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SOUL_PROJECTILE = ITEMS.register("soul_projectile",
             ()->new SoulProjectileItem(new Item.Properties().stacksTo(1)));

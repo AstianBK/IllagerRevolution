@@ -22,7 +22,6 @@ import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRavagerModel> {
-
     private static final Map<IllagerBeastEntity.Variant, ResourceLocation> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(IllagerBeastEntity.Variant.class), (p_114874_) -> {
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT1, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager1.png"));
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT2, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager2.png"));
@@ -30,10 +29,11 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT4, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager4.png"));
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT5, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png"));
     });
+
     public WildRavagerRenderer(EntityRendererProvider.Context p_174362_) {
         super(p_174362_, new WildRavagerModel(p_174362_.bakeLayer(ModEventBusEvents.RAVAGER)), 1.1F);
         this.addLayer(new WarPaintLayer<>(this));
-        this.addLayer(new WildRavagerArmorLayer<>(this,new WildRavagerModel(p_174362_.bakeLayer(ModEventBusEvents.RAVAGER))));
+        this.addLayer(new WildRavagerArmorLayer<>(this));
     }
 
     @Override

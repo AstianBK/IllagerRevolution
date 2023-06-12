@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +27,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -52,6 +55,8 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class MaulerEntity extends MountEntity implements IAnimatable {
+
+    private static final UUID MAULER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 
     private static final UUID MAULER_ATTACK_DAMAGE_UUID = UUID.fromString("648D7064-6A60-4F59-8ABE-C2C23A6DD7A9");
 
@@ -93,7 +98,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(0, new SitWhenOrderedToGoal(this));
+        this.targetSelector.addGoal(1,new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2,new OwnerHurtByTargetGoal(this));
         this.goalSelector.addGoal(1,new MaulerMauled(this));
         this.goalSelector.addGoal(2,new MaulerAttackGoal(this,1.2d,true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
@@ -154,6 +161,16 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
         }
         return super.hurt(pSource, pAmount);
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        if(this.level.random.nextFloat() > 0.85F){
+            ItemStack itemStack=new ItemStack(ModItems.MAULER_PELT.get());
+            itemStack.setCount(1);
+            this.spawnAtLocation(itemStack);
+        }
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
     }
 
     @Override
@@ -249,10 +266,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             ItemStack stack = this.getItemBySlot(EquipmentSlot.LEGS);
             boolean flag = !stack.isEmpty();
             this.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(MAULER_ATTACK_DAMAGE_UUID);
+            this.getAttribute(Attributes.ARMOR).removeModifier(MAULER_ARMOR_UUID);
             if(flag) {
                 double i = ((BeastArmorItem) stack.getItem()).getDamageValue();
+                int d = (((BeastArmorItem) stack.getItem()).getArmorValue());
                 if (i != 0) {
                     this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(MAULER_ATTACK_DAMAGE_UUID, "mauler attack bonus", i, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                }
+                if(d!=0){
+                    this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(MAULER_ARMOR_UUID,"mauler armor bonus",d, AttributeModifier.Operation.ADDITION));
                 }
             }
             this.setIsSaddled(!this.getContainer().getItem(0).isEmpty());
@@ -305,7 +327,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
             }
-            if(itemstack.is(Items.BONE)){
+            if(itemstack.is(ModItems.BEAST_STAFF.get())){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
@@ -315,12 +337,10 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
             if (this.isFood(itemstack)) {
                 if(!this.isTame()){
-                    if (this.level.isClientSide) {
-                        return InteractionResult.CONSUME;
-                    } else {
-                        if (!pPlayer.getAbilities().instabuild) {
-                            itemstack.shrink(1);
-                        }
+                    if (!pPlayer.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    if(this.level.random.nextFloat()>0.90){
                         if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                             if (!this.level.isClientSide) {
                                 super.tame(pPlayer);
@@ -330,9 +350,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                                 this.setSitting(true);
                             }
                         }
-                        return InteractionResult.SUCCESS;
                     }
-                }{
+                    return InteractionResult.SUCCESS;
+                }else {
                     if(!pPlayer.getAbilities().instabuild){
                         itemstack.shrink(1);
                     }
@@ -369,6 +389,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
     }
+
 
     public void catchedTarget(LivingEntity entity){
         if(entity!=null && this.canAddPassenger(entity)){
@@ -450,7 +471,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void travel(Vec3 pTravelVector) {
         LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
         if (this.isAlive() ) {
-            if (this.isVehicle() && livingentity!=null && this.isTame() && !this.isSitting() && this.isSaddled()) {
+            if (this.isVehicle() && livingentity instanceof Player && this.isTame() && !this.isSitting() && this.isSaddled()) {
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);

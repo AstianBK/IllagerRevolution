@@ -23,7 +23,7 @@ public class WildRavagerInventoryMenu extends AbstractContainerMenu {
         p_39658_.startOpen(p_39657_.player);
         this.addSlot(new Slot(p_39658_, 0, 8, 36) {
             public boolean mayPlace(ItemStack p_39690_) {
-                return p_39690_.getItem() instanceof SaddleItem || mauler.isArmor(p_39690_);
+                return mauler.isArmor(p_39690_);
             }
             public boolean isActive() {
                 return true;

@@ -56,14 +56,14 @@ public class PacketHandler {
         channel.registerMessage(index++, PacketSand.class, PacketSand::encode,
                 PacketSand::new, PacketSand::handle);
 
+        channel.registerMessage(index++, PacketGlowEffect.class, PacketGlowEffect::encode,
+                PacketGlowEffect::new, PacketGlowEffect::handle);
+
         channel.registerMessage(index++, PacketSyncAttackMauler.class, PacketSyncAttackMauler::encode,
                 PacketSyncAttackMauler::new, PacketSyncAttackMauler::handle);
 
         channel.registerMessage(index++, PacketSyncAttackMauler2.class, PacketSyncAttackMauler2::encode,
                 PacketSyncAttackMauler2::new, PacketSyncAttackMauler2::handle);
-
-        channel.registerMessage(index++, PacketSyncOpenInvetoryMauler3.class, PacketSyncOpenInvetoryMauler3::encode,
-                PacketSyncOpenInvetoryMauler3::new, PacketSyncOpenInvetoryMauler3::handle);
 
         channel.registerMessage(index++, ClientMaulerScreenOpenPacket.class, ClientMaulerScreenOpenPacket::write,
                 ClientMaulerScreenOpenPacket::read, ClientMaulerScreenOpenPacket::handle);
@@ -73,7 +73,6 @@ public class PacketHandler {
 
         channel.registerMessage(index++, ClientScroungerScreenOpenPacket.class, ClientScroungerScreenOpenPacket::write,
                 ClientScroungerScreenOpenPacket::read, ClientScroungerScreenOpenPacket::handle);
-
 
         channel.registerMessage(index++, PacketSyncItemCapability.class, PacketSyncItemCapability::encode,
                 PacketSyncItemCapability::new, PacketSyncItemCapability::handle);

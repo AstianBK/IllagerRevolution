@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
+import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,7 +30,7 @@ public class ArrowBeast extends Arrow {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if(!this.level.isClientSide){
-            if(pResult.getEntity() instanceof LivingEntity livingEntity){
+            if(pResult.getEntity() instanceof LivingEntity livingEntity && !(this.getOwner() instanceof ScroungerEntity entity && entity.getOwner()==livingEntity)){
                 int ampliEffect=livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) ? livingEntity.getEffect(InitEffect.DEEP_WOUND.get()).getAmplifier() : 0;
                 int ampliBleeding=0;
                 if(livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect==1){

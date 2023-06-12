@@ -425,9 +425,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         }
 
         protected void performSpellCasting() {
-            if(BladeKnightEntity.this.getTarget() instanceof Player)
-
-                {
+            if(BladeKnightEntity.this.getTarget() instanceof Player) {
                     Entity target = BladeKnightEntity.this.getTarget();
                     Level souce = BladeKnightEntity.this.getLevel();
                     Entity owner= BladeKnightEntity.this;
@@ -439,8 +437,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                     soul_hunter.setPos(soul_hunter.getX(), soul_hunter.getY() - 0.5, soul_hunter.getZ());
                     soul_hunter.setDeltaMovement(new Vec3(targetPos.x - pos.x, targetPos.y - pos.y, targetPos.z - pos.z).normalize().scale(0.75));
                     souce.addFreshEntity(soul_hunter);
-                }
-
+            }
         }
     }
 

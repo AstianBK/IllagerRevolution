@@ -126,6 +126,14 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         this.entityData.set(SADDLED,pBoolean);
     }
 
+    @Override
+    public void setSitting(boolean sitting) {
+        super.setSitting(sitting);
+        for(Entity entity : this.getPassengers()){
+            entity.stopRiding();
+        }
+    }
+
     public void travel(Vec3 pTravelVector) {
         super.travel(pTravelVector);
     }
@@ -139,6 +147,7 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
                 }
             }
         }else {
+            return !this.getPassengers().isEmpty()? (LivingEntity) this.getPassengers().get(0) : null ;
         }
         return null;
     }

@@ -30,6 +30,7 @@ import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 
@@ -49,6 +50,13 @@ public class EventDeath {
                     event.setCanceled(true);
                     sendRunedBladePacket(stack,entity);
                     giveUseStatAndCriterion(stack,(ServerPlayer) entity);
+                }
+            }
+
+            if(entity instanceof AbstractIllager illager){
+                List<ScroungerEntity> scroungerEntities = illager.level.getEntitiesOfClass(ScroungerEntity.class,illager.getBoundingBox().inflate(40.0D),e->e.getOwnerIllager()==entity);
+                for (ScroungerEntity scrounger : scroungerEntities ){
+                    scrounger.setOwnerIllager(null);
                 }
             }
         }
