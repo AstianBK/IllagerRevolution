@@ -14,6 +14,9 @@
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Illager Beast Tamer Spawn Egg",
   "item.illagerrevolutionmod.scrapper_spawn_egg": "Raker Spawn Egg",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Blade Knight Illager Spawn Egg",
+  "item.illagerrevolutionmod.mauler_spawn_egg":"Mauler Spawn Egg",
+  "item.illagerrevolutionmod.wild_ravager_spawn_egg":"Wild Ravager Spawn Egg",
+  "item.illagerrevolutionmod.scrounger_spawn_egg":"Scrounger Spawn Egg",
 
 
   "item.illagerrevolutionmod.helmet_miner_reinforced": "Illagium Miner Helmet",
@@ -34,6 +37,16 @@
   "item.illagerrevolutionmod.scrapper_armor_diamond": "Diamond Raker Armor",
   "item.illagerrevolutionmod.scrapper_armor_gold": "Gold Raker Armor",
   "item.illagerrevolutionmod.scrapper_armor_iron": "Iron Raker Armor",
+  "item.illagerrevolutionmod.wild_ravager_armor_illagium":"Illagium Ravager Armor",
+  "item.illagerrevolutionmod.wild_ravager_armor_netherite":"Netherite Ravager Armor",
+  "item.illagerrevolutionmod.wild_ravager_armor_diamond":"Diamond Ravager Armor",
+  "item.illagerrevolutionmod.wild_ravager_armor_gold":"Gold Ravager Armor",
+  "item.illagerrevolutionmod.wild_ravager_armor_iron":"Iron Ravager Armor",
+  "item.illagerrevolutionmod.mauler_armor_illagium":"Illagium Mauler Armor",
+  "item.illagerrevolutionmod.mauler_armor_netherite":"Netherite Mauler Armor",
+  "item.illagerrevolutionmod.mauler_armor_diamond":"Diamond Mauler Armor",
+  "item.illagerrevolutionmod.mauler_armor_gold":"Gold Mauler Armor",
+  "item.illagerrevolutionmod.mauler_armor_iron":"Iron Mauler Armor",
   "item.illagerrevolutionmod.claws_armor_illagium": "Illagium Raker Claws",
   "item.illagerrevolutionmod.claws_armor_netherite": "Netherite Raker Claws",
   "item.illagerrevolutionmod.claws_armor_diamond": "Diamond Raker Claws",
@@ -44,6 +57,8 @@
   "item.illagerrevolutionmod.encrusted_lapis": "Encrusted Lapis",
   "item.illagerrevolutionmod.illagium": "Illagium Ingot",
   "item.illagerrevolutionmod.scraper_claw": "Raker Claw",
+  "item.illagerrevolutionmod.mauler_pelt": "Mauler Pelt",
+  "item.illagerrevolutionmod.scrounger_feather": "Scrounger Feather",
 
 
   "effect.illagerrevolutionmod.deep_wound": "Deep Wound",
@@ -58,6 +73,7 @@
   "item.illagerrevolutionmod.illagium_hammer": "Illagium Hammer",
   "item.illagerrevolutionmod.illagium_scythe": "Illagium Scythe",
   "item.illagerrevolutionmod.illagium_mace": "Illagium Spade",
+  "item.illagerrevolutionmod.beast_staff": "Beast Taming Staff",
   "item.illagerrevolutionmod.junk_axe": "Junk Axe",
   "item.illagerrevolutionmod.arrow_beast": "Claw Arrow",
 
@@ -70,6 +86,9 @@
   "entity.illagerrevolutionmod.blade_knight": "Illager Blade Knight",
   "entity.illagerrevolutionmod.illagerbeasttamer": "Illager Beast Tamer",
   "entity.illagerrevolutionmod.zombified": "Zombified Illager",
+  "entity.illagerrevolutionmod.mauler": "Mauler",
+  "entity.illagerrevolutionmod.wild_ravager": "Wild Ravager",
+  "entity.illagerrevolutionmod.scrounger": "Scrounger",
 
   "itemGroup.illagerrevolutiontab": "Illager Revolution",
 
