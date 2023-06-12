@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "illagerrevolutionmod:mauler_armor_diamond"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "item": "illagerrevolutionmod:mauler_armor_netherite"
+  }
+}

@@ -1,12 +1,23 @@
 {
-  "type": "minecraft:smithing",
-  "base": {
-    "item": "illagerrevolutionmod:claws_armor_iron"
-  },
-  "addition": {
-    "item": "minecraft:gold_ingot"
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iii",
+    "BBB",
+    " L "
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:gold_ingot"
+    },
+    "B": {
+      "item": "illagerrevolutionmod:raker_claw"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
   },
   "result": {
-    "item": "illagerrevolutionmod:claws_armor_gold"
+    "item": "illagerrevolutionmod:claws_armor_gold",
+    "count": 1
   }
 }

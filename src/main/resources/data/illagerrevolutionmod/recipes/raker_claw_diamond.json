@@ -1,12 +1,23 @@
 {
-  "type": "minecraft:smithing",
-  "base": {
-    "item": "illagerrevolutionmod:claws_armor_iron"
-  },
-  "addition": {
-    "item": "minecraft:diamond"
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iii",
+    "BBB",
+    " L "
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "illagerrevolutionmod:raker_claw"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
   },
   "result": {
-    "item": "illagerrevolutionmod:claws_armor_diamond"
+    "item": "illagerrevolutionmod:claws_armor_diamond",
+    "count": 1
   }
 }

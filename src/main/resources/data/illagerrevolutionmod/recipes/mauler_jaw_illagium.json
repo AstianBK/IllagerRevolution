@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "illagerrevolutionmod:mauler_armor_iron"
+  },
+  "addition": {
+    "item": "illagerrevolutionmod:illagium"
+  },
+  "result": {
+    "item": "illagerrevolutionmod:mauler_armor_illagium"
+  }
+}

@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "###",
     "iii",
+    "BBB",
     " L "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:iron_nugget"
-    },
     "i": {
       "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "illagerrevolutionmod:raker_claw"
     },
     "L": {
       "item": "minecraft:leather"
