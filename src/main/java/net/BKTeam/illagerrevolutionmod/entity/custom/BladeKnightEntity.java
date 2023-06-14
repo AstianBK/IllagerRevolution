@@ -99,7 +99,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 .add(Attributes.MAX_HEALTH, 90.0D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.10D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.85D)
                 .add(Attributes.ARMOR, 0.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 36.D)
@@ -539,7 +539,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         if(lowLife){
             this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.36D);
-            this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(0.25D);
+            this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(1.5D);
             this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
             this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(3.0D);
             this.getAttribute(Attributes.ARMOR).setBaseValue(10.0D);

@@ -624,7 +624,7 @@ public class WildRavagerEntity extends MountEntity{
         if (this.hasArmor()) {
             this.playSound(SoundEvents.RAVAGER_STEP, 0.15F, 1.0F);
         } else {
-            this.playSound(SoundEvents.HORSE_STEP, 0.15F, -2.0F);
+            this.playSound(SoundEvents.COW_STEP, 0.20F, -0.4F);
         }
     }
 

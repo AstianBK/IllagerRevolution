@@ -37,7 +37,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<RakerEntity>> RAKER = ENTITY_TYPES.register("raker",
             ()-> EntityType.Builder.of(RakerEntity::new, MobCategory.MONSTER)
-                .sized(0.65f,1.0f).
+                .sized(0.65f,1.3f).
                     build(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"raker")
                         .toString()));
 
@@ -48,10 +48,10 @@ public class ModEntityTypes {
                             .toString()));
 
 
-    public static final RegistryObject<EntityType<WildRavagerEntity>> WILD_RAVANGER= ENTITY_TYPES.register("wild_ravager",
+    public static final RegistryObject<EntityType<WildRavagerEntity>> WILD_RAVAGER = ENTITY_TYPES.register("wild_ravager",
             ()-> EntityType.Builder.of(WildRavagerEntity::new, MobCategory.MONSTER)
                     .sized(1.95f,2.2f).
-                    build(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"mauler")
+                    build(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"wild_ravager")
                             .toString()));
 
 

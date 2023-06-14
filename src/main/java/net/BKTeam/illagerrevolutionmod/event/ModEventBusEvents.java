@@ -2,11 +2,9 @@ package net.BKTeam.illagerrevolutionmod.event;
 
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
-import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.WildRavagerRenderer;
-import net.BKTeam.illagerrevolutionmod.entity.custom.*;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
@@ -25,7 +23,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -88,7 +85,7 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(WILD_RAVANGER.get(), WildRavagerRenderer::new);
+        event.registerEntityRenderer(WILD_RAVAGER.get(), WildRavagerRenderer::new);
     }
 
     @SubscribeEvent
