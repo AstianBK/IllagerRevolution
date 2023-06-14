@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.mixin;
 import com.mojang.authlib.GameProfile;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
+import net.BKTeam.illagerrevolutionmod.api.IProxy;
 import net.BKTeam.illagerrevolutionmod.entity.custom.*;
 import net.BKTeam.illagerrevolutionmod.gui.MaulerInventoryMenu;
 import net.BKTeam.illagerrevolutionmod.gui.RakerInventoryMenu;

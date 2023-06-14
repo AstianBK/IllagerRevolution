@@ -36,27 +36,12 @@ import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
 
 
-@Mod.EventBusSubscriber(modid = IllagerRevolutionMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = IllagerRevolutionMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ModEventBusEvents {
-
     public static ModelLayerLocation RAVAGER = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ravager"), "ravager");
     public static ModelLayerLocation RAVAGER_SADDLE = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ravager_saddle"), "ravager_saddle");
     public static ModelLayerLocation WAR_PAINT = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "war_paint"), "war_paint");
 
-
-    @SubscribeEvent
-    public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
-        event.put(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerScavengerEntity.setAttributes());
-        event.put(ModEntityTypes.RAKER.get(), RakerEntity.setAttributes());
-        event.put(ModEntityTypes.ILLAGERMINER.get(), IllagerMinerEntity.setAttributes());
-        event.put(ModEntityTypes.ILLAGERBEASTTAMER.get(), IllagerBeastTamerEntity.setAttributes());
-        event.put(ModEntityTypes.ZOMBIFIED.get(), ZombifiedEntity.setAttributes());
-        event.put(ModEntityTypes.BLADE_KNIGHT.get(), BladeKnightEntity.setAttributes());
-        event.put(ModEntityTypes.FALLEN_KNIGHT.get(), FallenKnightEntity.setAttributes());
-        event.put(MAULER.get(), MaulerEntity.setAttributes());
-        event.put(WILD_RAVANGER.get(), WildRavagerEntity.createAttributes().build());
-        event.put(SCROUNGER.get(),ScroungerEntity.setAttributes());
-    }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     @OnlyIn(Dist.CLIENT)
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {

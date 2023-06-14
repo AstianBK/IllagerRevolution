@@ -263,6 +263,9 @@ public class ModItems {
     public static final RegistryObject<Item> JUNK_AXE = ITEMS.register("junk_axe",
             ()->new JunkAxeItem(ModTiers.JUNK,0,3.5F,props()));
 
+    public static final RegistryObject<Item> FAKE_JUNK_AXE = ITEMS.register("fake_junk_axe",
+            ()->new AxeItem(ModTiers.JUNK,0,3.5F,new Item.Properties()));
+
     private static Item.Properties props() {
         return new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
     }

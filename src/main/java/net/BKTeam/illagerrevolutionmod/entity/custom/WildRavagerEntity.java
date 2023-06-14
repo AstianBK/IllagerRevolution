@@ -361,7 +361,7 @@ public class WildRavagerEntity extends MountEntity{
         if(!this.level.isClientSide){
             if(!this.isImmobile()){
                 this.roarTick=20;
-                this.level.broadcastEntityEvent(this, (byte)40);
+                this.level.broadcastEntityEvent(this, (byte)63);
                 this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
             }
 
@@ -542,7 +542,7 @@ public class WildRavagerEntity extends MountEntity{
 
     private void roar() {
         if (this.isAlive()) {
-            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d),e-> e!=this.getOwner() || e!=this) : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
+            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d),e-> e.getUUID()!=this.getOwnerUUID() || e!=this) : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
             for(Entity livingentity : livingEntityList) {
                 if(livingentity instanceof LivingEntity && livingentity!=this){
                     livingentity.hurt(DamageSource.mobAttack(this), 6.0F);
@@ -579,11 +579,9 @@ public class WildRavagerEntity extends MountEntity{
             this.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);
         } else if (pId == 39) {
             this.stunnedTick = 40;
-        } else if (pId == 40) {
-            this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
+        } else if (pId == 63) {
             this.roarTick = 20;
         }
-
         super.handleEntityEvent(pId);
     }
     public int getAttackTick() {

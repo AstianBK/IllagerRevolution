@@ -310,13 +310,14 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
             CompoundTag chestCompoundNBT = new CompoundTag();
             itemStackChest.save(chestCompoundNBT);
             compound.put("ChestScroungerArmor", chestCompoundNBT);
-            for(int i = 2 ; i<7;i++){
+            ListTag tags = new ListTag();
+            for(int i = 2 ; i < 7;i++){
                 CompoundTag nbt=new CompoundTag();
                 ItemStack stack = this.inventory.getItem(i);
                 stack.save(nbt);
-                compound.put("Potion"+i,nbt);
+                tags.add(nbt);
             }
-
+            compound.put("Potions",tags);
         }
     }
 
@@ -331,12 +332,14 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
                 ItemStack stack=ItemStack.of(compound.getCompound("ChestScroungerArmor"));
                 this.setItemSlot(EquipmentSlot.FEET,stack);
             }
-            for (int i = 2 ; i < 7; i++){
-                if(!compound.getCompound("Potion"+i).isEmpty()){
-                    ItemStack stack = ItemStack.of(compound.getCompound("Potion"+i));
+            if(compound.contains("Potions",9)){
+                ListTag tags = compound.getList("Potions",10);
+                for (int i = 2 ; i < 7; i++){
+                    ItemStack stack = ItemStack.of(tags.getCompound(i-2));
                     this.inventory.setItem(i,stack);
                 }
             }
+
         }
         this.updateContainerEquipment();
     }

@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
+import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public abstract class SpellcasterKnight extends AbstractIllager {
+public abstract class SpellcasterKnight extends KnightEntity {
     private static final EntityDataAccessor<Byte> DATA_SPELL_CASTING_ID = SynchedEntityData.defineId(SpellcasterKnight.class, EntityDataSerializers.BYTE);
     protected int spellCastingTickCount;
     private IllagerSpell currentSpell = IllagerSpell.NONE;

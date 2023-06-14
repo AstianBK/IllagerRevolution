@@ -13,6 +13,7 @@ import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.*;
 import net.BKTeam.illagerrevolutionmod.event.loot.LootModifiers;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrders;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.screen.ModMenuTypes;
 import net.BKTeam.illagerrevolutionmod.screen.RuneTableScreen;
@@ -21,12 +22,16 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +42,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 import software.bernie.example.GeckoLibMod;
 import software.bernie.geckolib3.GeckoLib;
+
+import javax.annotation.Nullable;
 
 import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 
@@ -77,7 +84,7 @@ public class IllagerRevolutionMod {
 
         //MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class,CapabilityHandler::attachItemCapability);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,CapabilityHandler::attachEntityCapability);
-
+        MinecraftForge.EVENT_BUS.addListener(this::onLoadingLevel);
         DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, IllagerRevolutionMod.MOD_ID);
         ATTRIBUTES.register("soul",()->SoulTick.SOUL);
         ATTRIBUTES.register(eventBus);
@@ -107,6 +114,31 @@ public class IllagerRevolutionMod {
 
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
+
+    private static DataSaver GAME_DATA_SAVER;
+    public void onLoadingLevel(LevelEvent.Load event) {
+        ServerLevel overworld = getOverworld( event.getLevel() );
+        if( overworld == null )
+            return;
+
+        GAME_DATA_SAVER = overworld.getDataStorage()
+                .computeIfAbsent(
+                        nbt->new DataSaver( overworld, nbt ),
+                        ()->new DataSaver( overworld ),
+                        IllagerRevolutionMod.MOD_ID
+                );
+    }
+
+    @Nullable
+    private static ServerLevel getOverworld(LevelAccessor levelAccessor ) {
+        ServerLevel overworld = levelAccessor.getServer() != null ? levelAccessor.getServer().getLevel( Level.OVERWORLD ) : null;
+        return levelAccessor.equals( overworld ) ? overworld : null;
+    }
+
+    public static TheKnightOrders getTheOrders(ServerLevel level){
+        return GAME_DATA_SAVER.getTheOrderAttack();
+    }
+
     public static void setupD() {
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(DeathEntityEvent::onLivintDeathEvent);

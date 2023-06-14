@@ -1,10 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
-import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSand;
-import net.BKTeam.illagerrevolutionmod.network.PacketSyncItemCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -64,8 +62,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(6);
     private static final UUID SCAVENGER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
-
-    //private static final UUID SCAVANGER_ATTACK_DAMAGE_UUID= UUID.fromString("648D7064-6A60-4F59-8ABE-C2C23A6DD7A9");
+    private static final UUID SCAVANGER_ATTACK_DAMAGE_UUID= UUID.fromString("648D7064-6A60-4F59-8ABE-C2C23A6DD7A9");
 
     private boolean useSand;
 
@@ -98,7 +95,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.JUNK_AXE.get()));
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.FAKE_JUNK_AXE.get()));
         this.setIdVariant(this.level.random.nextInt(0,6));
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
@@ -115,12 +112,16 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        if(this.level.getRandom().nextFloat() < 0.2){
+        if(this.level.getRandom().nextFloat() < 0.2F){
             ItemStack item =new ItemStack(ModItems.GOGGLES_MINER.get());
             item.setDamageValue(item.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(item.getMaxDamage() - 3, 1))));
             this.spawnAtLocation(item);
         }
-        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+        if(this.level.getRandom().nextFloat() < 0.3F){
+            ItemStack item =new ItemStack(ModItems.JUNK_AXE.get());
+            item.setDamageValue(item.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(item.getMaxDamage() - 3, 1))));
+            this.spawnAtLocation(item);
+        }
     }
 
     public static AttributeSupplier setAttributes() {
@@ -320,24 +321,9 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                 if(pTier==3){
                     this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3d);
                 }
-                this.upgradeWeapon(pTier);
+                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(1+(pTier*7));
             }
         }
-    }
-
-    public void upgradeWeapon(int pTier){
-        if(!this.level.isClientSide){
-            CompoundTag tag = this.getMainHandItem().getOrCreateTag();
-            tag.putInt("upgrade",pTier);
-            sendPacketAxe(this.getMainHandItem(),tag,this);
-        }
-    }
-
-    public static void sendPacketAxe(ItemStack stack,CompoundTag tag,LivingEntity target) {
-        if (target instanceof ServerPlayer player) {
-            PacketHandler.sendToPlayer(new PacketSyncItemCapability(stack,tag), player);
-        }
-        PacketHandler.sendToAllTracking(new PacketSyncItemCapability(stack,tag),target);
     }
 
     @Override

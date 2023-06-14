@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
 import net.minecraft.core.BlockPos;
@@ -45,7 +46,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnimatable, InventoryCarrier, RangedAttackMob {
+public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnimatable, InventoryCarrier, RangedAttackMob {
     private final AnimationFactory factory= GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(1);
 
@@ -66,7 +67,7 @@ public class IllagerBeastTamerEntity extends SpellcasterIllager implements IAnim
                         || this.getOffhandItem().getUseAnimation() == UseAnim.BOW);
     }
 
-    public IllagerBeastTamerEntity(EntityType<? extends SpellcasterIllager> entityType, Level level) {
+    public IllagerBeastTamerEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
         super(entityType, level);
 
     }
