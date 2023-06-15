@@ -63,8 +63,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public final AnimationFactory factory= GeckoLibUtil.createFactory(this);
 
-    protected SimpleContainer inventory = new SimpleContainer(2);
-
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(MaulerEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -206,6 +204,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
         }
         super.attackC(player);
+    }
+
+    @Override
+    protected int getInventorySize() {
+        return 2;
     }
 
     @Override

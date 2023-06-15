@@ -119,7 +119,6 @@ public class RakerInventoryMenu extends AbstractContainerMenu {
                 slot.setChanged();
             }
         }
-
         return itemstack;
     }
     public void removed(Player pPlayer) {

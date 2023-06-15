@@ -69,8 +69,6 @@ public class WildRavagerEntity extends MountEntity{
     private static final EntityDataAccessor<Boolean> SADDLED =
             SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.BOOLEAN);
 
-    protected SimpleContainer inventory = new SimpleContainer(1);
-
     private static final UUID WILD_RAVAGER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 
     private int attackTick;
@@ -91,8 +89,18 @@ public class WildRavagerEntity extends MountEntity{
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(4, new RavagerMeleeAttackGoal());
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.4D));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting();
+            }
+        });
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting();
+            }
+        });
         this.targetSelector.addGoal(2, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true){
             @Override
@@ -306,9 +314,7 @@ public class WildRavagerEntity extends MountEntity{
             }else if(stack.is(ModItems.BEAST_STAFF.get())){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
-                    this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
-                    this.updateContainerEquipment();
-                    return InteractionResult.SUCCESS;
+                    return InteractionResult.sidedSuccess(this.level.isClientSide);
                 }
             }else if(stack.is(Items.HAY_BLOCK)){
                 if(!this.isTame()){
@@ -397,14 +403,11 @@ public class WildRavagerEntity extends MountEntity{
 
     @Override
     public void containerChanged(Container pInvBasic) {
-        ItemStack saddle= this.getContainer().getItem(0);
-        this.updateContainerEquipment();
-        ItemStack saddle1= this.getContainer().getItem(0);
-        if(this.tickCount >20){
-            if ((this.isArmor(saddle1) && saddle!=saddle1)){
-                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
-            }
-        }
+        super.containerChanged(pInvBasic);
+    }
+    @Override
+    protected int getInventorySize() {
+        return 1;
     }
 
     @Override
@@ -419,8 +422,7 @@ public class WildRavagerEntity extends MountEntity{
                     this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(WILD_RAVAGER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
                 }
             }
-            boolean flag1 = flag && (this.isArmor(stack) || stack.is(Items.SADDLE));
-            this.setIsSaddled(flag1);
+            this.setIsSaddled(flag);
         }
         super.updateContainerEquipment();
     }

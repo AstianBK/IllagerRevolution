@@ -8,6 +8,7 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.TagTypes;
@@ -19,10 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -67,9 +65,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, FlyingAnimal, IHasInventory, RangedAttackMob {
+public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, FlyingAnimal, IHasInventory, RangedAttackMob{
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
+    private NonNullList<ItemStack> potions=NonNullList.withSize(5,ItemStack.EMPTY);
     public float flap;
     public float flapSpeed;
     public float oFlapSpeed;
@@ -85,7 +83,6 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
     LivingEntity targetIntent;
 
     LivingEntity ownerIllager;
-    private final SimpleContainer inventory = new SimpleContainer(7);
 
     private static final EntityDataAccessor<Boolean> THROW_ITEM =
             SynchedEntityData.defineId(ScroungerEntity.class, EntityDataSerializers.BOOLEAN);
@@ -274,11 +271,30 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
     }
 
     @Override
-    protected void updateContainerEquipment() {
-        super.updateContainerEquipment();
+    protected void updateContainerEquipment(){
+        if(!this.level.isClientSide){
+            if(!this.inventory.getItem(0).isEmpty()){
+                for(int i=2;i<this.getInventorySize();i++){
+                    ItemStack potion=this.inventory.getItem(i).copy();
+                    if(!potion.isEmpty()){
+                        this.potions.set(i-2,potion);
+                    }
+                }
+            }
+        }
     }
 
-    @Override
+    protected void updateInventoryPotions(){
+        if(!this.inventory.getItem(0).isEmpty()){
+            for(int i=0;i<5;i++){
+                ItemStack potion=this.potions.get(i);
+                int i1=i+2;
+                if(!potion.isEmpty()){
+                    this.inventory.setItem(i1,potion);
+                }
+            }
+        }
+    }
     public void containerChanged(Container pInvBasic) {
         ItemStack chest=this.inventory.getItem(0);
         this.updateContainerEquipment();
@@ -286,6 +302,10 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
         if(this.tickCount>20 && chest1!=chest && this.isArmor(chest1)){
             this.playSound(SoundEvents.HORSE_SADDLE);
         }
+    }
+    @Override
+    protected int getInventorySize() {
+        return 7;
     }
 
     public LivingEntity getOwnerIllager() {
@@ -311,11 +331,14 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
             itemStackChest.save(chestCompoundNBT);
             compound.put("ChestScroungerArmor", chestCompoundNBT);
             ListTag tags = new ListTag();
-            for(int i = 2 ; i < 7;i++){
-                CompoundTag nbt=new CompoundTag();
-                ItemStack stack = this.inventory.getItem(i);
-                stack.save(nbt);
-                tags.add(nbt);
+            for(int i=2;i<this.getInventorySize();i++){
+                ItemStack stack=this.inventory.getItem(i);
+                if(!stack.isEmpty()){
+                    CompoundTag nbt=new CompoundTag();
+                    nbt.putByte("Slot",(byte)i);
+                    stack.save(nbt);
+                    tags.add(nbt);
+                }
             }
             compound.put("Potions",tags);
         }
@@ -332,14 +355,14 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
                 ItemStack stack=ItemStack.of(compound.getCompound("ChestScroungerArmor"));
                 this.setItemSlot(EquipmentSlot.FEET,stack);
             }
-            if(compound.contains("Potions",9)){
-                ListTag tags = compound.getList("Potions",10);
-                for (int i = 2 ; i < 7; i++){
-                    ItemStack stack = ItemStack.of(tags.getCompound(i-2));
-                    this.inventory.setItem(i,stack);
+            ListTag tags = compound.getList("Potions",10);
+            for (int i = 0 ; i < tags.size() ; i++){
+                CompoundTag tag=tags.getCompound(i);
+                int j=tag.getByte("Slot") & 255;
+                if(j>=2 && j<this.getInventorySize()){
+                    this.inventory.setItem(j,ItemStack.of(tag));
                 }
             }
-
         }
         this.updateContainerEquipment();
     }
@@ -557,6 +580,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements IAnimatable, 
     public void setNextPotion(int pIdSlot){
         ItemStack stack = this.getContainer().getItem(pIdSlot).copy();
         this.inventory.setItem(pIdSlot,ItemStack.EMPTY);
+        this.potions.remove(stack);
         this.inventory.setItem(1,stack);
     }
 

@@ -53,9 +53,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.UUID;
 
-public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHasInventory {
+public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-    private final SimpleContainer inventory= new SimpleContainer(3);
     private int attackTimer;
     Mob owner;
     private static final UUID RAKER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
@@ -105,22 +104,22 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
         } else {
             if (pEntity instanceof LivingEntity livingEntity) {
                 ItemStack armor;
-                int timeBleeding=60;
-                int ampliEffect=livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) ? livingEntity.getEffect(InitEffect.DEEP_WOUND.get()).getAmplifier() : 0;
-                int ampliBleeding=0;
-                if(!this.getItemBySlot(EquipmentSlot.LEGS).isEmpty()){
-                    armor=this.getItemBySlot(EquipmentSlot.LEGS);
-                    armor.hurtAndBreak(20,this,e->broadcastBreakEvent(EquipmentSlot.LEGS));
-                    if(armor.getItem() instanceof  BeastArmorItem rakerArmorItem){
-                        timeBleeding+=rakerArmorItem.getAddBleeding();
+                int timeBleeding = 60;
+                int ampliEffect = livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) ? livingEntity.getEffect(InitEffect.DEEP_WOUND.get()).getAmplifier() : 0;
+                int ampliBleeding = 0;
+                if (!this.getItemBySlot(EquipmentSlot.LEGS).isEmpty()) {
+                    armor = this.getItemBySlot(EquipmentSlot.LEGS);
+                    armor.hurtAndBreak(20, this, e -> broadcastBreakEvent(EquipmentSlot.LEGS));
+                    if (armor.getItem() instanceof BeastArmorItem rakerArmorItem) {
+                        timeBleeding += rakerArmorItem.getAddBleeding();
                     }
                 }
-                if(livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect==1){
-                    ampliBleeding=2;
-                }else if(livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect==0){
-                    ampliBleeding=1;
+                if (livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect == 1) {
+                    ampliBleeding = 2;
+                } else if (livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect == 0) {
+                    ampliBleeding = 1;
                 }
-                livingEntity.addEffect(new MobEffectInstance(InitEffect.DEEP_WOUND.get(), timeBleeding,ampliBleeding));
+                livingEntity.addEffect(new MobEffectInstance(InitEffect.DEEP_WOUND.get(), timeBleeding, ampliBleeding));
             }
             return super.doHurtTarget(pEntity);
         }
@@ -128,10 +127,6 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
 
     }
 
-    @Override
-    public SimpleContainer getContainer() {
-        return this.inventory;
-    }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
 
         if (event.isMoving() && !isAggressive() && !this.isAttacking() && !this.isSitting()) {
@@ -280,6 +275,11 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
     }
 
     @Override
+    protected int getInventorySize() {
+        return 3;
+    }
+
+    @Override
     public Beast getTypeBeast() {
         return Beast.RAKER;
     }
@@ -326,10 +326,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable, IHas
         }
         this.updateContainerEquipment();
     }
-
-    @Override
     protected void updateContainerEquipment() {
-        super.updateContainerEquipment();
         this.setArmorEquipment(this.inventory.getItem(2));
         this.setArmorCrawsEquipment(this.inventory.getItem(1));
     }

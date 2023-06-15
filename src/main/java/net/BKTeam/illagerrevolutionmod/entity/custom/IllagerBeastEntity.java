@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.network.PacketGlowEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
@@ -30,7 +31,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-public class IllagerBeastEntity extends TamableAnimal implements ContainerListener, IAnimatable {
+public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,ContainerListener, IHasInventory {
 
 
     private static final EntityDataAccessor<Boolean> SITTING =
@@ -43,8 +44,11 @@ public class IllagerBeastEntity extends TamableAnimal implements ContainerListen
     private static final EntityDataAccessor<Integer> ID_VARIANT =
             SynchedEntityData.defineId(IllagerBeastEntity.class, EntityDataSerializers.INT);
 
+    protected SimpleContainer inventory;
+
     IllagerBeastEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
+        this.createInventory();
     }
 
     public void setSitting(boolean sitting) {
@@ -134,19 +138,37 @@ public class IllagerBeastEntity extends TamableAnimal implements ContainerListen
             }
         }
     }
+    protected void createInventory() {
+        SimpleContainer simplecontainer = this.inventory;
+        this.inventory = new SimpleContainer(this.getInventorySize());
+        if (simplecontainer != null) {
+            simplecontainer.removeListener(this);
+            int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
+
+            for (int j = 0; j < i; ++j) {
+                ItemStack itemstack = simplecontainer.getItem(j);
+                if (!itemstack.isEmpty()) {
+                    this.inventory.setItem(j, itemstack.copy());
+                }
+            }
+        }
+
+        this.inventory.addListener(this);
+        this.updateContainerEquipment();
+        this.itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> new net.minecraftforge.items.wrapper.InvWrapper(this.inventory));
+    }
 
     protected void updateContainerEquipment() {
+    }
+
+    protected int getInventorySize() {
+        return 0;
     }
 
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel p_146743_, AgeableMob p_146744_) {
         return null;
-    }
-
-    @Override
-    public void containerChanged(Container pInvBasic) {
-
     }
 
     @Override
@@ -158,6 +180,36 @@ public class IllagerBeastEntity extends TamableAnimal implements ContainerListen
     public AnimationFactory getFactory() {
         return null;
     }
+
+    @Override
+    public void containerChanged(Container pInvBasic) {
+
+    }
+
+    private net.minecraftforge.common.util.LazyOptional<?> itemHandler = null;
+
+    @Override
+    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @javax.annotation.Nullable net.minecraft.core.Direction facing) {
+        if (this.isAlive() && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER && itemHandler != null)
+            return itemHandler.cast();
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        if (itemHandler != null) {
+            net.minecraftforge.common.util.LazyOptional<?> oldHandler = itemHandler;
+            itemHandler = null;
+            oldHandler.invalidate();
+        }
+    }
+
+    @Override
+    public SimpleContainer getContainer() {
+        return this.inventory;
+    }
+
 
     public enum Variant {
         VARIANT1(0),

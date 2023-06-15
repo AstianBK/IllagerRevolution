@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
+import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +15,7 @@ import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -29,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 
-public class MountEntity extends IllagerBeastEntity implements IHasInventory, PlayerRideableJumping, Saddleable {
+public class MountEntity extends IllagerBeastEntity implements IHasInventory, PlayerRideableJumping, Saddleable,ContainerListener {
 
     private static final EntityDataAccessor<Boolean> STANDING =
             SynchedEntityData.defineId(MountEntity.class, EntityDataSerializers.BOOLEAN);
@@ -287,6 +289,14 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
             this.playSound(SoundEvents.HORSE_SADDLE, 0.5F, 1.0F);
         }
 
+    }
+
+    protected void updateContainerEquipment() {
+        if (!this.level.isClientSide) {
+            ItemStack stack = this.getContainer().getItem(0);
+            boolean flag = !stack.isEmpty();
+            this.setIsSaddled(flag);
+        }
     }
 
     public void setOwner(IllagerBeastTamerEntity illagerBeastTamerEntity) {
