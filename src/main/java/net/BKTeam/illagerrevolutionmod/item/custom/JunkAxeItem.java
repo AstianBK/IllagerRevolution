@@ -90,7 +90,7 @@ public class JunkAxeItem extends AxeItem {
                 if(this.upgrade<3){
                     CompoundTag nbt = pPlayer.getMainHandItem().getOrCreateTag();
                     this.upgrade++;
-                    this.count_hit=15;
+                    this.count_hit=5;
                     nbt.putInt("upgrade",this.upgrade);
                     nbt.putInt("countHit",this.count_hit);
                 }
@@ -114,7 +114,7 @@ public class JunkAxeItem extends AxeItem {
                     this.upgrade=this.upgrade-1;
                     nbt.putInt("upgrade",this.upgrade);
                     if(this.upgrade!=0){
-                        this.count_hit=15;
+                        this.count_hit=5;
                         nbt.putInt("countHit",this.count_hit);
                     }
                 }
