@@ -217,7 +217,7 @@ public class WildRavagerEntity extends MountEntity{
                 }
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)+(this.isImmobile() ? 0.0f : 0.20f ));
+                    this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)+(this.isImmobile() ? 0.0f : -0.10f ));
                     super.travel(new Vec3((double) f, pTravelVector.y, (double) f1));
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);
