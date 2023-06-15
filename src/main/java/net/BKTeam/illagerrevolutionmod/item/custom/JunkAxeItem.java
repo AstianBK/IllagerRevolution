@@ -89,13 +89,11 @@ public class JunkAxeItem extends AxeItem {
             if(!pPlayer.level.isClientSide){
                 if(this.upgrade<3){
                     CompoundTag nbt = pPlayer.getMainHandItem().getOrCreateTag();
-                    pPlayer.sendSystemMessage(Component.nullToEmpty("upgrade : "+this.upgrade));
                     this.upgrade++;
                     this.count_hit=15;
                     nbt.putInt("upgrade",this.upgrade);
                     nbt.putInt("countHit",this.count_hit);
                 }
-                pPlayer.sendSystemMessage(Component.nullToEmpty("upgrade : "+this.upgrade));
             }
 
             if(!pPlayer.getAbilities().instabuild && this.upgrade<3){
@@ -120,7 +118,6 @@ public class JunkAxeItem extends AxeItem {
                         nbt.putInt("countHit",this.count_hit);
                     }
                 }
-                player.sendSystemMessage(Component.nullToEmpty("contador de golpes restantes : " + this.count_hit));
             }
         }
         return super.hurtEnemy(pStack, pTarget, pAttacker);
@@ -128,7 +125,14 @@ public class JunkAxeItem extends AxeItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-
+        CompoundTag nbt = pStack.getOrCreateTag();
+        if(Screen.hasShiftDown()){
+            this.count_hit=nbt.getInt("countHit");
+            this.upgrade=nbt.getInt("upgrade");
+        }else {
+            this.count_hit=nbt.getInt("countHit");
+            this.upgrade=nbt.getInt("upgrade");
+        }
     }
 
     public static void sendPacketAxe(ItemStack stack,CompoundTag tag,LivingEntity target) {

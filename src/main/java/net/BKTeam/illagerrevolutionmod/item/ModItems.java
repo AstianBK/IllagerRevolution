@@ -99,7 +99,7 @@ public class ModItems {
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> WILD_RAVAGER_SPAWN_EGG = ITEMS.register("wild_ravager_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntityTypes.WILD_RAVANGER,0x575554, 0xd1c299,
+            () -> new ForgeSpawnEggItem(ModEntityTypes.WILD_RAVAGER,0x575554, 0xd1c299,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> MAULER_SPAWN_EGG = ITEMS.register("mauler_spawn_egg",

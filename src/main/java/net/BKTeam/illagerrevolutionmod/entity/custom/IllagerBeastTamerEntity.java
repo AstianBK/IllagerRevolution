@@ -118,7 +118,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
         if(this.level.random.nextFloat()<0.70f){
-            WildRavagerEntity ravager=new WildRavagerEntity(ModEntityTypes.WILD_RAVANGER.get(),this.level);
+            WildRavagerEntity ravager=new WildRavagerEntity(ModEntityTypes.WILD_RAVAGER.get(),this.level);
             ravager.setPos(this.getX(),this.getY(),this.getZ());
             ravager.finalizeSpawn((ServerLevelAccessor) this.level,this.level.getCurrentDifficultyAt(this.blockPosition()),MobSpawnType.MOB_SUMMONED,null,null);
             this.level.addFreshEntity(ravager);

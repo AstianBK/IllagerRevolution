@@ -40,15 +40,17 @@ public class SerratedEdgeEnchantment extends Enchantment {
 
     @Override
     public void doPostAttack(LivingEntity pAttacker, Entity pTarget, int pLevel) {
-        LivingEntity livingEntity= (LivingEntity) pTarget;
-        int ampliEffect=livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) ? livingEntity.getEffect(InitEffect.DEEP_WOUND.get()).getAmplifier() : 0;
-        int ampliBleeding=0;
-        if(livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect==1){
-            ampliBleeding=2;
-        }else if(livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect==0){
-            ampliBleeding=1;
+        if(pTarget instanceof LivingEntity livingEntity){
+            int ampliEffect=livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) ? livingEntity.getEffect(InitEffect.DEEP_WOUND.get()).getAmplifier() : 0;
+            int ampliBleeding=0;
+            if(livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect==1){
+                ampliBleeding=2;
+            }else if(livingEntity.hasEffect(InitEffect.DEEP_WOUND.get()) && ampliEffect==0){
+                ampliBleeding=1;
+            }
+            livingEntity.addEffect(new MobEffectInstance(InitEffect.DEEP_WOUND.get(),160,ampliBleeding));
         }
-        livingEntity.addEffect(new MobEffectInstance(InitEffect.DEEP_WOUND.get(),160,ampliBleeding));
+
 
     }
 }

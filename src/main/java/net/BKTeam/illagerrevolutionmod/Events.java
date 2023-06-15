@@ -58,8 +58,6 @@ import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class Events {
-
-
     @SubscribeEvent
     public static void initEffectPotion(MobEffectEvent.Added event){
         if(event.getEntity()!=null && event.getEffectInstance().getEffect()== InitEffect.MAULED.get()){

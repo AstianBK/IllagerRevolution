@@ -48,10 +48,10 @@ public class ModEntityTypes {
                             .toString()));
 
 
-    public static final RegistryObject<EntityType<WildRavagerEntity>> WILD_RAVANGER= ENTITY_TYPES.register("wild_ravager",
+    public static final RegistryObject<EntityType<WildRavagerEntity>> WILD_RAVAGER = ENTITY_TYPES.register("wild_ravager",
             ()-> EntityType.Builder.of(WildRavagerEntity::new, MobCategory.MONSTER)
                     .sized(1.95f,2.2f).
-                    build(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"mauler")
+                    build(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"wild_ravager")
                             .toString()));
 
 

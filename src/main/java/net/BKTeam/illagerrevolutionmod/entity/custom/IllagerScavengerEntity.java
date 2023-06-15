@@ -333,10 +333,6 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                 living.hurt(DamageSource.MAGIC,1f);
             }
         }
-        if(this.level.getNearestPlayer(this,100.0d)!=null){
-            this.level.getNearestPlayer(this,100.0d).sendSystemMessage(Component.nullToEmpty("el valor de ataque del scavanger "+this.getUUID()+" :"+this.getAttribute(Attributes.ATTACK_DAMAGE).getValue()+" variant : "+ (this.getTypeIdVariant() & 255)));
-
-        }
         return super.hurt(pSource, pAmount);
     }
 

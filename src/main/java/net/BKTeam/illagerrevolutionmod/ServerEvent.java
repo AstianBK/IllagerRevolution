@@ -20,7 +20,7 @@ public class ServerEvent {
         event.put(ModEntityTypes.BLADE_KNIGHT.get(), BladeKnightEntity.setAttributes());
         event.put(ModEntityTypes.FALLEN_KNIGHT.get(), FallenKnightEntity.setAttributes());
         event.put(MAULER.get(), MaulerEntity.setAttributes());
-        event.put(WILD_RAVANGER.get(), WildRavagerEntity.createAttributes().build());
+        event.put(WILD_RAVAGER.get(), WildRavagerEntity.createAttributes().build());
         event.put(SCROUNGER.get(),ScroungerEntity.setAttributes());
     }
 }
