@@ -542,9 +542,9 @@ public class WildRavagerEntity extends MountEntity{
 
     private void roar() {
         if (this.isAlive()) {
-            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d),e-> e.getUUID()!=this.getOwnerUUID() || e!=this) : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
+            List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d)) : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
             for(Entity livingentity : livingEntityList) {
-                if(livingentity instanceof LivingEntity && livingentity!=this){
+                if(livingentity instanceof LivingEntity && livingentity!=this && livingentity!=this.getOwner()){
                     livingentity.hurt(DamageSource.mobAttack(this), 6.0F);
                     ((LivingEntity) livingentity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,0));
                     this.strongKnockback(livingentity);
