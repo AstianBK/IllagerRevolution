@@ -19,8 +19,8 @@ public class BKKeybinds {
     @SubscribeEvent
     public static void register(final RegisterKeyMappingsEvent event) {
         attackKey1 = create("attack_key1", KeyEvent.VK_C);
-        attackKey2 = create("attack_key2", KeyEvent.VK_V);
-        attackKey3 = create("attack_key3", KeyEvent.VK_G);
+        attackKey2 = create("attack_key2", KeyEvent.VK_G);
+        attackKey3 = create("attack_key3", KeyEvent.VK_V);
 
         event.register(attackKey1);
         event.register(attackKey2);
