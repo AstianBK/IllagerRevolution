@@ -376,7 +376,6 @@ public class WildRavagerEntity extends MountEntity{
                 boolean flag=false;
                 this.attackTick=20;
                 this.level.broadcastEntityEvent(this, (byte)4);
-                this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
                 float f1 = Mth.sin(f);
                 float f2 = Mth.cos(f);

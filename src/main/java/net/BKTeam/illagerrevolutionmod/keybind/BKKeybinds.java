@@ -15,20 +15,17 @@ public class BKKeybinds {
     public static KeyMapping attackKey2;
     public static KeyMapping attackKey3;
 
-    public static KeyMapping openInventoryKey;
 
 
     @SubscribeEvent
     public static void register(final RegisterKeyMappingsEvent event) {
         attackKey1 = create("attack_key1", KeyEvent.VK_C);
-        attackKey2 = create("attack_key2", KeyEvent.VK_V);
-        attackKey3 = create("attack_key3", KeyEvent.VK_G);
-        openInventoryKey = create("open_inventory_mauler", KeyEvent.VK_E);
+        attackKey2 = create("attack_key2", KeyEvent.VK_G);
+        attackKey3 = create("attack_key3", KeyEvent.VK_V);
 
         event.register(attackKey1);
         event.register(attackKey2);
         event.register(attackKey3);
-        event.register(openInventoryKey);
     }
 
     private static KeyMapping create(String name, int key) {
