@@ -113,6 +113,9 @@
 
   "event.illagerrevolutionmod.raid.defeat": "DEFEAT",
   "event.illagerrevolutionmod.raid.victory": "VICTORY",
-  "event.illagerrevolutionmod.raid": "The Order"
-
+  "event.illagerrevolutionmod.raid": "The Order",
+  "key.category.illagerrevolutionmod":"Illager Revolution",
+  "key.illagerrevolutionmod.attack_key2":"Primary Attack",
+  "key.illagerrevolutionmod.attack_key1":"Secondary Attack",
+  "key.illagerrevolutionmod.attack_key3":"Special Attack"
 }
