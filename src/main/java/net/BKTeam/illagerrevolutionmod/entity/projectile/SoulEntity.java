@@ -117,7 +117,7 @@ public class SoulEntity extends ThrowableItemProjectile {
             }
         }
         if(!this.level.isClientSide){
-            float cc= Mth.cos(this.tickCount/5.0f)*0.2f;
+            float cc= Mth.cos(this.tickCount/7.0f)*0.1f;
             this.yo=this.yo+cc;
             BlockPos blockPos=this.getOnPos();
             BlockState state=this.getBlockStateOn();
@@ -127,12 +127,13 @@ public class SoulEntity extends ThrowableItemProjectile {
         }
         this.moveTo(this.xo,this.yo,this.zo);
         if(!checkOwnerAlive((LivingEntity) this.getOwner())){
-            if(this.getOwner() instanceof Player){
-                if(this.life>1200){
-                    discard();
-                }
-            }else {
+            discard();
+        }
+        if(this.getOwner() instanceof Player){
+            if(this.life>1200){
                 discard();
+            }else {
+                this.life++;
             }
         }
 

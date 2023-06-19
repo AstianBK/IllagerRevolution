@@ -4,6 +4,9 @@ import com.mojang.logging.LogUtils;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.data.server.tags.BKEntityTypeTagsProvider;
+import net.BKTeam.illagerrevolutionmod.data.server.tags.BkBlockTagsProvider;
+import net.BKTeam.illagerrevolutionmod.data.server.tags.BkItemTagsProvider;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.data.DeathEntityEvent;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
@@ -21,6 +24,7 @@ import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +35,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -74,6 +80,7 @@ public class IllagerRevolutionMod {
         InitEnchantment.REGISTRY.register(eventBus);
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(CapabilityHandler::registerCapabilities);
+        eventBus.addListener(this::dataSetup);
 
         PacketHandler.registerMessages();
         setupD();
@@ -92,7 +99,17 @@ public class IllagerRevolutionMod {
     
     private void clientSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(ModEntityTypes::registerWaveMembers);
+    }
 
+    private void dataSetup(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+
+        boolean includeServer = event.includeServer();
+        BkBlockTagsProvider blockTags = new BkBlockTagsProvider(generator, existingFileHelper);
+        generator.addProvider(includeServer, blockTags);
+        generator.addProvider(includeServer, new BkItemTagsProvider(generator,blockTags ,existingFileHelper));
+        generator.addProvider(includeServer, new BKEntityTypeTagsProvider(generator, existingFileHelper));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -142,10 +159,6 @@ public class IllagerRevolutionMod {
     public static void setupD() {
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(DeathEntityEvent::onLivintDeathEvent);
-    }
-
-    public static ResourceLocation rl (String s ){
-        return new ResourceLocation(MOD_ID, s);
     }
 
 }

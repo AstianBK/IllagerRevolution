@@ -17,5 +17,6 @@ public class BKEntityTypeTagsProvider extends EntityTypeTagsProvider {
     @Override
     protected void addTags() {
         this.tag(EntityTypeTags.RAIDERS).add(ModEntityTypes.ILLAGERMINER.get());
-        this.tag(EntityTypeTags.ARROWS).add(ModEntityTypes.ARROWBEAST.get());    }
+        this.tag(EntityTypeTags.ARROWS).add(ModEntityTypes.ARROWBEAST.get());
+    }
 }

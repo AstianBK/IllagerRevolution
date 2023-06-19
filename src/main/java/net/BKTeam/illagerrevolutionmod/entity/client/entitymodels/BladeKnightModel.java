@@ -46,7 +46,7 @@ public class BladeKnightModel<I extends AbstractIllager> extends AnimatedGeoMode
 
     @Override
     public ResourceLocation getTextureResource(BladeKnightEntity object) {
-        if(!object.isFase2()){
+        if(!object.isPhase2()){
             return TEXTURE_DEFAULT;
         }
         return TEXTURE_HURT;
