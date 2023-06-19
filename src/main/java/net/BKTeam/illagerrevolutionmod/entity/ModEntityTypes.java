@@ -88,7 +88,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<SoulEntity>> SOUL_ENTITY = ENTITY_TYPES.register("soul_entity", () -> EntityType.Builder.<SoulEntity>of(SoulEntity::new, MobCategory.MISC).fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_entity"));
 
-    public static final RegistryObject<EntityType<ArrowBeast>> ARROWBEAST = ENTITY_TYPES.register("arrowbeast", () -> EntityType.Builder.<ArrowBeast>of(ArrowBeast::new, MobCategory.MISC).fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "arrowbeast"));
+    public static final RegistryObject<EntityType<ArrowBeast>> ARROWBEAST = ENTITY_TYPES.register("arrow_beast", () -> EntityType.Builder.<ArrowBeast>of(ArrowBeast::new, MobCategory.MISC).fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "arrow_beast"));
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
     }

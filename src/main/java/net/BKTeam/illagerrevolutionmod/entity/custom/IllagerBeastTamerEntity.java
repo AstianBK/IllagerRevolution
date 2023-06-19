@@ -152,9 +152,6 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
     @Override
     public void performRangedAttack(LivingEntity target, float flval) {
         ArrowBeast entityarrow = new ArrowBeast(this.level, this);
-        if(this.random.nextFloat() > 0.9){
-            entityarrow.addEffect(new MobEffectInstance(MobEffects.POISON,300,0));
-        }
         double d0 = target.getY() + target.getEyeHeight() - 1.1;
         double d1 = target.getX() - this.getX();
         double d3 = target.getZ() - this.getZ();

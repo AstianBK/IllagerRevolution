@@ -4,6 +4,7 @@ package net.BKTeam.illagerrevolutionmod.event;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
+import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.WildRavagerRenderer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
@@ -86,6 +87,7 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(WILD_RAVAGER.get(), WildRavagerRenderer::new);
+        event.registerEntityRenderer(ARROWBEAST.get(), ArrowBeastRender::new);
     }
 
     @SubscribeEvent
