@@ -81,9 +81,8 @@ public class Events {
                 List<ScroungerEntity> listBirds=attacker.level.getEntitiesOfClass(ScroungerEntity.class,attacker.getBoundingBox().inflate(15.0D),e->e.getOwner()==attacker || e.getOwnerIllager()==attacker);
                 if(!listBirds.isEmpty()){
                     for(ScroungerEntity scrounger:listBirds){
-                        scrounger.ordenThrow();
                         if(scrounger.nextAttack<=0){
-                            scrounger.ordenAttack(entity,10.0f);
+                            scrounger.ordenAttack(entity);
                         }
                     }
                 }

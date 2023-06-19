@@ -154,6 +154,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new ScrapperAttackGoal(this,1,false));
+        this.goalSelector.addGoal(3,new TemptGoal(this,1.5d,Ingredient.of(Items.PUFFERFISH),false));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));

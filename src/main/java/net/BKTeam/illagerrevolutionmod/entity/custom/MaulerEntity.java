@@ -26,12 +26,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -97,6 +99,12 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.ROTTEN_FLESH),false){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && ((TamableAnimal)this.mob).isTame();
+            }
+        });
         this.targetSelector.addGoal(1,new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2,new OwnerHurtByTargetGoal(this));
         this.goalSelector.addGoal(1,new MaulerMauled(this));
@@ -168,7 +176,20 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             itemStack.setCount(1);
             this.spawnAtLocation(itemStack);
         }
+        if(this.hasArmor() || this.isSaddled()){
+            for (int i = 0 ; i < this.getInventorySize() ; i++){
+                ItemStack stack = this.inventory.getItem(i);
+                if(!stack.isEmpty()){
+                    this.spawnAtLocation(stack);
+                    this.inventory.setItem(i,ItemStack.EMPTY);
+                }
+            }
+        }
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+    }
+
+    public boolean hasArmor(){
+        return !this.inventory.getItem(1).isEmpty() && this.isArmor(this.inventory.getItem(1));
     }
 
     @Override
@@ -188,7 +209,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(living!=this && living!=player && !flag){
                         flag=true;
                         this.catchedTarget(living);
-                        living.hurt(DamageSource.mobAttack(this), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+                        living.doHurtTarget(living);
                     }else if(flag){
                         break;
                     }
@@ -258,7 +279,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         if(this.tickCount >20){
             if ((this.isArmor(legs1) && legs!=legs1) || (!flag && flag!=this.isSaddled())){
                 this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
-                this.updateContainerEquipment();
             }
         }
     }
@@ -355,7 +375,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                         }
                     }
                     return InteractionResult.SUCCESS;
-                }else {
+                }else if(this.getHealth()!=this.getMaxHealth()){
                     if(!pPlayer.getAbilities().instabuild){
                         itemstack.shrink(1);
                     }
@@ -398,6 +418,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         if(entity!=null && this.canAddPassenger(entity)){
             if (!this.level.isClientSide) {
                 entity.startRiding(this);
+
             }
         }
     }
@@ -474,7 +495,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void travel(Vec3 pTravelVector) {
         LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
         if (this.isAlive() ) {
-            if (this.isVehicle() && livingentity instanceof Player && this.isTame() && !this.isSitting() && this.isSaddled()) {
+            if (this.isVehicle() && livingentity!=null && this.isTame() && !this.isSitting() && this.isSaddled()) {
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);

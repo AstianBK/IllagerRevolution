@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SaddleItem;
+import net.minecraft.world.item.alchemy.PotionUtils;
 
 public class ScroungerInventoryMenu extends AbstractContainerMenu {
     private final Container maulerContainer;
@@ -25,45 +26,17 @@ public class ScroungerInventoryMenu extends AbstractContainerMenu {
         this.maulerContainer = p_39658_;
         this.scrounger = p_39659_;
         p_39658_.startOpen(p_39657_.player);
-        this.addSlot(new Slot(p_39658_, 0, 8, 36) {
-            public boolean mayPlace(ItemStack p_39690_) {
-                return p_39690_.getItem() instanceof BeastArmorItem armorItem && armorItem.getBeast() == Beast.SCROUNGER;
-            }
-            public boolean isActive() {
-                return p_39659_.isTame();
-            }
-
-            public int getMaxStackSize() {
-                return 1;
-            }
-        });
-        this.addSlot(new Slot(p_39658_, 1, 8, 54) {
-            public boolean mayPlace(ItemStack p_39690_) {
-                return false;
-            }
-            public boolean isActive() {
-                return false;
-            }
-
-            public int getMaxStackSize() {
-                return 1;
-            }
-        });
-        for(int l = 0; l < 5; ++l) {
-            this.addSlot(new Slot(p_39658_, 2 + l , 80 + (l * 18), 18){
+        for(int l = 0; l < 2; ++l) {
+            int finalL = l;
+            this.addSlot(new Slot(p_39658_, finalL, 80 + (l * 18), 18){
                 @Override
                 public boolean mayPlace(ItemStack pStack) {
-                    return super.mayPlace(pStack) && (pStack.is(Items.SPLASH_POTION) || pStack.is(Items.LINGERING_POTION));
-                }
-
-                @Override
-                public int getMaxStackSize() {
-                    return 1;
+                    return super.mayPlace(pStack) && canUsedPotion(finalL,pStack);
                 }
 
                 @Override
                 public boolean isActive() {
-                    return !this.container.getItem(0).isEmpty();
+                    return hasChest();
                 }
             });
         }
@@ -83,6 +56,22 @@ public class ScroungerInventoryMenu extends AbstractContainerMenu {
     public boolean stillValid(Player pPlayer) {
         return !this.scrounger.hasInventoryChanged(this.maulerContainer) && this.maulerContainer.stillValid(pPlayer) && this.scrounger.isAlive() && this.scrounger.distanceTo(pPlayer) < 8.0F;
     }
+
+    public boolean canUsedPotion(int pSlot, ItemStack pStack){
+        return (pStack.is(Items.SPLASH_POTION) || pStack.is(Items.LINGERING_POTION) || pStack.is(Items.PODZOL)) && isBeneficalPotion(pSlot,pStack);
+    }
+
+    public boolean isBeneficalPotion(int pSlot,ItemStack pStack){
+        if(pSlot==0){
+            return PotionUtils.getPotion(pStack).getEffects().stream().anyMatch(e-> e.getEffect().isBeneficial());
+        }else {
+            return PotionUtils.getPotion(pStack).getEffects().stream().anyMatch(e-> !e.getEffect().isBeneficial());
+        }
+    }
+
+    public boolean hasChest(){
+        return this.scrounger.hasChest();
+    }
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
@@ -94,15 +83,7 @@ public class ScroungerInventoryMenu extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(itemstack1, i, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            }else if (this.getSlot(1).mayPlace(itemstack1) && !this.getSlot(1).hasItem()) {
-                    if (!this.moveItemStackTo(itemstack1, 1,2, false)) {
-                        return ItemStack.EMPTY;
-                    }
-            }else if (this.getSlot(0).mayPlace(itemstack1)) {
-                if (!this.moveItemStackTo(itemstack1, 0,1, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (i <= 2 || !this.moveItemStackTo(itemstack1, 2, i, false)) {
+            }else if (i <= 0 || !this.moveItemStackTo(itemstack1, 0, i, false)) {
                 int j = i + 27;
                 int k = j + 9;
                 if (pIndex >= j && pIndex < k) {

@@ -152,7 +152,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
     @Override
     public void performRangedAttack(LivingEntity target, float flval) {
         ArrowBeast entityarrow = new ArrowBeast(this.level, this);
-        if(this.random.nextFloat() < 0.9){
+        if(this.random.nextFloat() > 0.9){
             entityarrow.addEffect(new MobEffectInstance(MobEffects.POISON,300,0));
         }
         double d0 = target.getY() + target.getEyeHeight() - 1.1;
@@ -214,6 +214,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                 raker.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
                 serverlevel.addFreshEntityWithPassengers(raker);
                 raker.setOwner(IllagerBeastTamerEntity.this);
+
             }else if(IllagerBeastTamerEntity.this.level.random.nextFloat()<0.33f){
                 BlockPos blockpos = IllagerBeastTamerEntity.this.blockPosition().offset(-2 + IllagerBeastTamerEntity.this.random.nextInt(5), 1, -2 + IllagerBeastTamerEntity.this.random.nextInt(5));
                 MaulerEntity mauler = ModEntityTypes.MAULER.get().create(IllagerBeastTamerEntity.this.level);
@@ -225,6 +226,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                     IllagerBeastTamerEntity.this.startRiding(mauler);
                 }
             }else {
+
                 List<AbstractIllager> illagerList = IllagerBeastTamerEntity.this.level.getEntitiesOfClass(AbstractIllager.class,IllagerBeastTamerEntity.this.getBoundingBox().inflate(40.0D));
                 int cc=0;
                 for(AbstractIllager illager : illagerList){
@@ -234,6 +236,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                         scrounger.moveTo(blockpos, 0.0F, 0.0F);
                         scrounger.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
                         serverlevel.addFreshEntityWithPassengers(scrounger);
+                        scrounger.setOnCombat(true);
                         scrounger.setOwnerIllager(illager);
                         cc++;
                     }

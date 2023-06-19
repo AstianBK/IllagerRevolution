@@ -42,6 +42,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -89,6 +90,12 @@ public class WildRavagerEntity extends MountEntity{
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(4, new RavagerMeleeAttackGoal());
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.4D));
+        this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.HAY_BLOCK),false){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && ((TamableAnimal)this.mob).isTame();
+            }
+        });
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F){
             @Override
             public boolean canUse() {
@@ -147,6 +154,15 @@ public class WildRavagerEntity extends MountEntity{
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
     }
 
+    @Override
+    protected void dropEquipment() {
+        if(this.hasArmor() || this.isSaddled()){
+            ItemStack stack=this.inventory.getItem(0);
+            this.spawnAtLocation(stack);
+            this.inventory.setItem(0,ItemStack.EMPTY);
+        }
+        super.dropEquipment();
+    }
 
     @Override
     protected void defineSynchedData() {
@@ -211,7 +227,7 @@ public class WildRavagerEntity extends MountEntity{
     public void travel(Vec3 pTravelVector) {
         if (this.isAlive()) {
             LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
-            if (this.isVehicle() && livingentity instanceof Player && this.isTame() && !this.isSitting() && this.isSaddled()) {
+            if (this.isVehicle() && livingentity!=null && livingentity==this.getOwner() && this.isTame() && !this.isSitting() && this.isSaddled()) {
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);
@@ -230,7 +246,6 @@ public class WildRavagerEntity extends MountEntity{
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);
                 }
-
                 this.calculateEntityAnimation(this, false);
                 this.tryCheckInsideBlocks();
             } else {
@@ -433,15 +448,16 @@ public class WildRavagerEntity extends MountEntity{
 
     @Nullable
     public LivingEntity getControllingPassenger() {
-        Entity entity = this.getFirstPassenger();
-        return entity != null && this.canBeControlledBy(entity) ? (LivingEntity) entity : null;
-    }
-
-    private boolean canBeControlledBy(Entity p_219063_) {
-        if(this.isTame() && p_219063_ instanceof LivingEntity){
-            return this.isOwnedBy((LivingEntity) p_219063_);
+        if (this.isSaddled()) {
+            for(Entity entity:this.getPassengers()){
+                if(entity==this.getOwner()){
+                    return (LivingEntity) entity;
+                }
+            }
+        }else {
+            return null ;
         }
-        return !this.isNoAi() && p_219063_ instanceof LivingEntity;
+        return null;
     }
 
 

@@ -20,6 +20,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -194,6 +195,7 @@ public class FallenKnightEntity extends ReanimatedEntity implements IAnimatable,
         this.goalSelector.addGoal(2,new FallenKnightAttack(this,1.0D,true));
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.7));
         this.goalSelector.addGoal(4, new RandomLookAroundFallenKnightGoal(this));
+        this.goalSelector.addGoal(4,new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));

@@ -17,11 +17,6 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 import java.util.EnumSet;
 
 public class FollowOwnerGoalReanimate  extends Goal {
-
-    public static final int TELEPORT_WHEN_DISTANCE_IS = 12;
-    private static final int MIN_HORIZONTAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 2;
-    private static final int MAX_HORIZONTAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 3;
-    private static final int MAX_VERTICAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 1;
     private final ReanimatedEntity tamable;
     private LivingEntity owner;
     private final LevelReader level;

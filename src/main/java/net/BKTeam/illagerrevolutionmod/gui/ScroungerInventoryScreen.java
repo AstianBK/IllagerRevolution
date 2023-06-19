@@ -31,11 +31,8 @@ public class ScroungerInventoryScreen extends AbstractContainerScreen<ScroungerI
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pPoseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
-        if (this.scrounger.isTame()) {
-            this.blit(pPoseStack, i + 7, j + 35, 18, this.imageHeight + 36, 18, 18);
-        }
-        if(!this.scrounger.getContainer().getItem(0).isEmpty()){
-            this.blit(pPoseStack, i + 79, j + 17, 0, this.imageHeight + 18,90, 18);
+        if(this.scrounger.hasChest()){
+            this.blit(pPoseStack, i + 79, j + 17, 0, this.imageHeight + 18,36, 18);
         }
         InventoryScreen.renderEntityInInventory(i + 51, j + 60, 17, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.scrounger);
     }

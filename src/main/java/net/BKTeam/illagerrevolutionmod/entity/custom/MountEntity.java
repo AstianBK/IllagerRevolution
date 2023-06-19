@@ -149,7 +149,7 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
                 }
             }
         }else {
-            return !this.getPassengers().isEmpty()? (LivingEntity) this.getPassengers().get(0) : null ;
+            return null;
         }
         return null;
     }
@@ -249,14 +249,15 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
 
     }
     public void attackC(Player player){
+        this.setOnCombat(true);
     }
 
     public void attackV(Player player){
-
+        this.setOnCombat(true);
     }
 
     public void attackG(Player player){
-
+        this.setOnCombat(true);
     }
 
     public void readAdditionalSaveData(CompoundTag pCompound) {

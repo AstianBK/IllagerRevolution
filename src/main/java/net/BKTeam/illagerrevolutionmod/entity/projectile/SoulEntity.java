@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Zombie;
@@ -24,7 +25,6 @@ import net.BKTeam.illagerrevolutionmod.EventDeath;
 
 
 public class SoulEntity extends ThrowableItemProjectile {
-
     int life;
     String soul;
 
@@ -117,28 +117,23 @@ public class SoulEntity extends ThrowableItemProjectile {
             }
         }
         if(!this.level.isClientSide){
-            if(!(this.getY()>=this.PosYMin && this.getY()<=this.PosYMax)){
-                if(this.getY()>= this.PosYMax){
-                    this.canUp=false;
-                }else if(this.getY()<=this.PosYMin){
-                    this.canUp=true;
-                }
-            }
-            if(this.canUp){
-                this.yo+=0.02D;
-            }else{
-                this.yo-=0.02D;
-            }
+            float cc= Mth.cos(this.tickCount/5.0f)*0.2f;
+            this.yo=this.yo+cc;
             BlockPos blockPos=this.getOnPos();
             BlockState state=this.getBlockStateOn();
             while (this.isColliding(blockPos,state)){
                 this.moveTo(this.getX()+this.level.getRandom().nextInt(-1,1),this.getY(),this.getZ()+(this.level.getRandom().nextInt(-1,1)));
             }
-
         }
         this.moveTo(this.xo,this.yo,this.zo);
         if(!checkOwnerAlive((LivingEntity) this.getOwner())){
-            discard();
+            if(this.getOwner() instanceof Player){
+                if(this.life>1200){
+                    discard();
+                }
+            }else {
+                discard();
+            }
         }
 
     }

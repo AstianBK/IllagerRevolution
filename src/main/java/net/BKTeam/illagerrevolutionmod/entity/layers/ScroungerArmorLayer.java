@@ -1,10 +1,12 @@
 package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.ScroungerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,6 +18,8 @@ public class ScroungerArmorLayer extends GeoLayerRenderer<ScroungerEntity> {
 
     private final ScroungerModel model;
 
+    private final ResourceLocation LOCATION=new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/entity/scrounger/armor/scrounger_armor_chest_leather.png");
+
     public ScroungerArmorLayer(IGeoRenderer entityRendererIn, ScroungerModel model) {
         super(entityRendererIn);
         this.model = model;
@@ -23,12 +27,11 @@ public class ScroungerArmorLayer extends GeoLayerRenderer<ScroungerEntity> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, ScroungerEntity entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ItemStack itemstack =entityLivingBaseIn.getContainer().getItem(0);
-        if (itemstack.getItem() instanceof BeastArmorItem armor) {
+        if (entityLivingBaseIn.hasChest()) {
             this.model.getModelResource(entityLivingBaseIn);
             this.model.getTextureResource(entityLivingBaseIn);
             this.model.getAnimationResource(entityLivingBaseIn);
-            this.renderCopyModel(this.model,armor.getArmorTexture(),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
+            this.renderCopyModel(this.model,LOCATION,matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
     }
 }

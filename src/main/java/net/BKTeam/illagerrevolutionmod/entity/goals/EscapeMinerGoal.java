@@ -12,7 +12,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerScavengerEntity;
 import java.util.EnumSet;
 
 
-public class EscapeMinerGoal<T extends LivingEntity> extends AvoidEntityGoal {
+public class EscapeMinerGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
     private final IllagerMinerEntity goalOwner;
     public EscapeMinerGoal(PathfinderMob pMob, Class<T> pEntityClassToAvoid, float pMaxDistance, double pWalkSpeedModifier, double pSprintSpeedModifier) {
         super(pMob,pEntityClassToAvoid,pMaxDistance,pWalkSpeedModifier,pSprintSpeedModifier);
