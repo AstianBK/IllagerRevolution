@@ -55,7 +55,7 @@ public class GoalLowhealth extends Goal {
         }else {
             this.owner.getNavigation().stop();
             this.owner.setInvulnerable(true);
-            if(this.owner.isFase2()){
+            if(this.owner.isPhase2()){
                 this.stop();
             }
         }

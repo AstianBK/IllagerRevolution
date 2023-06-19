@@ -120,7 +120,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         String s1=this.isAttackingShield() ? "2"  : "1";
-        String s2=this.isLowLife() && this.isFase2()? "2" : "1";
+        String s2=this.isLowLife() && this.isPhase2()? "2" : "1";
         if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isCastingSpell() && !this.isStartAnimationLowHealth()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.walk" + s2, ILoopType.EDefaultLoopTypes.LOOP));
 
@@ -183,7 +183,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 this.count_expansion--;
             }
             if(this.lowHealtTimer==3){
-                this.setFase2(true);
+                this.setPhase2(true);
             }
             if(this.lowHealtTimer<=39 && this.lowHealtTimer>=20){
                 if(this.lowHealtTimer==39){
@@ -259,11 +259,11 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public void setStartAnimationLowHealth(boolean startAnimationLowHealth) {
         this.entityData.set(STARTANIMATIONLOWHEALTH,startAnimationLowHealth);
     }
-    public boolean isFase2() {
+    public boolean isPhase2() {
         return this.entityData.get(FASE2);
     }
 
-    public void setFase2(boolean fase2) {
+    public void setPhase2(boolean fase2) {
         this.entityData.set(FASE2 ,fase2);
     }
     @Override
@@ -515,7 +515,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.setAttackingshield(compound.getBoolean("isAttackingShield"));
         this.setLowLife(compound.getBoolean("isLowlife"));
         this.setStartAnimationLowHealth(compound.getBoolean("isLowHealth"));
-        this.setFase2(compound.getBoolean("isFase2"));
+        this.setPhase2(compound.getBoolean("isFase2"));
 
     }
 
@@ -526,7 +526,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         compound.putBoolean("isAttackingShield",this.isAttackingShield());
         compound.putBoolean("isLowlife",this.isLowLife());
         compound.putBoolean("isLowHealth",this.isStartAnimationLowHealth());
-        compound.putBoolean("isFase2",this.isFase2());
+        compound.putBoolean("isFase2",this.isPhase2());
         }
 
     public void setAttacking(boolean attacking){
