@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.WildRavagerRenderer;
+import net.BKTeam.illagerrevolutionmod.entity.layers.BumModel;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
@@ -39,6 +40,7 @@ public class ModEventBusEvents {
     public static ModelLayerLocation RAVAGER = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ravager"), "ravager");
     public static ModelLayerLocation RAVAGER_SADDLE = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ravager_saddle"), "ravager_saddle");
     public static ModelLayerLocation WAR_PAINT = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "war_paint"), "war_paint");
+    public static ModelLayerLocation BUUM = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "buum"), "buum");
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     @OnlyIn(Dist.CLIENT)
@@ -95,6 +97,7 @@ public class ModEventBusEvents {
         event.registerLayerDefinition(RAVAGER, WildRavagerModel::createBodyLayer);
         event.registerLayerDefinition(WAR_PAINT, WildRavagerModel::createBodyLayer);
         event.registerLayerDefinition(RAVAGER_SADDLE, WildRavagerModel::createBodyLayer);
+        event.registerLayerDefinition(BUUM, BumModel::createBodyLayer);
 
     }
 

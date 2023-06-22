@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "illagerrevolutionmod:block/drum_speed" },
+    "facing=east": { "model": "illagerrevolutionmod:block/drum_speed", "y": 90 },
+    "facing=south": { "model": "illagerrevolutionmod:block/drum_speed", "y": 180 },
+    "facing=west": { "model": "illagerrevolutionmod:block/drum_speed", "y": 270 }
+  }
+}

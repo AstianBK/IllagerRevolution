@@ -28,11 +28,6 @@ public class SoulEntity extends ThrowableItemProjectile {
     int life;
     String soul;
 
-    private boolean canUp;
-    private double PosYMax;
-
-    private double PosYMin;
-
 
     public SoulEntity(EntityType<? extends SoulEntity> type, Level world) {
         super(type,world);
@@ -44,9 +39,6 @@ public class SoulEntity extends ThrowableItemProjectile {
         super(ModEntityTypes.SOUL_ENTITY.get(),thrower,level);
         this.setOwner(owner);
         this.setNoGravity(true);
-        this.PosYMax=ori+0.2d;
-        this.PosYMin=ori-0.2d;
-        this.canUp=false;
         this.soul=soul;
         this.life=0;
 
@@ -63,11 +55,6 @@ public class SoulEntity extends ThrowableItemProjectile {
 
     public String getSoul() {
         return this.soul;
-    }
-
-    public void setRangeMoveY(double posYMax,double posYMin) {
-        this.PosYMin=posYMin;
-        this.PosYMax=posYMax;
     }
     public boolean checkOwnerAlive(LivingEntity owner){
         if(owner!=null){
@@ -97,15 +84,12 @@ public class SoulEntity extends ThrowableItemProjectile {
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putString("soul",this.soul);
-        pCompound.putDouble("posYmax",this.PosYMax);
-        pCompound.putDouble("posYmin",this.PosYMin);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         setSoul(pCompound.getString("soul"));
-        setRangeMoveY(pCompound.getDouble("posYmax"),pCompound.getDouble("posYmin"));
     }
 
 
@@ -117,7 +101,7 @@ public class SoulEntity extends ThrowableItemProjectile {
             }
         }
         if(!this.level.isClientSide){
-            float cc= Mth.cos(this.tickCount/7.0f)*0.1f;
+            float cc= Mth.cos(this.tickCount/10.0f)*0.05f;
             this.yo=this.yo+cc;
             BlockPos blockPos=this.getOnPos();
             BlockState state=this.getBlockStateOn();
@@ -130,7 +114,7 @@ public class SoulEntity extends ThrowableItemProjectile {
             discard();
         }
         if(this.getOwner() instanceof Player){
-            if(this.life>1200){
+            if(this.life>600){
                 discard();
             }else {
                 this.life++;

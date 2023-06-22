@@ -79,8 +79,10 @@ public class SummonedSoul extends ThrowableItemProjectile {
         Vec3 deltaMovement = this.getDeltaMovement();
         super.tick();
         this.setDeltaMovement(deltaMovement);
-        SimpleParticleType particleType = ParticleTypes.LARGE_SMOKE;
-        this.level.addParticle(particleType, this.getX(), this.getY(), this.getZ(), 0.0, 0.0, 0.0);
+        if(this.level.isClientSide){
+            SimpleParticleType particleType = ParticleTypes.LARGE_SMOKE;
+            this.level.addParticle(particleType, this.getX(), this.getY(), this.getZ(), 0.0, 0.0, 0.0);
+        }
         if (!this.level.isClientSide()) {
             HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
             if (result.getType() == HitResult.Type.MISS && this.isAlive()) {

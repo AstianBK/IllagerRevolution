@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
+import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
@@ -68,6 +69,9 @@ public class WildRavagerEntity extends MountEntity{
         return p_33346_.isAlive() && !(p_33346_ instanceof WildRavagerEntity);
     };
     private static final EntityDataAccessor<Boolean> SADDLED =
+            SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Boolean> HAS_DRUM =
             SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final UUID WILD_RAVAGER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
@@ -168,10 +172,12 @@ public class WildRavagerEntity extends MountEntity{
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SADDLED,false);
+        this.entityData.define(HAS_DRUM,false);
     }
 
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("hasDrum", this.hasDrum());
         pCompound.putInt("AttackTick", this.attackTick);
         pCompound.putInt("StunTick", this.stunnedTick);
         pCompound.putInt("RoarTick", this.roarTick);
@@ -183,11 +189,23 @@ public class WildRavagerEntity extends MountEntity{
         }
     }
 
+    public boolean hasDrum() {
+        return this.entityData.get(HAS_DRUM);
+    }
+
+    public void setHasDrum(boolean pBoolean){
+        this.entityData.set(HAS_DRUM,pBoolean);
+    }
+
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        this.setHasDrum(pCompound.getBoolean("hasDrum"));
         this.attackTick = pCompound.getInt("AttackTick");
         this.stunnedTick = pCompound.getInt("StunTick");
         this.roarTick = pCompound.getInt("RoarTick");
+        if(this.hasDrum()){
+            this.inventory.setItem(1,new ItemStack(ModBlocks.DRUM_SPEED.get().asItem()));
+        }
         CompoundTag compoundNBT = pCompound.getCompound("ChestRavagerArmor");
         if(!compoundNBT.isEmpty()) {
             if(this.isArmor(ItemStack.of(pCompound.getCompound("ChestRavagerArmor")))){
@@ -312,6 +330,14 @@ public class WildRavagerEntity extends MountEntity{
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
             }
+            if(stack.is(ModBlocks.DRUM_SPEED.get().asItem())){
+                this.setHasDrum(true);
+                this.inventory.setItem(1,stack.copy());
+                if(!pPlayer.getAbilities().instabuild){
+                    stack.shrink(1);
+                }
+                return InteractionResult.CONSUME;
+            }
             if(stack.is(Items.SADDLE) || this.isArmor(stack)){
                 if(!this.level.isClientSide){
                     if(stack.getItem() instanceof BeastArmorItem){
@@ -422,13 +448,14 @@ public class WildRavagerEntity extends MountEntity{
     }
     @Override
     protected int getInventorySize() {
-        return 1;
+        return 2;
     }
 
     @Override
     protected void updateContainerEquipment() {
         if (!this.level.isClientSide) {
             ItemStack stack = this.getContainer().getItem(0);
+            ItemStack stack1 = this.getContainer().getItem(1);
             boolean flag = !stack.isEmpty();
             this.getAttribute(Attributes.ARMOR).removeModifier(WILD_RAVAGER_ARMOR_UUID);
             if(flag && stack.getItem() instanceof BeastArmorItem){
@@ -437,6 +464,7 @@ public class WildRavagerEntity extends MountEntity{
                     this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(WILD_RAVAGER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
                 }
             }
+            this.setHasDrum(!stack1.isEmpty());
             this.setIsSaddled(flag);
         }
         super.updateContainerEquipment();

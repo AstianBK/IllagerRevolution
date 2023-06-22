@@ -34,7 +34,6 @@ import java.util.UUID;
 
 
 public class SoulProjectile extends ThrowableItemProjectile {
-
     int life;
     @Nullable
     private Entity finalTarget;

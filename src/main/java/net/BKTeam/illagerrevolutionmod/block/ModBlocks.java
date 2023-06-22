@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.block;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.block.custom.RuneTableBlock;
 import net.BKTeam.illagerrevolutionmod.item.ModCreativeModeTab;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -28,6 +29,10 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> RUNE_TABLE_BLOCK = registerBlock("rune_table_block",
             () -> new RuneTableBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion()),
+            ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+
+    public static final RegistryObject<Block> DRUM_SPEED = registerBlock("drum_speed",
+            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion(), DrumBlock.Drum.SPEED_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
 

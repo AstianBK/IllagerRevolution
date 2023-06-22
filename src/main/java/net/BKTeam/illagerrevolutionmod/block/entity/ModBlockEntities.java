@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.block.entity;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
+import net.BKTeam.illagerrevolutionmod.block.entity.custom.DrumBlockEntity;
 import net.BKTeam.illagerrevolutionmod.block.entity.custom.RuneTableEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -17,6 +18,11 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("rune_table_entity", () ->
                     BlockEntityType.Builder.of(RuneTableEntity::new,
                             ModBlocks.RUNE_TABLE_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<DrumBlockEntity>> DRUM_ENTITY_SPEED =
+            BLOCK_ENTITIES.register("drum_entity", () ->
+                    BlockEntityType.Builder.of(DrumBlockEntity::new,
+                            ModBlocks.DRUM_SPEED.get()).build(null));
 
     public static void register(IEventBus eventBus) {
     BLOCK_ENTITIES.register(eventBus);

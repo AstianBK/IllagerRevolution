@@ -8,13 +8,13 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerArmorLayer;
+import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerBuumLayer;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -34,6 +34,7 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
         super(p_174362_, new WildRavagerModel(p_174362_.bakeLayer(ModEventBusEvents.RAVAGER)), 1.1F);
         this.addLayer(new WarPaintLayer<>(this));
         this.addLayer(new WildRavagerArmorLayer<>(this));
+        this.addLayer(new WildRavagerBuumLayer<>(this));
     }
 
     @Override
