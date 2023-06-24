@@ -65,6 +65,9 @@ public class PacketHandler {
         channel.registerMessage(index++, PacketSyncAttackMauler2.class, PacketSyncAttackMauler2::encode,
                 PacketSyncAttackMauler2::new, PacketSyncAttackMauler2::handle);
 
+        channel.registerMessage(index++, PacketSyncEspecialAttack.class, PacketSyncEspecialAttack::encode,
+                PacketSyncEspecialAttack::new, PacketSyncEspecialAttack::handle);
+
         channel.registerMessage(index++, ClientMaulerScreenOpenPacket.class, ClientMaulerScreenOpenPacket::write,
                 ClientMaulerScreenOpenPacket::read, ClientMaulerScreenOpenPacket::handle);
 

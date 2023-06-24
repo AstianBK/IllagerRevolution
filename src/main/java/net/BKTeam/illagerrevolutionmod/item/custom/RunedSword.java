@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
@@ -22,5 +23,10 @@ public class RunedSword extends SwordItem {
             this.souls = (int) ((Player)pEntity).getAttribute(SoulTick.SOUL).getValue();
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+    }
+
+    @Override
+    public Rarity getRarity(ItemStack pStack) {
+        return Rarity.UNCOMMON;
     }
 }

@@ -354,7 +354,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
-                    this.updateContainerEquipment();
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -532,7 +531,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed(!this.hasCatched() ?(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)-0.1f:(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)-0.25f);
+                    this.setSpeed(!this.hasCatched() ?(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2:(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/3);
                     super.travel(new Vec3((double) f, pTravelVector.y, (double) f1));
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);

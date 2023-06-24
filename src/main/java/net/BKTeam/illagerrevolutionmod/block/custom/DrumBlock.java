@@ -1,11 +1,9 @@
 package net.BKTeam.illagerrevolutionmod.block.custom;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
-import net.BKTeam.illagerrevolutionmod.block.entity.custom.DrumBlockEntity;
-import net.BKTeam.illagerrevolutionmod.block.entity.custom.RuneTableEntity;
+import net.BKTeam.illagerrevolutionmod.block.entity.custom.DrumBlockSpeedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -17,7 +15,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -26,7 +23,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class DrumBlock extends BaseEntityBlock {
@@ -98,12 +94,12 @@ public class DrumBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new DrumBlockEntity(pPos,pState);
+        return new DrumBlockSpeedEntity(pPos,pState);
     }
 
     public enum Drum{
         DAMAGE_DRUM("damage",new MobEffectInstance(MobEffects.DAMAGE_BOOST,500,0,false,false)),
-        HEAL_DRUM("heal",new MobEffectInstance(MobEffects.HEAL,0,0,false,false)),
+        HEAL_DRUM("heal",new MobEffectInstance(MobEffects.REGENERATION,100,0,false,false)),
         SPEED_DRUM("speed",new MobEffectInstance(MobEffects.MOVEMENT_SPEED,500,0,false,false));
 
         final String name;

@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -21,6 +22,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.xml.stream.events.Attribute;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -40,13 +42,19 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
     private static final EntityDataAccessor<Boolean> ON_COMBAT =
             SynchedEntityData.defineId(IllagerBeastEntity.class, EntityDataSerializers.BOOLEAN);
 
+    private static final EntityDataAccessor<Boolean> EXCITED =
+            SynchedEntityData.defineId(IllagerBeastEntity.class, EntityDataSerializers.BOOLEAN);
+
     private int combatTimer;
 
     protected SimpleContainer inventory;
 
+    private int excitedTimer;
+
     IllagerBeastEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
         this.combatTimer=0;
+        this.excitedTimer=0;
         this.createInventory();
     }
 
@@ -79,16 +87,22 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
         this.entityData.define(SITTING, false);
         this.entityData.define(DATA_PAINT_COLOR, -1);
         this.entityData.define(PAINTED, false);
+        this.entityData.define(EXCITED,false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putBoolean("isExcited",this.isExcited());
         compound.putBoolean("onCombat",this.onCombat());
         compound.putBoolean("isSitting", this.isSitting());
         compound.putBoolean("isPainted", this.isPainted());
         compound.putInt("color", this.getColor().getId());
         compound.putInt("Variant", this.getTypeIdVariant());
+    }
+
+    public boolean isExcited() {
+        return this.entityData.get(EXCITED);
     }
 
     public DyeColor getColor() {
@@ -110,12 +124,23 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        this.setIsExcited(compound.getBoolean("isExcited"));
         this.setOnCombat(compound.getBoolean("onCombat"));
         this.setSitting(compound.getBoolean("isSitting"));
         this.setPainted(compound.getBoolean("isPainted"));
         this.setIdVariant(compound.getInt("Variant"));
         if (compound.contains("color", 99)) {
             this.setColor(DyeColor.byId(compound.getInt("color")));
+        }
+    }
+
+    public void setIsExcited(boolean isExcited) {
+        this.entityData.set(EXCITED,isExcited);
+        if(isExcited){
+            this.excitedTimer=500;
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getValue()+0.10d);
+        }else {
+            this.excitedTimer=0;
         }
     }
 
@@ -163,6 +188,12 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
                     }
                 }
             }
+        }
+        if(this.isExcited()){
+            this.excitedTimer--;
+        }
+        if(this.excitedTimer<0){
+            this.setIsExcited(false);
         }
     }
     protected void createInventory() {

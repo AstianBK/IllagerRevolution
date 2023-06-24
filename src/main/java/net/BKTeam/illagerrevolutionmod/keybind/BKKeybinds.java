@@ -15,8 +15,6 @@ public class BKKeybinds {
     public static KeyMapping attackKey2;
     public static KeyMapping attackKey3;
 
-    public static KeyMapping openInventoryKey;
-
 
     @SubscribeEvent
     public static void register(final RegisterKeyMappingsEvent event) {

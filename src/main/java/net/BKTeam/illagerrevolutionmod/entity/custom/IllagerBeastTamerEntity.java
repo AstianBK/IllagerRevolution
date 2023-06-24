@@ -223,7 +223,6 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                     IllagerBeastTamerEntity.this.startRiding(mauler);
                 }
             }else {
-
                 List<AbstractIllager> illagerList = IllagerBeastTamerEntity.this.level.getEntitiesOfClass(AbstractIllager.class,IllagerBeastTamerEntity.this.getBoundingBox().inflate(40.0D));
                 int cc=0;
                 for(AbstractIllager illager : illagerList){

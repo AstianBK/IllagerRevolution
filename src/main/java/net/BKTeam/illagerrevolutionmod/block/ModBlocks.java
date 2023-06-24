@@ -35,6 +35,14 @@ public class ModBlocks {
             () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion(), DrumBlock.Drum.SPEED_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
+    public static final RegistryObject<Block> DRUM_DAMAGE = registerBlock("drum_damage",
+            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion(), DrumBlock.Drum.DAMAGE_DRUM),
+            ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+
+    public static final RegistryObject<Block> DRUM_HEAL = registerBlock("drum_heal",
+            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion(), DrumBlock.Drum.HEAL_DRUM),
+            ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab){

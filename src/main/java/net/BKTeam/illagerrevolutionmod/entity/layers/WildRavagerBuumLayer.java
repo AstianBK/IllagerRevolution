@@ -42,16 +42,12 @@ public class WildRavagerBuumLayer<T extends WildRavagerEntity,M extends EntityMo
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(0.6f,0.6f,0.6f);
                 matrixStackIn.translate(leftShoulderIn ? -1.5f : 1.0f , entitylivingbaseIn.isSitting() ? 1.0F : 0.0F, entitylivingbaseIn.isSitting() ? 0.7D : 0.3D);
-                VertexConsumer ivertexbuilder = bufferIn.getBuffer(model.renderType(this.getTexture(drumBlock.getDrum())));
+                VertexConsumer ivertexbuilder = bufferIn.getBuffer(model.renderType(drumBlock.getLocation()));
                 model.renderOnShoulder(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, limbSwing, limbSwingAmount, netHeadYaw, headPitch, entitylivingbaseIn.tickCount);
                 matrixStackIn.popPose();
             }
 
         }
-    }
-
-    private ResourceLocation getTexture(DrumBlock.Drum drum){
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/entity/wild_ravager/drum/drum_"+drum.getName()+".png");
     }
 }
 

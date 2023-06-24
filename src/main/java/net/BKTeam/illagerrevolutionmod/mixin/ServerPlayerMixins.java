@@ -13,6 +13,7 @@ import net.BKTeam.illagerrevolutionmod.network.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.inventory.ContainerListener;
@@ -32,7 +33,7 @@ public abstract class ServerPlayerMixins extends Player implements IOpenBeatsCon
     private ContainerListener containerListener;
 
     @Shadow
-    private int containerCounter;
+    public int containerCounter;
 
     private final List<FallenKnightEntity> entitiesLinked=new ArrayList<>();
 
@@ -48,24 +49,31 @@ public abstract class ServerPlayerMixins extends Player implements IOpenBeatsCon
         if (this.containerMenu != this.inventoryMenu) {
             this.closeContainer();
         }
-        this.nextContainerCounter();
-        ClientRakerScreenOpenPacket message = new ClientRakerScreenOpenPacket(this.containerCounter, p_9059_.getId());
-        PacketHandler.MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> p_9059_), message);
-        this.containerMenu = new RakerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
-        this.containerMenu.addSlotListener(this.containerListener);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        if(p_9059_.getOwner()!=null){
+            ServerPlayer serverPlayer = (ServerPlayer) p_9059_.getOwner();
+            this.nextContainerCounter();
+            ClientRakerScreenOpenPacket message = new ClientRakerScreenOpenPacket(this.containerCounter, p_9059_.getId());
+            PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
+            this.containerMenu = new RakerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
+            this.containerMenu.addSlotListener(this.containerListener);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        }
+
     }
     @Override
     public void openMaulerInventory(MaulerEntity p_9059_, Container p_9060_) {
         if (this.containerMenu != this.inventoryMenu) {
             this.closeContainer();
         }
-        this.nextContainerCounter();
-        ClientMaulerScreenOpenPacket message = new ClientMaulerScreenOpenPacket(this.containerCounter, p_9059_.getId());
-        PacketHandler.MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> p_9059_), message);
-        this.containerMenu = new MaulerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
-        this.containerMenu.addSlotListener(this.containerListener);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        if(p_9059_.getOwner()!=null){
+            ServerPlayer serverPlayer = (ServerPlayer) p_9059_.getOwner();
+            this.nextContainerCounter();
+            ClientMaulerScreenOpenPacket message = new ClientMaulerScreenOpenPacket(this.containerCounter, p_9059_.getId());
+            PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
+            this.containerMenu = new MaulerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
+            this.containerMenu.addSlotListener(this.containerListener);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        }
     }
 
     @Override
@@ -73,12 +81,17 @@ public abstract class ServerPlayerMixins extends Player implements IOpenBeatsCon
         if (this.containerMenu != this.inventoryMenu) {
             this.closeContainer();
         }
-        this.nextContainerCounter();
-        ClientRavagerScreenOpenPacket message = new ClientRavagerScreenOpenPacket(this.containerCounter, p_9059_.getId());
-        PacketHandler.MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> p_9059_), message);
-        this.containerMenu = new WildRavagerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
-        this.containerMenu.addSlotListener(this.containerListener);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        if(p_9059_.getOwner()!=null){
+            this.nextContainerCounter();
+            ServerPlayer serverPlayer= (ServerPlayer) p_9059_.getOwner();
+            ClientRavagerScreenOpenPacket message = new ClientRavagerScreenOpenPacket(this.containerCounter, p_9059_.getId());
+            PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
+            this.containerMenu = new WildRavagerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
+            this.containerMenu.addSlotListener(this.containerListener);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        }
+
+
 
     }
 
@@ -87,19 +100,25 @@ public abstract class ServerPlayerMixins extends Player implements IOpenBeatsCon
         if (this.containerMenu != this.inventoryMenu) {
             this.closeContainer();
         }
-        this.nextContainerCounter();
-        ClientScroungerScreenOpenPacket message = new ClientScroungerScreenOpenPacket(this.containerCounter, p_9059_.getId());
-        PacketHandler.MOD_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> p_9059_), message);
-        this.containerMenu = new ScroungerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
-        this.containerMenu.addSlotListener(this.containerListener);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        if(p_9059_.getOwner()!=null){
+            this.nextContainerCounter();
+            ServerPlayer serverPlayer= (ServerPlayer) p_9059_.getOwner();
+            ClientScroungerScreenOpenPacket message = new ClientScroungerScreenOpenPacket(this.containerCounter, p_9059_.getId());
+            PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
+            this.containerMenu = new ScroungerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
+            this.containerMenu.addSlotListener(this.containerListener);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
+        }
 
     }
 
     @Shadow
-    private void nextContainerCounter() {
+    public void nextContainerCounter() {
 
     }
+
+    @Shadow public abstract boolean startRiding(Entity pEntity, boolean pForce);
+
     @Override
     public List<FallenKnightEntity> getBondedMinions(){
         return this.entitiesLinked;

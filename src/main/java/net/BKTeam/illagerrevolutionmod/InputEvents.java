@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.keybind.BKKeybinds;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSyncAttackMauler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSyncAttackMauler2;
+import net.BKTeam.illagerrevolutionmod.network.PacketSyncEspecialAttack;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,6 +32,9 @@ public class InputEvents {
         }
         if(mc.screen == null && BKKeybinds.attackKey2.consumeClick()) {
             PacketHandler.sendToServer(new PacketSyncAttackMauler2(key));
+        }
+        if(mc.screen == null && BKKeybinds.attackKey3.consumeClick()) {
+            PacketHandler.sendToServer(new PacketSyncEspecialAttack(key));
         }
     }
 }

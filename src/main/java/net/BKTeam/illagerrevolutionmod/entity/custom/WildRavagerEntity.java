@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
+import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
@@ -35,6 +36,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -80,10 +82,16 @@ public class WildRavagerEntity extends MountEntity{
     private int stunnedTick;
     private int roarTick;
 
+    private int drumTick;
+
+    private int reAcvivateEffectTick;
+
     public WildRavagerEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
         this.maxUpStep = 1.0F;
         this.xpReward = 20;
+        this.drumTick = 0;
+        this.reAcvivateEffectTick = 0;
     }
 
     protected void registerGoals() {
@@ -181,7 +189,14 @@ public class WildRavagerEntity extends MountEntity{
         pCompound.putInt("AttackTick", this.attackTick);
         pCompound.putInt("StunTick", this.stunnedTick);
         pCompound.putInt("RoarTick", this.roarTick);
-        ItemStack itemStackHead = this.getContainer().getItem(0);
+        ItemStack itemStackHead = this.inventory.getItem(0);
+
+        if(this.hasDrum()){
+            ItemStack drumItem= this.inventory.getItem(1);
+            CompoundTag nbt=new CompoundTag();
+            drumItem.save(nbt);
+            pCompound.put("drumItem",nbt);
+        }
         if(!itemStackHead.isEmpty()){
             CompoundTag headCompoundNBT = new CompoundTag();
             itemStackHead.save(headCompoundNBT);
@@ -204,7 +219,11 @@ public class WildRavagerEntity extends MountEntity{
         this.stunnedTick = pCompound.getInt("StunTick");
         this.roarTick = pCompound.getInt("RoarTick");
         if(this.hasDrum()){
-            this.inventory.setItem(1,new ItemStack(ModBlocks.DRUM_SPEED.get().asItem()));
+            CompoundTag compoundTag = pCompound.getCompound("drumItem");
+            if(!compoundTag.isEmpty()){
+                ItemStack stack= ItemStack.of(compoundTag);
+                this.setItemSlot(EquipmentSlot.LEGS,stack);
+            }
         }
         CompoundTag compoundNBT = pCompound.getCompound("ChestRavagerArmor");
         if(!compoundNBT.isEmpty()) {
@@ -330,7 +349,7 @@ public class WildRavagerEntity extends MountEntity{
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
             }
-            if(stack.is(ModBlocks.DRUM_SPEED.get().asItem())){
+            if(Block.byItem(stack.getItem()) instanceof DrumBlock){
                 this.setHasDrum(true);
                 this.inventory.setItem(1,stack.copy());
                 if(!pPlayer.getAbilities().instabuild){
@@ -355,6 +374,7 @@ public class WildRavagerEntity extends MountEntity{
             }else if(stack.is(ModItems.BEAST_STAFF.get())){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
+                    this.gameEvent(GameEvent.ENTITY_INTERACT,pPlayer);
                     return InteractionResult.sidedSuccess(this.level.isClientSide);
                 }
             }else if(stack.is(Items.HAY_BLOCK)){
@@ -401,6 +421,49 @@ public class WildRavagerEntity extends MountEntity{
             this.doPlayerRide(pPlayer);
         }
         return super.mobInteract(pPlayer, pHand);
+    }
+
+    @Override
+    public void stopRiding() {
+        if(this.drumTick>0){
+            this.gameEvent(GameEvent.JUKEBOX_STOP_PLAY,this);
+            this.drumTick=0;
+            this.reAcvivateEffectTick=0;
+        }
+        super.stopRiding();
+    }
+
+    @Override
+    public void attackV(Player player) {
+        if(!this.level.isClientSide){
+            if(this.hasDrum()){
+                if(this.drumTick<=0){
+                    this.activeEffectAura();
+                    this.level.playSound(null,this,SoundEvents.MUSIC_DISC_CAT,SoundSource.AMBIENT,2.0f,1.0f);
+                    this.level.broadcastEntityEvent(this,(byte) 64);
+                    this.drumTick=1000;
+                    this.reAcvivateEffectTick=200;
+                }
+            }
+        }
+        super.attackV(player);
+    }
+
+    public void activeEffectAura() {
+        List<IllagerBeastEntity> beasts = this.level.getEntitiesOfClass(IllagerBeastEntity.class,this.getBoundingBox().inflate(15.0d),e -> e.getOwner()==this.getOwner());
+        MobEffectInstance effect=this.getDrumEffect().getEffect();
+        for (IllagerBeastEntity beast : beasts){
+            beast.setIsExcited(true);
+        }
+        if(this.getOwner()!=null){
+            for(Player player : this.level.getEntitiesOfClass(Player.class,this.getBoundingBox().inflate(15.0D),e -> e == this.getOwner() || this.getOwner().isAlliedTo(e))){
+                player.addEffect(new MobEffectInstance(effect.getEffect(),effect.getDuration(),effect.getAmplifier(),effect.isAmbient(),effect.isVisible()));
+            }
+        }
+    }
+
+    public DrumBlock.Drum getDrumEffect(){
+        return this.hasDrum() ? ((DrumBlock)Block.byItem(this.inventory.getItem(1).getItem())).getDrum() : null;
     }
 
     @Override
@@ -491,6 +554,16 @@ public class WildRavagerEntity extends MountEntity{
 
     public void aiStep() {
         super.aiStep();
+        if(this.hasDrum()){
+            if(this.drumTick>0){
+                this.drumTick--;
+                this.reAcvivateEffectTick--;
+                if(this.reAcvivateEffectTick<0){
+                    this.activeEffectAura();
+                    this.reAcvivateEffectTick=200;
+                }
+            }
+        }
         if (this.isAlive()) {
             if (this.isImmobile()) {
                 this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
@@ -536,7 +609,6 @@ public class WildRavagerEntity extends MountEntity{
                     this.roarTick = 20;
                 }
             }
-
         }
     }
 
@@ -626,6 +698,8 @@ public class WildRavagerEntity extends MountEntity{
             this.stunnedTick = 40;
         } else if (pId == 63) {
             this.roarTick = 20;
+        }else if (pId == 64){
+            this.level.playSound((Player) null,this,SoundEvents.MUSIC_DISC_CAT,SoundSource.AMBIENT,2.0f,1.0f);
         }
         super.handleEntityEvent(pId);
     }
