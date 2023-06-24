@@ -439,7 +439,7 @@ public class WildRavagerEntity extends MountEntity{
             if(this.hasDrum()){
                 if(this.drumTick<=0){
                     this.activeEffectAura();
-                    this.level.playSound(null,this,SoundEvents.MUSIC_DISC_CAT,SoundSource.AMBIENT,2.0f,1.0f);
+                    this.level.playSound(null,this,SoundEvents.ENDER_DRAGON_GROWL,SoundSource.HOSTILE,1.0f,-1.0f);
                     this.level.broadcastEntityEvent(this,(byte) 64);
                     this.drumTick=1000;
                     this.reAcvivateEffectTick=200;
@@ -699,7 +699,7 @@ public class WildRavagerEntity extends MountEntity{
         } else if (pId == 63) {
             this.roarTick = 20;
         }else if (pId == 64){
-            this.level.playSound((Player) null,this,SoundEvents.MUSIC_DISC_CAT,SoundSource.AMBIENT,2.0f,1.0f);
+            this.level.playSound((Player) null,this,SoundEvents.ENDER_DRAGON_GROWL,SoundSource.HOSTILE,1.0f,-1.0f);
         }
         super.handleEntityEvent(pId);
     }

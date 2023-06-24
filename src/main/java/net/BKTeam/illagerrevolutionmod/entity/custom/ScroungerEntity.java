@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -206,7 +208,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
             }
-            if(itemstack.is(ModItems.CHEST_LEATHER.get())){
+            if(itemstack.is(ModItems.SCROUNGER_POUCH.get())){
                 if(!this.level.isClientSide){
                     this.setHasChest(true);
                     this.playSound(SoundEvents.MULE_CHEST);
@@ -254,7 +256,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                 this.setHasChest(false);
                 this.dropPotions();
                 if(!player.getAbilities().instabuild){
-                    player.setItemInHand(pHand,new ItemStack(ModItems.CHEST_LEATHER.get()));
+                    player.setItemInHand(pHand,new ItemStack(ModItems.SCROUNGER_POUCH.get()));
                 }
                 return InteractionResult.CONSUME;
             }
@@ -296,7 +298,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     protected void dropEquipment() {
         if(this.hasChest()){
             this.dropPotions();
-            this.spawnAtLocation(new ItemStack(ModItems.CHEST_LEATHER.get()));
+            this.spawnAtLocation(new ItemStack(ModItems.SCROUNGER_POUCH.get()));
         }
         super.dropEquipment();
     }
@@ -957,5 +959,13 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         public static PotionIntent byId(int p_30987_) {
             return BY_ID[p_30987_ % BY_ID.length];
         }
+    }
+
+    protected SoundEvent getAmbientSound() {
+        return this.level.random.nextFloat() > 0.5f ? ModSounds.SCROUNGER_AMBIENT1.get() : ModSounds.SCROUNGER_AMBIENT2.get();
+    }
+
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
+        return ModSounds.SCROUNGER_HURT.get();
     }
 }

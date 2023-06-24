@@ -87,7 +87,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        pLevel.playSound(null,pPos,SoundEvents.MUSIC_DISC_CAT, SoundSource.BLOCKS,3.0f,1.0f);
+        pLevel.playSound(null,pPos,SoundEvents.ENDER_DRAGON_GROWL, SoundSource.BLOCKS,1.0f,-1.0f);
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 

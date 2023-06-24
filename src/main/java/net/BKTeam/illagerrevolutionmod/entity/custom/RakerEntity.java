@@ -1,6 +1,5 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
-import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
@@ -9,7 +8,6 @@ import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -33,7 +31,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -49,8 +46,6 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.UUID;
 
 public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
@@ -71,7 +66,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
 
     @Override
     protected void dropEquipment() {
-        ItemStack itemStack=new ItemStack(ModItems.SCRAPER_CLAW.get());
+        ItemStack itemStack=new ItemStack(ModItems.RAKER_CLAW.get());
         itemStack.setCount(this.level.getRandom().nextInt(1,5));
         this.spawnAtLocation(itemStack);
         if(this.hasArmor()){

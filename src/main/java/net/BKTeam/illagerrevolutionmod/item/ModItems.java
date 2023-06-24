@@ -64,7 +64,7 @@ public class ModItems {
     public static final RegistryObject<Item> ENCRUSTED_LAPIS = ITEMS.register("encrusted_lapis",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
-    public static final RegistryObject<Item> SCRAPER_CLAW = ITEMS.register("scraper_claw",()->
+    public static final RegistryObject<Item> RAKER_CLAW = ITEMS.register("raker_claw",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SCROUNGER_FEATHER = ITEMS.register("scrounger_feather",
@@ -169,10 +169,10 @@ public class ModItems {
             new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1550),20,ModArmorMaterials.ILLAGIUM,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_NETHERITE = ITEMS.register("wild_ravager_armor_netherite",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1000),30,ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(800),30,ArmorMaterials.NETHERITE,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_DIAMOND = ITEMS.register("wild_ravager_armor_diamond",()->
-            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(700),25,ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
+            new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(750),25,ArmorMaterials.DIAMOND,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
 
     public static final RegistryObject<Item> WILD_RAVAGER_ARMOR_GOLD = ITEMS.register("wild_ravager_armor_gold",()->
             new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(350),10,ArmorMaterials.GOLD,0.0d,0,EquipmentSlot.LEGS,Beast.WILD_RAVAGER));
@@ -211,7 +211,7 @@ public class ModItems {
             new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(500),10,ArmorMaterials.IRON,0.0d,0,EquipmentSlot.CHEST,Beast.RAKER));
 
 
-    public static final RegistryObject<Item> CHEST_LEATHER = ITEMS.register("chest_leather",()->
+    public static final RegistryObject<Item> SCROUNGER_POUCH = ITEMS.register("scrounger_pouch",()->
             new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(200),0,ArmorMaterials.LEATHER,0.0d,0,EquipmentSlot.CHEST,Beast.SCROUNGER));
 
     public static final RegistryObject<Item> CLAWS_ARMOR_ILLAGIUM = ITEMS.register("claws_armor_illagium",()->
@@ -241,7 +241,7 @@ public class ModItems {
     //
 
     public static final RegistryObject<Item> ILLAGIUM_CLEAVER = ITEMS.register("illagium_cleaver",
-            ()->new BleedingSwordItem(ModTiers.ILLAGIUM,6,-3.0F,props()));
+            ()->new BleedingSwordItem(ModTiers.ILLAGIUM,6,-2.5F,props()));
 
     public static final RegistryObject<Item> ILLAGIUM_HELBERD = ITEMS.register("illagium_helberd",
             ()->new AxeItem(ModTiers.ILLAGIUM,8,-3.1F,props()));
