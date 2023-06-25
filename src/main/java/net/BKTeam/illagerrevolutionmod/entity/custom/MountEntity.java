@@ -74,9 +74,13 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
             } else {
                 this.playerJumpPendingScale = 0.4F + 0.4F * (float)pJumpPower / 90.0F;
             }
-
         }
     }
+
+    public float getPlayerJumpPendingScale() {
+        return this.playerJumpPendingScale;
+    }
+
     private void stand() {
         if (this.isControlledByLocalInstance() || this.isEffectiveAi()) {
             this.standCounter = 1;
@@ -136,8 +140,14 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         }
     }
 
-    public void travel(Vec3 pTravelVector) {
-        super.travel(pTravelVector);
+    public void handledEventKey(byte pId){
+        if(pId==0){
+            this.attackC();
+        }else if(pId==1){
+            this.attackG();
+        }else if(pId==2){
+            this.attackV();
+        }
     }
 
     @javax.annotation.Nullable
@@ -248,15 +258,15 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         pCompound.putBoolean("isStanding",this.isStanding());
 
     }
-    public void attackC(Player player){
+    public void attackC(){
         this.setOnCombat(true);
     }
 
-    public void attackV(Player player){
+    public void attackV(){
         this.setOnCombat(true);
     }
 
-    public void attackG(Player player){
+    public void attackG(){
         this.setOnCombat(true);
     }
 

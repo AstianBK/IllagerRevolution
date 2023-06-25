@@ -9,19 +9,23 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 
-public class PacketSyncAttackMauler2 {
+public class PacketSyncMountAttacks {
     private final int key;
+    private final byte pId;
 
-    public PacketSyncAttackMauler2(FriendlyByteBuf buf) {
+    public PacketSyncMountAttacks(FriendlyByteBuf buf) {
         this.key = buf.readInt();
+        this.pId = buf.readByte();
     }
 
-    public PacketSyncAttackMauler2(int pKey){
-        this.key=pKey;
+    public PacketSyncMountAttacks(int pKey, byte pId){
+        this.key = pKey;
+        this.pId = pId;
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(key);
+        buf.writeByte(pId);
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
@@ -29,13 +33,13 @@ public class PacketSyncAttackMauler2 {
             Player player=context.get().getSender();
             assert player!=null;
             LivingEntity vehicle = (LivingEntity) player.getVehicle();
-            handlePlayActivateAnimation(player,vehicle);
+            handlePlayActivateAnimation(vehicle);
         });
         context.get().setPacketHandled(true);
     }
-    private void handlePlayActivateAnimation(Player player, LivingEntity vehicle) {
+    private void handlePlayActivateAnimation(LivingEntity vehicle) {
         if(vehicle instanceof MountEntity mount){
-            mount.attackG(player);
+            mount.handledEventKey(this.pId);
         }
     }
 }

@@ -2,9 +2,7 @@ package net.BKTeam.illagerrevolutionmod;
 
 import net.BKTeam.illagerrevolutionmod.keybind.BKKeybinds;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
-import net.BKTeam.illagerrevolutionmod.network.PacketSyncAttackMauler;
-import net.BKTeam.illagerrevolutionmod.network.PacketSyncAttackMauler2;
-import net.BKTeam.illagerrevolutionmod.network.PacketSyncEspecialAttack;
+import net.BKTeam.illagerrevolutionmod.network.PacketSyncMountAttacks;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -30,13 +28,13 @@ public class ForgeBusEvents {
 
     private static void onInput(Minecraft mc, int key, int action) {
         if (mc.screen == null && BKKeybinds.attackKey1.consumeClick()) {
-            PacketHandler.sendToServer(new PacketSyncAttackMauler(key));
+            PacketHandler.sendToServer(new PacketSyncMountAttacks(key,(byte) 0));
         }
         if(mc.screen == null && BKKeybinds.attackKey2.consumeClick()) {
-            PacketHandler.sendToServer(new PacketSyncAttackMauler2(key));
+            PacketHandler.sendToServer(new PacketSyncMountAttacks(key,(byte) 1));
         }
         if(mc.screen == null && BKKeybinds.attackKey3.consumeClick()) {
-            PacketHandler.sendToServer(new PacketSyncEspecialAttack(key));
+            PacketHandler.sendToServer(new PacketSyncMountAttacks(key,(byte) 2));
         }
     }
 }

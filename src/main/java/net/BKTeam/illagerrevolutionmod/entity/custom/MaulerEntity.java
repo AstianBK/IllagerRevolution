@@ -195,20 +195,20 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
-    public void attackC(Player player) {
+    public void attackC() {
         if(this.attackTimer<=0 && !this.isMauled()){
             if(this.getPassengers().size()<2){
                 boolean flag=false;
                 this.setAttacking(true);
                 this.level.broadcastEntityEvent(this, (byte) 8);
-                this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
+                this.level.playSound(null,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
                 float f1 = Mth.sin(f);
                 float f2 = Mth.cos(f);
                 float f3 = 0.5f;
                 BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY()+1.5d,this.getZ()+(f3*f2));
                 for(LivingEntity living : this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(2.5d))){
-                    if(living!=this && living!=player && !flag){
+                    if(living!=this && living!=this.getOwner() && !flag){
                         flag=true;
                         this.catchedTarget(living);
                         living.doHurtTarget(living);
@@ -219,14 +219,14 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }else {
                 this.setAttacking(true);
                 this.level.broadcastEntityEvent(this, (byte) 8);
-                this.level.playSound(player,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
+                this.level.playSound(null,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
                 if(this.getCatchedEntity()!=null){
                     this.getCatchedEntity().addEffect(new MobEffectInstance(InitEffect.MAULED.get(),100,0));
                     this.releaseTarget(this.getCatchedEntity());
                 }
             }
         }
-        super.attackC(player);
+        super.attackC();
     }
 
     @Override
@@ -235,12 +235,12 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
-    public void attackG(Player player) {
+    public void attackG() {
         if(this.mauledTimer<=0 && this.attackTimer<=0){
             this.setIsMauled(true);
             this.level.broadcastEntityEvent(this, (byte) 4);
         }
-        super.attackG(player);
+        super.attackG();
     }
 
     public LivingEntity getCatchedEntity(){
@@ -700,6 +700,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
     }
 
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return ModSounds.MAULER_HURT.get();
+    }
+
+    @javax.annotation.Nullable
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.WOLF_GROWL;
+    }
+
     static class MaulerAttackGoal extends MeleeAttackGoal {
         private final MaulerEntity goalOwner;
 
@@ -749,14 +758,5 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         public boolean canUse() {
             return this.mauler.getCatchedEntity()!=null && this.mauler.level.random.nextFloat() > 0.80F && !this.mauler.isMauled();
         }
-    }
-
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return ModSounds.MAULER_HURT.get();
-    }
-
-    @javax.annotation.Nullable
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.WOLF_GROWL;
     }
 }

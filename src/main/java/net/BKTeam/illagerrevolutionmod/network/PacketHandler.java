@@ -59,14 +59,8 @@ public class PacketHandler {
         channel.registerMessage(index++, PacketGlowEffect.class, PacketGlowEffect::encode,
                 PacketGlowEffect::new, PacketGlowEffect::handle);
 
-        channel.registerMessage(index++, PacketSyncAttackMauler.class, PacketSyncAttackMauler::encode,
-                PacketSyncAttackMauler::new, PacketSyncAttackMauler::handle);
-
-        channel.registerMessage(index++, PacketSyncAttackMauler2.class, PacketSyncAttackMauler2::encode,
-                PacketSyncAttackMauler2::new, PacketSyncAttackMauler2::handle);
-
-        channel.registerMessage(index++, PacketSyncEspecialAttack.class, PacketSyncEspecialAttack::encode,
-                PacketSyncEspecialAttack::new, PacketSyncEspecialAttack::handle);
+        channel.registerMessage(index++, PacketSyncMountAttacks.class, PacketSyncMountAttacks::encode,
+                PacketSyncMountAttacks::new, PacketSyncMountAttacks::handle);
 
         channel.registerMessage(index++, ClientMaulerScreenOpenPacket.class, ClientMaulerScreenOpenPacket::write,
                 ClientMaulerScreenOpenPacket::read, ClientMaulerScreenOpenPacket::handle);
@@ -79,6 +73,9 @@ public class PacketHandler {
 
         channel.registerMessage(index++, PacketSyncItemCapability.class, PacketSyncItemCapability::encode,
                 PacketSyncItemCapability::new, PacketSyncItemCapability::handle);
+
+        channel.registerMessage(index++, PacketStopSound.class,PacketStopSound::write,PacketStopSound::new,
+                PacketStopSound::handle);
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
