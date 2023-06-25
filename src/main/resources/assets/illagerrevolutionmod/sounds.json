@@ -20,6 +20,13 @@
     ]
   },
 
+  "mauler_hurt": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_hurt",
+    "sounds": [
+      "illagerrevolutionmod:mauler_hurt"
+    ]
+  },
+
   "mauler_bark": {
     "subtitle": "sounds.illagerrevolutionmod.mauler_bark",
     "sounds": [
@@ -87,6 +94,20 @@
     "subtitle": "sounds.illagerrevolutionmod.rune_table_use",
     "sounds": [
       "illagerrevolutionmod:rune_table_use"
+    ]
+  },
+
+  "drum_sound": {
+    "subtitle": "sounds.illagerrevolutionmod.drum_sound",
+    "sounds": [
+      "illagerrevolutionmod:drum_sound"
+    ]
+  },
+
+  "drum_sound_once": {
+    "subtitle": "sounds.illagerrevolutionmod.drum_sound_once",
+    "sounds": [
+      "illagerrevolutionmod:drum_sound_once"
     ]
   },
 

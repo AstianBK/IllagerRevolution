@@ -91,7 +91,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     private static final EntityDataAccessor<Boolean> LOW_LIFE =
             SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
 
-    private static final EntityDataAccessor<Boolean> FASE2 =
+    private static final EntityDataAccessor<Boolean> PHASE2 =
             SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
 
     public static AttributeSupplier setAttributes() {
@@ -108,7 +108,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     public BladeKnightEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
         super(entityType, level);
-        this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,99999,0));
+        this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,99999999,0,false,false));
+        this.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING,99999999,0,false,false));
         this.attackTimer=0;
         this.lowHealtTimer=40;
         this.attackShield=0;
@@ -142,7 +143,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0,new GoalLowhealth(this,60));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1,new GoalLowhealth(this,60));
         this.goalSelector.addGoal(1,new BKSummonUpUndeadSpellGoal());
         this.goalSelector.addGoal(1,new BKSummonHunterSpellGoal());
         this.goalSelector.addGoal(2, new BkAttackGoal(this,1.0,false));
@@ -152,7 +154,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(4, new RandomStrollGoal(this, 0.7));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(6, new FloatGoal(this));
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
     }
 
@@ -260,11 +261,11 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.entityData.set(STARTANIMATIONLOWHEALTH,startAnimationLowHealth);
     }
     public boolean isPhase2() {
-        return this.entityData.get(FASE2);
+        return this.entityData.get(PHASE2);
     }
 
-    public void setPhase2(boolean fase2) {
-        this.entityData.set(FASE2 ,fase2);
+    public void setPhase2(boolean phase2) {
+        this.entityData.set(PHASE2 ,phase2);
     }
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
@@ -506,7 +507,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.entityData.define(ATTACKINGSHIELD,false);
         this.entityData.define(LOW_LIFE,false);
         this.entityData.define(STARTANIMATIONLOWHEALTH,false);
-        this.entityData.define(FASE2,false);
+        this.entityData.define(PHASE2,false);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
@@ -515,7 +516,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.setAttackingshield(compound.getBoolean("isAttackingShield"));
         this.setLowLife(compound.getBoolean("isLowlife"));
         this.setStartAnimationLowHealth(compound.getBoolean("isLowHealth"));
-        this.setPhase2(compound.getBoolean("isFase2"));
+        this.setPhase2(compound.getBoolean("isphase2"));
 
     }
 
@@ -526,7 +527,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         compound.putBoolean("isAttackingShield",this.isAttackingShield());
         compound.putBoolean("isLowlife",this.isLowLife());
         compound.putBoolean("isLowHealth",this.isStartAnimationLowHealth());
-        compound.putBoolean("isFase2",this.isPhase2());
+        compound.putBoolean("isphase2",this.isPhase2());
         }
 
     public void setAttacking(boolean attacking){
@@ -544,6 +545,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(3.0D);
             this.getAttribute(Attributes.ARMOR).setBaseValue(10.0D);
             this.removeEffect(MobEffects.FIRE_RESISTANCE);
+            this.removeEffect(MobEffects.WATER_BREATHING);
         }
     }
     public boolean  isLowLife(){

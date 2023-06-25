@@ -1,15 +1,14 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
-import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -36,7 +35,6 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -439,7 +437,7 @@ public class WildRavagerEntity extends MountEntity{
             if(this.hasDrum()){
                 if(this.drumTick<=0){
                     this.activeEffectAura();
-                    this.level.playSound(null,this,SoundEvents.ENDER_DRAGON_GROWL,SoundSource.HOSTILE,1.0f,-1.0f);
+                    this.level.playSound(null,this, ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
                     this.level.broadcastEntityEvent(this,(byte) 64);
                     this.drumTick=1000;
                     this.reAcvivateEffectTick=200;
@@ -699,7 +697,7 @@ public class WildRavagerEntity extends MountEntity{
         } else if (pId == 63) {
             this.roarTick = 20;
         }else if (pId == 64){
-            this.level.playSound((Player) null,this,SoundEvents.ENDER_DRAGON_GROWL,SoundSource.HOSTILE,1.0f,-1.0f);
+            this.level.playSound((Player) null,this,ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
         }
         super.handleEntityEvent(pId);
     }

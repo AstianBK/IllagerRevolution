@@ -5,11 +5,13 @@ import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -747,5 +749,14 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         public boolean canUse() {
             return this.mauler.getCatchedEntity()!=null && this.mauler.level.random.nextFloat() > 0.80F && !this.mauler.isMauled();
         }
+    }
+
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return ModSounds.MAULER_HURT.get();
+    }
+
+    @javax.annotation.Nullable
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.WOLF_GROWL;
     }
 }

@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.block.custom;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.block.entity.custom.DrumBlockSpeedEntity;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -87,7 +88,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        pLevel.playSound(null,pPos,SoundEvents.ENDER_DRAGON_GROWL, SoundSource.BLOCKS,1.0f,-1.0f);
+        pLevel.playSound(null,pPos, ModSounds.DRUM_SOUND_ONCE.get(), SoundSource.BLOCKS,1.0f,-1.0f);
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
@@ -99,7 +100,7 @@ public class DrumBlock extends BaseEntityBlock {
 
     public enum Drum{
         DAMAGE_DRUM("damage",new MobEffectInstance(MobEffects.DAMAGE_BOOST,500,0,false,false)),
-        HEAL_DRUM("heal",new MobEffectInstance(MobEffects.REGENERATION,100,0,false,false)),
+        HEAL_DRUM("heal",new MobEffectInstance(MobEffects.REGENERATION,150,0,false,false)),
         SPEED_DRUM("speed",new MobEffectInstance(MobEffects.MOVEMENT_SPEED,500,0,false,false));
 
         final String name;
@@ -118,6 +119,8 @@ public class DrumBlock extends BaseEntityBlock {
             return this.effect;
         }
     }
+
+
 }
 
 

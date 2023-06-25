@@ -32,16 +32,18 @@ public class ModBlocks {
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
     public static final RegistryObject<Block> DRUM_SPEED = registerBlock("drum_speed",
-            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion(), DrumBlock.Drum.SPEED_DRUM),
+            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).noOcclusion(), DrumBlock.Drum.SPEED_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
     public static final RegistryObject<Block> DRUM_DAMAGE = registerBlock("drum_damage",
-            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion(), DrumBlock.Drum.DAMAGE_DRUM),
+            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).noOcclusion(), DrumBlock.Drum.DAMAGE_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
+
     public static final RegistryObject<Block> DRUM_HEAL = registerBlock("drum_heal",
-            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion(), DrumBlock.Drum.HEAL_DRUM),
+            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).noOcclusion(), DrumBlock.Drum.HEAL_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+
 
 
 

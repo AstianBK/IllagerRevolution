@@ -94,7 +94,7 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGERMINER,0x948e8d, 0x3b3635,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
-    public static final RegistryObject<Item> SCRAPPER_SPAWN_EGG = ITEMS.register("scrapper_spawn_egg",
+    public static final RegistryObject<Item> RAKER_SPAWN_EGG = ITEMS.register("raker_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntityTypes.RAKER,0x575554, 0xd1c299,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
@@ -106,6 +106,9 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntityTypes.MAULER,0x575554, 0xd1c299,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
+    public static final RegistryObject<Item> SCROUNGER_SPAWN_EGG = ITEMS.register("scrounger_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.SCROUNGER,0x575554, 0xd1c299,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
     public static final RegistryObject<Item> BLADE_KNIGHT_SPAWN_EGG = ITEMS.register("blade_knight_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntityTypes.BLADE_KNIGHT,0x5e7371, 0x3e6b5a,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
@@ -214,6 +217,7 @@ public class ModItems {
     public static final RegistryObject<Item> SCROUNGER_POUCH = ITEMS.register("scrounger_pouch",()->
             new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(200),0,ArmorMaterials.LEATHER,0.0d,0,EquipmentSlot.CHEST,Beast.SCROUNGER));
 
+
     public static final RegistryObject<Item> CLAWS_ARMOR_ILLAGIUM = ITEMS.register("claws_armor_illagium",()->
             new BeastArmorItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).durability(1500),0,ModArmorMaterials.ILLAGIUM,0.5d,30,EquipmentSlot.LEGS,Beast.RAKER));
 
@@ -241,7 +245,7 @@ public class ModItems {
     //
 
     public static final RegistryObject<Item> ILLAGIUM_CLEAVER = ITEMS.register("illagium_cleaver",
-            ()->new BleedingSwordItem(ModTiers.ILLAGIUM,6,-2.5F,props()));
+            ()->new BleedingSwordItem(ModTiers.ILLAGIUM,6,-2.6F,props()));
 
     public static final RegistryObject<Item> ILLAGIUM_HELBERD = ITEMS.register("illagium_helberd",
             ()->new AxeItem(ModTiers.ILLAGIUM,8,-3.1F,props()));

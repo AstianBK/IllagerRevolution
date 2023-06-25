@@ -1,6 +1,9 @@
 {
 
   "block.illagerrevolutionmod.rune_table_block": "Runic Table",
+  "block.illagerrevolutionmod.drum_heal": "Heal War Drum",
+  "block.illagerrevolutionmod.drum_damage": "Damage War Drum",
+  "block.illagerrevolutionmod.drum_speed": "Speed War Drum",
 
   "item.illagerrevolutionmod.rune_fragment_bone": "Rune Fragment",
   "item.illagerrevolutionmod.rune_fragment_flesh": "Rune Fragment",
@@ -12,7 +15,7 @@
   "item.illagerrevolutionmod.illagerminer_spawn_egg": "Illager Miner Spawn Egg",
   "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Illager Scavenger Spawn Egg",
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Illager Beast Tamer Spawn Egg",
-  "item.illagerrevolutionmod.scrapper_spawn_egg": "Raker Spawn Egg",
+  "item.illagerrevolutionmod.raker_spawn_egg": "Raker Spawn Egg",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Blade Knight Illager Spawn Egg",
   "item.illagerrevolutionmod.mauler_spawn_egg":"Mauler Spawn Egg",
   "item.illagerrevolutionmod.wild_ravager_spawn_egg":"Wild Ravager Spawn Egg",
@@ -47,6 +50,7 @@
   "item.illagerrevolutionmod.mauler_armor_diamond":"Diamond Mauler Armor",
   "item.illagerrevolutionmod.mauler_armor_gold":"Gold Mauler Armor",
   "item.illagerrevolutionmod.mauler_armor_iron":"Iron Mauler Armor",
+  "item.illagerrevolutionmod.scrounger_pouch":"Scrounger Pouch",
   "item.illagerrevolutionmod.claws_armor_illagium": "Illagium Raker Claws",
   "item.illagerrevolutionmod.claws_armor_netherite": "Netherite Raker Claws",
   "item.illagerrevolutionmod.claws_armor_diamond": "Diamond Raker Claws",

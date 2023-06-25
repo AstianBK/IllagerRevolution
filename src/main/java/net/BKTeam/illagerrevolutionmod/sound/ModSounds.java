@@ -15,6 +15,12 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> RUNE_TABLE_USE =
                 registerSoundEvent("rune_table_use");
 
+        public static final RegistryObject<SoundEvent> DRUM_SOUND =
+                registerSoundEvent("drum_sound");
+
+        public static final RegistryObject<SoundEvent> DRUM_SOUND_ONCE =
+                registerSoundEvent("drum_sound_once");
+
         public static final RegistryObject<SoundEvent> TAMER_WHISTLE =
                 registerSoundEvent("tamer_whistle");
 
@@ -23,6 +29,9 @@ public class ModSounds {
 
         public static final RegistryObject<SoundEvent> RAKER_MEOW =
             registerSoundEvent("raker_meow");
+
+        public static final RegistryObject<SoundEvent> MAULER_HURT =
+                registerSoundEvent("mauler_hurt");
 
         public static final RegistryObject<SoundEvent> MAULER_BARK =
                 registerSoundEvent("mauler_bark");
