@@ -248,7 +248,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        }
+    }
 
     @Override
     protected SoundEvent getCastingSoundEvent() {
