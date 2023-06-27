@@ -131,7 +131,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.SPIDER_EYE),false){
+        this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.FERMENTED_SPIDER_EYE),false){
             @Override
             public boolean canUse() {
                 return super.canUse() && ((ScroungerEntity)this.mob).isTame();
@@ -218,7 +218,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                 }
                 return InteractionResult.CONSUME;
             }
-            if(itemstack.is(Items.SPIDER_EYE)){
+            if(itemstack.is(Items.FERMENTED_SPIDER_EYE)){
                 if(this.canTame()){
                     if (this.level.isClientSide) {
                         return InteractionResult.CONSUME;
@@ -236,6 +236,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                                 this.level.broadcastEntityEvent(this, (byte)7);
                             }
                         }
+                        playSound(SoundEvents.PARROT_EAT, 1.0F, 1.5F);
                         return InteractionResult.SUCCESS;
                     }
                 }
