@@ -43,17 +43,11 @@ public class MaulerModel extends AnimatedGeoModel<MaulerEntity> {
     public void setCustomAnimations(MaulerEntity entity, int instanceId, AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, instanceId, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("bipedHead");
-        IBone jaw = this.getAnimationProcessor().getBone("Jaw");
-        int i=entity.attackTimer;
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         if (head != null && !entity.isSitting()) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
-        }
-        if(i>0){
-            float f7 = Mth.sin(((float)(10 - i) - customPredicate.getPartialTick()) / 20.0F * (float)Math.PI * 0.25F);
-            jaw.setRotationZ(((float)Math.PI / 2F) * f7);
         }
     }
 }

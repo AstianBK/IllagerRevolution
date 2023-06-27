@@ -130,6 +130,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     private  <E extends IAnimatable> PlayState predicateHead(AnimationEvent<E> event) {
         if (this.isMauled()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        }else if(this.isAttacking()) {
+            //event.getController().setAnimationSpeed(1.0d);
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else {
             event.getController().clearAnimationCache();
         }
@@ -137,11 +140,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     private  <E extends IAnimatable> PlayState predicateAttack(AnimationEvent<E> event) {
-        if(this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-        }else{
+        /*else{
             event.getController().clearAnimationCache();
-        }
+        }*/
         return PlayState.CONTINUE;
     }
     @Override
@@ -278,7 +279,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         ItemStack legs= this.getItemBySlot(EquipmentSlot.LEGS);
         this.updateContainerEquipment();
         ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
-        if(this.tickCount >20){
+        if(this.tickCount > 20){
             if ((this.isArmor(legs1) && legs!=legs1) || (!flag && flag!=this.isSaddled())){
                 this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
             }
@@ -456,8 +457,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         if (this.isAttacking()) {
             this.attackTimer--;
         }
-
-        if(this.attackTimer==0){
+        if(this.attackTimer<0){
             this.setAttacking(false);
         }
         if(this.catchedTimer>0){
@@ -670,10 +670,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<MaulerEntity>(this, "controller_attack",
-                0, this::predicateAttack));
         data.addAnimationController(new AnimationController<MaulerEntity>(this, "controller_mauled",
-                10, this::predicateHead));
+                0, this::predicateHead));
         data.addAnimationController(new AnimationController<MaulerEntity>(this, "controller_body",
                 10, this::predicate));
     }

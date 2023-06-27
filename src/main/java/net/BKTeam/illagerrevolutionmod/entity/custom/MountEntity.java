@@ -77,10 +77,6 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         }
     }
 
-    public float getPlayerJumpPendingScale() {
-        return this.playerJumpPendingScale;
-    }
-
     private void stand() {
         if (this.isControlledByLocalInstance() || this.isEffectiveAi()) {
             this.standCounter = 1;

@@ -126,6 +126,7 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(SUMMONED_SOUL.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(SOUL_ENTITY.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(ARROWBEAST.get(), ArrowBeastRender::new);
+        EntityRenderers.register(FEATHER_PROJECTILE.get(), FeatherRender::new);
         EntityRenderers.register(MAULER.get(), MaulerRenderer::new);
         EntityRenderers.register(SCROUNGER.get(), ScroungerRenderer::new);
 

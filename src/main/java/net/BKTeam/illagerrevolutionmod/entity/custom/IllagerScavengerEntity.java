@@ -5,7 +5,6 @@ import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -66,7 +65,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     private boolean useSand;
 
-    private int ScrapTimer;
+    private int scrapTimer;
 
     private int attackTimer;
 
@@ -88,7 +87,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     public IllagerScavengerEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
         super(entityType, level);
-        this.ScrapTimer =0;
+        this.scrapTimer =0;
         this.attackTimer=0;
         this.useSand =false;
     }
@@ -97,6 +96,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.FAKE_JUNK_AXE.get()));
         this.setIdVariant(this.level.random.nextInt(0,6));
+        this.setArmorTier(this.level.random.nextInt(0,2));
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
@@ -155,7 +155,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     @Override
     public boolean doHurtTarget(Entity pEntity) {
-        int cc=this.ScrapTimer;
+        int cc=this.scrapTimer;
         if(pEntity instanceof ServerPlayer && cc==0){
             if(this.getRandom().nextInt(2)==1){
                 boolean flag = false;
@@ -199,7 +199,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                 }
                 this.setUpgrading(true);
                 this.setAttackSand(true);
-                this.ScrapTimer=200;
+                this.scrapTimer =200;
             }
         }
         return super.doHurtTarget(pEntity);
@@ -337,11 +337,6 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
     }
 
     @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
     public void aiStep() {
         super.aiStep();
         if(this.isAttacking()){
@@ -369,10 +364,10 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
         }
 
         if(this.isUpgrading()){
-            this.ScrapTimer--;
+            this.scrapTimer--;
         }
 
-        if(this.ScrapTimer ==0 && this.isUpgrading()){
+        if(this.scrapTimer ==0 && this.isUpgrading()){
             this.setUpgrading(false);
         }
 

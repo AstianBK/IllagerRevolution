@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.gui;
 
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
+import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.world.Container;
@@ -12,6 +13,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SaddleItem;
+import net.minecraft.world.level.block.Block;
 
 public class WildRavagerInventoryMenu extends AbstractContainerMenu {
     private final Container maulerContainer;
@@ -36,7 +38,7 @@ public class WildRavagerInventoryMenu extends AbstractContainerMenu {
         });
         this.addSlot(new Slot(p_39658_, 1, 8, 54) {
             public boolean mayPlace(ItemStack p_39690_) {
-                return p_39690_.is(ModBlocks.DRUM_SPEED.get().asItem());
+                return Block.byItem(p_39690_.getItem()) instanceof DrumBlock;
             }
             public boolean isActive() {
                 return true;

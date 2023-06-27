@@ -138,8 +138,9 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
         this.entityData.set(EXCITED,isExcited);
         if(isExcited){
             this.excitedTimer=500;
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getValue()+0.10d);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getValue()+0.10D);
         }else {
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getValue()-0.10D);
             this.excitedTimer=0;
         }
     }

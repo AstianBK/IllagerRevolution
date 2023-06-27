@@ -58,7 +58,7 @@ public class ScroungerInventoryMenu extends AbstractContainerMenu {
     }
 
     public boolean canUsedPotion(int pSlot, ItemStack pStack){
-        return (pStack.is(Items.SPLASH_POTION) || pStack.is(Items.LINGERING_POTION) || pStack.is(Items.PODZOL)) && isBeneficalPotion(pSlot,pStack);
+        return (pStack.is(Items.POTION)) && isBeneficalPotion(pSlot,pStack);
     }
 
     public boolean isBeneficalPotion(int pSlot,ItemStack pStack){

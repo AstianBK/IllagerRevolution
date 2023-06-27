@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.FeatherProjectile;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
@@ -33,6 +34,7 @@ import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.*;
@@ -64,7 +66,6 @@ import java.util.function.Predicate;
 
 public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal, RangedAttackMob{
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
 
     private static final EntityDataAccessor<Boolean> DATA_ID_CHEST = SynchedEntityData.defineId(ScroungerEntity.class, EntityDataSerializers.BOOLEAN);
     public float flap;
@@ -102,14 +103,18 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     }
 
     private   <E extends IAnimatable> PlayState predicateMaster(AnimationEvent<E> event) {
-        if(event.isMoving() && !this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.fly", ILoopType.EDefaultLoopTypes.LOOP));
-        }else if(this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        if(this.isFlying()){
+            if(event.isMoving() && !this.isAttacking()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.fly", ILoopType.EDefaultLoopTypes.LOOP));
+            }else if(this.isAttacking()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.attack1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+            }else if(!this.isAttacking()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.idle2", ILoopType.EDefaultLoopTypes.LOOP));
+            }
         }else if(this.isSitting()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.sit", ILoopType.EDefaultLoopTypes.LOOP));
+        }else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.idle1", ILoopType.EDefaultLoopTypes.LOOP));
-        }else if(!this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.idle"+(!this.isFlying() ? "1" : "2"), ILoopType.EDefaultLoopTypes.LOOP));
         }
         return PlayState.CONTINUE;
     }
@@ -261,7 +266,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                 }
                 return InteractionResult.CONSUME;
             }
-            if(player.isSecondaryUseActive() && this.isOwnedBy(player) && this.isTame()){
+            if(!player.isSecondaryUseActive() && this.isOwnedBy(player) && this.isTame()){
                 this.setSitting(!this.isSitting());
                 return InteractionResult.SUCCESS;
             }
@@ -450,7 +455,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
 
     public List<MobEffectInstance> intentAttack(PotionIntent intent, LivingEntity pTarget){
         List<MobEffectInstance> effects = new ArrayList<>();
-        if(pTarget!=null){
+        if(pTarget!=null && intent!=null){
             int i = intent==PotionIntent.HEAL_OWNER ? 0 : 1;
             ItemStack stack=this.inventory.getItem(i);
             if(!stack.isEmpty()){
@@ -497,40 +502,47 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         PotionIntent intent = this.getIdPotionIntent();
         LivingEntity owner = this.isTame() ? this.getOwner() : this.getOwnerIllager();
         boolean flag = intent == PotionIntent.HEAL_OWNER && owner!=null;
-        target=flag ? owner : target;
-        Arrow entityarrow = new Arrow(levelAccessor, this);
-        double i = flag ? 1.0d : 5.0D;
-        if(this.hasChest()){
-            if(!this.level.isClientSide){
-                for(MobEffectInstance effect:this.intentAttack(intent,target)){
-                    if(effect!=null){
-                        entityarrow.addEffect(new MobEffectInstance(effect.getEffect(),effect.getDuration(),effect.getAmplifier(),effect.isAmbient(),effect.isVisible()));
+        target=flag  ? owner : target;
+        if(target!=null){
+            FeatherProjectile entityarrow = new FeatherProjectile(levelAccessor, this);
+            double i = flag ? 1.0d : 5.0D;
+            if(this.hasChest()){
+                if(!this.level.isClientSide){
+                    if(target instanceof Zombie){
+                        intent = PotionIntent.HEAL_OWNER;
+                    }
+                    if(this.intentAttack(intent,target)!=null){
+                        for(MobEffectInstance effect:this.intentAttack(intent,target)){
+                            if(effect!=null){
+                                entityarrow.addEffect(new MobEffectInstance(effect.getEffect(),effect.getDuration(),effect.getAmplifier(),effect.isAmbient(),effect.isVisible()));
+                            }
+                        }
                     }
                 }
             }
+            entityarrow.setBaseDamage(i);
+            double d0 = target.getY() + target.getEyeHeight() - 1.1;
+            double d1 = target.getX() - this.getX();
+            double d3 = target.getZ() - this.getZ();
+            entityarrow.shoot(d1, d0 - entityarrow.getY() + Math.sqrt(d1 * d1 + d3 * d3) * 0.2F, d3, 1.6F, 0.1F);
+            this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+            levelAccessor.addFreshEntity(entityarrow);
         }
-        entityarrow.setBaseDamage(i);
-        double d0 = target.getY() + target.getEyeHeight() - 1.1;
-        double d1 = target.getX() - this.getX();
-        double d3 = target.getZ() - this.getZ();
-        entityarrow.shoot(d1, d0 - entityarrow.getY() + Math.sqrt(d1 * d1 + d3 * d3) * 0.2F, d3, 1.6F, 0.1F);
-        this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        levelAccessor.addFreshEntity(entityarrow);
         this.setTarget((LivingEntity)null);
     }
     public void nextAction(LivingEntity target){
         LivingEntity owner = this.isTame() ? this.getOwner() : this.getOwnerIllager();
         Predicate<MobEffectInstance> predicate=e-> e.getEffect()!=MobEffects.HEAL && e.getEffect()!=MobEffects.REGENERATION && e.getEffect()!=MobEffects.ABSORPTION;
-        if(owner!=null){
+        if(owner!=null && target!=null){
             float h = owner.getHealth();
             List<MobEffectInstance> listEffects=this.intentAttack(PotionIntent.HEAL_OWNER,owner);
-            if(listEffects!=null){
+            if(listEffects!=null && !listEffects.isEmpty()){
                 boolean hasHeal = listEffects.stream().anyMatch(e->e.getEffect()==MobEffects.HEAL || e.getEffect()==MobEffects.REGENERATION || e.getEffect()==MobEffects.ABSORPTION );
                 boolean flag = owner.getActiveEffects().stream().filter(predicate)==listEffects.stream().filter(predicate);
                 if(owner.getMaxHealth()*0.5f>h || (!hasHeal && !flag)){
                     this.setIdPotionIntent(0);
                 }else {
-                    this.setIdPotionIntent(1);
+                        this.setIdPotionIntent(1);
                 }
             }else {
                 this.setIdPotionIntent(1);
@@ -646,7 +658,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             LivingEntity livingentity = this.mob.getTarget();
             if (livingentity != null && livingentity.isAlive()) {
                 this.target = livingentity;
-                return true;
+                return !((ScroungerEntity)this.mob).isSitting();
             } else {
                 return false;
             }
