@@ -60,7 +60,7 @@ public class PacketStopSound {
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 					Minecraft minecraft = Minecraft.getInstance();
-					assert minecraft==null;
+					assert minecraft.getConnection()!=null;
 					minecraft.getConnection().handleStopSoundEvent(new ClientboundStopSoundPacket(this.name,this.source));
 
 				}

@@ -25,13 +25,11 @@ public class PacketCuteSkin {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
         ctx.enqueueWork(() -> {
-            assert ctx.getSender()!=null;
             Player player = ctx.getSender().level.getPlayerByUUID(entity);
             if(!Patreon.acolytes.contains(player)) {
                 Patreon.acolytes.add(player);
             }
         });
         return true;
-
     }
 }

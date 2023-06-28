@@ -21,6 +21,7 @@ import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -80,7 +81,9 @@ public class Events {
         }
         if(event.getEntity() instanceof Player player){
             if(Patreon.isPatreon(player, IllagerRevolutionMod.CUTE_SKIN_UUID)){
-                PacketHandler.sendToServer(new PacketCuteSkin(player.getUUID()));
+                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+                buf.writeUUID(player.getUUID());
+                PacketHandler.sendToAllTracking(new PacketCuteSkin(buf),player);
             }
         }
     }
