@@ -43,7 +43,7 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
 
     @Override
     public ResourceLocation getTextureLocation(WildRavagerEntity pEntity) {
-        if(pEntity.getCustomName()!=null && Patreon.acolytes.contains(Minecraft.getInstance().player)){
+        if(pEntity.getCustomName()!=null && Patreon.isPatreon(Minecraft.getInstance().player,IllagerRevolutionMod.CUTE_SKIN_UUID)){
             return pEntity.getCustomName().getString().equals("Cute") ? TEXTURE_CUTE   : LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
         }
         return LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
