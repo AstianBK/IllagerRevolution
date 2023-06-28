@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
@@ -11,9 +12,11 @@ import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerArmorLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerBuumLayer;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,6 +32,7 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT4, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager4.png"));
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT5, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png"));
     });
+    private static final ResourceLocation TEXTURE_CUTE= new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png");
 
     public WildRavagerRenderer(EntityRendererProvider.Context p_174362_) {
         super(p_174362_, new WildRavagerModel(p_174362_.bakeLayer(ModEventBusEvents.RAVAGER)), 1.1F);
@@ -39,6 +43,9 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
 
     @Override
     public ResourceLocation getTextureLocation(WildRavagerEntity pEntity) {
+        if(pEntity.getCustomName()!=null && Patreon.acolytes.contains(Minecraft.getInstance().player)){
+            return pEntity.getCustomName().getString().equals("Cute") ? TEXTURE_CUTE   : LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
+        }
         return LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
     }
 

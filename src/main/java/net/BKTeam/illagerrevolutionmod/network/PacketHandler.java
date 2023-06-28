@@ -76,6 +76,12 @@ public class PacketHandler {
 
         channel.registerMessage(index++, PacketStopSound.class,PacketStopSound::write,PacketStopSound::new,
                 PacketStopSound::handle);
+
+        channel.registerMessage(index++, PacketCuteSkin.class,PacketCuteSkin::toBytes,PacketCuteSkin::new,
+                PacketCuteSkin::handle);
+
+        channel.registerMessage(index++, PacketRefreshPatreon.class,PacketRefreshPatreon::toBytes,PacketRefreshPatreon::new,
+                PacketRefreshPatreon::handle);
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {

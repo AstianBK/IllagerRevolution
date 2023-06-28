@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod;
 
+import io.netty.buffer.Unpooled;
 import net.BKTeam.illagerrevolutionmod.api.IMauledCapability;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
@@ -14,6 +15,7 @@ import net.BKTeam.illagerrevolutionmod.item.custom.ArmorIllusionerRobeItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
+import net.BKTeam.illagerrevolutionmod.network.PacketCuteSkin;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
@@ -46,6 +48,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
@@ -70,7 +73,17 @@ public class Events {
             }
         }
     }
-
+    @SubscribeEvent
+    public static void onJoinGame(EntityJoinLevelEvent event){
+        if(event.getLevel().isClientSide){
+           return;
+        }
+        if(event.getEntity() instanceof Player player){
+            if(Patreon.isPatreon(player, IllagerRevolutionMod.CUTE_SKIN_UUID)){
+                PacketHandler.sendToServer(new PacketCuteSkin(player.getUUID()));
+            }
+        }
+    }
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event != null && event.getEntity() != null) {
