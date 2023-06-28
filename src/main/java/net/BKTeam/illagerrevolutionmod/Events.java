@@ -79,11 +79,11 @@ public class Events {
         if(event.getLevel().isClientSide){
            return;
         }
-        if(event.getEntity() instanceof Player player){
+        if(event.getEntity() instanceof ServerPlayer player){
             if(Patreon.isPatreon(player, IllagerRevolutionMod.CUTE_SKIN_UUID)){
                 FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
                 buf.writeUUID(player.getUUID());
-                PacketHandler.sendToAllTracking(new PacketCuteSkin(buf),player);
+                PacketHandler.sendToPlayer(new PacketCuteSkin(buf),player);
             }
         }
     }
