@@ -7,6 +7,7 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketStopSound;
+import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -712,7 +713,7 @@ public class WildRavagerEntity extends MountEntity{
                 double d0 = this.random.nextGaussian() * 0.2D;
                 double d1 = this.random.nextGaussian() * 0.2D;
                 double d2 = this.random.nextGaussian() * 0.2D;
-                this.level.addParticle(ParticleTypes.POOF, vec3.x, vec3.y, vec3.z, d0, d1, d2);
+                this.level.addParticle(this.isCute()  ? ModParticles.HEART_BK_PARTICLES.get() : ParticleTypes.POOF, vec3.x, vec3.y, vec3.z, d0, d1, d2);
             }
             this.gameEvent(GameEvent.ENTITY_ROAR);
         }
@@ -728,7 +729,7 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     private double getKnockbackPower(){
-        return 4.0D*this.roarPower;
+        return this.roarPower > 0 ? 4.0D*this.roarPower : 4.0D;
     }
 
     public void handleEntityEvent(byte pId) {

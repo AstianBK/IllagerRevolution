@@ -35,7 +35,13 @@
     { "predicate":  { "custom_model_data": 3 }, "model": "illagerrevolutionmod:item/illagium_runed_blade_charged3"},
     { "predicate":  { "custom_model_data": 4 }, "model": "illagerrevolutionmod:item/illagium_runed_blade_charged4"},
     { "predicate":  { "custom_model_data": 5 }, "model": "illagerrevolutionmod:item/illagium_runed_blade_charged5"},
-    { "predicate":  { "custom_model_data": 6 }, "model": "illagerrevolutionmod:item/illagium_runed_blade_charged6"}
-
+    { "predicate":  { "custom_model_data": 6 }, "model": "illagerrevolutionmod:item/illagium_runed_blade_charged6"},
+    { "predicate":  { "custom_model_data": 7 }, "model": "illagerrevolutionmod:item/frost_rune_uncharged"},
+    { "predicate":  { "custom_model_data": 8 }, "model": "illagerrevolutionmod:item/frost_rune_charged1"},
+    { "predicate":  { "custom_model_data": 9 }, "model": "illagerrevolutionmod:item/frost_rune_charged2"},
+    { "predicate":  { "custom_model_data": 10 }, "model": "illagerrevolutionmod:item/frost_rune_charged3"},
+    { "predicate":  { "custom_model_data": 11 }, "model": "illagerrevolutionmod:item/frost_rune_charged4"},
+    { "predicate":  { "custom_model_data": 12 }, "model": "illagerrevolutionmod:item/frost_rune_charged5"},
+    { "predicate":  { "custom_model_data": 13 }, "model": "illagerrevolutionmod:item/frost_rune_charged6"}
   ]
-  }
+}

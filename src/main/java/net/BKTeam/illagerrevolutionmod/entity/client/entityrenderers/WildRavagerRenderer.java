@@ -10,6 +10,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerArmorLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerBuumLayer;
+import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerCuteLayer;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,10 +34,11 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT4, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager4.png"));
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT5, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png"));
     });
-    private static final ResourceLocation TEXTURE_CUTE= new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png");
+    private static final ResourceLocation TEXTURE_CUTE = new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png");
 
     public WildRavagerRenderer(EntityRendererProvider.Context p_174362_) {
         super(p_174362_, new WildRavagerModel(p_174362_.bakeLayer(ModEventBusEvents.RAVAGER)), 1.1F);
+        this.addLayer(new WildRavagerCuteLayer<>(this));
         this.addLayer(new WarPaintLayer<>(this));
         this.addLayer(new WildRavagerArmorLayer<>(this));
         this.addLayer(new WildRavagerBuumLayer<>(this));
@@ -43,9 +46,6 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
 
     @Override
     public ResourceLocation getTextureLocation(WildRavagerEntity pEntity) {
-        if(pEntity.getCustomName()!=null && Patreon.isPatreon(Minecraft.getInstance().player,IllagerRevolutionMod.CUTE_SKIN_UUID)){
-            return pEntity.getCustomName().getString().equals("Cute") ? TEXTURE_CUTE   : LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
-        }
         return LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
     }
 

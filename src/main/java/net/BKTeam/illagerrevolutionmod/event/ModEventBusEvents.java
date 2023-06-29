@@ -45,9 +45,11 @@ public class ModEventBusEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     @OnlyIn(Dist.CLIENT)
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        ParticleEngine manager = Minecraft.getInstance().particleEngine;
         if(SMOKE_BK_PARTICLES.isPresent()){
             event.register(SMOKE_BK_PARTICLES.get(), BkSmokeParticles.Factory::new);
+        }
+        if(HEART_BK_PARTICLES.isPresent()){
+            event.register(HEART_BK_PARTICLES.get(), BkHeartParticles.Factory::new);
         }
         if (BKSOULS_PARTICLES.isPresent()){
             event.register(BKSOULS_PARTICLES.get(), BKSoulsParticles.Factory::new);

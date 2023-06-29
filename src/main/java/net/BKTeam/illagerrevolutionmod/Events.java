@@ -47,7 +47,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -80,7 +79,7 @@ public class Events {
            return;
         }
         if(event.getEntity() instanceof ServerPlayer player){
-            if(Patreon.isPatreon(player, IllagerRevolutionMod.CUTE_SKIN_UUID)){
+            if(Patreon.isPatreon(player, IllagerRevolutionMod.ACOLYTES_SKIN_UUID)){
                 FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
                 buf.writeUUID(player.getUUID());
                 PacketHandler.sendToPlayer(new PacketCuteSkin(buf),player);

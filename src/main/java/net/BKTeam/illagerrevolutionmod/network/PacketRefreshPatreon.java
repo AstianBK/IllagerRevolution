@@ -7,7 +7,6 @@ import net.minecraftforge.network.NetworkEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class PacketRefreshPatreon {
@@ -38,9 +37,9 @@ public class PacketRefreshPatreon {
                         System.out.println(sc.next());
                     }
 
-                    IllagerRevolutionMod.CUTE_SKIN_UUID = sb.toString();
+                    IllagerRevolutionMod.ACOLYTES_SKIN_UUID = sb.toString();
 
-                    IllagerRevolutionMod.CUTE_SKIN_UUID  = IllagerRevolutionMod.CUTE_SKIN_UUID .replaceAll("<[^>]*>", "");
+                    IllagerRevolutionMod.ACOLYTES_SKIN_UUID = IllagerRevolutionMod.ACOLYTES_SKIN_UUID.replaceAll("<[^>]*>", "");
                     System.out.println("Refreshing Illager Revolution Patron List");
 
                 } catch (IOException ignored) {

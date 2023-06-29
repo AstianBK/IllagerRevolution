@@ -30,7 +30,7 @@ public class RakerModel extends AnimatedGeoModel<RakerEntity> {
 
     @Override
     public ResourceLocation getTextureResource(RakerEntity object) {
-        return LOCATION_BY_VARIANT.get(object.getIdVariant());
+        return object.isScrapper() ? new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/raker/raker_scrapper.png") : LOCATION_BY_VARIANT.get(object.getIdVariant());
     }
     @Override
     public ResourceLocation getAnimationResource(RakerEntity animatable) {

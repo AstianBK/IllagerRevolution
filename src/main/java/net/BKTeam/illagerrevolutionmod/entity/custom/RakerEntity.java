@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
@@ -169,6 +171,9 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         if(this.attackTimer==0){
             this.setAttacking(false);
         }
+    }
+    public boolean isScrapper(){
+        return this.getOwner() != null && this.getCustomName() != null && Patreon.isPatreon((Player) this.getOwner(), IllagerRevolutionMod.ACOLYTES_SKIN_UUID) && this.getCustomName().getString().equals("Scrapper");
     }
     @Override
     public InteractionResult mobInteract(Player player,  InteractionHand hand) {

@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.network.PacketGlowEffect;
@@ -13,6 +15,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -21,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -103,6 +105,10 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
 
     public boolean isExcited() {
         return this.entityData.get(EXCITED);
+    }
+
+    public boolean isCute(){
+        return this.getOwner() != null && this.getCustomName() != null && Patreon.isPatreon((Player) this.getOwner(), IllagerRevolutionMod.ACOLYTES_SKIN_UUID) && this.getCustomName().getString().equals("Cute");
     }
 
     public DyeColor getColor() {

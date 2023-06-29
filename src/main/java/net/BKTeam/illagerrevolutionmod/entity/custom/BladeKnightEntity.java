@@ -356,7 +356,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             while (i<listentity.size() && i<=5){
                 entity=listentity.get(i);
                 if(entity instanceof SoulEntity entity1 && entity1.getOwner()== BladeKnightEntity.this) {
-                    entity1.spawUndead((ServerLevel) BladeKnightEntity.this.level, BladeKnightEntity.this,entity);
+                    entity1.spawUndead((ServerLevel) BladeKnightEntity.this.level, BladeKnightEntity.this,entity,false);
                 }
                 i++;
             }
