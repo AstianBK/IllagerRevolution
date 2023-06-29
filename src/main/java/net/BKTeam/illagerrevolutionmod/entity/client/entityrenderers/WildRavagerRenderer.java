@@ -3,23 +3,19 @@ package net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
-import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerArmorLayer;
-import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerBuumLayer;
+import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerDrumLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WildRavagerCuteLayer;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -41,7 +37,7 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
         this.addLayer(new WildRavagerCuteLayer<>(this));
         this.addLayer(new WarPaintLayer<>(this));
         this.addLayer(new WildRavagerArmorLayer<>(this));
-        this.addLayer(new WildRavagerBuumLayer<>(this));
+        this.addLayer(new WildRavagerDrumLayer<>(this));
     }
 
     @Override

@@ -2,7 +2,6 @@ package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
@@ -12,17 +11,15 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class WildRavagerBuumLayer<T extends WildRavagerEntity,M extends EntityModel<T>> extends RenderLayer<T,M> {
-    private BumModel model = null;
-    public WildRavagerBuumLayer(RenderLayerParent<T, M> pRenderer) {
+public class WildRavagerDrumLayer<T extends WildRavagerEntity,M extends EntityModel<T>> extends RenderLayer<T,M> {
+    private DrumModel model = null;
+    public WildRavagerDrumLayer(RenderLayerParent<T, M> pRenderer) {
         super(pRenderer);
     }
 
@@ -35,7 +32,7 @@ public class WildRavagerBuumLayer<T extends WildRavagerEntity,M extends EntityMo
     private void renderRaven(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, boolean leftShoulderIn) {
         if(entitylivingbaseIn.hasDrum()){
             if (model == null) {
-                model = new BumModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEventBusEvents.BUUM));
+                model = new DrumModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEventBusEvents.BUUM));
             }
             ItemStack stack = entitylivingbaseIn.getContainer().getItem(1);
             if(Block.byItem(stack.getItem()) instanceof DrumBlock drumBlock){

@@ -6,14 +6,13 @@ import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.WildRavagerRenderer;
-import net.BKTeam.illagerrevolutionmod.entity.layers.BumModel;
+import net.BKTeam.illagerrevolutionmod.entity.layers.DrumModel;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.particle.custom.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -99,7 +98,7 @@ public class ModEventBusEvents {
         event.registerLayerDefinition(RAVAGER, WildRavagerModel::createBodyLayer);
         event.registerLayerDefinition(WAR_PAINT, WildRavagerModel::createBodyLayer);
         event.registerLayerDefinition(RAVAGER_SADDLE, WildRavagerModel::createBodyLayer);
-        event.registerLayerDefinition(BUUM, BumModel::createBodyLayer);
+        event.registerLayerDefinition(BUUM, DrumModel::createBodyLayer);
 
     }
 

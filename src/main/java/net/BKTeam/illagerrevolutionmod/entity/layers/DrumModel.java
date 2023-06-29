@@ -7,16 +7,15 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class BumModel extends EntityModel<WildRavagerEntity> {
+public class DrumModel extends EntityModel<WildRavagerEntity> {
 
     private final ModelPart root;
 
-    public BumModel(ModelPart root) {
+    public DrumModel(ModelPart root) {
         this.root = root.getChild("drum");
     }
 
