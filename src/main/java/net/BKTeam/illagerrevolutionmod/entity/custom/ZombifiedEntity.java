@@ -64,6 +64,8 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
 
     private static final EntityDataAccessor<Boolean> IS_SPAWNED =
             SynchedEntityData.defineId(ZombifiedEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_FROZEN =
+            SynchedEntityData.defineId(ZombifiedEntity.class, EntityDataSerializers.BOOLEAN);
 
     private int attackTimer;
 
@@ -129,6 +131,15 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         this.attackTimer = isAttacking() ? 10 : 0;
     }
 
+    public void setIsFrozen(boolean pBoolean){
+        this.entityData.set(IS_FROZEN,pBoolean);
+    }
+
+    public boolean getIsFrozen(){
+        return this.entityData.get(IS_FROZEN);
+    }
+
+
     public String getnameSoul() {
         return this.getIdSoul();
     }
@@ -165,6 +176,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         pCompound.putBoolean("isSpawned",getIsSpawned());
         pCompound.putBoolean("isAttacking",isAttacking());
         pCompound.putString("idSoul",getIdSoul());
+        pCompound.putBoolean("isFrozen",this.getIsFrozen());
     }
 
     @Override
@@ -174,6 +186,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         setAttacking(pCompound.getBoolean("isAttacking"));
         setIsSpawned(pCompound.getBoolean("isSpawned"));
         setIdSoul(pCompound.getString("idSoul"));
+        this.setIsFrozen(pCompound.getBoolean("isFrozen"));
         this.updateListOwner();
 
     }
@@ -193,6 +206,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         this.entityData.define(HASSOUL,false);
         this.entityData.define(ID_SOUL,"pillager");
         this.entityData.define(IS_SPAWNED,false);
+        this.entityData.define(IS_FROZEN,false);
     }
 
 

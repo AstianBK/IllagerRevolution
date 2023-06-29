@@ -1,7 +1,7 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0":"illagerrevolutionmod:item/illagium_runed_blade_charged1"
+    "layer0":"illagerrevolutionmod:item/frostrune_charged2"
   },
 
   "display": {

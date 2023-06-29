@@ -2,6 +2,8 @@ package net.BKTeam.illagerrevolutionmod.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -50,14 +52,15 @@ public class SwordRuneBladeItem extends RunedSword {
     }
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         CompoundTag nbt = null;
-        if(entity instanceof Player){
-            int cc = (int) ((Player)entity).getAttribute(SoulTick.SOUL).getValue();
+        if(entity instanceof Player player){
+            int cc = (int) player.getAttribute(SoulTick.SOUL).getValue();
+            int cc1 = this.isFrostRune(player,itemStack) ? 7 : 0;
             if (cc <= 6) {
                 nbt = itemStack.getOrCreateTag();
                 this.souls = cc;
             }
             if(nbt!=null){
-                nbt.putInt("CustomModelData", this.souls);
+                nbt.putInt("CustomModelData", this.souls + cc1);
             }
         }
         super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
@@ -73,6 +76,10 @@ public class SwordRuneBladeItem extends RunedSword {
         else{
             return super.getAttributeModifiers(slot, stack);
         }
+    }
+
+    public boolean isFrostRune(Player player, ItemStack stack){
+        return Patreon.isPatreon(player, IllagerRevolutionMod.ACOLYTES_SKIN_UUID) && stack.getHoverName().getString().equals("FrostRune");
     }
 
     @Override
@@ -106,7 +113,7 @@ public class SwordRuneBladeItem extends RunedSword {
                             while (i < listSoul.size() && j < 6 ) {
                                 entity = listSoul.get(i);
                                 if (entity instanceof SoulEntity entity1 && entity1.getOwner() == pPlayer) {
-                                    entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity);
+                                    entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity,this.isFrostRune(pPlayer,itemStack));
                                     j++;
                                     k++;
                                     if(k==12){

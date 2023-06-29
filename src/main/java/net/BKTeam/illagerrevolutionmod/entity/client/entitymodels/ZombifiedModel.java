@@ -21,8 +21,13 @@ public class ZombifiedModel<I extends Monster> extends AnimatedGeoModel<Zombifie
     @Override
     public ResourceLocation getTextureResource(ZombifiedEntity object) {
         if(object.isHasSoul()){
-            return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
-                    "textures/entity/zombified/zombified_"+object.getnameSoul()+".png");
+            if(object.getIsFrozen()){
+                return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+                        "textures/entity/zombified/frozen_zombified_"+object.getnameSoul()+".png");
+            }else {
+                return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+                        "textures/entity/zombified/zombified_"+object.getnameSoul()+".png");
+            }
         }
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
                 "textures/entity/zombified/zombified_pillager.png");

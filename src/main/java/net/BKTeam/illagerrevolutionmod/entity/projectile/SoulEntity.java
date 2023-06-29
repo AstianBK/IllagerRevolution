@@ -128,7 +128,7 @@ public class SoulEntity extends ThrowableItemProjectile {
     }
 
 
-    public void spawUndead(ServerLevel world, LivingEntity pSummoner, Entity Source){
+    public void spawUndead(ServerLevel world, LivingEntity pSummoner, Entity Source,boolean isFrostRune){
         String undead=this.getSoul();
         boolean flag1= EventDeath.hasNameSoul(undead);
         if(flag1){
@@ -140,6 +140,9 @@ public class SoulEntity extends ThrowableItemProjectile {
             entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pSummoner.blockPosition()), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
             pSummoner.level.addFreshEntity(entity);
             if(pSummoner instanceof Player){
+                if(isFrostRune){
+                    entity.setIsFrozen(true);
+                }
                 entity.addEntityOfList();
             }else {
                 entity.addEffect(new MobEffectInstance(InitEffect.DEATH_MARK.get(),99999,0));

@@ -1,10 +1,5 @@
 package net.BKTeam.illagerrevolutionmod;
 
-import com.besaba.revonline.pastebinapi.Pastebin;
-import com.besaba.revonline.pastebinapi.impl.PastebinImpl;
-import com.besaba.revonline.pastebinapi.impl.factory.PastebinFactory;
-import com.besaba.revonline.pastebinapi.paste.Paste;
-import com.besaba.revonline.pastebinapi.paste.internal.Pastes;
 import com.mojang.logging.LogUtils;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
@@ -30,7 +25,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -55,14 +49,12 @@ import software.bernie.example.GeckoLibMod;
 import software.bernie.geckolib3.GeckoLib;
 
 import javax.annotation.Nullable;
-import javax.swing.text.DefaultEditorKit;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.UUID;
 
 import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 
@@ -70,7 +62,7 @@ import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 @Mod(IllagerRevolutionMod.MOD_ID)
 public class IllagerRevolutionMod {
     public static final String MOD_ID = "illagerrevolutionmod";
-    public static String CUTE_SKIN_UUID;
+    public static String ACOLYTES_SKIN_UUID;
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public IllagerRevolutionMod() {
@@ -107,9 +99,8 @@ public class IllagerRevolutionMod {
                 con.setRequestMethod("GET");
                 con.connect();
                 if(con.getResponseCode()!=200){
-                    throw new RuntimeException("No funca "+con.getResponseCode() );
+                    throw new RuntimeException(String.valueOf(con.getResponseCode()));
                 }else{
-                    System.out.println("Funca chill bro "+con.getResponseCode());
                     Scanner sc = new Scanner(url.openStream());
                     StringBuilder sb = new StringBuilder();
                     while (sc.hasNext()) {
@@ -117,9 +108,9 @@ public class IllagerRevolutionMod {
                         //System.out.println(sc.next());
                     }
                     sc.close();
-                    CUTE_SKIN_UUID = sb.toString();
+                    ACOLYTES_SKIN_UUID = sb.toString();
 
-                    CUTE_SKIN_UUID  = CUTE_SKIN_UUID .replaceAll("<[^>]*>", "");
+                    ACOLYTES_SKIN_UUID = ACOLYTES_SKIN_UUID.replaceAll("<[^>]*>", "");
                 }
 
                 System.out.println("Refreshing Illager Revolution Patreon List");
