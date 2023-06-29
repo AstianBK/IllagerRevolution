@@ -138,9 +138,9 @@ public class IllagerRevolutionMod {
                         //System.out.println(sc.next());
                     }
                     sc.close();
-                    ACOLYTES_SKIN_UUID = sb.toString();
+                    KNIGHTS_SKIN_UUID = sb.toString();
 
-                    ACOLYTES_SKIN_UUID = ACOLYTES_SKIN_UUID.replaceAll("<[^>]*>", "");
+                    KNIGHTS_SKIN_UUID = KNIGHTS_SKIN_UUID.replaceAll("<[^>]*>", "");
                 }
                 System.out.println("Refreshing Illager Revolution Patreon List");
             }catch (MalformedURLException e){
