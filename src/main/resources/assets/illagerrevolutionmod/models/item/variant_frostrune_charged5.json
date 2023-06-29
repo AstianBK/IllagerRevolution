@@ -1,7 +1,7 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0":"illagerrevolutionmod:item/frostrune_charged5"
+    "layer0":"illagerrevolutionmod:item/variant_frostrune_charged5"
   },
 
   "display": {
