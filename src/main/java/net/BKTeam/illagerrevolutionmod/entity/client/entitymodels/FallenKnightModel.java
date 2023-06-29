@@ -20,9 +20,13 @@ public class FallenKnightModel<I extends Monster> extends AnimatedGeoModel<Falle
 
     @Override
     public ResourceLocation getTextureResource(FallenKnightEntity object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
-                "textures/entity/fallen_knight/fallen_knight.png");
-
+        if(object.getIsFrozen()){
+            return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+                    "textures/entity/fallen_knight/frozen_fallen_knight.png");
+        }else {
+            return new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+                    "textures/entity/fallen_knight/fallen_knight.png");
+        }
     }
 
     @Override

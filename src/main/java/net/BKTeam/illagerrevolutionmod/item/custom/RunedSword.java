@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.item.custom;
 
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +25,10 @@ public class RunedSword extends SwordItem {
             this.souls = (int) ((Player)pEntity).getAttribute(SoulTick.SOUL).getValue();
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+    }
+
+    public boolean isFrostRune(Player player, ItemStack stack){
+        return Patreon.isPatreon(player, IllagerRevolutionMod.KNIGHTS_SKIN_UUID) && stack.getHoverName().getString().equals("FrostRune");
     }
 
     @Override

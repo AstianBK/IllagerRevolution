@@ -51,10 +51,6 @@ public class ScroungerRenderer extends ExtendedGeoEntityRenderer<ScroungerEntity
     @Nullable
     @Override
     protected ItemStack getHeldItemForBone(String boneName, ScroungerEntity animatable) {
-        switch (boneName) {
-            case "ItemSlot":
-                return animatable.getContainer().getItem(1);
-        }
         return null;
     }
 
@@ -71,13 +67,6 @@ public class ScroungerRenderer extends ExtendedGeoEntityRenderer<ScroungerEntity
 
     @Override
     protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, ScroungerEntity currentEntity, IBone bone) {
-        if (item == currentEntity.getContainer().getItem(1)) {
-            stack.mulPose(Vector3f.XP.rotationDegrees(90F));
-            boolean shieldFlag = item.getItem() instanceof ShieldItem;
-            // stack.mulPose(Vector3f.YP.rotationDegrees(180));
-
-            // stack.scale(0.75F, 0.75F, 0.75F);
-        }
     }
 
     @Override

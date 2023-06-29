@@ -51,15 +51,15 @@ public class VariantRuneBladeItem extends RunedSword{
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
         CompoundTag nbt = null;
-        if(entity instanceof Player){
+        if(entity instanceof Player player){
             this.defense=(double)this.souls*2.5d;
             this.knockbackres=(double)this.souls*0.025d;
-
+            int cc1 = this.isFrostRune(player,itemStack) ? 7 : 0;
             if (this.souls <= 6) {
                 nbt = itemStack.getOrCreateTag();
             }
             if(nbt!=null){
-                nbt.putInt("CustomModelData", this.souls);
+                nbt.putInt("CustomModelData", this.souls+cc1);
             }
         }
     }
@@ -96,6 +96,7 @@ public class VariantRuneBladeItem extends RunedSword{
                     BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextInt(-1,1),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextInt(-1,1));
                     FallenKnightEntity fallenKnight=new FallenKnightEntity(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
                     fallenKnight.setIdOwner(pPlayer.getUUID());
+                    fallenKnight.setIsFrozen(this.isFrostRune(pPlayer,itemStack));
                     fallenKnight.finalizeSpawn((ServerLevelAccessor) pLevel,pLevel.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED,null,null);
                     fallenKnight.setDispawnTimer(1200,pPlayer,false);
                     fallenKnight.moveTo(pos1,0.0f,0.0f);

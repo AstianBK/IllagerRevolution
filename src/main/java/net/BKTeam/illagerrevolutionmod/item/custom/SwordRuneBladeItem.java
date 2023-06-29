@@ -78,10 +78,6 @@ public class SwordRuneBladeItem extends RunedSword {
         }
     }
 
-    public boolean isFrostRune(Player player, ItemStack stack){
-        return Patreon.isPatreon(player, IllagerRevolutionMod.ACOLYTES_SKIN_UUID) && stack.getHoverName().getString().equals("FrostRune");
-    }
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);

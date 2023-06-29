@@ -29,6 +29,9 @@ public class ReanimatedEntity extends Monster {
     private static final EntityDataAccessor<Optional<UUID>> ID_NECROMANCER =
             SynchedEntityData.defineId(ReanimatedEntity.class,EntityDataSerializers.OPTIONAL_UUID);
 
+    private static final EntityDataAccessor<Boolean> IS_FROZEN =
+            SynchedEntityData.defineId(ReanimatedEntity.class, EntityDataSerializers.BOOLEAN);
+
     protected ReanimatedEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
@@ -99,6 +102,7 @@ public class ReanimatedEntity extends Monster {
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("isFrozen",this.getIsFrozen());
         if (this.getIdOwner() != null) {
             pCompound.putUUID("Owner", this.getIdOwner());
         }
@@ -112,6 +116,7 @@ public class ReanimatedEntity extends Monster {
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        this.setIsFrozen(pCompound.getBoolean("isFrozen"));
         UUID uuid;
         UUID uuid2;
         if (pCompound.hasUUID("Owner")) {
@@ -134,6 +139,14 @@ public class ReanimatedEntity extends Monster {
         }
     }
 
+    public void setIsFrozen(boolean pBoolean){
+        this.entityData.set(IS_FROZEN,pBoolean);
+    }
+
+    public boolean getIsFrozen(){
+        return this.entityData.get(IS_FROZEN);
+    }
+
     @Override
     public MobType getMobType() {
         return MobType.UNDEAD;
@@ -153,5 +166,6 @@ public class ReanimatedEntity extends Monster {
         super.defineSynchedData();
         this.entityData.define(ID_OWNER, Optional.empty());
         this.entityData.define(ID_NECROMANCER,Optional.empty());
+        this.entityData.define(IS_FROZEN,false);
     }
 }
