@@ -275,13 +275,17 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public void containerChanged(Container pInvBasic) {
-        boolean flag = this.isSaddled();
-        ItemStack legs= this.getItemBySlot(EquipmentSlot.LEGS);
+        ItemStack saddled = this.getItemBySlot(EquipmentSlot.FEET);
+        ItemStack legs = this.getItemBySlot(EquipmentSlot.LEGS);
         this.updateContainerEquipment();
+        ItemStack saddled1 = this.getItemBySlot(EquipmentSlot.FEET);
         ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
         if(this.tickCount > 20){
-            if ((this.isArmor(legs1) && legs!=legs1) || (!flag && flag!=this.isSaddled())){
-                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
+            if (this.isArmor(legs1) && legs!=legs1){
+                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC);
+            }
+            if(saddled!=saddled1){
+                this.playSound(SoundEvents.HORSE_SADDLE);
             }
         }
     }
@@ -365,7 +369,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if (!pPlayer.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
-                    if(this.level.random.nextFloat()>0.90){
+                    if(this.level.random.nextFloat()>0.90f){
                         if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                             if (!this.level.isClientSide) {
                                 super.tame(pPlayer);
@@ -373,8 +377,13 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                                 this.setTarget(null);
                                 this.level.broadcastEntityEvent(this, (byte)7);
                                 this.setSitting(true);
+                                for(Entity entity : this.getPassengers()){
+                                    entity.stopRiding();
+                                }
                             }
                         }
+                    }else {
+                        this.level.broadcastEntityEvent(this, (byte)6);
                     }
                     return InteractionResult.SUCCESS;
                 }else if(this.getHealth()!=this.getMaxHealth()){
@@ -390,15 +399,16 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             boolean flag = !this.isSaddled() && itemstack.is(Items.SADDLE);
             if (this.isArmor(itemstack) || flag) {
                 if(itemstack.getItem() instanceof BeastArmorItem armorItem){
+                    this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC);
                     this.setItemSlot(armorItem.getEquipmetSlot(),itemstack);
                 }else {
+                    this.playSound(SoundEvents.HORSE_SADDLE);
                     this.setIsSaddled(true);
                     this.inventory.setItem(0,itemstack);
                 }
                 if (!pPlayer.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
-                this.updateContainerEquipment();
                 return InteractionResult.CONSUME;
             }
             InteractionResult interactionresult = itemstack.interactLivingEntity(pPlayer, this, pHand);

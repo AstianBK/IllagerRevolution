@@ -355,6 +355,7 @@ public class WildRavagerEntity extends MountEntity{
             }
             if(Block.byItem(stack.getItem()) instanceof DrumBlock){
                 this.setHasDrum(true);
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER);
                 this.inventory.setItem(1,stack.copy());
                 if(!pPlayer.getAbilities().instabuild){
                     stack.shrink(1);
@@ -365,8 +366,10 @@ public class WildRavagerEntity extends MountEntity{
                 if(!this.level.isClientSide){
                     if(stack.getItem() instanceof BeastArmorItem){
                         this.setItemSlot(EquipmentSlot.FEET,stack.copy());
+                        this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC);
                     }else {
                         this.inventory.setItem(0,stack.copy());
+                        this.playSound(SoundEvents.HORSE_SADDLE);
                     }
                 }
                 this.setIsSaddled(true);
@@ -387,7 +390,7 @@ public class WildRavagerEntity extends MountEntity{
                         if (!pPlayer.getAbilities().instabuild) {
                             stack.shrink(1);
                         }
-                        if(this.level.random.nextFloat()>0.5F){
+                        if(this.level.random.nextFloat()<0.25F){
                             if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                                 if (!this.level.isClientSide) {
                                     super.tame(pPlayer);
@@ -400,6 +403,8 @@ public class WildRavagerEntity extends MountEntity{
                                     }
                                 }
                             }
+                        }else {
+                            this.level.broadcastEntityEvent(this, (byte)6);
                         }
                         playSound(SoundEvents.HORSE_EAT, 1.0F, -1.5F);
                         return InteractionResult.SUCCESS;
@@ -538,6 +543,21 @@ public class WildRavagerEntity extends MountEntity{
 
     @Override
     public void containerChanged(Container pInvBasic) {
+        ItemStack saddle = this.getItemBySlot(EquipmentSlot.FEET);
+        ItemStack drum = this.getItemBySlot(EquipmentSlot.LEGS);
+        updateContainerEquipment();
+        ItemStack saddle1 = this.getItemBySlot(EquipmentSlot.FEET);
+        ItemStack drum1 = this.getItemBySlot(EquipmentSlot.LEGS);
+        if(this.tickCount > 20){
+            if(this.isArmor(saddle1) && saddle!=saddle1){
+                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC);
+            }else if(saddle1.getItem() instanceof SaddleItem && saddle!=saddle1){
+                this.playSound(SoundEvents.HORSE_SADDLE);
+            }
+            if(drum1!=drum){
+                this.playSound(SoundEvents.ARMOR_EQUIP_LEATHER);
+            }
+        }
         super.containerChanged(pInvBasic);
     }
     @Override
