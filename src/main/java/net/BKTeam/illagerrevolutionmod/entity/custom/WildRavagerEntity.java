@@ -487,7 +487,6 @@ public class WildRavagerEntity extends MountEntity{
                 }
             }
         }
-
     }
 
     public void activeEffectAura() {
