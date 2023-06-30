@@ -366,7 +366,7 @@ public class WildRavagerEntity extends MountEntity{
                 if(!this.level.isClientSide){
                     if(stack.getItem() instanceof BeastArmorItem){
                         this.setItemSlot(EquipmentSlot.FEET,stack.copy());
-                        this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
+                        this.playSound(SoundEvents.ARMOR_EQUIP_GOLD);
                     }else {
                         this.inventory.setItem(0,stack.copy());
                         this.playSound(SoundEvents.HORSE_SADDLE);
