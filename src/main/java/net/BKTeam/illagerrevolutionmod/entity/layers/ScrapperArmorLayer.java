@@ -24,7 +24,7 @@ public class ScrapperArmorLayer extends GeoLayerRenderer<RakerEntity> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, RakerEntity entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ItemStack itemstack =entityLivingBaseIn.getItemBySlot(EquipmentSlot.CHEST);
+        ItemStack itemstack =entityLivingBaseIn.getItemBySlot(EquipmentSlot.FEET);
         ItemStack itemstack1 = entityLivingBaseIn.getItemBySlot(EquipmentSlot.LEGS);
         if (itemstack.getItem() instanceof BeastArmorItem armor) {
             this.model.getModelResource(entityLivingBaseIn);

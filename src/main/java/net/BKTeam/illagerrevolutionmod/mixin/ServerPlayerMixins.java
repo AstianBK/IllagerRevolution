@@ -3,12 +3,8 @@ package net.BKTeam.illagerrevolutionmod.mixin;
 import com.mojang.authlib.GameProfile;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
-import net.BKTeam.illagerrevolutionmod.api.IProxy;
 import net.BKTeam.illagerrevolutionmod.entity.custom.*;
-import net.BKTeam.illagerrevolutionmod.gui.MaulerInventoryMenu;
-import net.BKTeam.illagerrevolutionmod.gui.RakerInventoryMenu;
-import net.BKTeam.illagerrevolutionmod.gui.ScroungerInventoryMenu;
-import net.BKTeam.illagerrevolutionmod.gui.WildRavagerInventoryMenu;
+import net.BKTeam.illagerrevolutionmod.gui.BeastInventoryMenu;
 import net.BKTeam.illagerrevolutionmod.network.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,67 +41,16 @@ public abstract class ServerPlayerMixins extends Player implements IOpenBeatsCon
     }
 
     @Override
-    public void openRakerInventory(RakerEntity p_9059_, Container p_9060_) {
+    public void openRakerInventory(IllagerBeastEntity p_9059_, Container p_9060_) {
         if (this.containerMenu != this.inventoryMenu) {
             this.closeContainer();
         }
         if(p_9059_.getOwner()!=null){
             ServerPlayer serverPlayer = (ServerPlayer) p_9059_.getOwner();
             this.nextContainerCounter();
-            ClientRakerScreenOpenPacket message = new ClientRakerScreenOpenPacket(this.containerCounter, p_9059_.getId());
+            ClientBeastScreenOpenPacket message = new ClientBeastScreenOpenPacket(this.containerCounter, p_9059_.getId());
             PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
-            this.containerMenu = new RakerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
-            this.containerMenu.addSlotListener(this.containerListener);
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
-        }
-
-    }
-    @Override
-    public void openMaulerInventory(MaulerEntity p_9059_, Container p_9060_) {
-        if (this.containerMenu != this.inventoryMenu) {
-            this.closeContainer();
-        }
-        if(p_9059_.getOwner()!=null){
-            ServerPlayer serverPlayer = (ServerPlayer) p_9059_.getOwner();
-            this.nextContainerCounter();
-            ClientMaulerScreenOpenPacket message = new ClientMaulerScreenOpenPacket(this.containerCounter, p_9059_.getId());
-            PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
-            this.containerMenu = new MaulerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
-            this.containerMenu.addSlotListener(this.containerListener);
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
-        }
-    }
-
-    @Override
-    public void openRavagerInventory(WildRavagerEntity p_9059_, Container p_9060_) {
-        if (this.containerMenu != this.inventoryMenu) {
-            this.closeContainer();
-        }
-        if(p_9059_.getOwner()!=null){
-            this.nextContainerCounter();
-            ServerPlayer serverPlayer= (ServerPlayer) p_9059_.getOwner();
-            ClientRavagerScreenOpenPacket message = new ClientRavagerScreenOpenPacket(this.containerCounter, p_9059_.getId());
-            PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
-            this.containerMenu = new WildRavagerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
-            this.containerMenu.addSlotListener(this.containerListener);
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
-        }
-
-
-
-    }
-
-    @Override
-    public void openScroungerInventory(ScroungerEntity p_9059_, Container p_9060_) {
-        if (this.containerMenu != this.inventoryMenu) {
-            this.closeContainer();
-        }
-        if(p_9059_.getOwner()!=null){
-            this.nextContainerCounter();
-            ServerPlayer serverPlayer= (ServerPlayer) p_9059_.getOwner();
-            ClientScroungerScreenOpenPacket message = new ClientScroungerScreenOpenPacket(this.containerCounter, p_9059_.getId());
-            PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
-            this.containerMenu = new ScroungerInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
+            this.containerMenu = new BeastInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);
             this.containerMenu.addSlotListener(this.containerListener);
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerContainerEvent.Open(this, this.containerMenu));
         }

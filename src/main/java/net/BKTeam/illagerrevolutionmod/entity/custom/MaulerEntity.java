@@ -589,13 +589,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
     }
 
-    public void openInventory(Player player) {
-        MaulerEntity mauler = (MaulerEntity) ((Object) this);
-        if (!this.level.isClientSide && player instanceof IOpenBeatsContainer) {
-            ((IOpenBeatsContainer)player).openMaulerInventory(mauler, this.inventory);
-        }
-    }
-
     public boolean canBeLeashed(@NotNull Player player) {
         return super.canBeLeashed(player);
     }
@@ -608,6 +601,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(10.0D);
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40f);
         }
+    }
+    @Override
+    public boolean canEquipOnFeet(ItemStack p_39690_) {
+        return p_39690_.is(Items.SADDLE);
+    }
+
+    @Override
+    public boolean canEquipOnLegs(ItemStack p_39690_) {
+        return super.canEquipOnLegs(p_39690_);
     }
 
     public boolean isArmor(ItemStack stack){
@@ -690,11 +692,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public AnimationFactory getFactory() {
         return this.factory;
     }
-
-    public boolean hasInventoryChanged(Container container){
-        return this.inventory!=container;
-    }
-
     @Override
     public SimpleContainer getContainer() {
         return this.inventory;

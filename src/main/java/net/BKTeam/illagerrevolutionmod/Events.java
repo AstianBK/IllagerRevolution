@@ -15,7 +15,6 @@ import net.BKTeam.illagerrevolutionmod.item.custom.ArmorIllusionerRobeItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
-import net.BKTeam.illagerrevolutionmod.network.PacketCuteSkin;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
@@ -74,30 +73,25 @@ public class Events {
         }
     }
     @SubscribeEvent
-    public static void onJoinGame(EntityJoinLevelEvent event){
-        if(event.getLevel().isClientSide){
-           return;
-        }
-        if(event.getEntity() instanceof ServerPlayer player){
-            if(Patreon.isPatreon(player, IllagerRevolutionMod.ACOLYTES_SKIN_UUID)){
-                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-                buf.writeUUID(player.getUUID());
-                PacketHandler.sendToPlayer(new PacketCuteSkin(buf),player);
-            }
-        }
-    }
-    @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event != null && event.getEntity() != null) {
             Arrow bulletEntity=event.getSource().getDirectEntity() instanceof Arrow ? (Arrow) event.getSource().getDirectEntity() :null;
             LivingEntity attacker=event.getSource().getEntity() instanceof LivingEntity ? (LivingEntity) event.getSource().getEntity() : null;
             LivingEntity entity=event.getEntity();
             if(attacker!=null){
-                List<ScroungerEntity> listBirds=attacker.level.getEntitiesOfClass(ScroungerEntity.class,attacker.getBoundingBox().inflate(15.0D),e->e.getOwner()==attacker || e.getOwnerIllager()==attacker);
+                List<ScroungerEntity> listBirds=attacker.level.getEntitiesOfClass(ScroungerEntity.class,attacker.getBoundingBox().inflate(20.0D),e->e.getOwner()==attacker || e.getOwnerIllager()==attacker);
                 if(!listBirds.isEmpty()){
                     for(ScroungerEntity scrounger:listBirds){
                         if(scrounger.nextAttack<=0){
                             scrounger.ordenAttack(entity);
+                        }
+                    }
+                }
+                if(entity!=null){
+                    List<ScroungerEntity> listBirds1=attacker.level.getEntitiesOfClass(ScroungerEntity.class,attacker.getBoundingBox().inflate(20.0D),e->e.getOwner()==entity || e.getOwnerIllager()==entity);
+                    for (ScroungerEntity scrounger : listBirds1){
+                        if(scrounger.nextAttack<=0){
+                            scrounger.ordenAttack(attacker);
                         }
                     }
                 }
@@ -140,7 +134,7 @@ public class Events {
                     List <FallenKnightEntity> knights= player.level.getEntitiesOfClass(FallenKnightEntity.class,player.getBoundingBox().inflate(50.0d), e -> e.getOwner()==player);
                     if(!knights.isEmpty()){
                         if(Util.checkIsOneLinked(knights)){
-                            player.getMainHandItem().hurtAndBreak(50,player,e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                            player.getMainHandItem().hurtAndBreak((int) event.getAmount()*Util.getNumberOfLinked(knights),player, e->e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                             for(FallenKnightEntity knight : knights){
                                 if(knight.itIsLinked()){
                                     knight.hurt(event.getSource(),event.getAmount()*1/Util.getNumberOfLinked(knights));

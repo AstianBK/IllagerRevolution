@@ -71,7 +71,7 @@ public class FallenKnightEntity extends ReanimatedEntity implements IAnimatable,
             SynchedEntityData.defineId(FallenKnightEntity.class,EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> REARMED =
             SynchedEntityData.defineId(FallenKnightEntity.class,EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> ARMED=
+    private static final EntityDataAccessor<Boolean> ARMED =
             SynchedEntityData.defineId(FallenKnightEntity.class,EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DAMAGE_LINK =
             SynchedEntityData.defineId(FallenKnightEntity.class, EntityDataSerializers.BOOLEAN);
@@ -184,7 +184,7 @@ public class FallenKnightEntity extends ReanimatedEntity implements IAnimatable,
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "controller",
-                10, this::predicate));
+                0, this::predicate));
     }
 
     @Override
