@@ -38,7 +38,6 @@ public class FeatherRender <T extends AbstractArrow & ItemSupplier> extends Enti
         PoseStack.Pose posestack$pose = pMatrixStack.last();
         this.itemRenderer.renderStatic(pEntity.getItem(), ItemTransforms.TransformType.GROUND,pPackedLight, OverlayTexture.NO_OVERLAY,pMatrixStack,pBuffer,pEntity.getId());
 
-
         pMatrixStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }

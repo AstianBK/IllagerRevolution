@@ -23,6 +23,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -134,6 +135,15 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         for(Entity entity : this.getPassengers()){
             entity.stopRiding();
         }
+    }
+    @Override
+    public boolean canEquipOnFeet(ItemStack p_39690_) {
+        return  super.canEquipOnFeet(p_39690_) || p_39690_.is(Items.SADDLE);
+    }
+
+    @Override
+    public boolean canEquipOnLegs(ItemStack p_39690_) {
+        return super.canEquipOnLegs(p_39690_);
     }
 
     public void handledEventKey(byte pId){

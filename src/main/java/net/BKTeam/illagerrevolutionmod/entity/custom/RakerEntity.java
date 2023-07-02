@@ -76,15 +76,15 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                 this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.LEGS));
                 this.setItemSlot(EquipmentSlot.LEGS,ItemStack.EMPTY);
             }
-            if(!this.getItemBySlot(EquipmentSlot.CHEST).isEmpty()){
-                this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.CHEST));
-                this.setItemSlot(EquipmentSlot.CHEST,ItemStack.EMPTY);
+            if(!this.getItemBySlot(EquipmentSlot.FEET).isEmpty()){
+                this.spawnAtLocation(this.getItemBySlot(EquipmentSlot.FEET));
+                this.setItemSlot(EquipmentSlot.FEET,ItemStack.EMPTY);
             }
         }
     }
 
     private boolean hasArmor(){
-        return !this.getItemBySlot(EquipmentSlot.LEGS).isEmpty() || !this.getItemBySlot(EquipmentSlot.CHEST).isEmpty();
+        return !this.getItemBySlot(EquipmentSlot.LEGS).isEmpty() || !this.getItemBySlot(EquipmentSlot.FEET).isEmpty();
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
@@ -268,16 +268,10 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
             return false;
         }
     }
-    public void openInventory(Player player) {
-        RakerEntity raker = (RakerEntity) ((Object) this);
-        if (!this.level.isClientSide && player instanceof IOpenBeatsContainer) {
-            ((IOpenBeatsContainer)player).openRakerInventory(raker, this.inventory);
-        }
-    }
 
     @Override
     protected int getInventorySize() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -288,12 +282,12 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("isAttacking",this.isAttacking());
-        ItemStack itemStackChest = this.getItemBySlot(EquipmentSlot.CHEST);
+        ItemStack itemStackFeet = this.getItemBySlot(EquipmentSlot.FEET);
         ItemStack itemStackHead = this.getItemBySlot(EquipmentSlot.LEGS);
-        if(!itemStackChest.isEmpty()) {
-            CompoundTag chestCompoundNBT = new CompoundTag();
-            itemStackChest.save(chestCompoundNBT);
-            compound.put("ChestRakerArmor", chestCompoundNBT);
+        if(!itemStackFeet.isEmpty()) {
+            CompoundTag FeetCompoundNBT = new CompoundTag();
+            itemStackFeet.save(FeetCompoundNBT);
+            compound.put("FeetRakerArmor", FeetCompoundNBT);
         }
         if(!itemStackHead.isEmpty()){
             CompoundTag headCompoundNBT = new CompoundTag();
@@ -301,21 +295,17 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
             compound.put("LegsRakerArmor", headCompoundNBT);
         }
     }
-    
-    public boolean hasInventoryChanged(Container container){
-        return this.inventory!=container;
-    }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         setAttacking(compound.getBoolean("isAttacking"));
-        CompoundTag compoundNBT = compound.getCompound("ChestRakerArmor");
+        CompoundTag compoundNBT = compound.getCompound("FeetRakerArmor");
         CompoundTag compoundNBT1 = compound.getCompound("LegsRakerArmor");
         if(!compoundNBT.isEmpty()) {
-            if (this.isArmor(ItemStack.of(compound.getCompound("ChestRakerArmor")))) {
-                ItemStack stack=ItemStack.of(compound.getCompound("ChestRakerArmor"));
-                this.setItemSlot(EquipmentSlot.CHEST,stack);
+            if (this.isArmor(ItemStack.of(compound.getCompound("FeetRakerArmor")))) {
+                ItemStack stack=ItemStack.of(compound.getCompound("FeetRakerArmor"));
+                this.setItemSlot(EquipmentSlot.FEET,stack);
             }
 
         }
@@ -327,15 +317,26 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         }
         this.updateContainerEquipment();
     }
+
+    @Override
+    public boolean canEquipOnFeet(ItemStack p_39690_) {
+        return super.canEquipOnFeet(p_39690_) && ((BeastArmorItem)p_39690_.getItem()).getEquipmetSlot()==EquipmentSlot.FEET;
+    }
+
+    @Override
+    public boolean canEquipOnLegs(ItemStack p_39690_) {
+        return super.canEquipOnLegs(p_39690_) && ((BeastArmorItem)p_39690_.getItem()).getEquipmetSlot()==EquipmentSlot.LEGS;
+    }
+
     protected void updateContainerEquipment() {
-        this.setArmorEquipment(this.inventory.getItem(2));
+        this.setArmorEquipment(this.inventory.getItem(0));
         this.setArmorCrawsEquipment(this.inventory.getItem(1));
     }
 
     private void setArmorEquipment(ItemStack item) {
         if (!this.level.isClientSide) {
             this.getAttribute(Attributes.ARMOR).removeModifier(RAKER_ARMOR_UUID);
-            if(!this.getItemBySlot(EquipmentSlot.CHEST).isEmpty()){
+            if(!this.getItemBySlot(EquipmentSlot.FEET).isEmpty()){
                 int i = ((BeastArmorItem)item.getItem()).getArmorValue();
                 if (i != 0) {
                     this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(RAKER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
@@ -407,13 +408,13 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
 
     @Override
     public void containerChanged(Container pInvBasic) {
-        ItemStack chest= this.getItemBySlot(EquipmentSlot.CHEST);
-        ItemStack chest1= this.getItemBySlot(EquipmentSlot.CHEST);
+        ItemStack Feet= this.getItemBySlot(EquipmentSlot.FEET);
+        ItemStack Feet1= this.getItemBySlot(EquipmentSlot.FEET);
         this.updateContainerEquipment();
         ItemStack legs= this.getItemBySlot(EquipmentSlot.LEGS);
         ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
         if(this.tickCount > 20){
-            if ((this.isArmor(chest1) && chest!=chest1) || (this.isArmor(legs1) && legs!=legs1)){
+            if ((this.isArmor(Feet1) && Feet!=Feet1) || (this.isArmor(legs1) && legs!=legs1)){
                 this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
                 this.updateContainerEquipment();
             }

@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.FeatherProjectile;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -391,11 +392,11 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         }
     }
 
-    public void openInventory(Player player) {
-        ScroungerEntity scrounger = (ScroungerEntity) ((Object) this);
-        if (!this.level.isClientSide && player instanceof IOpenBeatsContainer) {
-            ((IOpenBeatsContainer)player).openScroungerInventory(scrounger, this.inventory);
-        }
+    public int getRowInventory(int slot){
+        return 18;
+    }
+    public int getColumnInventory(int slot){
+        return 80+18*slot;
     }
 
 
@@ -487,10 +488,6 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         return this.inventory;
     }
 
-    public boolean hasInventoryChanged(Container maulerContainer) {
-        return this.inventory!=maulerContainer;
-    }
-
     @Override
     public void performRangedAttack(@NotNull LivingEntity target, float pDistanceFactor) {
         this.setIsAttacking(true);
@@ -550,6 +547,15 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
 
         }
     }
+
+    protected SoundEvent getAmbientSound() {
+        return this.level.random.nextFloat() > 0.5f ? ModSounds.SCROUNGER_AMBIENT1.get() : ModSounds.SCROUNGER_AMBIENT2.get();
+    }
+
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
+        return ModSounds.SCROUNGER_HURT.get();
+    }
+
 
     public void ordenAttack(LivingEntity pTarget){
         this.nextAction(pTarget);
@@ -618,6 +624,34 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             }
         }
     }
+
+    @Override
+    public boolean canEquipOnFeet(ItemStack p_39690_) {
+        return this.canUsedPotion(0,p_39690_);
+    }
+
+    @Override
+    public boolean canViewInventory() {
+        return super.canViewInventory() && this.hasChest();
+    }
+
+    @Override
+    public boolean canEquipOnLegs(ItemStack p_39690_) {
+        return this.canUsedPotion(1,p_39690_);
+    }
+
+    public boolean canUsedPotion(int pSlot, ItemStack pStack){
+        return (pStack.is(Items.POTION)) && this.isBeneficalPotion(pSlot,pStack);
+    }
+
+    public boolean isBeneficalPotion(int pSlot,ItemStack pStack){
+        if(pSlot==0){
+            return PotionUtils.getPotion(pStack).getEffects().stream().anyMatch(e-> e.getEffect().isBeneficial());
+        }else {
+            return PotionUtils.getPotion(pStack).getEffects().stream().anyMatch(e-> !e.getEffect().isBeneficial());
+        }
+    }
+
     static class ScroungerRangedAttack extends Goal{
         private final Mob mob;
         private final RangedAttackMob rangedAttackMob;
@@ -910,7 +944,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                 int j = this.randomIntInclusive(-3, 3);
                 int k = this.randomIntInclusive(-1, 1);
                 int l = this.randomIntInclusive(-3, 3);
-                int b = ((ScroungerEntity)this.tamable).onCombat() ? 10 : 0;
+                int b = ((ScroungerEntity)this.tamable).onCombat() ? 5 : 0;
                 boolean flag = this.maybeTeleportTo(blockpos.getX() + j, blockpos.getY() + k + b, blockpos.getZ() + l);
                 if (flag) {
                     return;
@@ -972,13 +1006,5 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         public static PotionIntent byId(int p_30987_) {
             return BY_ID[p_30987_ % BY_ID.length];
         }
-    }
-
-    protected SoundEvent getAmbientSound() {
-        return this.level.random.nextFloat() > 0.5f ? ModSounds.SCROUNGER_AMBIENT1.get() : ModSounds.SCROUNGER_AMBIENT2.get();
-    }
-
-    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return ModSounds.SCROUNGER_HURT.get();
     }
 }

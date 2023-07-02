@@ -3,7 +3,9 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
+import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
+import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketGlowEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -139,6 +141,13 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
             this.setColor(DyeColor.byId(compound.getInt("color")));
         }
     }
+    public int getRowInventory(int slot){
+        return 36+18*slot;
+    }
+    public int getColumnInventory(int slot){
+        return 8;
+    }
+
 
     public void setIsExcited(boolean isExcited) {
         this.entityData.set(EXCITED,isExcited);
@@ -282,9 +291,32 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
         }
     }
 
+    public void openInventory(Player player) {
+        IllagerBeastEntity beast = (IllagerBeastEntity) ((Object) this);
+        if (!this.level.isClientSide && player instanceof IOpenBeatsContainer) {
+            ((IOpenBeatsContainer)player).openRakerInventory(beast, this.inventory);
+        }
+    }
+
     @Override
     public SimpleContainer getContainer() {
         return this.inventory;
+    }
+
+    public boolean hasInventoryChanged(Container beastContainer) {
+        return this.inventory!= beastContainer;
+    }
+
+    public boolean canViewInventory() {
+        return this.isTame();
+    }
+
+    public boolean canEquipOnFeet(ItemStack p_39690_) {
+        return p_39690_.getItem() instanceof BeastArmorItem beastItem && beastItem.getBeast()==this.getTypeBeast();
+    }
+
+    public boolean canEquipOnLegs(ItemStack p_39690_) {
+        return p_39690_.getItem() instanceof BeastArmorItem beastItem && beastItem.getBeast()==this.getTypeBeast();
     }
 
 

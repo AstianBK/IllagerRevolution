@@ -32,11 +32,6 @@ public class FeatherProjectile extends AbstractArrow implements ItemSupplier {
 
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
-        if(!this.level.isClientSide){
-            if(pResult.getEntity() instanceof LivingEntity livingEntity){
-                this.doPostHurtEffects(livingEntity);
-            }
-        }
         super.onHitEntity(pResult);
     }
 

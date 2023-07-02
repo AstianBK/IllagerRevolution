@@ -11,8 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -59,8 +57,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
 
     }
     public boolean isWieldingTwoHandedWeapon() {
-        return
-                // Bow and crossbows
+        return// Bow and crossbows
                 (this.getMainHandItem().getItem() instanceof ProjectileWeaponItem
                         || this.getOffhandItem().getItem() instanceof ProjectileWeaponItem
                         || this.getMainHandItem().getUseAnimation() == UseAnim.BOW
@@ -72,7 +69,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
 
     }
     private   <E extends IAnimatable> PlayState predicateSit(AnimationEvent<E> event) {
-        if (this.isWieldingTwoHandedWeapon() && !event.isMoving() && isAggressive()){
+        if (this.isWieldingTwoHandedWeapon() && !event.isMoving() && isAggressive() && !this.isCastingSpell()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else if (this.isCastingSpell()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.summon", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
@@ -117,7 +114,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
-        if(this.level.random.nextFloat()<0.70f){
+        if(this.level.random.nextFloat()>0.85f){
             WildRavagerEntity ravager=new WildRavagerEntity(ModEntityTypes.WILD_RAVAGER.get(),this.level);
             ravager.setPos(this.getX(),this.getY(),this.getZ());
             ravager.finalizeSpawn((ServerLevelAccessor) this.level,this.level.getCurrentDifficultyAt(this.blockPosition()),MobSpawnType.MOB_SUMMONED,null,null);
@@ -130,7 +127,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
 
     @Override
     public double getMyRidingOffset() {
-        return super.getMyRidingOffset()+0.3d;
+        return super.getMyRidingOffset()+0.5d;
     }
 
     @Override
@@ -146,7 +143,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
         this.goalSelector.addGoal(0,new BeastTamerSummonSpellGoal());
-        this.goalSelector.addGoal(2, new RangedBowAttackGoal(this, 0.5D, 20, 15.0f) {
+        this.goalSelector.addGoal(2, new RangedBowAttackGoal<IllagerBeastTamerEntity>(this, 0.5D, 20, 15.0f) {
         });
     }
     @Override
@@ -161,13 +158,13 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
     }
     class BeastTamerSummonSpellGoal extends SpellcasterUseSpellGoal {
 
-        private final TargetingConditions vexCountTargeting = TargetingConditions.forCombat().range(20.0D).ignoreLineOfSight().ignoreInvisibilityTesting();
+        private final TargetingConditions beastCountTargeting = TargetingConditions.forCombat().range(20.0D).ignoreLineOfSight().ignoreInvisibilityTesting();
 
         public boolean canUse() {
             if (!super.canUse()) {
                 return false;
             } else {
-                int i = IllagerBeastTamerEntity.this.level.getNearbyEntities(IllagerBeastEntity.class, this.vexCountTargeting, IllagerBeastTamerEntity.this, IllagerBeastTamerEntity.this.getBoundingBox().inflate(20.0D)).size();
+                int i = IllagerBeastTamerEntity.this.level.getNearbyEntities(IllagerBeastEntity.class, this.beastCountTargeting, IllagerBeastTamerEntity.this, IllagerBeastTamerEntity.this.getBoundingBox().inflate(20.0D)).size();
                 return i<4;
             }
         }

@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
+import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -118,7 +119,7 @@ public class WildRavagerEntity extends MountEntity{
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F){
             @Override
             public boolean canUse() {
-                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting();
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting() && this.lookAt!=this.mob.getControllingPassenger();
             }
         });
         this.targetSelector.addGoal(2, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
@@ -144,7 +145,7 @@ public class WildRavagerEntity extends MountEntity{
         });
     }
     protected void updateControlFlags() {
-        boolean flag = !(this.getControllingPassenger() instanceof Mob);
+        boolean flag = !(this.getControllingPassenger() instanceof Player);
         boolean flag1 = !(this.getVehicle() instanceof Boat);
         this.goalSelector.setControlFlag(Goal.Flag.MOVE, flag);
         this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
@@ -309,13 +310,6 @@ public class WildRavagerEntity extends MountEntity{
         ((LivingEntity)pPassenger).yBodyRot = this.yBodyRot;
     }
 
-    public void openInventory(Player player) {
-        WildRavagerEntity mauler = (WildRavagerEntity) ((Object) this);
-        if (!this.level.isClientSide && player instanceof IOpenBeatsContainer) {
-            ((IOpenBeatsContainer)player).openRavagerInventory(mauler, this.inventory);
-        }
-    }
-
     @Override
     public void setItemSlot(EquipmentSlot slotIn, ItemStack itemStack) {
         switch (slotIn.getType()){
@@ -444,11 +438,11 @@ public class WildRavagerEntity extends MountEntity{
                 if(this.drumTick<=0){
                     if(this.reAcvivateEffectTick==0){
                         this.activeEffectAura();
-                        this.reAcvivateEffectTick=200;
+                        this.reAcvivateEffectTick=100;
                     }
                     this.level.playSound(null,this, ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
                     this.level.broadcastEntityEvent(this,(byte) 64);
-                    this.drumTick=1000;
+                    this.drumTick=600;
                 }else {
                     this.stopDrumSound();
                 }
@@ -496,7 +490,7 @@ public class WildRavagerEntity extends MountEntity{
             beast.setIsExcited(true);
         }
         if(this.getOwner()!=null){
-            for(Player player : this.level.getEntitiesOfClass(Player.class,this.getBoundingBox().inflate(15.0D),e -> e == this.getOwner() || this.getOwner().isAlliedTo(e))){
+            for(Player player : this.level.getEntitiesOfClass(Player.class,this.getBoundingBox().inflate(15.0D))){
                 player.addEffect(new MobEffectInstance(effect.getEffect(),effect.getDuration(),effect.getAmplifier(),effect.isAmbient(),effect.isVisible()));
             }
         }
@@ -543,7 +537,7 @@ public class WildRavagerEntity extends MountEntity{
     public void containerChanged(Container pInvBasic) {
         ItemStack saddle = this.getItemBySlot(EquipmentSlot.FEET);
         ItemStack drum = this.getItemBySlot(EquipmentSlot.LEGS);
-        updateContainerEquipment();
+        this.updateContainerEquipment();
         ItemStack saddle1 = this.getItemBySlot(EquipmentSlot.FEET);
         ItemStack drum1 = this.getItemBySlot(EquipmentSlot.LEGS);
         if(this.tickCount > 20){
@@ -606,6 +600,12 @@ public class WildRavagerEntity extends MountEntity{
         if(this.hasDrum()){
             if(this.drumTick>0){
                 this.drumTick--;
+                if(this.drumTick==0){
+                    this.stopDrumSound();
+                    this.level.playSound(null,this, ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
+                    this.level.broadcastEntityEvent(this,(byte) 64);
+                    this.drumTick=600;
+                }
                 this.reAcvivateEffectTick--;
                 if(this.reAcvivateEffectTick<0){
                     this.activeEffectAura();
@@ -615,7 +615,6 @@ public class WildRavagerEntity extends MountEntity{
                     this.stopDrumSound();
                 }
             }
-
         }
         if (this.isAlive()) {
             if (this.isImmobile()) {
@@ -806,13 +805,18 @@ public class WildRavagerEntity extends MountEntity{
             this.playSound(SoundEvents.HORSE_STEP, 0.35F, -0.4F);
         }
     }
+    @Override
+    public boolean canEquipOnFeet(ItemStack p_39690_) {
+        return super.canEquipOnFeet(p_39690_);
+    }
+
+    @Override
+    public boolean canEquipOnLegs(ItemStack p_39690_) {
+        return Block.byItem(p_39690_.getItem()) instanceof DrumBlock;
+    }
 
     public boolean checkSpawnObstruction(LevelReader pLevel) {
         return !pLevel.containsAnyLiquid(this.getBoundingBox());
-    }
-
-    public boolean hasInventoryChanged(Container container){
-        return this.inventory!=container;
     }
 
     class RavagerMeleeAttackGoal extends MeleeAttackGoal {
@@ -823,6 +827,11 @@ public class WildRavagerEntity extends MountEntity{
         protected double getAttackReachSqr(LivingEntity pAttackTarget) {
             float f = WildRavagerEntity.this.getBbWidth() - 0.1F;
             return (double)(f * 2.0F * f * 2.0F + pAttackTarget.getBbWidth());
+        }
+
+        @Override
+        public boolean canUse() {
+            return super.canUse() && !this.mob.isVehicle();
         }
     }
 

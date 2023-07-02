@@ -35,8 +35,8 @@ public class PacketHandler {
         channel.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode,
                 PacketEffectSwordRuned::new, PacketEffectSwordRuned::handle);
 
-        channel.registerMessage(index++,ClientRakerScreenOpenPacket.class,ClientRakerScreenOpenPacket::write,
-                ClientRakerScreenOpenPacket::read,ClientRakerScreenOpenPacket::handle);
+        channel.registerMessage(index++, ClientBeastScreenOpenPacket.class, ClientBeastScreenOpenPacket::write,
+                ClientBeastScreenOpenPacket::read, ClientBeastScreenOpenPacket::handle);
 
         channel.registerMessage(index++, PacketProcBleedingEffect.class, PacketProcBleedingEffect::encode,
                 PacketProcBleedingEffect::new, PacketProcBleedingEffect::handle);
@@ -62,23 +62,11 @@ public class PacketHandler {
         channel.registerMessage(index++, PacketSyncMountAttacks.class, PacketSyncMountAttacks::encode,
                 PacketSyncMountAttacks::new, PacketSyncMountAttacks::handle);
 
-        channel.registerMessage(index++, ClientMaulerScreenOpenPacket.class, ClientMaulerScreenOpenPacket::write,
-                ClientMaulerScreenOpenPacket::read, ClientMaulerScreenOpenPacket::handle);
-
-        channel.registerMessage(index++, ClientRavagerScreenOpenPacket.class, ClientRavagerScreenOpenPacket::write,
-                ClientRavagerScreenOpenPacket::read, ClientRavagerScreenOpenPacket::handle);
-
-        channel.registerMessage(index++, ClientScroungerScreenOpenPacket.class, ClientScroungerScreenOpenPacket::write,
-                ClientScroungerScreenOpenPacket::read, ClientScroungerScreenOpenPacket::handle);
-
         channel.registerMessage(index++, PacketSyncItemCapability.class, PacketSyncItemCapability::encode,
                 PacketSyncItemCapability::new, PacketSyncItemCapability::handle);
 
         channel.registerMessage(index++, PacketStopSound.class,PacketStopSound::write,PacketStopSound::new,
                 PacketStopSound::handle);
-
-        channel.registerMessage(index++, PacketCuteSkin.class,PacketCuteSkin::toBytes,PacketCuteSkin::new,
-                PacketCuteSkin::handle);
 
         channel.registerMessage(index++, PacketRefreshPatreon.class,PacketRefreshPatreon::toBytes,PacketRefreshPatreon::new,
                 PacketRefreshPatreon::handle);
