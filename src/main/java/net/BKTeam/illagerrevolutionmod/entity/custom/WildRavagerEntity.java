@@ -110,20 +110,20 @@ public class WildRavagerEntity extends MountEntity{
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F){
             @Override
             public boolean canUse() {
-                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting();
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting() && !ravager.isVehicle();
             }
         });
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F){
             @Override
             public boolean canUse() {
-                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting() && this.lookAt!=this.mob.getControllingPassenger();
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isSitting() && !ravager.isVehicle();
             }
         });
         this.targetSelector.addGoal(2, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true){
             @Override
             public boolean canUse() {
-                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isTame();
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isTame() && !ravager.isVehicle();
             }
         });
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, (p_199899_) -> {
@@ -131,13 +131,13 @@ public class WildRavagerEntity extends MountEntity{
         }){
             @Override
             public boolean canUse() {
-                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isTame();
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isTame() && !ravager.isVehicle();
             }
         });
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, true){
             @Override
             public boolean canUse() {
-                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isTame();
+                return super.canUse() && this.mob instanceof WildRavagerEntity ravager && !ravager.isTame() && !ravager.isVehicle();
             }
         });
     }
@@ -148,11 +148,6 @@ public class WildRavagerEntity extends MountEntity{
         this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
         this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
         this.goalSelector.setControlFlag(Goal.Flag.TARGET, flag);
-    }
-
-    @Override
-    public SimpleContainer getContainer() {
-        return this.inventory;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -266,7 +261,7 @@ public class WildRavagerEntity extends MountEntity{
     public void travel(Vec3 pTravelVector) {
         if (this.isAlive()) {
             LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
-            if (this.isVehicle() && livingentity!=null && livingentity==this.getOwner() && this.isTame() && !this.isSitting() && this.isSaddled()) {
+            if (this.isVehicle() && livingentity!=null && livingentity==this.getOwner() && !this.isSitting()) {
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);
@@ -412,12 +407,12 @@ public class WildRavagerEntity extends MountEntity{
             }
             return super.mobInteract(pPlayer, pHand);
         }else{
-            if(pPlayer.isShiftKeyDown() && this.isTame()){
+            if(pPlayer.isShiftKeyDown() && this.isOwnedBy(pPlayer)){
                 this.setSitting(!this.isSitting());
                 return InteractionResult.SUCCESS;
             }
         }
-        if(!this.isBaby() && this.isTame()){
+        if(!this.isBaby() && this.isTame() && this.isOwnedBy(pPlayer)){
             this.doPlayerRide(pPlayer);
         }
         return super.mobInteract(pPlayer, pHand);
@@ -505,6 +500,12 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     @Override
+    public SimpleContainer getContainer() {
+        return this.inventory;
+    }
+
+
+    @Override
     public void attackG() {
         if(!this.level.isClientSide){
             if(!this.isImmobile()){
@@ -586,7 +587,7 @@ public class WildRavagerEntity extends MountEntity{
                 }
             }
         }else {
-            return null ;
+            return this.getFirstPassenger() instanceof LivingEntity ? (LivingEntity) this.getFirstPassenger() : null ;
         }
         return null;
     }
@@ -632,10 +633,6 @@ public class WildRavagerEntity extends MountEntity{
                     if (block instanceof LeavesBlock) {
                         flag = this.level.destroyBlock(blockpos, true, this) || flag;
                     }
-                }
-
-                if (!flag && this.onGround) {
-                    this.jumpFromGround();
                 }
             }
 

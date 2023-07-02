@@ -1,10 +1,10 @@
 package net.BKTeam.illagerrevolutionmod.item;
 
 public enum Beast {
-    RAKER("raker",0),
-    MAULER("mauler",18),
-    WILD_RAVAGER("wild_ravager",36),
-    SCROUNGER("scrounger",54);
+    RAKER("raker",54),
+    MAULER("mauler",36),
+    WILD_RAVAGER("wild_ravager",18),
+    SCROUNGER("scrounger",0);
 
     private final String beastName;
     private final int row;
