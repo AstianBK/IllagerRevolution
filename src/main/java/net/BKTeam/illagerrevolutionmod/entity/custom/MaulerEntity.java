@@ -457,10 +457,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     flag = this.level.destroyBlock(blockpos, true, this) || flag;
                 }
             }
-
-            if (!flag && this.onGround) {
-                this.jumpFromGround();
-            }
         }
         LivingEntity target = this.getCatchedEntity();
 

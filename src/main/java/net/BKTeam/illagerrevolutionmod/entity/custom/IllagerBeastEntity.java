@@ -8,6 +8,7 @@ import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketGlowEffect;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -29,6 +30,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
 
 public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,ContainerListener, IHasInventory {
 
@@ -155,7 +157,7 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
             this.excitedTimer=500;
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getValue()+0.10D);
         }else {
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getValue()-0.10D);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue());
             this.excitedTimer=0;
         }
     }
@@ -179,7 +181,7 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
     }
     public void setOnCombat(boolean pBoolean){
         this.entityData.set(ON_COMBAT,pBoolean);
-        this.combatTimer=pBoolean ? 500 :0;
+        this.combatTimer=pBoolean ? 500 : 0;
     }
 
     @Override
@@ -202,6 +204,7 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
                     if(!this.level.isClientSide){
                         this.heal(1);
                     }
+                    this.spawParticleHeal();
                 }
             }
         }
@@ -210,6 +213,17 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
         }
         if(this.excitedTimer<0){
             this.setIsExcited(false);
+        }
+    }
+
+    public void spawParticleHeal() {
+        Random random = new Random();
+        for (int i = 0 ; i<5 ; i++){
+            double box = this.getBbWidth();
+            double xp = this.getX() + random.nextDouble(-box, box);
+            double yp = this.getY() + random.nextDouble(0.0d, this.getBbHeight());
+            double zp = this.getZ() + random.nextDouble(-box, box);
+            this.level.addParticle(ParticleTypes.HAPPY_VILLAGER,xp,yp,zp,0.0F,0.0F,0.0F);
         }
     }
     protected void createInventory() {

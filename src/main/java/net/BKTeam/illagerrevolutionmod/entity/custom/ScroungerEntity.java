@@ -98,7 +98,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                 .add(Attributes.MAX_HEALTH, 15.0D)
                 .add(Attributes.FOLLOW_RANGE, 35.D)
                 .add(Attributes.MOVEMENT_SPEED, 1.0d)
-                .add(Attributes.FLYING_SPEED,3.0D)
+                .add(Attributes.FLYING_SPEED,1.0D)
                 .build();
 
     }
@@ -191,10 +191,10 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand pHand) {
         ItemStack itemstack = player.getItemInHand(pHand);
-        if(!itemstack.isEmpty()){
-            if(itemstack.getItem() instanceof DyeItem dyeItem){
+        if(!itemstack.isEmpty()) {
+            if (itemstack.getItem() instanceof DyeItem dyeItem) {
                 this.setPainted(true);
-                if (dyeItem.getDyeColor()!=this.getColor()){
+                if (dyeItem.getDyeColor() != this.getColor()) {
                     this.setColor(dyeItem.getDyeColor());
                     if (!player.getAbilities().instabuild) {
                         itemstack.shrink(1);
@@ -202,33 +202,31 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                     playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
                     return InteractionResult.SUCCESS;
                 }
-            } else if(itemstack.is(Items.WATER_BUCKET) && this.isPainted()){
+            } else if (itemstack.is(Items.WATER_BUCKET) && this.isPainted()) {
                 this.setPainted(false);
                 this.setColor(DyeColor.WHITE);
                 if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
-                    itemstack=new ItemStack(Items.BUCKET);
-                    player.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
-                    player.setItemSlot(EquipmentSlot.MAINHAND,itemstack);
+                    itemstack = new ItemStack(Items.BUCKET);
+                    player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                    player.setItemSlot(EquipmentSlot.MAINHAND, itemstack);
                 }
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
             }
-            if(itemstack.is(ModItems.SCROUNGER_POUCH.get())){
-                if(!this.level.isClientSide){
+            if (itemstack.is(ModItems.SCROUNGER_POUCH.get())) {
+                if (!this.level.isClientSide) {
                     this.setHasChest(true);
                     this.playSound(SoundEvents.MULE_CHEST);
                 }
-                if(!player.getAbilities().instabuild){
+                if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
                 return InteractionResult.CONSUME;
             }
-            if(itemstack.is(Items.FERMENTED_SPIDER_EYE)){
-                if(this.canTame()){
-                    if (this.level.isClientSide) {
-                        return InteractionResult.CONSUME;
-                    } else {
+            if (itemstack.is(Items.FERMENTED_SPIDER_EYE)) {
+                if(!this.isTame()){
+                    if (this.canTame()) {
                         if (!player.getAbilities().instabuild) {
                             itemstack.shrink(1);
                         }
@@ -239,14 +237,22 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                                 this.setOwnerIllager(null);
                                 this.setTarget(null);
                                 this.setSitting(true);
-                                this.level.broadcastEntityEvent(this, (byte)7);
+                                this.level.broadcastEntityEvent(this, (byte) 7);
                             }
                         }
                         playSound(SoundEvents.PARROT_EAT, 1.0F, 1.5F);
-                        return InteractionResult.SUCCESS;
+                        return InteractionResult.CONSUME;
                     }
-                }
+                }else if(this.getMaxHealth()!=this.getHealth()){
+                    if (!player.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    if(!this.level.isClientSide){
+                        this.heal(2);
 
+                    }
+                    return InteractionResult.CONSUME;
+                }
             }
             if(itemstack.is(ModItems.BEAST_STAFF.get())){
                 this.openInventory(player);
