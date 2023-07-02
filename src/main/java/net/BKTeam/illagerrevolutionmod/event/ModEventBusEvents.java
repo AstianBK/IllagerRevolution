@@ -39,7 +39,7 @@ public class ModEventBusEvents {
     public static ModelLayerLocation RAVAGER = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ravager"), "ravager");
     public static ModelLayerLocation RAVAGER_SADDLE = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ravager_saddle"), "ravager_saddle");
     public static ModelLayerLocation WAR_PAINT = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "war_paint"), "war_paint");
-    public static ModelLayerLocation BUUM = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "buum"), "buum");
+    public static ModelLayerLocation DRUM = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "drum"), "drum");
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     @OnlyIn(Dist.CLIENT)
@@ -98,7 +98,7 @@ public class ModEventBusEvents {
         event.registerLayerDefinition(RAVAGER, WildRavagerModel::createBodyLayer);
         event.registerLayerDefinition(WAR_PAINT, WildRavagerModel::createBodyLayer);
         event.registerLayerDefinition(RAVAGER_SADDLE, WildRavagerModel::createBodyLayer);
-        event.registerLayerDefinition(BUUM, DrumModel::createBodyLayer);
+        event.registerLayerDefinition(DRUM, DrumModel::createBodyLayer);
 
     }
 

@@ -1,9 +1,6 @@
 package net.BKTeam.illagerrevolutionmod;
 
-import net.BKTeam.illagerrevolutionmod.api.IProxy;
-import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrder;
-import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrders;
-import net.minecraft.core.BlockPos;
+import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;

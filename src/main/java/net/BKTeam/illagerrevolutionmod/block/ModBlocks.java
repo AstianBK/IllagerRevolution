@@ -28,20 +28,24 @@ public class ModBlocks {
                     //.strength(9f).requiresCorrectToolForDrops().explosionResistance(5.0F)), ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
     public static final RegistryObject<Block> RUNE_TABLE_BLOCK = registerBlock("rune_table_block",
-            () -> new RuneTableBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).noOcclusion()),
+            () -> new RuneTableBlock(BlockBehaviour.Properties.of(Material.STONE)
+                    .strength(8f).requiresCorrectToolForDrops().noOcclusion()),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
     public static final RegistryObject<Block> DRUM_SPEED = registerBlock("drum_speed",
-            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).noOcclusion(), DrumBlock.Drum.SPEED_DRUM),
+            () -> new DrumBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion(), DrumBlock.Drum.SPEED_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
     public static final RegistryObject<Block> DRUM_DAMAGE = registerBlock("drum_damage",
-            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).noOcclusion(), DrumBlock.Drum.DAMAGE_DRUM),
+            () -> new DrumBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion(), DrumBlock.Drum.DAMAGE_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
 
     public static final RegistryObject<Block> DRUM_HEAL = registerBlock("drum_heal",
-            () -> new DrumBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).noOcclusion(), DrumBlock.Drum.HEAL_DRUM),
+            () -> new DrumBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion(), DrumBlock.Drum.HEAL_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
 

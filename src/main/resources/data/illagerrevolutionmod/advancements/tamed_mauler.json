@@ -1,10 +1,10 @@
 {
   "display": {
     "icon": {
-      "item": "illagerrevolutionmod:raker_claw"
+      "item": "illagerrevolutionmod:mauler_pelt"
     },
-    "title": "Cat Whisperer",
-    "description": "You tamed a Raker, hope it was worth all the scratches!",
+    "title": "Don't worry he doesn't bite",
+    "description": "You tamed a Mauler, let's hope you didn't get rabies. ",
     "frame": "task",
     "show_toast": false,
     "announce_to_chat": true,
@@ -20,7 +20,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "illagerrevolutionmod:raker"
+              "type": "illagerrevolutionmod:mauler"
             }
           }
         ]

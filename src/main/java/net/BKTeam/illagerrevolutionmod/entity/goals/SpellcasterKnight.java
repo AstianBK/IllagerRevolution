@@ -1,6 +1,5 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
-import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -9,7 +8,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;

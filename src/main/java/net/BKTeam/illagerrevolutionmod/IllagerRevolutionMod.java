@@ -16,7 +16,7 @@ import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.*;
 import net.BKTeam.illagerrevolutionmod.event.loot.LootModifiers;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
-import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrders;
+import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.screen.ModMenuTypes;
 import net.BKTeam.illagerrevolutionmod.screen.RuneTableScreen;

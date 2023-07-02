@@ -1,7 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
-import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -13,7 +12,6 @@ import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -91,7 +89,6 @@ public class WildRavagerEntity extends MountEntity{
         super(p_20966_, p_20967_);
         this.maxUpStep = 1.0F;
         this.roarPower = 0.0F;
-        this.xpReward = 20;
         this.drumTick = 0;
         this.reAcvivateEffectTick = 0;
     }
@@ -161,7 +158,7 @@ public class WildRavagerEntity extends MountEntity{
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 90.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+                .add(Attributes.MOVEMENT_SPEED, 0.29D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.10D)
                 .add(Attributes.ATTACK_DAMAGE, 12.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
@@ -567,7 +564,7 @@ public class WildRavagerEntity extends MountEntity{
             if(flag && stack.getItem() instanceof BeastArmorItem){
                 int i = ((BeastArmorItem)stack.getItem()).getArmorValue();
                 if (i != 0) {
-                    this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(WILD_RAVAGER_ARMOR_UUID, "Raker armor bonus", i, AttributeModifier.Operation.ADDITION));
+                    this.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(WILD_RAVAGER_ARMOR_UUID, "Ravager armor bonus", i, AttributeModifier.Operation.ADDITION));
                 }
             }
             this.setHasDrum(!stack1.isEmpty());
@@ -716,8 +713,8 @@ public class WildRavagerEntity extends MountEntity{
             List<Entity> livingEntityList = this.isTame() ? this.level.getEntitiesOfClass(Entity.class,this.getBoundingBox().inflate(4.0d)) : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4.0D), NO_RAVAGER_AND_ALIVE);
             for(Entity livingentity : livingEntityList) {
                 if(livingentity instanceof LivingEntity && livingentity!=this && livingentity!=this.getOwner()){
-                    livingentity.hurt(DamageSource.mobAttack(this), 6.0F);
-                    ((LivingEntity) livingentity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,0));
+                    livingentity.hurt(DamageSource.mobAttack(this), 5.0F);
+                    ((LivingEntity) livingentity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,120,0));
                     this.strongKnockback(livingentity);
                 }else if(livingentity instanceof Projectile projectile){
                     projectile.shoot(projectile.getX()-this.getX(),projectile.getY()-this.getY(),projectile.getZ()-this.getZ(),1f,0.1f);

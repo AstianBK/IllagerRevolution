@@ -32,7 +32,7 @@ public class WildRavagerDrumLayer<T extends WildRavagerEntity,M extends EntityMo
     private void renderRaven(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, boolean leftShoulderIn) {
         if(entitylivingbaseIn.hasDrum()){
             if (model == null) {
-                model = new DrumModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEventBusEvents.BUUM));
+                model = new DrumModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEventBusEvents.DRUM));
             }
             ItemStack stack = entitylivingbaseIn.getContainer().getItem(1);
             if(Block.byItem(stack.getItem()) instanceof DrumBlock drumBlock){

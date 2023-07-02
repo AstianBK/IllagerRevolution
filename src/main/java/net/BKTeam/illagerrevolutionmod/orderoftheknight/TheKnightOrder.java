@@ -1,4 +1,4 @@
-package net.BKTeam.illagerrevolutionmod.orderoftheknigth;
+package net.BKTeam.illagerrevolutionmod.orderoftheknight;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;

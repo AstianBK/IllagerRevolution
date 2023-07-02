@@ -1,6 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
-import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrder;
+import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractIllager;

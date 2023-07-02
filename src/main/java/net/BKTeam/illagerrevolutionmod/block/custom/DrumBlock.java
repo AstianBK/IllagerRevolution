@@ -100,9 +100,10 @@ public class DrumBlock extends BaseEntityBlock {
     }
 
     public enum Drum{
-        DAMAGE_DRUM("damage",new MobEffectInstance(MobEffects.DAMAGE_BOOST,500,0,false,false)),
-        HEAL_DRUM("heal",new MobEffectInstance(MobEffects.REGENERATION,150,0,false,false)),
-        SPEED_DRUM("speed",new MobEffectInstance(MobEffects.MOVEMENT_SPEED,500,0,false,false));
+        DAMAGE_DRUM("damage",new MobEffectInstance(MobEffects.DAMAGE_BOOST,180,0,false,false)),
+        HEAL_DRUM("heal",new MobEffectInstance(MobEffects.REGENERATION,150,1,false,false)),
+        SPEED_DRUM("speed",new MobEffectInstance(MobEffects.MOVEMENT_SPEED,200,1,false,false));
+
 
         final String name;
 

@@ -1,6 +1,5 @@
 package net.BKTeam.illagerrevolutionmod;
 
-import net.BKTeam.illagerrevolutionmod.orderoftheknigth.TheKnightOrderCommand;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;

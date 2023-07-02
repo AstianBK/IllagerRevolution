@@ -4,7 +4,7 @@
       "item": "illagerrevolutionmod:illagium"
     },
     "title": "Illagium Forger",
-    "description": "Finally making lapis and emeralds useful!",
+    "description": "It's nearly indestructible!",
     "frame": "task",
     "background": "minecraft:textures/block/stone.png",
     "show_toast": true,

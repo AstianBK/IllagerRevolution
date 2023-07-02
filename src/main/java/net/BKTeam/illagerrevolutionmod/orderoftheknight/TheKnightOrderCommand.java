@@ -1,4 +1,4 @@
-package net.BKTeam.illagerrevolutionmod.orderoftheknigth;
+package net.BKTeam.illagerrevolutionmod.orderoftheknight;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -22,7 +22,6 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.entity.raid.Raids;
 
 import javax.annotation.Nullable;
 
