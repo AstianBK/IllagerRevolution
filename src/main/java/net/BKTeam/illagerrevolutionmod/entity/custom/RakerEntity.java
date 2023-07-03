@@ -385,7 +385,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
     public void setTame(boolean tamed) {
         super.setTame(tamed);
         if (tamed) {
-            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(40.0D);
+            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0D);
             this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(10.0D);
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40f);
         }
@@ -415,7 +415,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
         if(this.tickCount > 20){
             if ((this.isArmor(Feet1) && Feet!=Feet1) || (this.isArmor(legs1) && legs!=legs1)){
-                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC,1.0f,1.0f);
+                this.playSound(SoundEvents.ARMOR_EQUIP_IRON,1.0f,1.0f);
                 this.updateContainerEquipment();
             }
         }

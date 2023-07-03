@@ -12,6 +12,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -95,6 +97,7 @@ public class VariantRuneBladeItem extends RunedSword{
                     BlockPos pos=pPlayer.getOnPos();
                     BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextInt(-1,1),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextInt(-1,1));
                     FallenKnightEntity fallenKnight=new FallenKnightEntity(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
+                    pPlayer.level.playSound(null,pPlayer.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.AMBIENT,20.0f,1.0f);
                     fallenKnight.setIdOwner(pPlayer.getUUID());
                     fallenKnight.setIsFrozen(this.isFrostRune(pPlayer,itemStack));
                     fallenKnight.finalizeSpawn((ServerLevelAccessor) pLevel,pLevel.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED,null,null);

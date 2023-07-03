@@ -93,7 +93,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 .add(Attributes.MAX_HEALTH, 25.0D)
                 .add(Attributes.ATTACK_DAMAGE, 7.0D)
                 .add(Attributes.FOLLOW_RANGE, 30.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.38f)
+                .add(Attributes.MOVEMENT_SPEED, 0.37f)
                 .add(Attributes.JUMP_STRENGTH,0.60d)
                 .build();
     }
@@ -282,7 +282,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         ItemStack legs1= this.getItemBySlot(EquipmentSlot.LEGS);
         if(this.tickCount > 20){
             if (this.isArmor(legs1) && legs!=legs1){
-                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC);
+                this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
             }
             if(saddled!=saddled1){
                 this.playSound(SoundEvents.HORSE_SADDLE);
@@ -399,7 +399,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             boolean flag = !this.isSaddled() && itemstack.is(Items.SADDLE);
             if (this.isArmor(itemstack) || flag) {
                 if(itemstack.getItem() instanceof BeastArmorItem armorItem){
-                    this.playSound(SoundEvents.ARMOR_EQUIP_GOLD);
+                    this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
                     this.setItemSlot(armorItem.getEquipmetSlot(),itemstack);
                 }else {
                     this.playSound(SoundEvents.HORSE_SADDLE);

@@ -153,7 +153,7 @@ public class WildRavagerEntity extends MountEntity{
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 90.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.29D)
+                .add(Attributes.MOVEMENT_SPEED, 0.30D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.10D)
                 .add(Attributes.ATTACK_DAMAGE, 12.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
@@ -352,7 +352,7 @@ public class WildRavagerEntity extends MountEntity{
                 if(!this.level.isClientSide){
                     if(stack.getItem() instanceof BeastArmorItem){
                         this.setItemSlot(EquipmentSlot.FEET,stack.copy());
-                        this.playSound(SoundEvents.ARMOR_EQUIP_GOLD);
+                        this.playSound(SoundEvents.ARMOR_EQUIP_DIAMOND);
                     }else {
                         this.inventory.setItem(0,stack.copy());
                         this.playSound(SoundEvents.HORSE_SADDLE);
@@ -540,7 +540,7 @@ public class WildRavagerEntity extends MountEntity{
         ItemStack drum1 = this.getItemBySlot(EquipmentSlot.LEGS);
         if(this.tickCount > 20){
             if(this.isArmor(saddle1) && saddle!=saddle1){
-                this.playSound(SoundEvents.ARMOR_EQUIP_GENERIC);
+                this.playSound(SoundEvents.ARMOR_EQUIP_DIAMOND);
             }else if(saddle1.getItem() instanceof SaddleItem && saddle!=saddle1){
                 this.playSound(SoundEvents.HORSE_SADDLE);
             }
@@ -618,7 +618,7 @@ public class WildRavagerEntity extends MountEntity{
             if (this.isImmobile()) {
                 this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
             } else {
-                double d0 = this.getTarget() != null ? 0.35D : 0.3D;
+                double d0 = this.getTarget() != null ? 0.30D : 0.29D;
                 double d1 = this.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue();
                 this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(Mth.lerp(0.1D, d1, d0));
             }
