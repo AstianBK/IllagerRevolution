@@ -2,6 +2,8 @@ package net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.ScroungerModel;
+import net.BKTeam.illagerrevolutionmod.entity.layers.CuteLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintBeastGeckoLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -16,6 +18,7 @@ public class RakerRenderer extends GeoEntityRenderer<RakerEntity> {
 
     public RakerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager,new RakerModel());
+        this.addLayer(new CuteLayer<>(this,new RakerModel()));
         this.addLayer(new WarPaintBeastGeckoLayer<>(this,new RakerModel()));
         this.addLayer(new ScrapperArmorLayer(this,new RakerModel()));
         this.shadowRadius = 0.5f;

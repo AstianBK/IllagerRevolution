@@ -23,6 +23,7 @@ public class ScroungerModel extends AnimatedGeoModel<ScroungerEntity> {
         p_114874_.put(MaulerEntity.Variant.VARIANT5, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/scrounger/scrounger5.png"));
     });
 
+    private static final ResourceLocation TEXTURE_UNDEAD = new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/scrounger/zombie_scrounger.png");
     @Override
     public ResourceLocation getModelResource(ScroungerEntity object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/scrounger.geo.json");
@@ -30,7 +31,7 @@ public class ScroungerModel extends AnimatedGeoModel<ScroungerEntity> {
 
     @Override
     public ResourceLocation getTextureResource(ScroungerEntity object) {
-        return LOCATION_BY_VARIANT.get(object.getIdVariant());
+        return object.isUndead() ? TEXTURE_UNDEAD : LOCATION_BY_VARIANT.get(object.getIdVariant());
     }
 
     @Override

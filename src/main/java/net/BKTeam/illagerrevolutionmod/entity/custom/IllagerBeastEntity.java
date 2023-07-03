@@ -115,6 +115,10 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
         return this.getOwner() != null && this.getCustomName() != null && Patreon.isPatreon((Player) this.getOwner(), IllagerRevolutionMod.ACOLYTES_SKIN_UUID) && this.getCustomName().getString().equals("Cute");
     }
 
+    public boolean isUndead(){
+        return this.getOwner() != null && this.getCustomName() != null && Patreon.isPatreon((Player) this.getOwner(), IllagerRevolutionMod.MAGES_SKIN_UUID) && this.getCustomName().getString().equals("Undead");
+    }
+
     public DyeColor getColor() {
         return DyeColor.byId(this.entityData.get(DATA_PAINT_COLOR));
     }

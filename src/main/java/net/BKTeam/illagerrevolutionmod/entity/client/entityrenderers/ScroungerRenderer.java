@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.ScroungerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
+import net.BKTeam.illagerrevolutionmod.entity.layers.CuteLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.ScroungerArmorLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintBeastGeckoLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,6 +25,7 @@ public class ScroungerRenderer extends ExtendedGeoEntityRenderer<ScroungerEntity
 
     public ScroungerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager,new ScroungerModel());
+        this.addLayer(new CuteLayer<>(this,new ScroungerModel()));
         this.addLayer(new ScroungerArmorLayer(this,new ScroungerModel()));
         this.addLayer(new WarPaintBeastGeckoLayer<>(this,new ScroungerModel()));
         this.shadowRadius = 0.5f;

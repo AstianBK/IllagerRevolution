@@ -23,6 +23,8 @@ public class RakerModel extends AnimatedGeoModel<RakerEntity> {
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT5, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/raker/raker5.png"));
     });
 
+    private static final ResourceLocation TEXTURE_UNDEAD = new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/raker/zombie_raker.png");
+
     @Override
     public ResourceLocation getModelResource(RakerEntity object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/raker.geo.json");
@@ -30,7 +32,11 @@ public class RakerModel extends AnimatedGeoModel<RakerEntity> {
 
     @Override
     public ResourceLocation getTextureResource(RakerEntity object) {
-        return object.isScrapper() ? new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/raker/raker_scrapper.png") : LOCATION_BY_VARIANT.get(object.getIdVariant());
+        if(object.isUndead()){
+            return TEXTURE_UNDEAD;
+        }else {
+            return object.isScrapper() ? new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/raker/raker_scrapper.png") : LOCATION_BY_VARIANT.get(object.getIdVariant());
+        }
     }
     @Override
     public ResourceLocation getAnimationResource(RakerEntity animatable) {

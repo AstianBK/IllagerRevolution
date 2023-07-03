@@ -140,7 +140,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.FERMENTED_SPIDER_EYE),false){
             @Override
             public boolean canUse() {
-                return super.canUse() && ((ScroungerEntity)this.mob).isTame();
+                return super.canUse() && ((ScroungerEntity)this.mob).isTame() && !((ScroungerEntity)this.mob).isSitting();
             }
         });
         this.goalSelector.addGoal(3,new ScroungerWanderGoal(this,1.0D));

@@ -30,7 +30,7 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT4, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager4.png"));
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT5, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png"));
     });
-    private static final ResourceLocation TEXTURE_CUTE = new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager5.png");
+    private static final ResourceLocation TEXTURE_UNDEAD = new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/zombie_wild_ravager.png");
 
     public WildRavagerRenderer(EntityRendererProvider.Context p_174362_) {
         super(p_174362_, new WildRavagerModel(p_174362_.bakeLayer(ModEventBusEvents.RAVAGER)), 1.1F);
@@ -42,7 +42,7 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
 
     @Override
     public ResourceLocation getTextureLocation(WildRavagerEntity pEntity) {
-        return LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
+        return pEntity.isUndead() ? TEXTURE_UNDEAD : LOCATION_BY_VARIANT.get(pEntity.getIdVariant());
     }
 
     @Override

@@ -63,6 +63,8 @@ import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 public class IllagerRevolutionMod {
     public static final String MOD_ID = "illagerrevolutionmod";
     public static String ACOLYTES_SKIN_UUID;
+
+    public static String MAGES_SKIN_UUID;
     public static String KNIGHTS_SKIN_UUID;
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -141,6 +143,34 @@ public class IllagerRevolutionMod {
                     KNIGHTS_SKIN_UUID = sb.toString();
 
                     KNIGHTS_SKIN_UUID = KNIGHTS_SKIN_UUID.replaceAll("<[^>]*>", "");
+                }
+                System.out.println("Refreshing Illager Revolution Patreon List");
+            }catch (MalformedURLException e){
+                System.out.println("Failed");
+            }
+
+        } catch (IOException ignored) {
+            System.out.println("Refreshing Illager Revolution Patreon List failed");
+        }
+        try {
+            try {
+                URL url2 = new URL("https://pastebin.com/raw/qak4v4Vd");
+                HttpURLConnection con = (HttpURLConnection) url2.openConnection();
+                con.setRequestMethod("GET");
+                con.connect();
+                if(con.getResponseCode()!=200){
+                    throw new RuntimeException(String.valueOf(con.getResponseCode()));
+                }else{
+                    Scanner sc = new Scanner(url2.openStream());
+                    StringBuilder sb = new StringBuilder();
+                    while (sc.hasNext()) {
+                        sb.append(sc.next());
+                        //System.out.println(sc.next());
+                    }
+                    sc.close();
+                    MAGES_SKIN_UUID = sb.toString();
+
+                    MAGES_SKIN_UUID = MAGES_SKIN_UUID.replaceAll("<[^>]*>", "");
                 }
                 System.out.println("Refreshing Illager Revolution Patreon List");
             }catch (MalformedURLException e){

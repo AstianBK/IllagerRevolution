@@ -3,7 +3,9 @@ package net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.MaulerModel;
+import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.ScroungerModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MaulerEntity;
+import net.BKTeam.illagerrevolutionmod.entity.layers.CuteLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.MaulerArmorLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.MaulerSaddlerLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.WarPaintBeastGeckoLayer;
@@ -17,6 +19,7 @@ public class MaulerRenderer extends GeoEntityRenderer<MaulerEntity> {
 
     public MaulerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager,new MaulerModel());
+        this.addLayer(new CuteLayer<>(this,new MaulerModel()));
         this.addLayer(new WarPaintBeastGeckoLayer<>(this,new MaulerModel()));
         this.addLayer(new MaulerSaddlerLayer(this,new MaulerModel()));
         this.addLayer(new MaulerArmorLayer(this,new MaulerModel()));

@@ -74,7 +74,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
         if (this.isWieldingTwoHandedWeapon() && !event.isMoving() && isAggressive() && !this.isCastingSpell()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else if (this.isCastingSpell()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.summon", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.sit2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else {
             event.getController().clearAnimationCache();
         }

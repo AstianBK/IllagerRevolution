@@ -104,7 +104,7 @@ public class WildRavagerEntity extends MountEntity{
         this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.HAY_BLOCK),false){
             @Override
             public boolean canUse() {
-                return super.canUse() && ((TamableAnimal)this.mob).isTame() && ((TamableAnimal)this.mob).isOrderedToSit();
+                return super.canUse() && ((TamableAnimal)this.mob).isTame() && !((TamableAnimal)this.mob).isOrderedToSit();
             }
         });
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F){

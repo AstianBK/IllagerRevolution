@@ -20,7 +20,7 @@ public class SerratedEdgeEnchantment extends Enchantment {
     @Override
     public boolean canEnchant(ItemStack stack) {
         Item item = stack.getItem();
-        return item == ModItems.ILLAGIUM_CLEAVER.get();
+        return item == ModItems.ILLAGIUM_SWORD.get();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SerratedEdgeEnchantment extends Enchantment {
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         Item item = stack.getItem();
-        return item == ModItems.ILLAGIUM_CLEAVER.get();
+        return item == ModItems.ILLAGIUM_SWORD.get();
     }
     @Override
     public int getMaxLevel() {
