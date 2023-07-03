@@ -70,24 +70,16 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
         super(entityType, level);
 
     }
-    private   <E extends IAnimatable> PlayState predicateSit(AnimationEvent<E> event) {
-        if (this.isWieldingTwoHandedWeapon() && !event.isMoving() && isAggressive() && !this.isCastingSpell()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-        }else if (this.isCastingSpell()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.sit2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-        }else {
-            event.getController().clearAnimationCache();
-        }
-        return PlayState.CONTINUE;
-
-    }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-
         if (event.isMoving() && !this.isAggressive() && !this.isCastingSpell() && !this.isPassenger()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.walk", ILoopType.EDefaultLoopTypes.LOOP));
         }
-        else if (this.isWieldingTwoHandedWeapon() && event.isMoving() && !this.isPassenger()){
+        else if (this.isWieldingTwoHandedWeapon() && event.isMoving() && !this.isPassenger() && !this.isCastingSpell()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.walk2", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if (this.isWieldingTwoHandedWeapon() && !event.isMoving() && this.isAggressive() && !this.isCastingSpell() && !this.isPassenger()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager.attack1", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if (this.isCastingSpell()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.beasttamerillager."+(this.isPassenger() ? "sit2" : "summon"), ILoopType.EDefaultLoopTypes.LOOP));
         }
         else event.getController().setAnimation(new AnimationBuilder().addAnimation(this.isPassenger()?"animation.beasttamerillager.sit" : "animation.beasttamerillager.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
@@ -158,6 +150,47 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         level.addFreshEntity(entityarrow);
     }
+
+    @Override
+    protected SoundEvent getCastingSoundEvent() {
+        return SoundEvents.EVOKER_PREPARE_SUMMON;
+    }
+
+
+    @Override
+    public SimpleContainer getInventory() {
+        return inventory;
+    }
+
+    @Override
+    public void applyRaidBuffs(int pWave, boolean p_37845_) {
+
+    }
+
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.VINDICATOR_AMBIENT;
+    }
+
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
+        return SoundEvents.PILLAGER_HURT;
+    }
+
+    @Override
+    public SoundEvent getCelebrateSound() {
+        return SoundEvents.EVOKER_CELEBRATE;
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController<>(this, "controller",
+                0, this::predicate));
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
+    }
+
     class BeastTamerSummonSpellGoal extends SpellcasterUseSpellGoal {
 
         private final TargetingConditions beastCountTargeting = TargetingConditions.forCombat().range(20.0D).ignoreLineOfSight().ignoreInvisibilityTesting();
@@ -218,9 +251,6 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                 mauler.finalizeSpawn(serverlevel, IllagerBeastTamerEntity.this.level.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData)null, (CompoundTag)null);
                 serverlevel.addFreshEntityWithPassengers(mauler);
                 mauler.setOwner(IllagerBeastTamerEntity.this);
-                if(serverlevel.random.nextFloat()<0.50f){
-                    IllagerBeastTamerEntity.this.startRiding(mauler);
-                }
             }else {
                 List<AbstractIllager> illagerList = IllagerBeastTamerEntity.this.level.getEntitiesOfClass(AbstractIllager.class,IllagerBeastTamerEntity.this.getBoundingBox().inflate(40.0D));
                 int cc=0;
@@ -241,59 +271,6 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                 }
             }
         }
-    }
-
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-    }
-
-    @Override
-    protected SoundEvent getCastingSoundEvent() {
-        return SoundEvents.EVOKER_PREPARE_SUMMON;
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-    }
-
-
-    @Override
-    public SimpleContainer getInventory() {
-        return inventory;
-    }
-
-    @Override
-    public void applyRaidBuffs(int pWave, boolean p_37845_) {
-
-    }
-
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.VINDICATOR_AMBIENT;
-    }
-
-    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.PILLAGER_HURT;
-    }
-
-    @Override
-    public SoundEvent getCelebrateSound() {
-        return null;
-    }
-
-    @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller",
-                0, this::predicate));
-        data.addAnimationController(new AnimationController<>(this, "controller_Attack",
-                0, this::predicateSit));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
 

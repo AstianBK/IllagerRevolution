@@ -189,7 +189,6 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
 
         Item itemForTaming = Items.PUFFERFISH;
 
-        super.mobInteract(player, hand);
         if(!itemstack.isEmpty()){
             if(itemstack.getItem() instanceof DyeItem dyeItem){
                 this.setPainted(true);
@@ -227,6 +226,18 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                 return InteractionResult.SUCCESS;
             }
         }
+        if(this.isArmor(itemstack)){
+            if(this.canEquipOnFeet(itemstack)){
+                this.setItemSlot(EquipmentSlot.FEET,itemstack);
+                itemstack.shrink(1);
+            }else {
+                if(this.canEquipOnLegs(itemstack)){
+                    this.setItemSlot(EquipmentSlot.LEGS,itemstack);
+                    itemstack.shrink(1);
+                }
+            }
+            return InteractionResult.CONSUME;
+        }
         if (item == itemForTaming && !isTame() && health <= maxhealth*30/100) {
             if (this.level.isClientSide) {
                 return InteractionResult.CONSUME;
@@ -261,7 +272,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         return super.mobInteract(player, hand);
     }
     public boolean isArmor(ItemStack stack){
-        return stack.getItem() instanceof BeastArmorItem;
+        return stack.getItem() instanceof BeastArmorItem armor && armor.getBeast()==this.getTypeBeast();
     }
 
     public boolean isAlliedTo(@NotNull Entity pEntity) {

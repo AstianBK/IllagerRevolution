@@ -59,9 +59,6 @@ public class EventDeath {
                     scrounger.setOwnerIllager(null);
                 }
             }
-            if (entity instanceof BladeKnightEntity entity1){
-
-            }
         }
     }
     public static void upSouls(LevelAccessor world, Entity entity,Entity assasin) {

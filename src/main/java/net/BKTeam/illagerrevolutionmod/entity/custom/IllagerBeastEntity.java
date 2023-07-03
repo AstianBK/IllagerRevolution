@@ -203,12 +203,14 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
             this.setOnCombat(false);
         }
         if(!this.onCombat()){
-            if(this.getMaxHealth()!=this.getHealth()){
-                if(this.tickCount%20==0){
-                    if(!this.level.isClientSide){
-                        this.heal(1);
+            if(this.isTame()){
+                if(this.getMaxHealth()!=this.getHealth()){
+                    if(this.tickCount%20==0){
+                        if(!this.level.isClientSide){
+                            this.heal(1);
+                        }
+                        this.spawParticleHeal();
                     }
-                    this.spawParticleHeal();
                 }
             }
         }

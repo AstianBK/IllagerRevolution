@@ -185,7 +185,6 @@ public class IllagerRevolutionMod {
             eventBus.addListener(this::registerRenderers);
         });
 
-        //MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class,CapabilityHandler::attachItemCapability);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,CapabilityHandler::attachEntityCapability);
         MinecraftForge.EVENT_BUS.addListener(this::onLoadingLevel);
         DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, IllagerRevolutionMod.MOD_ID);

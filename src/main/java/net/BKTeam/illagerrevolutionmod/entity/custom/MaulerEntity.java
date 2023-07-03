@@ -212,7 +212,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(living!=this && living!=this.getOwner() && !flag){
                         flag=true;
                         this.catchedTarget(living);
-                        living.doHurtTarget(living);
+                        this.doHurtTarget(living);
                     }else if(flag){
                         break;
                     }
@@ -477,6 +477,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     this.mauledAttackTimer=10;
                     if(target!=null && target.isAlive()){
                         target.hurt(DamageSource.mobAttack(this),5.0f);
+                        target.addEffect(new MobEffectInstance(InitEffect.MAULED.get(),1200,0));
                     }
                 }
             }else {
@@ -614,10 +615,16 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public boolean doHurtTarget(Entity pEntity) {
-        if(this.level.random.nextFloat() > 0.75F && this.catchedTimer<=0){
-            pEntity.startRiding(this);
-            this.catchedTimer=400;
+        if(pEntity instanceof  LivingEntity living){
+            if(this.level.random.nextFloat() > 0.90F && this.catchedTimer<=0){
+                living.startRiding(this);
+                this.catchedTimer=400;
+            }
+            if(this.level.random.nextFloat() > 0.99F){
+                living.addEffect(new MobEffectInstance(InitEffect.MAULED.get(),1200,0));
+            }
         }
+
         return super.doHurtTarget(pEntity);
     }
 
@@ -646,7 +653,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void setIsMauled(boolean pBoolean){
         this.entityData.set(MAULED,pBoolean);
         this.mauledTimer= pBoolean ? 40 : 0 ;
-        this.mauledAttackTimer = pBoolean ? 10 : 0;
     }
 
     public void readAdditionalSaveData(CompoundTag pCompound) {
@@ -757,7 +763,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
         @Override
         public boolean canUse() {
-            return this.mauler.getCatchedEntity()!=null && this.mauler.level.random.nextFloat() > 0.80F && !this.mauler.isMauled();
+            return this.mauler.getCatchedEntity()!=null && this.mauler.level.random.nextFloat() > 0.90F && !this.mauler.isMauled();
         }
     }
 }
