@@ -1,13 +1,13 @@
 {
   "type": "minecraft:smithing",
   "base": {
-    "item": "minecraft:iron_pickaxe"
+    "item": "minecraft:iron_axe"
   },
   "addition": {
     "item": "illagerrevolutionmod:illagium"
   },
   "result": {
-    "item": "illagerrevolutionmod:illagium_hammer",
+    "item": "illagerrevolutionmod:illagium_axe",
     "count": 1
   }
 }

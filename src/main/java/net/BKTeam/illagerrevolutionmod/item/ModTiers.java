@@ -5,8 +5,8 @@ import net.minecraftforge.common.ForgeTier;
 
 
 public class ModTiers {
-    public static final ForgeTier ILLAGIUM = new ForgeTier(5, 5000, 7.5f,
-            1f, 15, BlockTags.NEEDS_IRON_TOOL,
+    public static final ForgeTier ILLAGIUM = new ForgeTier(5, 4031, 6.0F,
+            0F, 14, BlockTags.NEEDS_IRON_TOOL,
             () -> Ingredient.of(ModItems.ILLAGIUM.get()));
     
        public static final ForgeTier JUNK = new ForgeTier(0, 350, 1.0f,
