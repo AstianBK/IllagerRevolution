@@ -1,13 +1,13 @@
 {
   "type": "minecraft:smithing",
   "base": {
-    "item": "minecraft:iron_hoe"
+    "item": "minecraft:iron_shovel"
   },
   "addition": {
     "item": "illagerrevolutionmod:illagium"
   },
   "result": {
-    "item": "illagerrevolutionmod:illagium_scythe",
+    "item": "illagerrevolutionmod:illagium_shovel",
     "count": 1
   }
 }
