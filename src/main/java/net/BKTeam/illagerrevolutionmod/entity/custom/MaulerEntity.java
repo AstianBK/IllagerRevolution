@@ -726,7 +726,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             double d0 = this.getAttackReachSqr(entity);
             if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
                 this.resetAttackCooldown();
-                this.goalOwner.playSound(SoundEvents.WOLF_HURT, 1.2F, -3.0F);
+                this.goalOwner.playSound(ModSounds.MAULER_BARK.get(), 1.0F, 1.0F);
                 this.goalOwner.doHurtTarget(entity);
             }
         }

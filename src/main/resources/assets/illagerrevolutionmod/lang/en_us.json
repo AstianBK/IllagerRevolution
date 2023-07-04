@@ -60,7 +60,7 @@
 
   "item.illagerrevolutionmod.encrusted_lapis": "Encrusted Lapis",
   "item.illagerrevolutionmod.illagium": "Illagium Ingot",
-  "item.illagerrevolutionmod.scraper_claw": "Raker Claw",
+  "item.illagerrevolutionmod.raker_claw": "Raker Claw",
   "item.illagerrevolutionmod.mauler_pelt": "Mauler Pelt",
   "item.illagerrevolutionmod.scrounger_feather": "Scrounger Feather",
 
@@ -97,6 +97,14 @@
   "itemGroup.illagerrevolutiontab": "Illager Revolution",
 
   "sounds.illagerrevolutionmod.tamer_whistle": "Beast Tamer Whistling",
+
+  "tooltip.illagerrevolutionmod.beast_staff": "niggers",
+  "tooltip.illagerrevolutionmod.rune_fragment_bone": "niggers",
+  "tooltip.illagerrevolutionmod.rune_fragment_flesh": "niggers",
+  "tooltip.illagerrevolutionmod.rune_fragment_undying": "niggers",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_bone": "niggers",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_flesh": "niggers",
+
 
   "tooltip.illagerrevolutionmod.junk_axe0": "0 Hits remaining",
   "tooltip.illagerrevolutionmod.junk_axe1": "1 Hits remaining",
