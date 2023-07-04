@@ -196,13 +196,13 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
-    public void attackC() {
+    public void attackG() {
         if(this.attackTimer<=0 && !this.isMauled()){
             if(this.getPassengers().size()<2){
                 boolean flag=false;
                 this.setAttacking(true);
                 this.level.broadcastEntityEvent(this, (byte) 8);
-                this.level.playSound(null,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
+                this.level.playSound(null,this.getOnPos(),ModSounds.MAULER_BARK.get(), SoundSource.HOSTILE,1.0f,1.0f);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
                 float f1 = Mth.sin(f);
                 float f2 = Mth.cos(f);
@@ -227,7 +227,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
             }
         }
-        super.attackC();
+        super.attackG();
     }
 
     @Override
@@ -236,12 +236,12 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
-    public void attackG() {
+    public void attackV() {
         if(this.mauledTimer<=0 && this.attackTimer<=0){
             this.setIsMauled(true);
             this.level.broadcastEntityEvent(this, (byte) 4);
         }
-        super.attackG();
+        super.attackV();
     }
 
     public LivingEntity getCatchedEntity(){
@@ -729,7 +729,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             double d0 = this.getAttackReachSqr(entity);
             if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
                 this.resetAttackCooldown();
-                this.goalOwner.playSound(SoundEvents.WOLF_HURT, 1.2F, -3.0F);
+                this.goalOwner.playSound(ModSounds.MAULER_BARK.get(), 1.0F, 1.0F);
                 this.goalOwner.doHurtTarget(entity);
             }
         }
