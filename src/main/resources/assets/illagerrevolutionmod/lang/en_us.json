@@ -98,7 +98,12 @@
 
   "sounds.illagerrevolutionmod.tamer_whistle": "Beast Tamer Whistling",
 
-  "tooltip.illagerrevolutionmod.junk_axe": "Hits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe0": "0 Hits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe1": "1 Hits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe2": "2 Hits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe3": "3 Hits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe4": "4 Hits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe5": "5 Hits remaining",
 
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",
