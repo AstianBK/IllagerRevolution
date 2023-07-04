@@ -98,6 +98,8 @@
 
   "sounds.illagerrevolutionmod.tamer_whistle": "Beast Tamer Whistling",
 
+  "tooltip.illagerrevolutionmod.junk_axe": "Hits remaining",
+
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",
