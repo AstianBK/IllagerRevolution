@@ -10,13 +10,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FragmentItem extends Item {
-    public FragmentItem(Properties pProperties) {
+    private final String name;
+    public FragmentItem(Properties pProperties,String name) {
         super(pProperties);
+        this.name=name;
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod."+this.getName(pStack)));
+        pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod."+this.name));
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 }

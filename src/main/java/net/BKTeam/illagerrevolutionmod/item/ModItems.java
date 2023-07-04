@@ -28,19 +28,19 @@ public class ModItems {
     //
     //
     public static final RegistryObject<Item> RUNE_FRAGMENT_BONE = ITEMS.register("rune_fragment_bone",()->
-            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16),"rune_fragment_bone"));
 
     public static final RegistryObject<Item> RUNE_FRAGMENT_FLESH = ITEMS.register("rune_fragment_flesh",()->
-            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16),"rune_fragment_flesh"));
 
     public static final RegistryObject<Item> RUNE_FRAGMENT_UNDYING = ITEMS.register("rune_fragment_undying",()->
-            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16),"rune_fragment_undying"));
 
     public static final RegistryObject<Item> RUNE_TABLET_UNDYING_BONE = ITEMS.register("rune_tablet_undying_bone",()->
-            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16),"rune_tablet_undying_bone"));
 
     public static final RegistryObject<Item> RUNE_TABLET_UNDYING_FLESH = ITEMS.register("rune_tablet_undying_flesh",()->
-            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16),"rune_tablet_undying_flesh"));
     
     
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
