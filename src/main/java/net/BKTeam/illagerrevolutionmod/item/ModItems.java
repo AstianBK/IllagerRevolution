@@ -28,22 +28,19 @@ public class ModItems {
     //
     //
     public static final RegistryObject<Item> RUNE_FRAGMENT_BONE = ITEMS.register("rune_fragment_bone",()->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
 
     public static final RegistryObject<Item> RUNE_FRAGMENT_FLESH = ITEMS.register("rune_fragment_flesh",()->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
 
     public static final RegistryObject<Item> RUNE_FRAGMENT_UNDYING = ITEMS.register("rune_fragment_undying",()->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
 
     public static final RegistryObject<Item> RUNE_TABLET_UNDYING_BONE = ITEMS.register("rune_tablet_undying_bone",()->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
 
     public static final RegistryObject<Item> RUNE_TABLET_UNDYING_FLESH = ITEMS.register("rune_tablet_undying_flesh",()->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
-
-    
-    
+            new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16)));
     
     
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
@@ -59,7 +56,7 @@ public class ModItems {
             ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> BEAST_STAFF = ITEMS.register("beast_staff",
-            ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1)));
+            ()-> new BeastStaffItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1)));
 
     public static final RegistryObject<Item> ENCRUSTED_LAPIS = ITEMS.register("encrusted_lapis",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
@@ -74,16 +71,16 @@ public class ModItems {
             ()-> new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SOUL_PROJECTILE = ITEMS.register("soul_projectile",
-            ()->new SoulProjectileItem(new Item.Properties().stacksTo(1)));
+            ()->new Item(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> ARROW_BEAST = ITEMS.register("arrow_beast",
             ()->new ArrowBeastItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SOUL_HUNTER = ITEMS.register("soul_hunter",
-            ()->new SoulHunterItem(new Item.Properties().stacksTo(1)));
+            ()->new Item(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> SOUL_WITHER = ITEMS.register("soul_wither",
-            ()->new SoulWitherItem(new Item.Properties().stacksTo(1)));
+            ()->new Item(new Item.Properties().stacksTo(1)));
 
 
     public static final RegistryObject<Item> ILLAGERMINERBADLANDS_SPAWN_EGG = ITEMS.register("illagerminerbadlands_spawn_egg",
