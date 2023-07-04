@@ -189,13 +189,13 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
-    public void attackC() {
+    public void attackG() {
         if(this.attackTimer<=0 && !this.isMauled()){
             if(this.getPassengers().size()<2){
                 boolean flag=false;
                 this.setAttacking(true);
                 this.level.broadcastEntityEvent(this, (byte) 8);
-                this.level.playSound(null,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
+                this.level.playSound(null,this.getOnPos(),ModSounds.MAULER_BARK.get(), SoundSource.HOSTILE,1.0f,1.0f);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
                 float f1 = Mth.sin(f);
                 float f2 = Mth.cos(f);
@@ -213,14 +213,14 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }else {
                 this.setAttacking(true);
                 this.level.broadcastEntityEvent(this, (byte) 8);
-                this.level.playSound(null,this.getOnPos(),SoundEvents.WOLF_HURT, SoundSource.HOSTILE,1.0f,1.0f);
+                this.level.playSound(null,this.getOnPos(), ModSounds.MAULER_BARK.get(), SoundSource.HOSTILE,1.0f,1.0f);
                 if(this.getCatchedEntity()!=null){
                     this.getCatchedEntity().addEffect(new MobEffectInstance(InitEffect.MAULED.get(),100,0));
                     this.releaseTarget(this.getCatchedEntity());
                 }
             }
         }
-        super.attackC();
+        super.attackG();
     }
 
     @Override
@@ -229,13 +229,13 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
-    public void attackG() {
+    public void attackV() {
         if(this.mauledTimer<=0 && this.attackTimer<=0 && this.hasCatched()){
             this.setIsMauled(true);
             this.level.playSound(null,this,ModSounds.MAULER_SNARL.get(),SoundSource.HOSTILE,1.0F,1.0F);
             this.level.broadcastEntityEvent(this, (byte) 4);
         }
-        super.attackG();
+        super.attackV();
     }
 
     public LivingEntity getCatchedEntity(){
