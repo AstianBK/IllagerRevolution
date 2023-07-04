@@ -60,7 +60,7 @@ public class MauledCapability implements IMauledCapability {
                     living.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(NATURAL_ARMOR_MODIFIER_UUID,"natural armor",armor, AttributeModifier.Operation.ADDITION));
                 }
             }
-            checkArmor0(living);
+            this.checkArmor0(living);
 
             oldArmorTotal=living.getArmorValue();
             ArmorTotal=living.getArmorValue();
@@ -144,7 +144,7 @@ public class MauledCapability implements IMauledCapability {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        setArmorNatural(nbt.getDouble("armorNatural"));
+        this.setArmorNatural(nbt.getDouble("armorNatural"));
     }
 
     public static class AplastarProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {

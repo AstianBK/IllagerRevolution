@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import net.BKTeam.illagerrevolutionmod.api.IMauledCapability;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.capability.MauledCapability;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
@@ -21,6 +22,7 @@ import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -47,6 +49,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -253,15 +256,6 @@ public class Events {
             }
         }
     }
-
-
-
-    /*@SubscribeEvent
-    public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event){
-        if(event.getObject().getItem() == ModItems.JUNK_AXE.get()){
-            event.addCapability(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"axe_tier"),new ItemCapability.SwordProvider());
-        }
-    }*/
     public static void sendSmoke(LivingEntity livingEntity) {
         if (livingEntity instanceof ServerPlayer player) {
             PacketHandler.sendToPlayer(new PacketSmoke(player), player);
@@ -271,6 +265,13 @@ public class Events {
 
     private static boolean checkHelmetMiner(Item item){
         return item== ModItems.HELMET_MINER.get() || item==ModItems.HELMET_MINER_REINFORCED.get();
+    }
+
+    @SubscribeEvent
+    public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event){
+        if(event.getObject() instanceof LivingEntity){
+            event.addCapability(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"mauled"),new MauledCapability.AplastarProvider());
+        }
     }
 
     private static void hurtHelmet(ItemStack itemStack, Player player){
@@ -299,6 +300,12 @@ public class Events {
     public static void onEntityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
         Level world = entity.level;
+        if (entity.hasEffect(InitEffect.MAULED.get())) {
+            IMauledCapability capability= CapabilityHandler.getEntityCapability(entity,CapabilityHandler.MAULED_CAPABILITY);
+            if(capability!=null){
+                capability.onTick(entity,entity.getEffect(InitEffect.MAULED.get()));
+            }
+        }
         if (!(entity.hasEffect(InitEffect.DEATH_MARK.get())) && Util.entitydeterminar(entity) != null) {
             if (!world.getEntitiesOfClass(BladeKnightEntity.class, AABB.ofSize(new Vec3(entity.getX(), entity.getY(), entity.getZ()), 50, 50, 50), e -> true).isEmpty()) {
                 entity.addEffect(new MobEffectInstance(InitEffect.DEATH_MARK.get(), 3000, 0));

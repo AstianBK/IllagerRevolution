@@ -25,22 +25,14 @@ public class MauledEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        if(!pLivingEntity.level.isClientSide){
-            IMauledCapability capability= CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.MAULED_CAPABILITY);
-            if(capability!=null){
-                capability.onTick(pLivingEntity,pLivingEntity.getEffect(this));
-            }
-        }
         super.applyEffectTick(pLivingEntity, pAmplifier);
     }
 
     @Override
     public void removeAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-        if(!pLivingEntity.level.isClientSide){
-            IMauledCapability capability= CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.MAULED_CAPABILITY);
-            if(capability!=null){
-                capability.removeAttributeAmor(pLivingEntity,pLivingEntity.getEffect(this));
-            }
+        IMauledCapability capability= CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.MAULED_CAPABILITY);
+        if(capability!=null){
+            capability.removeAttributeAmor(pLivingEntity,pLivingEntity.getEffect(this));
         }
         super.removeAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier);
     }

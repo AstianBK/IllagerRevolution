@@ -32,6 +32,7 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -117,7 +118,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.registerGoals();
     }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !isAggressive() && !this.isSitting()) {
+        if (event.isMoving() && !this.isAggressive() && !this.isSitting()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.walk"+(!this.isVehicle() ? "1" : "2"), ILoopType.EDefaultLoopTypes.LOOP));
         }else if(event.isMoving() && this.isAggressive() && !this.isSitting()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.walk2", ILoopType.EDefaultLoopTypes.LOOP));
@@ -129,10 +130,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     private  <E extends IAnimatable> PlayState predicateHead(AnimationEvent<E> event) {
-        if (this.isMauled()){
+        if (this.isMauled() && !this.isAttacking()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-        }else if(this.isAttacking()) {
-            //event.getController().setAnimationSpeed(1.0d);
+        }else if(this.isAttacking() && !this.isMauled()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else {
             event.getController().clearAnimationCache();
@@ -421,10 +421,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
 
     public void catchedTarget(LivingEntity entity){
-        if(entity!=null && this.canAddPassenger(entity)){
+        if(entity!=null && this.canAddPassenger(entity) && entity.getBbWidth()<1.4D && entity.getBbHeight()<2.7d && !(entity instanceof WitherBoss)){
             if (!this.level.isClientSide) {
                 entity.startRiding(this);
-
             }
         }
     }
@@ -465,7 +464,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
         if(this.isMauled()){
             this.mauledTimer--;
-            this.mauledAttackTimer--;
             if(this.mauledTimer!=0){
                 if(this.mauledAttackTimer==0){
                     this.mauledAttackTimer=10;
@@ -474,6 +472,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                         target.addEffect(new MobEffectInstance(InitEffect.MAULED.get(),1200,0));
                     }
                 }
+                this.mauledAttackTimer--;
             }else {
                 this.setIsMauled(false);
             }
@@ -611,7 +610,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public boolean doHurtTarget(Entity pEntity) {
         if(pEntity instanceof  LivingEntity living){
             if(this.level.random.nextFloat() > 0.90F && this.catchedTimer<=0){
-                living.startRiding(this);
+                this.catchedTarget(living);
                 this.catchedTimer=400;
             }
             if(this.level.random.nextFloat() > 0.99F){

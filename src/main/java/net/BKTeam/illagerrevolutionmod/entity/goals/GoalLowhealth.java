@@ -38,6 +38,7 @@ public class GoalLowhealth extends Goal {
         this.owner.getNavigation().stop();
         this.countTick=this.durationGoal;
         this.owner.setStartAnimationLowHealth(true);
+        this.owner.stopRiding();
     }
 
     @Override
