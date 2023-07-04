@@ -251,6 +251,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void handleEntityEvent(byte pId) {
         if(pId==4){
             this.setIsMauled(true);
+            this.level.playSound(null,this,ModSounds.MAULER_SNARL.get(),SoundSource.HOSTILE,1.0F,1.0F);
         }else if(pId == 8){
             this.setAttacking(true);
         }
