@@ -465,15 +465,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
         if(this.isMauled()){
             this.mauledTimer--;
-            this.mauledAttackTimer--;
             if(this.mauledTimer!=0){
                 if(this.mauledAttackTimer==0){
                     this.mauledAttackTimer=10;
                     if(target!=null && target.isAlive()){
-                        target.hurt(DamageSource.mobAttack(this),5.0f);
-                        target.addEffect(new MobEffectInstance(InitEffect.MAULED.get(),1200,0));
+                        target.hurt(DamageSource.mobAttack(this),2.0f);
+                        target.addEffect(new MobEffectInstance(InitEffect.MAULED.get(),350,0));
                     }
                 }
+                this.mauledAttackTimer--;
             }else {
                 this.setIsMauled(false);
             }
