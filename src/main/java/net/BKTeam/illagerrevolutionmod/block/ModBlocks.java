@@ -59,9 +59,8 @@ public class ModBlocks {
 
     private static <T extends  Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block,
                                                                             CreativeModeTab tab) {
-    return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(),
-            new Item.Properties().tab(tab)));
-}
+        return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(tab).stacksTo(1)));
+    }
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

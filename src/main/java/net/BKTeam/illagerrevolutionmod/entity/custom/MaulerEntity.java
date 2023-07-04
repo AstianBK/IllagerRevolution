@@ -138,13 +138,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
         return PlayState.CONTINUE;
     }
-
-    private  <E extends IAnimatable> PlayState predicateAttack(AnimationEvent<E> event) {
-        /*else{
-            event.getController().clearAnimationCache();
-        }*/
-        return PlayState.CONTINUE;
-    }
     @Override
     public boolean isFood(ItemStack pStack) {
         return pStack.is(Items.ROTTEN_FLESH);
@@ -237,8 +230,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public void attackG() {
-        if(this.mauledTimer<=0 && this.attackTimer<=0){
+        if(this.mauledTimer<=0 && this.attackTimer<=0 && this.hasCatched()){
             this.setIsMauled(true);
+            this.level.playSound(null,this,ModSounds.MAULER_SNARL.get(),SoundSource.HOSTILE,1.0F,1.0F);
             this.level.broadcastEntityEvent(this, (byte) 4);
         }
         super.attackG();
@@ -736,7 +730,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
         @Override
         public boolean canUse() {
-            return super.canUse() && !(this.goalOwner.isTame() && this.goalOwner.isVehicle());
+            return super.canUse() && !(this.goalOwner.isTame() && this.goalOwner.isVehicle()) && !this.goalOwner.hasCatched();
         }
 
         @Override
