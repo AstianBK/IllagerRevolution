@@ -52,11 +52,11 @@
 
   "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
   "item.illagerrevolutionmod.illagium_alt_runed_blade": "§eIllagium Runed Blade§r",
-  "item.illagerrevolutionmod.illagium_cleaver": "Espada de illagium",
-  "item.illagerrevolutionmod.illagium_helberd": "Hacha de illagium",
-  "item.illagerrevolutionmod.illagium_hammer": "Martillo de illagium",
-  "item.illagerrevolutionmod.illagium_scythe": "Guadaña de illagium",
-  "item.illagerrevolutionmod.illagium_mace": "Espatula de illagium",
+  "item.illagerrevolutionmod.illagium_sword": "Espada de illagium",
+  "item.illagerrevolutionmod.illagium_axe": "Hacha de illagium",
+  "item.illagerrevolutionmod.illagium_pickaxe": "Pico de illagium",
+  "item.illagerrevolutionmod.illagium_hoe": "Hazada de illagium",
+  "item.illagerrevolutionmod.illagium_shovel": "Palade illagium",
   "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Filo dentado",

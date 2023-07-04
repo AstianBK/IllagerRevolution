@@ -50,11 +50,11 @@
 
 
   "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
-  "item.illagerrevolutionmod.illagium_cleaver": "Espada de illagium",
-  "item.illagerrevolutionmod.illagium_helberd": "Machado de illagium",
-  "item.illagerrevolutionmod.illagium_hammer": "Martelo de illagium",
-  "item.illagerrevolutionmod.illagium_scythe": "Foice de illagium",
-  "item.illagerrevolutionmod.illagium_mace": "Malho de illagium",
+  "item.illagerrevolutionmod.illagium_sword": "Espada de illagium",
+  "item.illagerrevolutionmod.illagium_axe": "Machado de illagium",
+  "item.illagerrevolutionmod.illagium_pickaxe": "Martelo de illagium",
+  "item.illagerrevolutionmod.illagium_hoe": "Foice de illagium",
+  "item.illagerrevolutionmod.illagium_shovel": "Malho de illagium",
   "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Borda irregular",
