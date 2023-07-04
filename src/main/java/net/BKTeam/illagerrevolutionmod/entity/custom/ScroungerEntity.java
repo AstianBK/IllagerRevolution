@@ -254,7 +254,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                     return InteractionResult.CONSUME;
                 }
             }
-            if(itemstack.is(ModItems.BEAST_STAFF.get())){
+            if(itemstack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(player)){
                 this.openInventory(player);
                 this.gameEvent(GameEvent.ENTITY_INTERACT, player);
                 return InteractionResult.SUCCESS;

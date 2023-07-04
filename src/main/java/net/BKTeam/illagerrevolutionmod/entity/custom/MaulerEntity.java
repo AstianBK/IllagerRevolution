@@ -60,7 +60,6 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class MaulerEntity extends MountEntity implements IAnimatable {
-
     private static final UUID MAULER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 
     private static final UUID MAULER_ATTACK_DAMAGE_UUID = UUID.fromString("648D7064-6A60-4F59-8ABE-C2C23A6DD7A9");
@@ -351,7 +350,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
             }
-            if(itemstack.is(ModItems.BEAST_STAFF.get())){
+            if(itemstack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(pPlayer)){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
@@ -468,7 +467,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 if(this.mauledAttackTimer==0){
                     this.mauledAttackTimer=10;
                     if(target!=null && target.isAlive()){
-                        target.hurt(DamageSource.mobAttack(this),2.0f);
+                        target.hurt(DamageSource.mobAttack(this),1.0f);
                         target.addEffect(new MobEffectInstance(InitEffect.MAULED.get(),350,0));
                     }
                 }
@@ -493,6 +492,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public boolean canJump() {
         return this.isSaddled();
     }
+
     public void travel(Vec3 pTravelVector) {
         LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
         if (this.isAlive() ) {

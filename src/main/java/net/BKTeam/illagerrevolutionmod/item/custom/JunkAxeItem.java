@@ -90,7 +90,7 @@ public class JunkAxeItem extends AxeItem {
             ItemStack itemStack = pPlayer.getOffhandItem();
             if(!pPlayer.level.isClientSide){
                 if(this.upgrade<3){
-                    pPlayer.level.playSound(null,pPlayer, SoundEvents.ALLAY_DEATH, SoundSource.HOSTILE,1.0F,1.0F);
+                    pPlayer.level.playSound(null,pPlayer, SoundEvents.SMITHING_TABLE_USE, SoundSource.HOSTILE,1.0F,1.0F);
                     CompoundTag nbt = pPlayer.getMainHandItem().getOrCreateTag();
                     this.upgrade++;
                     this.count_hit=5;
@@ -113,7 +113,7 @@ public class JunkAxeItem extends AxeItem {
                 this.count_hit=this.count_hit-1;
                 nbt.putInt("countHit",this.count_hit);
                 if(this.count_hit==0){
-                    player.level.playSound(null,player, SoundEvents.ALLAY_HURT, SoundSource.HOSTILE,1.0F,1.0F);
+                    player.level.playSound(null,player, SoundEvents.ITEM_BREAK, SoundSource.HOSTILE,1.0F,1.0F);
                     this.upgrade=this.upgrade-1;
                     nbt.putInt("upgrade",this.upgrade);
                     if(this.upgrade!=0){

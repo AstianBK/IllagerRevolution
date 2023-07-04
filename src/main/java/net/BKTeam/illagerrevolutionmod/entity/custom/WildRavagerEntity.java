@@ -363,7 +363,7 @@ public class WildRavagerEntity extends MountEntity{
                     stack.shrink(1);
                 }
                 return InteractionResult.CONSUME;
-            }else if(stack.is(ModItems.BEAST_STAFF.get())){
+            }else if(stack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(pPlayer)){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT,pPlayer);
