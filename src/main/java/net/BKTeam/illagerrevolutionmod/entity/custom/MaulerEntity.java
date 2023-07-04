@@ -106,6 +106,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             public boolean canUse() {
                 return super.canUse() && ((TamableAnimal)this.mob).isTame();
             }
+
         });
         this.targetSelector.addGoal(1,new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2,new OwnerHurtByTargetGoal(this));
@@ -232,7 +233,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void attackV() {
         if(this.mauledTimer<=0 && this.attackTimer<=0 && this.hasCatched()){
             this.setIsMauled(true);
-            this.level.playSound(null,this,ModSounds.MAULER_SNARL.get(),SoundSource.HOSTILE,1.0F,1.0F);
             this.level.broadcastEntityEvent(this, (byte) 4);
         }
         super.attackV();
@@ -251,7 +251,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void handleEntityEvent(byte pId) {
         if(pId==4){
             this.setIsMauled(true);
-            this.level.playSound(null,this,ModSounds.MAULER_SNARL.get(),SoundSource.HOSTILE,1.0F,1.0F);
         }else if(pId == 8){
             this.setAttacking(true);
         }
@@ -648,6 +647,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void setIsMauled(boolean pBoolean){
         this.entityData.set(MAULED,pBoolean);
         this.mauledTimer= pBoolean ? 40 : 0 ;
+        if(pBoolean){
+            this.level.playSound(null,this,ModSounds.MAULER_SNARL.get(),SoundSource.HOSTILE,1.0F,1.0F);
+        }
     }
 
     public void readAdditionalSaveData(CompoundTag pCompound) {
@@ -758,7 +760,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
         @Override
         public boolean canUse() {
-            return this.mauler.getCatchedEntity()!=null && this.mauler.level.random.nextFloat() > 0.90F && !this.mauler.isMauled();
+            return this.mauler.getCatchedEntity()!=null && this.mauler.level.random.nextFloat() > 0.90F && !this.mauler.isMauled() && this.mauler.getPassengers().size()!=2;
         }
     }
 }

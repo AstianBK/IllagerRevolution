@@ -9,6 +9,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -88,6 +90,7 @@ public class JunkAxeItem extends AxeItem {
             ItemStack itemStack = pPlayer.getOffhandItem();
             if(!pPlayer.level.isClientSide){
                 if(this.upgrade<3){
+                    pPlayer.level.playSound(null,pPlayer, SoundEvents.ALLAY_DEATH, SoundSource.HOSTILE,1.0F,1.0F);
                     CompoundTag nbt = pPlayer.getMainHandItem().getOrCreateTag();
                     this.upgrade++;
                     this.count_hit=5;
@@ -95,7 +98,6 @@ public class JunkAxeItem extends AxeItem {
                     nbt.putInt("countHit",this.count_hit);
                 }
             }
-
             if(!pPlayer.getAbilities().instabuild && this.upgrade<3){
                 itemStack.shrink(1);
             }
@@ -111,6 +113,7 @@ public class JunkAxeItem extends AxeItem {
                 this.count_hit=this.count_hit-1;
                 nbt.putInt("countHit",this.count_hit);
                 if(this.count_hit==0){
+                    player.level.playSound(null,player, SoundEvents.ALLAY_HURT, SoundSource.HOSTILE,1.0F,1.0F);
                     this.upgrade=this.upgrade-1;
                     nbt.putInt("upgrade",this.upgrade);
                     if(this.upgrade!=0){
@@ -127,9 +130,7 @@ public class JunkAxeItem extends AxeItem {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         CompoundTag nbt = pStack.getOrCreateTag();
         if(Screen.hasShiftDown()){
-            this.count_hit=nbt.getInt("countHit");
-            this.upgrade=nbt.getInt("upgrade");
-        }else {
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe"+this.count_hit));
             this.count_hit=nbt.getInt("countHit");
             this.upgrade=nbt.getInt("upgrade");
         }
