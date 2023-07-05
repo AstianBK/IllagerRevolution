@@ -72,6 +72,20 @@
 
   "sounds.illagerrevolutionmod.tamer_whistle": "Domador de bestias silvando",
 
+  "tooltip.illagerrevolutionmod.junk_axe0": "§60 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe1": "§61 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe2": "§62 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe3": "§63 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe4": "§64 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe5": "§65 §rGolpes restantes",
+
+  "tooltip.illagerrevolutionmod.beast_staff": "§6CLICK DERECHO§r en una bestia domesticada para abrir su inventario.",
+  "tooltip.illagerrevolutionmod.rune_fragment_bone": "§6Hueso§r ",
+  "tooltip.illagerrevolutionmod.rune_fragment_flesh": "§6Carne§r",
+  "tooltip.illagerrevolutionmod.rune_fragment_undying": "§6Inmortal§r",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_bone": "§6Hueso Inmortal§r",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_flesh": "§6Carne Inmortal§r",
+
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Runa: Carne Inmortal§r",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Manten §6SHIFT§r para mas informaciòn",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",

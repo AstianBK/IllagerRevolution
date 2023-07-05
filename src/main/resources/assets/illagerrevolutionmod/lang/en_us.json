@@ -98,20 +98,20 @@
 
   "sounds.illagerrevolutionmod.tamer_whistle": "Beast Tamer Whistling",
 
-  "tooltip.illagerrevolutionmod.beast_staff": "niggers",
-  "tooltip.illagerrevolutionmod.rune_fragment_bone": "niggers",
-  "tooltip.illagerrevolutionmod.rune_fragment_flesh": "niggers",
-  "tooltip.illagerrevolutionmod.rune_fragment_undying": "niggers",
-  "tooltip.illagerrevolutionmod.rune_tablet_undying_bone": "niggers",
-  "tooltip.illagerrevolutionmod.rune_tablet_undying_flesh": "niggers",
+  "tooltip.illagerrevolutionmod.beast_staff": "§6RIGHT CLICK§r on a tamed beast to open it's inventory.",
+  "tooltip.illagerrevolutionmod.rune_fragment_bone": "§6Bone§r ",
+  "tooltip.illagerrevolutionmod.rune_fragment_flesh": "§6Flesh§r",
+  "tooltip.illagerrevolutionmod.rune_fragment_undying": "§6Undying§r",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_bone": "§6Undying Bone§r",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_flesh": "§6Undying Flesh§r",
 
 
-  "tooltip.illagerrevolutionmod.junk_axe0": "0 Hits remaining",
-  "tooltip.illagerrevolutionmod.junk_axe1": "1 Hits remaining",
-  "tooltip.illagerrevolutionmod.junk_axe2": "2 Hits remaining",
-  "tooltip.illagerrevolutionmod.junk_axe3": "3 Hits remaining",
-  "tooltip.illagerrevolutionmod.junk_axe4": "4 Hits remaining",
-  "tooltip.illagerrevolutionmod.junk_axe5": "5 Hits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe0": "§60 §rHits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe1": "§61 §rHits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe2": "§62 §rHits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe3": "§63 §rHits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe4": "§64 §rHits remaining",
+  "tooltip.illagerrevolutionmod.junk_axe5": "§65 §rHits remaining",
 
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",

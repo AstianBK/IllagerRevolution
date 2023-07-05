@@ -11,7 +11,7 @@
   "item.illagerrevolutionmod.illagerminer_spawn_egg": "Generar illager minero",
   "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Generar illager rastreador",
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Generar illager domador de bestias",
-  "item.illagerrevolutionmod.scrapper_spawn_egg": "Generar Rasgador",
+  "item.illagerrevolutionmod.raker_spawn_egg": "Generar Rasgador",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Generar illager caballero de la espada",
 
 
@@ -42,7 +42,7 @@
 
   "item.illagerrevolutionmod.encrusted_lapis": "Lapislàzuli incrustado",
   "item.illagerrevolutionmod.illagium": "Lingote de illagium",
-  "item.illagerrevolutionmod.scraper_claw": "Garra de rasgador",
+  "item.illagerrevolutionmod.raker_claw": "Garra de rasgador",
 
 
   "effect.illagerrevolutionmod.deep_wound": "Herida profunda",
@@ -57,6 +57,7 @@
   "item.illagerrevolutionmod.illagium_pickaxe": "Pico de illagium",
   "item.illagerrevolutionmod.illagium_hoe": "Hazada de illagium",
   "item.illagerrevolutionmod.illagium_shovel": "Palade illagium",
+  "item.illagerrevolutionmod.beast_staff": "Beast Taming Staff",
   "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Filo dentado",
@@ -68,12 +69,27 @@
   "entity.illagerrevolutionmod.blade_knight": "Illager caballero de la espada",
   "entity.illagerrevolutionmod.illagerbeasttamer": "Illager domador de bestias",
   "entity.illagerrevolutionmod.zombified": "Illager zombi",
+  "entity.illagerrevolutionmod.mauler": "Mauler",
+  "entity.illagerrevolutionmod.wild_ravager": "Wild Ravager",
+  "entity.illagerrevolutionmod.scrounger": "Scrounger",
 
   "itemGroup.illagerrevolutiontab":"Illager Revolution",
 
   "sounds.illagerrevolutionmod.tamer_whistle": "Domador de bestias silvando",
 
-  "tooltip.illagerrevolutionmod.junk_axe": "Golpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe0": "§60 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe1": "§61 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe2": "§62 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe3": "§63 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe4": "§64 §rGolpes restantes",
+  "tooltip.illagerrevolutionmod.junk_axe5": "§65 §rGolpes restantes",
+
+  "tooltip.illagerrevolutionmod.beast_staff": "§6CLICK DERECHO§r en una bestia domesticada para abrir su inventario.",
+  "tooltip.illagerrevolutionmod.rune_fragment_bone": "§6Hueso§r ",
+  "tooltip.illagerrevolutionmod.rune_fragment_flesh": "§6Carne§r",
+  "tooltip.illagerrevolutionmod.rune_fragment_undying": "§6Inmortal§r",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_bone": "§6Hueso Inmortal§r",
+  "tooltip.illagerrevolutionmod.rune_tablet_undying_flesh": "§6Carne Inmortal§r",
 
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Runa: Carne Inmortal§r",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Manten §6SHIFT§r para mas informaciòn",
