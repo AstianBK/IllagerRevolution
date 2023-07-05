@@ -221,7 +221,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                     itemstack.shrink(1);
                 }
                 this.heal(3.0f);
-                playSound(SoundEvents.CAT_EAT, 1.0F, -1.0F);
+                this.playSound(SoundEvents.CAT_EAT, 1.0F, -1.0F);
                 this.gameEvent(GameEvent.ENTITY_INTERACT, player);
                 return InteractionResult.SUCCESS;
             }
@@ -229,33 +229,31 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         if(this.isArmor(itemstack)){
             if(this.canEquipOnFeet(itemstack)){
                 this.setItemSlot(EquipmentSlot.FEET,itemstack);
+                this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
                 itemstack.shrink(1);
             }else {
                 if(this.canEquipOnLegs(itemstack)){
+                    this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
                     this.setItemSlot(EquipmentSlot.LEGS,itemstack);
                     itemstack.shrink(1);
                 }
             }
             return InteractionResult.CONSUME;
         }
-        if (item == itemForTaming && !isTame() && health <= maxhealth*30/100) {
-            if (this.level.isClientSide) {
-                return InteractionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().instabuild) {
+        if (item == itemForTaming && !this.isTame() && health <= maxhealth*30/100) {
+            if (!player.getAbilities().instabuild) {
                     itemstack.shrink(1);
-                }
-                if (!ForgeEventFactory.onAnimalTame(this, player)) {
-                    if (!this.level.isClientSide) {
-                        super.tame(player);
-                        this.navigation.recomputePath();
-                        this.setTarget(null);
-                        this.level.broadcastEntityEvent(this, (byte)7);
-                        this.setSitting(true);
-                    }
-                }
-                return InteractionResult.SUCCESS;
             }
+            if (!ForgeEventFactory.onAnimalTame(this, player)) {
+                if (!this.level.isClientSide) {
+                    super.tame(player);
+                    this.navigation.recomputePath();
+                    this.setTarget(null);
+                    this.level.broadcastEntityEvent(this, (byte)7);
+                    this.setSitting(true);
+                }
+            }
+            return InteractionResult.SUCCESS;
         }
         if (this.isTame() && this.isOwnedBy(player) && !player.isSecondaryUseActive() ) {
             if(player instanceof IOpenBeatsContainer && itemstack.is(ModItems.BEAST_STAFF.get())){
