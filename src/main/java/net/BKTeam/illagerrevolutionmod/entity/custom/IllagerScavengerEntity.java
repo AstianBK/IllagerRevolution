@@ -131,7 +131,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                 .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 35.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.30f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
 
     }
 

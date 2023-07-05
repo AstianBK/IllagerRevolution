@@ -96,7 +96,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 9.0D)
-                .add(Attributes.FOLLOW_RANGE, 40.D)
+                .add(Attributes.FOLLOW_RANGE, 45.D)
                 .add(Attributes.MOVEMENT_SPEED, 1.0d)
                 .add(Attributes.FLYING_SPEED,1.0D)
                 .build();

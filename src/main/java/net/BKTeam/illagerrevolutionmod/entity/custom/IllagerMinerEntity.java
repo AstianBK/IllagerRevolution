@@ -105,7 +105,7 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 27.0D)
+                .add(Attributes.MAX_HEALTH, 25.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 30.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
