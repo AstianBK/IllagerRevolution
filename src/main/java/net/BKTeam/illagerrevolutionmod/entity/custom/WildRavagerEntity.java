@@ -261,7 +261,7 @@ public class WildRavagerEntity extends MountEntity{
     public void travel(Vec3 pTravelVector) {
         if (this.isAlive()) {
             LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
-            if (this.isVehicle() && livingentity!=null && livingentity==this.getOwner() && !this.isSitting()) {
+            if (this.isVehicle() && livingentity!=null && livingentity==this.getOwner() && !this.isSitting() && this.isSaddled()) {
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);

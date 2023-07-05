@@ -179,7 +179,7 @@ public class Util {
         for(int i=0;i<number;i++){
             FallenKnightEntity knight=new FallenKnightEntity(ModEntityTypes.FALLEN_KNIGHT.get(),level);
             knight.spawnAnim();
-            knight.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(level.random.nextFloat() < 0.5 ? Items.STONE_SWORD : Items.STONE_AXE));
+            knight.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(level.random.nextFloat() < 0.5 ? ModItems.ILLAGIUM_AXE.get() : ModItems.ILLAGIUM_SWORD.get()));
             knight.setIdNecromancer(livingEntity.getUUID());
             knight.moveTo(pos.get(i),0.0f,0.0f);
             level.addFreshEntity(knight);
