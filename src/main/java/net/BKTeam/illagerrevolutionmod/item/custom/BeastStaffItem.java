@@ -15,7 +15,7 @@ public class BeastStaffItem extends Item {
     }
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.beast_staff"));
+        //pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.beast_staff"));
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 }

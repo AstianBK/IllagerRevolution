@@ -154,7 +154,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         this.goalSelector.addGoal(3,new TemptGoal(this,1.5d,Ingredient.of(Items.PUFFERFISH),false){
             @Override
             public boolean canUse() {
-                return super.canUse() && ((ScroungerEntity)this.mob).isTame() && !((ScroungerEntity)this.mob).isSitting();
+                return super.canUse() && ((RakerEntity)this.mob).isTame() && !((RakerEntity)this.mob).isSitting();
             }
         });
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));

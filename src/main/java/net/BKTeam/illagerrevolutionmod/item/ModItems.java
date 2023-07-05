@@ -42,7 +42,6 @@ public class ModItems {
     public static final RegistryObject<Item> RUNE_TABLET_UNDYING_FLESH = ITEMS.register("rune_tablet_undying_flesh",()->
             new FragmentItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(16),"rune_tablet_undying_flesh"));
     
-    
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
     //                                                                                          //
     //ITEMS                                                                                     //
