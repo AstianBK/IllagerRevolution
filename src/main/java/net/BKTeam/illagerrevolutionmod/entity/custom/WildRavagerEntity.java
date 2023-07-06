@@ -168,6 +168,11 @@ public class WildRavagerEntity extends MountEntity{
             this.spawnAtLocation(stack);
             this.inventory.setItem(0,ItemStack.EMPTY);
         }
+        if(this.hasDrum()){
+            ItemStack stack=this.inventory.getItem(1);
+            this.spawnAtLocation(stack);
+            this.inventory.setItem(1,ItemStack.EMPTY);
+        }
         super.dropEquipment();
     }
 
