@@ -30,7 +30,7 @@ public class IllagerMinerRenderer extends ExtendedGeoEntityRenderer<IllagerMiner
 
     public IllagerMinerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager,
-                new IllagerMinerModel<IllagerMinerEntity>(MODEL_RESLOC, TEXTURE, "illagerminer"));
+                new IllagerMinerModel(MODEL_RESLOC, TEXTURE, "illagerminer"));
                 this.shadowRadius = 0.5f;
     }
     @Override
