@@ -155,7 +155,7 @@ public class SoulProjectile extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        if(!(result.getEntity() instanceof GlowItemFrame)){
+        if(result.getEntity() instanceof LivingEntity){
             Entity entity = result.getEntity();
             LivingEntity livingEntity = (LivingEntity) entity;
             boolean flag1= livingEntity.isInvulnerable() && livingEntity==this.getOwner();
