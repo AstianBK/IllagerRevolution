@@ -830,7 +830,7 @@ public class WildRavagerEntity extends MountEntity{
 
         @Override
         public boolean canUse() {
-            return super.canUse() && !this.mob.isVehicle();
+            return super.canUse() && !(this.mob.getControllingPassenger() instanceof Player);
         }
     }
 

@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
+import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.goals.*;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
@@ -16,6 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -137,6 +139,13 @@ public class FallenKnightEntity extends ReanimatedEntity implements IAnimatable,
             super.die(pCause);
         }
     }
+    @Override
+    public boolean canBeAffected(MobEffectInstance pPotioneffect) {
+        if(pPotioneffect.getEffect() == InitEffect.DEEP_WOUND.get()){
+            return false;
+        }
+        return pPotioneffect.getEffect() != InitEffect.DEATH_MARK.get() && super.canBeAffected(pPotioneffect);
+    }
 
     public boolean getDamageLink() {
         return this.entityData.get(DAMAGE_LINK);
@@ -186,6 +195,15 @@ public class FallenKnightEntity extends ReanimatedEntity implements IAnimatable,
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "controller",
                 0, this::predicate));
+    }
+
+    @Override
+    protected void dropEquipment() {
+        super.dropEquipment();
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
     }
 
     @Override
