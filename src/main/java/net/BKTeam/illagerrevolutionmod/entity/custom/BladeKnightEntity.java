@@ -72,13 +72,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public float count_expansion;
     private final List<FallenKnightEntity> knights=new ArrayList<>();
 
-    @Override
-    public boolean canBeAffected(MobEffectInstance pPotioneffect) {
-        if(pPotioneffect.getEffect()== InitEffect.DEEP_WOUND.get()){
-            return this.isLowLife();
-        }
-        return pPotioneffect.getEffect() != InitEffect.DEATH_MARK.get() && super.canBeAffected(pPotioneffect);
-    }
     private static final EntityDataAccessor<Boolean> STARTANIMATIONLOWHEALTH =
             SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -115,8 +108,12 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.attackShield=0;
         this.count_expansion=2.0f;
     }
-    public boolean doHurtTarget(@NotNull Entity pEntity) {
-        return super.doHurtTarget(pEntity);
+    @Override
+    public boolean canBeAffected(MobEffectInstance pPotioneffect) {
+        if(pPotioneffect.getEffect()== InitEffect.DEEP_WOUND.get()){
+            return this.isLowLife();
+        }
+        return pPotioneffect.getEffect() != InitEffect.DEATH_MARK.get() && super.canBeAffected(pPotioneffect);
     }
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
