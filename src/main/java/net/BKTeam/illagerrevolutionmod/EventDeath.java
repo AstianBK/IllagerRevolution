@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod;
 
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.damagesource.DamageSource;
@@ -74,7 +75,10 @@ public class EventDeath {
                 .getEntitiesOfClass(BladeKnightEntity.class, AABB.ofSize(new Vec3((entity.getX()), (entity.getY()), (entity.getZ())), 100, 100, 100), e -> true)
                 .isEmpty() && !(assasin instanceof Zombie)) {
             boolean flag=true;
-            String name=entity.getName().getString();
+            String name = "pillager";
+            if(entity.getEncodeId()!=null){
+                name=entity.getEncodeId().split(":")[1];
+            }
             if(_livEnt instanceof ZombifiedEntity zombified_evokerEntity){
                 name=zombified_evokerEntity.getIdSoul();
                 flag=!(zombified_evokerEntity.getOwner() instanceof Player);

@@ -147,7 +147,7 @@ public class SoulEntity extends ThrowableItemProjectile {
             }else {
                 entity.addEffect(new MobEffectInstance(InitEffect.DEATH_MARK.get(),99999,0));
             }
-        }else if(undead.equals("villager") || undead.equals("zombie_villager")){
+        }else if(undead.equals("Villager") || undead.equals("Zombie_Villager")){
             ZombieVillager entity=new ZombieVillager(EntityType.ZOMBIE_VILLAGER,world);
             BlockPos blockpos = Source.blockPosition();
             entity.moveTo(blockpos,0.0F,0.0F);
