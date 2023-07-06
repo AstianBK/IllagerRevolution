@@ -53,7 +53,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.EnumSet;
 
 
-public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, InventoryCarrier {
+public class IllagerMinerEntity extends Monster implements IAnimatable, InventoryCarrier {
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(5);
@@ -69,7 +69,7 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(IllagerMinerEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public IllagerMinerEntity(EntityType<? extends AbstractIllager> entityType, Level level) {
+    public IllagerMinerEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.fistUseInvi = false;
         this.animIdle2 = false;
@@ -78,11 +78,6 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
         for (int i=0;i<5;i++) {
             this.listRob[i]=0;
         }
-    }
-
-    @Override
-    public void applyRaidBuffs(int pWave, boolean p_37845_) {
-
     }
 
     @Nullable
@@ -217,11 +212,6 @@ public class IllagerMinerEntity extends AbstractIllager implements IAnimatable, 
         if(this.robTimer==0 && this.isHasItems()){
             this.setHasItem(false);
         }
-    }
-
-    @Override
-    public SoundEvent getCelebrateSound() {
-        return SoundEvents.VINDICATOR_CELEBRATE;
     }
 
 

@@ -420,7 +420,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
 
     public void catchedTarget(LivingEntity entity){
-        if(entity!=null && this.canAddPassenger(entity) && entity.getBbWidth()<1.4D && entity.getBbHeight()<2.7d && !(entity instanceof WitherBoss)){
+        if(entity!=null && !entity.isPassenger() && this.canAddPassenger(entity) && entity.getBbWidth()<1.4D && entity.getBbHeight()<2.7d && !(entity instanceof WitherBoss)){
             if (!this.level.isClientSide) {
                 entity.startRiding(this);
             }
@@ -440,14 +440,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.aiStep();
         if (this.horizontalCollision && ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
             boolean flag = false;
-            AABB aabb = this.getBoundingBox().inflate(0.2D);
 
-            for(BlockPos blockpos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
-                BlockState blockstate = this.level.getBlockState(blockpos);
-                Block block = blockstate.getBlock();
-                if (block instanceof LeavesBlock) {
-                    flag = this.level.destroyBlock(blockpos, true, this) || flag;
-                }
+            if (!flag && this.onGround) {
+                this.jumpFromGround();
             }
         }
         LivingEntity target = this.getCatchedEntity();

@@ -20,7 +20,7 @@ public class BeastInventoryMenu extends AbstractContainerMenu {
         p_39658_.startOpen(p_39657_.player);
         this.addSlot(new Slot(p_39658_, 0, beast.getColumnInventory(0), beast.getRowInventory(0)) {
             public boolean mayPlace(ItemStack p_39690_) {
-                return beast.canEquipOnFeet(p_39690_);
+                return beast.canEquipOnFeet(p_39690_) && beast.isTame();
             }
             public boolean isActive() {
                 return beast.canViewInventory();
@@ -32,7 +32,7 @@ public class BeastInventoryMenu extends AbstractContainerMenu {
         });
         this.addSlot(new Slot(p_39658_, 1, beast.getColumnInventory(1), beast.getRowInventory(1)) {
             public boolean mayPlace(ItemStack p_39690_) {
-                return beast.canEquipOnLegs(p_39690_);
+                return beast.canEquipOnLegs(p_39690_)  && beast.isTame();
             }
             public boolean isActive() {
                 return beast.canViewInventory();

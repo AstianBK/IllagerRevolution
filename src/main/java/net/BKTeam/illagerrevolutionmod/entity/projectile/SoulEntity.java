@@ -60,7 +60,7 @@ public class SoulEntity extends ThrowableItemProjectile {
         if(owner!=null){
             double y=owner.getY();
             double d1=this.distanceTo(owner);
-            return owner.isAlive() || d1<20 ||this.getY()-y<10;
+            return owner.isAlive() || d1<60 ||this.getY()-y<10;
         }
         return false;
     }

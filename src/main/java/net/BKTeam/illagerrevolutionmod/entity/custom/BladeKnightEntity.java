@@ -348,7 +348,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         protected void performSpellCasting()
         {
             int i=0;
-            List<SoulEntity> listentity= BladeKnightEntity.this.level.getEntitiesOfClass(SoulEntity.class, BladeKnightEntity.this.getBoundingBox().inflate(50.0d));
+            List<SoulEntity> listentity= BladeKnightEntity.this.level.getEntitiesOfClass(SoulEntity.class, BladeKnightEntity.this.getBoundingBox().inflate(60.0d));
             Entity entity;
             while (i<listentity.size() && i<=5){
                 entity=listentity.get(i);

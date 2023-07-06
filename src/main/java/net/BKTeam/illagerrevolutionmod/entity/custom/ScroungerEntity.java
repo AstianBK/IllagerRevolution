@@ -633,7 +633,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
 
     @Override
     public boolean canEquipOnFeet(ItemStack p_39690_) {
-        return this.canUsedPotion(0,p_39690_);
+        return this.canUsedPotion(0,p_39690_) && this.hasChest();
     }
 
     @Override
