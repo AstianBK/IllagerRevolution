@@ -47,7 +47,7 @@ public class SummonedSoul extends ThrowableItemProjectile {
     @Override
     protected void onHitEntity(EntityHitResult result) {
 
-        if(!(result.getEntity() instanceof LivingEntity)){
+        if(result.getEntity() instanceof LivingEntity){
             Entity entity = result.getEntity();
             Entity owner = this.getOwner();
             LivingEntity livingEntity = (LivingEntity) entity;
