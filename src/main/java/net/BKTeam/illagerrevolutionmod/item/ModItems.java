@@ -83,11 +83,11 @@ public class ModItems {
 
 
     public static final RegistryObject<Item> ILLAGERMINERBADLANDS_SPAWN_EGG = ITEMS.register("illagerminerbadlands_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGERMINERBADLANDS,0x948e8d, 0x573f2c,
+            () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGER_SCAVENGER,0x948e8d, 0x573f2c,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> ILLAGERMINER_SPAWN_EGG = ITEMS.register("illagerminer_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGERMINER,0x948e8d, 0x3b3635,
+            () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGER_MINER,0x948e8d, 0x3b3635,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> RAKER_SPAWN_EGG = ITEMS.register("raker_spawn_egg",
@@ -110,7 +110,7 @@ public class ModItems {
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> ILLAGERBEASTTAMER_SPAWN_EGG = ITEMS.register("illagerbeasttamer_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGERBEASTTAMER,0x848e8d, 0x7d8c7d,
+            () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGER_BEAST_TAMER,0x848e8d, 0x7d8c7d,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
     //
     //

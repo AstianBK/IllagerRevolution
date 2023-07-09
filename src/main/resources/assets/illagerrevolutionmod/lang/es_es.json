@@ -11,7 +11,7 @@
   "item.illagerrevolutionmod.illagerminer_spawn_egg": "Generar illager minero",
   "item.illagerrevolutionmod.illagerminerbadlands_spawn_egg": "Generar illager rastreador",
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Generar illager domador de bestias",
-  "item.illagerrevolutionmod.scrapper_spawn_egg": "Generar Rasgador",
+  "item.illagerrevolutionmod.raker_spawn_egg": "Generar Rasgador",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Generar illager caballero de la espada",
 
 
@@ -41,7 +41,7 @@
 
   "item.illagerrevolutionmod.encrusted_lapis": "Lapislàzuli incrustado",
   "item.illagerrevolutionmod.illagium": "Lingote de illagium",
-  "item.illagerrevolutionmod.scraper_claw": "Garra de rasgador",
+  "item.illagerrevolutionmod.raker_claw": "Garra de rasgador",
 
 
   "effect.illagerrevolutionmod.deep_wound": "Herida profunda",
@@ -51,21 +51,21 @@
 
   "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
   "item.illagerrevolutionmod.illagium_alt_runed_blade": "§eIllagium Runed Blade§r",
-  "item.illagerrevolutionmod.illagium_cleaver": "Espada de illagium",
-  "item.illagerrevolutionmod.illagium_helberd": "Hacha de illagium",
-  "item.illagerrevolutionmod.illagium_hammer": "Martillo de illagium",
-  "item.illagerrevolutionmod.illagium_scythe": "Guadaña de illagium",
-  "item.illagerrevolutionmod.illagium_mace": "Espatula de illagium",
+  "item.illagerrevolutionmod.illagium_sword": "Espada de illagium",
+  "item.illagerrevolutionmod.illagium_axe": "Hacha de illagium",
+  "item.illagerrevolutionmod.illagium_pickaxe": "Pico de illagium",
+  "item.illagerrevolutionmod.illagium_hoe": "Guadaña de illagium",
+  "item.illagerrevolutionmod.illagium_shovel": "Espatula de illagium",
   "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Filo dentado",
   "enchantment.illagerrevolutionmod.wary_lenses": "Lentes cautelosos",
 
   "entity.illagerrevolutionmod.raker": "Rasgador",
-  "entity.illagerrevolutionmod.illagerminer": "Minero illager",
-  "entity.illagerrevolutionmod.illagerminerbadlands": "Illager rastreador",
+  "entity.illagerrevolutionmod.illager_miner": "Minero illager",
+  "entity.illagerrevolutionmod.illager_miner_badlands": "Illager rastreador",
   "entity.illagerrevolutionmod.blade_knight": "Illager caballero de la espada",
-  "entity.illagerrevolutionmod.illagerbeasttamer": "Illager domador de bestias",
+  "entity.illagerrevolutionmod.illager_beast_tamer": "Illager domador de bestias",
   "entity.illagerrevolutionmod.zombified": "Illager zombi",
 
   "itemGroup.illagerrevolutiontab":"Illager Revolution",

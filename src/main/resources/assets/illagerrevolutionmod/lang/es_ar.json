@@ -64,10 +64,10 @@
   "enchantment.illagerrevolutionmod.wary_lenses": "Lentes cautelosos",
 
   "entity.illagerrevolutionmod.raker": "Rasgador",
-  "entity.illagerrevolutionmod.illagerminer": "Minero illager",
-  "entity.illagerrevolutionmod.illagerminerbadlands": "Illager rastreador",
+  "entity.illagerrevolutionmod.illager_miner": "Minero illager",
+  "entity.illagerrevolutionmod.illager_miner_badlands": "Illager rastreador",
   "entity.illagerrevolutionmod.blade_knight": "Illager caballero de la espada",
-  "entity.illagerrevolutionmod.illagerbeasttamer": "Illager domador de bestias",
+  "entity.illagerrevolutionmod.illager_beast_tamer": "Illager domador de bestias",
   "entity.illagerrevolutionmod.zombified": "Illager zombi",
   "entity.illagerrevolutionmod.mauler": "Mauler",
   "entity.illagerrevolutionmod.wild_ravager": "Wild Ravager",

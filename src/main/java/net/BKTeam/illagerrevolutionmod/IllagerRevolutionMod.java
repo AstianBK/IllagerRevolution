@@ -209,10 +209,10 @@ public class IllagerRevolutionMod {
 
     @OnlyIn(Dist.CLIENT)
     private void registerRenderers(FMLCommonSetupEvent event){
-        EntityRenderers.register(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerScavengerRenderer::new);
+        EntityRenderers.register(ModEntityTypes.ILLAGER_SCAVENGER.get(), IllagerScavengerRenderer::new);
         EntityRenderers.register(RAKER.get(), RakerRenderer::new);
-        EntityRenderers.register(ModEntityTypes.ILLAGERMINER.get(), IllagerMinerRenderer::new);
-        EntityRenderers.register(ModEntityTypes.ILLAGERBEASTTAMER.get(), IllagerBeastTamerRenderer::new);
+        EntityRenderers.register(ModEntityTypes.ILLAGER_MINER.get(), IllagerMinerRenderer::new);
+        EntityRenderers.register(ModEntityTypes.ILLAGER_BEAST_TAMER.get(), IllagerBeastTamerRenderer::new);
         EntityRenderers.register(ModEntityTypes.ZOMBIFIED.get(), ZombifiedRenderer::new);
         EntityRenderers.register(ModEntityTypes.BLADE_KNIGHT.get(), BladeKnightRenderer::new);
         EntityRenderers.register(FALLEN_KNIGHT.get(),FallenKnightRenderer::new);

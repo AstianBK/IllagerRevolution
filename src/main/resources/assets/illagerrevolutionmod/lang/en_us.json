@@ -85,10 +85,10 @@
   "enchantment.illagerrevolutionmod.wary_lenses": "Wary Lenses",
 
   "entity.illagerrevolutionmod.raker": "Raker",
-  "entity.illagerrevolutionmod.illagerminer": "Illager Miner",
-  "entity.illagerrevolutionmod.illagerminerbadlands": "Illager Scavenger",
+  "entity.illagerrevolutionmod.illager_miner": "Illager Miner",
+  "entity.illagerrevolutionmod.illager_miner_badlands": "Illager Scavenger",
   "entity.illagerrevolutionmod.blade_knight": "Illager Blade Knight",
-  "entity.illagerrevolutionmod.illagerbeasttamer": "Illager Beast Tamer",
+  "entity.illagerrevolutionmod.illager_beast_tamer": "Illager Beast Tamer",
   "entity.illagerrevolutionmod.zombified": "Zombified Illager",
   "entity.illagerrevolutionmod.mauler": "Mauler",
   "entity.illagerrevolutionmod.wild_ravager": "Wild Ravager",

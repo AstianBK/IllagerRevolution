@@ -12,5 +12,5 @@ public class ModConstants {
     public static final String LEFT_HAND_BONE_IDENT = "itemHandLeft";
     public static final String RIGHT_HAND_BONE_IDENT = "itemHandRight";
     public static final String POTION_BONE_IDENT = "bipedPotionSlot";
-    public static final List<String> LIST_NAME_ZOMBIFIED= Arrays.asList("vindicator","evoker","illagerbeasttamer","pillager");
+    public static final List<String> LIST_NAME_ZOMBIFIED= Arrays.asList("vindicator","evoker","illager_beast_tamer","pillager");
 }
