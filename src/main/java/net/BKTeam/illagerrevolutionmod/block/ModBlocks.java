@@ -10,6 +10,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,23 +30,23 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> RUNE_TABLE_BLOCK = registerBlock("rune_table_block",
             () -> new RuneTableBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(8f).requiresCorrectToolForDrops().noOcclusion()),
+                    .strength(8f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.DEEPSLATE_BRICKS)),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
     public static final RegistryObject<Block> DRUM_SPEED = registerBlock("drum_speed",
             () -> new DrumBlock(BlockBehaviour.Properties.of(Material.WOOD)
-                    .strength(3f).requiresCorrectToolForDrops().noOcclusion(), DrumBlock.Drum.SPEED_DRUM),
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.SPEED_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
     public static final RegistryObject<Block> DRUM_DAMAGE = registerBlock("drum_damage",
             () -> new DrumBlock(BlockBehaviour.Properties.of(Material.WOOD)
-                    .strength(3f).requiresCorrectToolForDrops().noOcclusion(), DrumBlock.Drum.DAMAGE_DRUM),
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.DAMAGE_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
 
     public static final RegistryObject<Block> DRUM_HEAL = registerBlock("drum_heal",
             () -> new DrumBlock(BlockBehaviour.Properties.of(Material.WOOD)
-                    .strength(3f).requiresCorrectToolForDrops().noOcclusion(), DrumBlock.Drum.HEAL_DRUM),
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.HEAL_DRUM),
             ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
 
 
