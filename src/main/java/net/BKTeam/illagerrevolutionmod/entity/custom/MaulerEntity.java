@@ -32,16 +32,20 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -83,6 +87,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public MaulerEntity(EntityType<? extends MountEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
+        this.maxUpStep = 1.0F;
         this.attackTimer=0;
         this.mauledTimer=0;
         this.mauledAttackTimer=0;
@@ -116,6 +121,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
         super.registerGoals();
     }
+
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving() && !this.isAggressive() && !this.isSitting()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.walk"+(!this.isVehicle() ? "1" : "2"), ILoopType.EDefaultLoopTypes.LOOP));
@@ -138,6 +144,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
         return PlayState.CONTINUE;
     }
+
     @Override
     public boolean isFood(ItemStack pStack) {
         return pStack.is(Items.ROTTEN_FLESH);
@@ -337,8 +344,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
                     return InteractionResult.SUCCESS;
                 }
-            }
-            else if(itemstack.is(Items.WATER_BUCKET) && this.isPainted()){
+            } else if(itemstack.is(Items.WATER_BUCKET) && this.isPainted()){
                 this.setPainted(false);
                 this.setColor(DyeColor.WHITE);
                 if (!pPlayer.getAbilities().instabuild) {
@@ -391,13 +397,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
             boolean flag = !this.isSaddled() && itemstack.is(Items.SADDLE);
             if (this.isArmor(itemstack) || flag) {
-                if(itemstack.getItem() instanceof BeastArmorItem armorItem){
-                    this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
-                    this.setItemSlot(armorItem.getEquipmetSlot(),itemstack);
-                }else {
-                    this.playSound(SoundEvents.HORSE_SADDLE);
-                    this.setIsSaddled(true);
-                    this.inventory.setItem(0,itemstack);
+                if(!this.level.isClientSide){
+                    if(itemstack.getItem() instanceof BeastArmorItem armorItem){
+                        this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
+                        this.setItemSlot(armorItem.getEquipmetSlot(),itemstack);
+                    }else {
+                        this.playSound(SoundEvents.HORSE_SADDLE);
+                        this.setIsSaddled(true);
+                        this.setItemSlot(EquipmentSlot.FEET,itemstack);
+                    }
                 }
                 if (!pPlayer.getAbilities().instabuild) {
                     itemstack.shrink(1);
@@ -438,13 +446,6 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public void aiStep() {
         super.aiStep();
-        if (this.horizontalCollision && ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
-            boolean flag = false;
-
-            if (!flag && this.onGround) {
-                this.jumpFromGround();
-            }
-        }
         LivingEntity target = this.getCatchedEntity();
 
         if (this.isAttacking()) {
@@ -620,7 +621,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("Attacking",this.isAttacking());
         pCompound.putBoolean("isMauled",this.isMauled());
-        ItemStack saddle = this.getContainer().getItem(0);
+        ItemStack saddle = this.getItemBySlot(EquipmentSlot.FEET);
         ItemStack itemStackHead = this.getItemBySlot(EquipmentSlot.LEGS);
         if(!itemStackHead.isEmpty()){
             CompoundTag headCompoundNBT = new CompoundTag();
@@ -662,7 +663,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         if(!compoundNBT1.isEmpty()) {
             if(ItemStack.of(compoundNBT1).is(Items.SADDLE)){
                 ItemStack stack=ItemStack.of(compoundNBT1);
-                this.inventory.setItem(0,stack);
+                this.setItemSlot(EquipmentSlot.FEET,stack);
             }
         }
         this.updateContainerEquipment();
