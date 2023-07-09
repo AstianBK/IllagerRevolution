@@ -226,13 +226,13 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                 return InteractionResult.SUCCESS;
             }
         }
-        if(this.isArmor(itemstack)){
+        if((this.isArmor(itemstack)) && isTame()){
             if(this.canEquipOnFeet(itemstack)){
                 this.setItemSlot(EquipmentSlot.FEET,itemstack);
                 this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
                 itemstack.shrink(1);
             }else {
-                if(this.canEquipOnLegs(itemstack)){
+                if((this.canEquipOnLegs(itemstack)) && isTame()){
                     this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
                     this.setItemSlot(EquipmentSlot.LEGS,itemstack);
                     itemstack.shrink(1);

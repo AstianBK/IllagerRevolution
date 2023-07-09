@@ -353,7 +353,7 @@ public class WildRavagerEntity extends MountEntity{
                 }
                 return InteractionResult.CONSUME;
             }
-            if(stack.is(Items.SADDLE) || this.isArmor(stack)){
+            if((stack.is(Items.SADDLE) || this.isArmor(stack)) && isTame()){
                 if(!this.level.isClientSide){
                     if(stack.getItem() instanceof BeastArmorItem){
                         this.setItemSlot(EquipmentSlot.FEET,stack.copy());

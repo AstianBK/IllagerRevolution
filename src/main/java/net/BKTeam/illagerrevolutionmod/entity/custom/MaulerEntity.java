@@ -390,7 +390,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 return InteractionResult.CONSUME;
             }
             boolean flag = !this.isSaddled() && itemstack.is(Items.SADDLE);
-            if (this.isArmor(itemstack) || flag) {
+            if ((this.isArmor(itemstack) || flag) && isTame()) {
                 if(itemstack.getItem() instanceof BeastArmorItem armorItem){
                     this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
                     this.setItemSlot(armorItem.getEquipmetSlot(),itemstack);
