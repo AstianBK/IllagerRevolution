@@ -12,10 +12,10 @@ import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 public class ServerEvent {
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
-        event.put(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerScavengerEntity.setAttributes());
+        event.put(ModEntityTypes.ILLAGER_SCAVENGER.get(), IllagerScavengerEntity.setAttributes());
         event.put(ModEntityTypes.RAKER.get(), RakerEntity.setAttributes());
-        event.put(ModEntityTypes.ILLAGERMINER.get(), IllagerMinerEntity.setAttributes());
-        event.put(ModEntityTypes.ILLAGERBEASTTAMER.get(), IllagerBeastTamerEntity.setAttributes());
+        event.put(ModEntityTypes.ILLAGER_MINER.get(), IllagerMinerEntity.setAttributes());
+        event.put(ModEntityTypes.ILLAGER_BEAST_TAMER.get(), IllagerBeastTamerEntity.setAttributes());
         event.put(ModEntityTypes.ZOMBIFIED.get(), ZombifiedEntity.setAttributes());
         event.put(ModEntityTypes.BLADE_KNIGHT.get(), BladeKnightEntity.setAttributes());
         event.put(ModEntityTypes.FALLEN_KNIGHT.get(), FallenKnightEntity.setAttributes());

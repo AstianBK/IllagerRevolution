@@ -666,7 +666,7 @@ public class TheKnightOrder {
 
     public static enum KnightType implements net.minecraftforge.common.IExtensibleEnum {
         BLADE_KNIGHT(ModEntityTypes.BLADE_KNIGHT.get(), new int[]{0, 0, 2, 0, 1, 4, 2, 5}),
-        ILLAGER_BEAST_TAMER(ModEntityTypes.ILLAGERBEASTTAMER.get(), new int[]{0, 1, 1, 1, 1, 1, 1, 2});
+        ILLAGER_BEAST_TAMER(ModEntityTypes.ILLAGER_BEAST_TAMER.get(), new int[]{0, 1, 1, 1, 1, 1, 1, 2});
 
         static TheKnightOrder.KnightType[] VALUES = values();
         final EntityType<? extends SpellcasterKnight> entityType;

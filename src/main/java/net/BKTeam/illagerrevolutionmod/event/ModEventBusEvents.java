@@ -110,15 +110,15 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void registerRulesSpawn(SpawnPlacementRegisterEvent event){
-        event.register(ILLAGERMINER.get(),
+        event.register(ILLAGER_MINER.get(),
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(ILLAGERMINERBADLANDS.get(),
+        event.register(ILLAGER_SCAVENGER.get(),
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(ILLAGERBEASTTAMER.get(),
+        event.register(ILLAGER_BEAST_TAMER.get(),
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
