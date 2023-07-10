@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
@@ -36,6 +37,11 @@ public class BeastArmorItem extends Item implements IBeastArmorItem {
     }
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation getArmorTexture() {
+        if(this.isAmethystFreak(this.getDefaultInstance())){
+            return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/"+beast.getBeastName()+"/armor/"+beast.getBeastName()+"_armor_"+slot.getName()+"_amethyst.png");
+        }else if (this.isCopperFreak(this.getDefaultInstance())){
+            return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/"+beast.getBeastName()+"/armor/"+beast.getBeastName()+"_armor_"+slot.getName()+"_copper.png");
+        }
         return tex;
     }
 
@@ -66,6 +72,14 @@ public class BeastArmorItem extends Item implements IBeastArmorItem {
     @Override
     public Beast getBeast() {
         return this.beast;
+    }
+
+    public boolean isAmethystFreak(ItemStack stack){
+        return stack.getHoverName().getString().equals("AmethystFreak");
+    }
+
+    public boolean isCopperFreak(ItemStack stack){
+        return stack.getHoverName().getString().equals("CopperFreak");
     }
 
 }
