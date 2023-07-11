@@ -87,6 +87,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         this.mauledTimer=0;
         this.mauledAttackTimer=0;
         this.catchedTimer=0;
+        //this.maxUpStep=1.0f;
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
@@ -96,6 +97,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 .add(Attributes.MOVEMENT_SPEED, 0.37f)
                 .add(Attributes.JUMP_STRENGTH,0.60d)
                 .build();
+    }
+
+    @Override
+    public float getStepHeight() {
+        return 1.0f;
     }
 
     @Override
@@ -318,9 +324,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (!this.isBaby()) {
-            if (this.isTame() && pPlayer.isSecondaryUseActive()) {
+            if (this.isTame() && pPlayer.isSecondaryUseActive() && this.isOwnedBy(pPlayer)) {
                 this.setSitting(!this.isSitting());
-                return InteractionResult.sidedSuccess(this.level.isClientSide);
+                return InteractionResult.SUCCESS;
             }
             if (this.isVehicle() && !this.canAddPassenger(pPlayer)) {
                 return super.mobInteract(pPlayer, pHand);
@@ -353,8 +359,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
-                    return InteractionResult.SUCCESS;
                 }
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
             if (this.isFood(itemstack)) {
                 if(!this.isTame()){
@@ -364,6 +370,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(this.level.random.nextFloat()>0.90f){
                         if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                             if (!this.level.isClientSide) {
+                                this.playSound(SoundEvents.FOX_EAT);
                                 super.tame(pPlayer);
                                 this.navigation.recomputePath();
                                 this.setTarget(null);
@@ -378,37 +385,38 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                         this.level.broadcastEntityEvent(this, (byte)6);
                     }
                     return InteractionResult.SUCCESS;
-                }else if(this.getHealth()!=this.getMaxHealth()){
+                }else{
                     if(!pPlayer.getAbilities().instabuild){
                         itemstack.shrink(1);
                     }
-                    if(!this.level.isClientSide){
+                    if(!this.level.isClientSide && this.getMaxHealth()!=this.getHealth()){
                         this.heal(this.getMaxHealth()*0.10f);
                     }
+                    this.playSound(SoundEvents.FOX_EAT);
                 }
                 return InteractionResult.CONSUME;
             }
             boolean flag = !this.isSaddled() && itemstack.is(Items.SADDLE);
-            if ((this.isArmor(itemstack) || flag) && isTame())  {
-                if(!this.level.isClientSide){
-                    if(itemstack.getItem() instanceof BeastArmorItem armorItem){
-                        this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
-                        this.setItemSlot(armorItem.getEquipmetSlot(),itemstack);
-                    }else {
-                        this.playSound(SoundEvents.HORSE_SADDLE);
-                        this.setIsSaddled(true);
-                        this.setItemSlot(EquipmentSlot.FEET,itemstack);
+            if ((this.isArmor(itemstack) || flag) && this.isTame() && this.isOwnedBy(pPlayer))  {
+                ItemStack stack = itemstack.copy();
+                if(stack.getItem() instanceof BeastArmorItem armorItem){
+                    if(!this.getItemBySlot(armorItem.getEquipmetSlot()).isEmpty()){
+                        this.spawnAtLocation(this.getItemBySlot(armorItem.getEquipmetSlot()));
+                        this.setItemSlot(armorItem.getEquipmetSlot(),ItemStack.EMPTY);
                     }
+                    this.setItemSlot(armorItem.getEquipmetSlot(),stack);
+                    this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
+                }else {
+                    this.playSound(SoundEvents.HORSE_SADDLE);
+                    this.setIsSaddled(true);
+                    this.setItemSlot(EquipmentSlot.FEET,itemstack);
                 }
                 if (!pPlayer.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
                 return InteractionResult.CONSUME;
             }
-            InteractionResult interactionresult = itemstack.interactLivingEntity(pPlayer, this, pHand);
-            if (interactionresult.consumesAction()) {
-                return interactionresult;
-            }
+            return super.mobInteract(pPlayer,pHand);
         }
 
         if (this.isBaby() || !this.isTame()) {

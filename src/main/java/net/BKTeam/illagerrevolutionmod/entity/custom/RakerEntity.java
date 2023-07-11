@@ -226,18 +226,15 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                 return InteractionResult.SUCCESS;
             }
         }
-        if((this.isArmor(itemstack)) && isTame()){
-            if(this.canEquipOnFeet(itemstack)){
-                this.setItemSlot(EquipmentSlot.FEET,itemstack);
-                this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
-                itemstack.shrink(1);
-            }else {
-                if((this.canEquipOnLegs(itemstack)) && isTame()){
-                    this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
-                    this.setItemSlot(EquipmentSlot.LEGS,itemstack);
-                    itemstack.shrink(1);
-                }
+        if((this.isArmor(itemstack)) && this.isTame() && this.isOwnedBy(player)){
+            ItemStack stack = itemstack.copy();
+            if(!this.getItemBySlot(((BeastArmorItem)item).getEquipmetSlot()).isEmpty()) {
+                this.spawnAtLocation(this.getItemBySlot(((BeastArmorItem) item).getEquipmetSlot()));
+                this.setItemSlot(((BeastArmorItem) item).getEquipmetSlot(),ItemStack.EMPTY);
             }
+            this.playSound(SoundEvents.ARMOR_EQUIP_IRON);
+            this.setItemSlot(((BeastArmorItem) item).getEquipmetSlot(),stack);
+            itemstack.shrink(1);
             return InteractionResult.CONSUME;
         }
         if (item == itemForTaming && !this.isTame() && health <= maxhealth*30/100) {
