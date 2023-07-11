@@ -29,7 +29,7 @@ public class MaulerArmorLayer extends GeoLayerRenderer<MaulerEntity> {
             this.model.getModelResource(entityLivingBaseIn);
             this.model.getTextureResource(entityLivingBaseIn);
             this.model.getAnimationResource(entityLivingBaseIn);
-            this.renderCopyModel(this.model,armor.getArmorTexture(),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
+            this.renderCopyModel(this.model,armor.getArmorTexture(itemstack),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
     }
 }

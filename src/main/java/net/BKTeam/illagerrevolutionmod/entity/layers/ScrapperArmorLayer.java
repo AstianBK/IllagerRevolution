@@ -30,13 +30,13 @@ public class ScrapperArmorLayer extends GeoLayerRenderer<RakerEntity> {
             this.model.getModelResource(entityLivingBaseIn);
             this.model.getTextureResource(entityLivingBaseIn);
             this.model.getAnimationResource(entityLivingBaseIn);
-            this.renderCopyModel(this.model,armor.getArmorTexture(),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
+            this.renderCopyModel(this.model,armor.getArmorTexture(itemstack),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
         if(itemstack1.getItem() instanceof BeastArmorItem armorItem){
             this.model.getModelResource(entityLivingBaseIn);
             this.model.getTextureResource(entityLivingBaseIn);
             this.model.getAnimationResource(entityLivingBaseIn);
-            this.renderCopyModel(this.model,armorItem.getArmorTexture(),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
+            this.renderCopyModel(this.model,armorItem.getArmorTexture(itemstack1),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
 
     }

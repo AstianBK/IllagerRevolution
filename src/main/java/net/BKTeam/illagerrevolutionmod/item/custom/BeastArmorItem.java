@@ -36,10 +36,10 @@ public class BeastArmorItem extends Item implements IBeastArmorItem {
         this.beast=beastName;
     }
     @OnlyIn(Dist.CLIENT)
-    public ResourceLocation getArmorTexture() {
-        if(this.isAmethystFreak(this.getDefaultInstance())){
+    public ResourceLocation getArmorTexture(ItemStack stack) {
+        if(this.isAmethystFreak(stack)){
             return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/"+beast.getBeastName()+"/armor/"+beast.getBeastName()+"_armor_"+slot.getName()+"_amethyst.png");
-        }else if (this.isCopperFreak(this.getDefaultInstance())){
+        }else if (this.isCopperFreak(stack)){
             return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/"+beast.getBeastName()+"/armor/"+beast.getBeastName()+"_armor_"+slot.getName()+"_copper.png");
         }
         return tex;
