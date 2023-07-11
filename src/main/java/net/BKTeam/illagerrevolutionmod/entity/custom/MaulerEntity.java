@@ -370,7 +370,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(this.level.random.nextFloat()>0.90f){
                         if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                             if (!this.level.isClientSide) {
-                                this.playSound(SoundEvents.FOX_EAT);
+                                this.playSound(SoundEvents.GENERIC_EAT, 1.0F, -1.0F);
                                 super.tame(pPlayer);
                                 this.navigation.recomputePath();
                                 this.setTarget(null);
@@ -392,7 +392,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(!this.level.isClientSide && this.getMaxHealth()!=this.getHealth()){
                         this.heal(this.getMaxHealth()*0.10f);
                     }
-                    this.playSound(SoundEvents.FOX_EAT);
+                    this.playSound(SoundEvents.GENERIC_EAT, 1.0F, -1.0F);
                 }
                 return InteractionResult.CONSUME;
             }
