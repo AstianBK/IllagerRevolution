@@ -353,16 +353,16 @@ public class WildRavagerEntity extends MountEntity{
                 }
                 return InteractionResult.CONSUME;
             }
-            if((stack.is(Items.SADDLE) || this.isArmor(stack)) && isTame()){
-                if(!this.level.isClientSide){
-                    if(stack.getItem() instanceof BeastArmorItem){
-                        this.setItemSlot(EquipmentSlot.FEET,stack.copy());
-                        this.playSound(SoundEvents.ARMOR_EQUIP_DIAMOND);
-                    }else {
-                        this.inventory.setItem(0,stack.copy());
-                        this.playSound(SoundEvents.HORSE_SADDLE);
-                    }
+            if((stack.is(Items.SADDLE) || this.isArmor(stack)) && this.isTame() && this.isOwnedBy(pPlayer)){
+                ItemStack stack1 = stack.copy();
+                boolean flag = stack1.is(Items.SADDLE);
+                EquipmentSlot slot = EquipmentSlot.FEET;
+                if(!this.getItemBySlot(slot).isEmpty()){
+                    this.spawnAtLocation(this.getItemBySlot(slot));
+                    this.setItemSlot(slot,ItemStack.EMPTY);
                 }
+                this.playSound(flag ? SoundEvents.HORSE_SADDLE : SoundEvents.ARMOR_EQUIP_DIAMOND);
+                this.setItemSlot(EquipmentSlot.FEET,stack1.copy());
                 this.setIsSaddled(true);
                 if (!pPlayer.getAbilities().instabuild) {
                     stack.shrink(1);

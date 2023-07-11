@@ -101,6 +101,8 @@ public class JunkAxeItem extends AxeItem {
             if(!pPlayer.getAbilities().instabuild && this.upgrade<3){
                 itemStack.shrink(1);
             }
+
+            return InteractionResultHolder.sidedSuccess(itemStack,pLevel.isClientSide());
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

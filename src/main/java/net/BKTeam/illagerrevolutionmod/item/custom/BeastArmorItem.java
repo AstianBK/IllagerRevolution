@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.item.custom;
 
 import net.BKTeam.illagerrevolutionmod.item.Beast;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
@@ -75,11 +76,11 @@ public class BeastArmorItem extends Item implements IBeastArmorItem {
     }
 
     public boolean isAmethystFreak(ItemStack stack){
-        return stack.getHoverName().getString().equals("AmethystFreak");
+        return stack.getHoverName().getString().equals("AmethystFreak") && !stack.is(ModItems.SCROUNGER_POUCH.get());
     }
 
     public boolean isCopperFreak(ItemStack stack){
-        return stack.getHoverName().getString().equals("CopperFreak");
+        return stack.getHoverName().getString().equals("CopperFreak") && !stack.is(ModItems.SCROUNGER_POUCH.get());
     }
 
 }
