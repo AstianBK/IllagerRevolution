@@ -111,7 +111,6 @@ public class WildRavagerEntity extends MountEntity{
         this.targetSelector.addGoal(2,new OwnerHurtByTargetGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(4,new RavagerMeleeAttackGoal());
-        this.goalSelector.addGoal(0,new ChargedGoal(this,2D,true));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.4D));
         this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.HAY_BLOCK),false){
             @Override
@@ -317,7 +316,7 @@ public class WildRavagerEntity extends MountEntity{
                 }
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed(this.isImmobile() ? 0.0F :(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2);
+                    this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2);
                     super.travel(new Vec3((double) f, pTravelVector.y, (double) f1));
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);
@@ -325,8 +324,12 @@ public class WildRavagerEntity extends MountEntity{
                 this.calculateEntityAnimation(this, false);
                 this.tryCheckInsideBlocks();
             } else {
-                this.flyingSpeed = 0.02F;
-                super.travel(pTravelVector);
+                if(this.isCharged()){
+                    this.charged(pTravelVector);
+                }else {
+                    this.flyingSpeed = 0.02F;
+                    super.travel(pTravelVector);
+                }
             }
         }
     }
@@ -485,6 +488,37 @@ public class WildRavagerEntity extends MountEntity{
         super.attackV();
     }
 
+    public void charged(Vec3 p_20857_){
+        Entity entity = this.getControllingPassenger();
+        if (this.isVehicle() && entity instanceof Player) {
+            this.setYRot(entity.getYRot());
+            this.yRotO = this.getYRot();
+            this.setXRot(entity.getXRot() * 0.5F);
+            this.setRot(this.getYRot(), this.getXRot());
+            this.yBodyRot = this.getYRot();
+            this.yHeadRot = this.getYRot();
+            this.flyingSpeed = this.getSpeed() * 0.1F;
+
+            if (this.isControlledByLocalInstance()) {
+                this.setSpeed((float) this.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+                this.travelWithInput(new Vec3(0.0D, 0.0D, 1.0D));
+                this.lerpSteps = 0;
+            } else {
+                this.calculateEntityAnimation(this, false);
+                this.setDeltaMovement(Vec3.ZERO);
+            }
+
+            this.tryCheckInsideBlocks();
+        } else {
+            this.flyingSpeed = 0.02F;
+            this.travelWithInput(p_20857_);
+        }
+    }
+
+    public void travelWithInput(Vec3 pTravel){
+        super.travel(pTravel);
+    }
+
     @Override
     public void onPlayerJump(int pJumpPower) {
         super.onPlayerJump(pJumpPower);
@@ -527,80 +561,6 @@ public class WildRavagerEntity extends MountEntity{
             for(Player player : this.level.getEntitiesOfClass(Player.class,this.getBoundingBox().inflate(15.0D))){
                 player.addEffect(new MobEffectInstance(effect.getEffect(),effect.getDuration(),effect.getAmplifier(),effect.isAmbient(),effect.isVisible()));
             }
-        }
-    }
-
-    static class ChargedGoal extends Goal {
-
-        private final PathfinderMob tameableEntity;
-        private LivingEntity player;
-        private final double speed;
-        private final boolean strafe;
-
-        public ChargedGoal(PathfinderMob mob, double speed) {
-            this(mob, speed, true);
-        }
-
-        public ChargedGoal(PathfinderMob mob, double speed, boolean strafe) {
-            this.tameableEntity = mob;
-            this.speed = speed;
-            this.strafe = strafe;
-            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
-        }
-
-        @Override
-        public boolean canUse() {
-            if (tameableEntity.getControllingPassenger() instanceof Player && tameableEntity.isVehicle()) {
-                player = (Player) tameableEntity.getControllingPassenger();
-                return ((WildRavagerEntity)tameableEntity).getChargedState() == ChargedStates.CHARGED;
-            } else {
-                tameableEntity.setSprinting(false);
-                return false;
-            }
-        }
-
-        @Override
-        public void start() {
-            tameableEntity.getNavigation().stop();
-        }
-
-        @Override
-        public void tick() {
-            tameableEntity.maxUpStep = 1;
-            tameableEntity.getNavigation().stop();
-            tameableEntity.setTarget(null);
-            double x = tameableEntity.getX();
-            double y = tameableEntity.getY();
-            double z = tameableEntity.getZ();
-            if (strafe) {
-                tameableEntity.xxa = player.xxa * 0.15F;
-            }
-            if (shouldMoveForward() && tameableEntity.isVehicle()) {
-                tameableEntity.setSprinting(true);
-                Vec3 lookVec = player.getLookAngle();
-                if (shouldMoveBackwards()) {
-                    lookVec = lookVec.yRot((float) Math.PI);
-                }
-                x += lookVec.x * 10;
-                z += lookVec.z * 10;
-                y += modifyYPosition(lookVec.y);
-                tameableEntity.getMoveControl().setWantedPosition(x, y, z, speed);
-            } else {
-                tameableEntity.setSprinting(false);
-            }
-        }
-
-        public double modifyYPosition(double lookVecY) {
-            return tameableEntity instanceof FlyingAnimal ? lookVecY * 10 : 0;
-        }
-
-        public boolean shouldMoveForward() {
-            return player.zza != 0;
-        }
-
-
-        public boolean shouldMoveBackwards() {
-            return player.zza < 0;
         }
     }
 
@@ -733,7 +693,7 @@ public class WildRavagerEntity extends MountEntity{
 
         if(this.getChargedState() == ChargedStates.CHARGED){
             this.chargedTick++;
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.50D);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40D);
             if(this.chargedTick>100){
                 this.setIsChargedState(3);
                 this.chargedTick=0;
