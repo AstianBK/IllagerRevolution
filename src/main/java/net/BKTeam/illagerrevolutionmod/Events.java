@@ -8,6 +8,7 @@ import net.BKTeam.illagerrevolutionmod.capability.MauledCapability;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.RakerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
@@ -22,6 +23,7 @@ import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -32,6 +34,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -43,18 +46,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.BlockEventData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -284,22 +293,24 @@ public class Events {
         int maxHurt= (int) (itemStack.getMaxDamage()+(itemStack.getMaxDamage()*(i)));
         itemStack.hurtAndBreak(maxHurt*j/100,player,e -> e.broadcastBreakEvent(EquipmentSlot.HEAD));
     }
-    private static float percentDamageForEnchantmentLevel(int pLevel){
+    private static float percentDamageForEnchantmentLevel(int pLevel) {
         float i;
-        if(pLevel==1){
-            i=0.25f;
-        }
-        else if(pLevel==2) {
+        if (pLevel == 1) {
+            i = 0.25f;
+        } else if (pLevel == 2) {
             i = 0.364f;
-        }else {
-            i=0.429f;
+        } else {
+            i = 0.429f;
         }
-        return  i;
+        return i;
     }
     @SubscribeEvent
     public static void onEntityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
         Level world = entity.level;
+        if(entity instanceof ScroungerEntity scrounger){
+            scrounger.level.getBlockEntity(scrounger.getOnPos(), BlockEntityType.JUKEBOX);
+        }
         if (entity.hasEffect(InitEffect.MAULED.get())) {
             IMauledCapability capability= CapabilityHandler.getEntityCapability(entity,CapabilityHandler.MAULED_CAPABILITY);
             if(capability!=null){

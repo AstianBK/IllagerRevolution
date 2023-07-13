@@ -9,6 +9,7 @@ import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketStopSound;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -37,6 +38,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -62,8 +64,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class WildRavagerEntity extends MountEntity{
@@ -72,6 +73,9 @@ public class WildRavagerEntity extends MountEntity{
     };
     private static final EntityDataAccessor<Boolean> SADDLED =
             SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Integer> CHARGED =
+            SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Boolean> HAS_DRUM =
             SynchedEntityData.defineId(WildRavagerEntity.class, EntityDataSerializers.BOOLEAN);
@@ -84,13 +88,20 @@ public class WildRavagerEntity extends MountEntity{
     private int drumTick;
     private float roarPower;
     private int reAcvivateEffectTick;
+    private int prepareTimer;
+    private int nextAssaultTimer;
+
+    private int chargedTick;
+    private BlockPos targetPos;
 
     public WildRavagerEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
-        this.maxUpStep = 1.0F;
         this.roarPower = 0.0F;
         this.drumTick = 0;
         this.reAcvivateEffectTick = 0;
+        this.prepareTimer = 0;
+        this.nextAssaultTimer = 0;
+        this.chargedTick = 0;
     }
 
     protected void registerGoals() {
@@ -99,7 +110,8 @@ public class WildRavagerEntity extends MountEntity{
         this.targetSelector.addGoal(1,new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2,new OwnerHurtByTargetGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(4, new RavagerMeleeAttackGoal());
+        this.goalSelector.addGoal(4,new RavagerMeleeAttackGoal());
+        this.goalSelector.addGoal(0,new ChargedGoal(this,2D,true));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.4D));
         this.goalSelector.addGoal(1,new TemptGoal(this,1.5d,Ingredient.of(Items.HAY_BLOCK),false){
             @Override
@@ -141,13 +153,10 @@ public class WildRavagerEntity extends MountEntity{
             }
         });
     }
-    protected void updateControlFlags() {
-        boolean flag = !(this.getControllingPassenger() instanceof Player);
-        boolean flag1 = !(this.getVehicle() instanceof Boat);
-        this.goalSelector.setControlFlag(Goal.Flag.MOVE, flag);
-        this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
-        this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
-        this.goalSelector.setControlFlag(Goal.Flag.TARGET, flag);
+
+    @Override
+    public float getStepHeight() {
+        return 1.0f;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -181,10 +190,41 @@ public class WildRavagerEntity extends MountEntity{
         super.defineSynchedData();
         this.entityData.define(SADDLED,false);
         this.entityData.define(HAS_DRUM,false);
+        this.entityData.define(CHARGED,0);
+    }
+
+    public void setIsChargedState(int pId){
+        this.entityData.set(CHARGED,pId);
+        switch (pId){
+            case 1 -> {
+                this.prepareTimer = 20;
+                break;
+            }
+            case 3 ->{ this.nextAssaultTimer = 500;
+                break;
+            }
+        }
+    }
+
+    public ChargedStates getChargedState(){
+        return ChargedStates.byId(this.getChargedId() & 255);
+    }
+
+    public int getChargedId(){
+        return this.entityData.get(CHARGED);
+    }
+
+    public boolean hasDrum() {
+        return this.entityData.get(HAS_DRUM);
+    }
+
+    public void setHasDrum(boolean pBoolean){
+        this.entityData.set(HAS_DRUM,pBoolean);
     }
 
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("ChargedState",this.getChargedId());
         pCompound.putBoolean("hasDrum", this.hasDrum());
         pCompound.putInt("AttackTick", this.attackTick);
         pCompound.putInt("StunTick", this.stunnedTick);
@@ -205,16 +245,9 @@ public class WildRavagerEntity extends MountEntity{
         }
     }
 
-    public boolean hasDrum() {
-        return this.entityData.get(HAS_DRUM);
-    }
-
-    public void setHasDrum(boolean pBoolean){
-        this.entityData.set(HAS_DRUM,pBoolean);
-    }
-
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        this.setIsChargedState(pCompound.getInt("ChargedState"));
         this.setHasDrum(pCompound.getBoolean("hasDrum"));
         this.attackTick = pCompound.getInt("AttackTick");
         this.stunnedTick = pCompound.getInt("StunTick");
@@ -262,11 +295,15 @@ public class WildRavagerEntity extends MountEntity{
         return ((double)this.getBbHeight());
     }
 
+    public boolean isCharged(){
+        return this.getChargedState()==ChargedStates.CHARGED || this.getChargedState()==ChargedStates.PREPARE;
+    }
+
     @Override
     public void travel(Vec3 pTravelVector) {
         if (this.isAlive()) {
             LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
-            if (this.isVehicle() && livingentity!=null && livingentity==this.getOwner() && !this.isSitting() && this.isSaddled()) {
+            if (this.isVehicle() && livingentity!=null && livingentity==this.getOwner() && !this.isSitting() && this.isSaddled() && !this.isCharged()) {
                 this.setYRot(livingentity.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(livingentity.getXRot() * 0.5F);
@@ -280,7 +317,7 @@ public class WildRavagerEntity extends MountEntity{
                 }
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2);
+                    this.setSpeed(this.isImmobile() ? 0.0F :(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2);
                     super.travel(new Vec3((double) f, pTravelVector.y, (double) f1));
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);
@@ -493,6 +530,80 @@ public class WildRavagerEntity extends MountEntity{
         }
     }
 
+    static class ChargedGoal extends Goal {
+
+        private final PathfinderMob tameableEntity;
+        private LivingEntity player;
+        private final double speed;
+        private final boolean strafe;
+
+        public ChargedGoal(PathfinderMob mob, double speed) {
+            this(mob, speed, true);
+        }
+
+        public ChargedGoal(PathfinderMob mob, double speed, boolean strafe) {
+            this.tameableEntity = mob;
+            this.speed = speed;
+            this.strafe = strafe;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (tameableEntity.getControllingPassenger() instanceof Player && tameableEntity.isVehicle()) {
+                player = (Player) tameableEntity.getControllingPassenger();
+                return ((WildRavagerEntity)tameableEntity).getChargedState() == ChargedStates.CHARGED;
+            } else {
+                tameableEntity.setSprinting(false);
+                return false;
+            }
+        }
+
+        @Override
+        public void start() {
+            tameableEntity.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            tameableEntity.maxUpStep = 1;
+            tameableEntity.getNavigation().stop();
+            tameableEntity.setTarget(null);
+            double x = tameableEntity.getX();
+            double y = tameableEntity.getY();
+            double z = tameableEntity.getZ();
+            if (strafe) {
+                tameableEntity.xxa = player.xxa * 0.15F;
+            }
+            if (shouldMoveForward() && tameableEntity.isVehicle()) {
+                tameableEntity.setSprinting(true);
+                Vec3 lookVec = player.getLookAngle();
+                if (shouldMoveBackwards()) {
+                    lookVec = lookVec.yRot((float) Math.PI);
+                }
+                x += lookVec.x * 10;
+                z += lookVec.z * 10;
+                y += modifyYPosition(lookVec.y);
+                tameableEntity.getMoveControl().setWantedPosition(x, y, z, speed);
+            } else {
+                tameableEntity.setSprinting(false);
+            }
+        }
+
+        public double modifyYPosition(double lookVecY) {
+            return tameableEntity instanceof FlyingAnimal ? lookVecY * 10 : 0;
+        }
+
+        public boolean shouldMoveForward() {
+            return player.zza != 0;
+        }
+
+
+        public boolean shouldMoveBackwards() {
+            return player.zza < 0;
+        }
+    }
+
     protected void stopDrumSound(){
         if(!this.level.isClientSide){
             PacketHandler.sendToAllTracking(new PacketStopSound(ModSounds.DRUM_SOUND.getId(),SoundSource.HOSTILE),this);
@@ -509,6 +620,14 @@ public class WildRavagerEntity extends MountEntity{
         return this.inventory;
     }
 
+    @Override
+    public void attackC() {
+        if(this.prepareTimer==0 && this.chargedTick==0 && this.nextAssaultTimer==0){
+            this.setIsChargedState(1);
+            this.level.broadcastEntityEvent(this,(byte) 65);
+        }
+        super.attackC();
+    }
 
     @Override
     public void attackG() {
@@ -597,6 +716,37 @@ public class WildRavagerEntity extends MountEntity{
         return null;
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.getChargedId()>0 && this.getChargedId()<3){
+            this.yBodyRot=this.getYRot();
+            if(this.prepareTimer==0){
+                this.setIsChargedState(2);
+                this.nextAssaultTimer=300;
+            }
+        }
+
+        if(this.getChargedState() == ChargedStates.PREPARE){
+            this.prepareTimer--;
+        }
+
+        if(this.getChargedState() == ChargedStates.CHARGED){
+            this.chargedTick++;
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.50D);
+            if(this.chargedTick>100){
+                this.setIsChargedState(3);
+                this.chargedTick=0;
+            }
+        }
+
+        if(this.getChargedState() == ChargedStates.FINISH){
+            this.nextAssaultTimer--;
+            if(this.nextAssaultTimer==0){
+                this.setIsChargedState(0);
+            }
+        }
+    }
 
     public void aiStep() {
         super.aiStep();
@@ -640,6 +790,18 @@ public class WildRavagerEntity extends MountEntity{
                     }
                 }
             }
+            if (this.isAlive() && this.getChargedState() == ChargedStates.CHARGED) {
+                for (Entity entity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.0D))) {
+                    if (!(this.isTame() && isAlliedTo(entity)) && !(!this.isTame() && entity instanceof WildRavagerEntity) && entity != this) {
+                        entity.hurt(DamageSource.mobAttack(this), 8.0F + random.nextFloat() * 8.0F);
+                        this.strongKnockback(entity);
+                    }
+                }
+                this.maxUpStep = 2F;
+            }else{
+                this.maxUpStep = 1.1F;
+            }
+
 
             if (this.roarTick > 0) {
                 --this.roarTick;
@@ -685,7 +847,7 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     protected boolean isImmobile() {
-        return super.isImmobile() || this.attackTick > 0 || this.stunnedTick > 0 || this.roarTick > 0;
+        return super.isImmobile() || this.attackTick > 0 || this.stunnedTick > 0 || this.roarTick > 0 || this.prepareTimer > 0;
     }
 
     public boolean hasLineOfSight(Entity p_149755_) {
@@ -758,6 +920,8 @@ public class WildRavagerEntity extends MountEntity{
             this.roarTick = 20;
         }else if (pId == 64){
             this.level.playSound((Player) null,this,ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
+        }else if (pId == 65){
+            this.prepareTimer=20;
         }
         super.handleEntityEvent(pId);
     }
@@ -846,11 +1010,31 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     static class RavagerNodeEvaluator extends WalkNodeEvaluator {
-        /**
-         * Returns the exact path node type according to abilities and settings of the entity
-         */
+
         protected BlockPathTypes evaluateBlockPathType(BlockGetter pLevel, boolean pCanOpenDoors, boolean pCanEnterDoors, BlockPos pPos, BlockPathTypes pNodeType) {
             return pNodeType == BlockPathTypes.LEAVES ? BlockPathTypes.OPEN : super.evaluateBlockPathType(pLevel, pCanOpenDoors, pCanEnterDoors, pPos, pNodeType);
+        }
+    }
+
+    enum ChargedStates{
+        PREPARE(1),
+        CHARGED(2),
+        FINISH(3),
+        CAN_CHARGED(0);
+
+        private static final ChargedStates[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(ChargedStates::getId)).toArray(ChargedStates[]::new);
+        private final int id;
+
+        ChargedStates(int p_30984_) {
+            this.id = p_30984_;
+        }
+
+        public int getId() {
+            return this.id;
+        }
+
+        public static ChargedStates byId(int p_30987_) {
+            return BY_ID[p_30987_ % BY_ID.length];
         }
     }
 }

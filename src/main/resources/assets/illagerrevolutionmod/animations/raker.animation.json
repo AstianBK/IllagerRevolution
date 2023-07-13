@@ -681,7 +681,7 @@
 			}
 		},
 		"animation.scrapper.attack": {
-			"animation_length": 0.4167,
+			"animation_length": 0.54167,
 			"bones": {
 				"main": {
 					"position": {
@@ -970,6 +970,168 @@
 				},
 				"head": {
 					"position": [0, 0, 0]
+				}
+			}
+		},
+		"animation.scrapper.prepare": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"main": {
+					"rotation": [20, 0, 0]
+				},
+				"bipedHead": {
+					"rotation": [-24.704, 0, 0],
+					"position": [0, -1.5, 2.5]
+				},
+				"jaw": {
+					"rotation": {
+						"0.0": [10, 0, 0],
+						"0.5": [2.5, 0, 0],
+						"1.0": [10, 0, 0]
+					}
+				},
+				"ears": {
+					"rotation": [-25, 0, 0],
+					"position": [0, -0.5, 0]
+				},
+				"right_arm": {
+					"position": {
+						"0.0": [0, -0.75, 0],
+						"0.5": [0, -1, 0],
+						"1.0": [0, -0.75, 0]
+					}
+				},
+				"HandR": {
+					"rotation": [-55, 0, 0],
+					"position": [-0.25, -0.75, 0.75]
+				},
+				"left_arm": {
+					"position": {
+						"0.0": [0, -0.75, 0],
+						"0.5": [0, -1, 0],
+						"1.0": [0, -0.75, 0]
+					}
+				},
+				"HandL": {
+					"rotation": [-60, 0, 0],
+					"position": [0, -1.75, 1.25]
+				},
+				"right_leg": {
+					"rotation": [-25, 0, 0],
+					"position": [0, 0, 0]
+				},
+				"left_leg": {
+					"position": [0, -2, 0]
+				},
+				"FootLegL": {
+					"rotation": [-22.5, 0, 0]
+				},
+				"bipedBody": {
+					"position": [0, -1.25, 0]
+				},
+				"Chest": {
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.5": [1.03, 1.03, 1.03],
+						"1.0": [1, 1, 1]
+					}
+				},
+				"Tail1": {
+					"rotation": {
+						"0.0": [3.34288, -30.32448, -12.2921],
+						"0.5": [3.80595, 24.37387, 4.38046],
+						"1.0": [3.34288, -30.32448, -12.2921]
+					}
+				},
+				"Tail2": {
+					"rotation": {
+						"0.0": [12.39769, -50.33155, -26.03345],
+						"0.5": [12.39769, 50.3315, 26.0334],
+						"1.0": [12.39769, -50.33155, -26.03345]
+					}
+				}
+			}
+		},
+		"animation.scrapper.jump": {
+			"loop": true,
+			"animation_length": 0.54167,
+			"bones": {
+				"main": {
+					"position": {
+						"0.0": [0, 0.25, 0],
+						"0.25": [0, -0.75, 0],
+						"0.5417": [0, 0.25, 0]
+					}
+				},
+				"UpperR": {
+					"rotation": [-82.5, 0, 0]
+				},
+				"LowerR": {
+					"rotation": [0, 0, 0],
+					"position": [0, 12.5, -3]
+				},
+				"HandR": {
+					"rotation": [-135, 0, 0],
+					"position": [0, -1, 1]
+				},
+				"UpperLegR": {
+					"position": [0, 0, 0]
+				},
+				"LowerLegR": {
+					"position": [0, 0, 0]
+				},
+				"LowerLegR2": {
+					"position": [0, 0, 0]
+				},
+				"UpperLegL": {
+					"position": [0, 0, 0]
+				},
+				"LowerLegL": {
+					"position": [0, 0, 0]
+				},
+				"LowerLegL2": {
+					"rotation": [57.5, 0, 0],
+					"position": [0, -1.5, -0.75]
+				},
+				"UpperL": {
+					"rotation": [-82.5, 0, 0]
+				},
+				"LowerL": {
+					"rotation": [0, 0, 0],
+					"position": [0, 12, -3.5]
+				},
+				"HandL": {
+					"rotation": [-135, 0, 0],
+					"position": [0, -1, 1]
+				},
+				"Chest": {
+					"scale": 1
+				},
+				"Tail1": {
+					"rotation": [-50, 0, 0],
+					"position": [0, -0.5, 0.75]
+				},
+				"bipedHead": {
+					"rotation": [-12.5, 0, 0],
+					"position": [0, 0, 0.5]
+				},
+				"jaw": {
+					"rotation": [10, 0, 0],
+					"position": [0, 0, 0]
+				},
+				"right_leg": {
+					"rotation": [62.5, 0, 0]
+				},
+				"FootLegR": {
+					"rotation": [62.5, 0, 0],
+					"position": [0, 0.5, -0.5]
+				},
+				"left_leg": {
+					"rotation": [62.5, 0, 0]
+				},
+				"FootLegL": {
+					"position": [0, -1.5, 5.5]
 				}
 			}
 		}

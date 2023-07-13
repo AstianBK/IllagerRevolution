@@ -1,15 +1,14 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
-import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.FeatherProjectile;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
-import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -37,12 +36,12 @@ import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -85,12 +84,15 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
 
     private static final EntityDataAccessor<Boolean> ATTACKING =
             SynchedEntityData.defineId(ScroungerEntity.class, EntityDataSerializers.BOOLEAN);
+    private BlockPos jukebox;
+    private boolean partyParrot;
 
     public ScroungerEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
         this.nextAttack=0;
         this.helpOwnerTimer=0;
         this.moveControl=new ScroungerFlyingMoveControl(this,5,false);
+        this.partyParrot = false;
     }
 
     public static AttributeSupplier setAttributes() {
@@ -112,6 +114,8 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             }else if(!this.isAttacking()){
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.idle2", ILoopType.EDefaultLoopTypes.LOOP));
             }
+        }else if(this.partyParrot){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.dance", ILoopType.EDefaultLoopTypes.LOOP));
         }else if(this.isSitting()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.sit", ILoopType.EDefaultLoopTypes.LOOP));
         }else {
@@ -156,6 +160,10 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     @Override
     public void aiStep() {
         super.aiStep();
+        if (this.jukebox == null || !this.jukebox.closerToCenterThan(this.position(), 3.46D) || !this.level.getBlockState(this.jukebox).is(Blocks.JUKEBOX)) {
+            this.partyParrot = false;
+            this.jukebox = null;
+        }
         if(this.isAttacking()){
             this.nextAttack--;
         }
@@ -169,6 +177,15 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             this.helpOwnerTimer--;
         }
         this.calculateFlapping();
+    }
+
+    @Override
+    public void setRecordPlayingNearby(BlockPos pPos, boolean pIsPartying) {
+        if(this.isTame()){
+            this.getOwner().sendSystemMessage(Component.nullToEmpty("funciona"));
+        }
+        this.partyParrot = pIsPartying;
+        this.jukebox = pPos;
     }
 
     private void calculateFlapping() {
