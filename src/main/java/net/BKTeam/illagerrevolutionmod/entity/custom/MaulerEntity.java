@@ -136,7 +136,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     private  <E extends IAnimatable> PlayState predicateHead(AnimationEvent<E> event) {
         if (this.isMauled() && !this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack2", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack3", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else if(this.isAttacking() && !this.isMauled()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.attack1", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else {
