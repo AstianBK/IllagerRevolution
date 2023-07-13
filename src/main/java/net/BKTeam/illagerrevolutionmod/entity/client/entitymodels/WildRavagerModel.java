@@ -11,6 +11,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
@@ -82,7 +83,7 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
         this.leftFrontLeg.xRot = !pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F) * f : -1.23446F;
     }
 
-    public void prepareMobModel(WildRavagerEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick) {
+    public void prepareMobModel(@NotNull WildRavagerEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick) {
         super.prepareMobModel(pEntity, pLimbSwing, pLimbSwingAmount, pPartialTick);
         int i = pEntity.getStunnedTick();
         int j = pEntity.getRoarTick();

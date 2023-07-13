@@ -56,7 +56,6 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
 
