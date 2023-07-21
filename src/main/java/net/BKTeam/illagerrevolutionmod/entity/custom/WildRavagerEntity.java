@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketSand;
 import net.BKTeam.illagerrevolutionmod.network.PacketStopSound;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
@@ -62,12 +63,19 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class WildRavagerEntity extends MountEntity{
+public class WildRavagerEntity extends MountEntity {
     private static final Predicate<Entity> NO_RAVAGER_AND_ALIVE = (p_33346_) -> {
         return p_33346_.isAlive() && !(p_33346_ instanceof WildRavagerEntity);
     };
@@ -88,11 +96,10 @@ public class WildRavagerEntity extends MountEntity{
     private int drumTick;
     private float roarPower;
     private int reAcvivateEffectTick;
-    private int prepareTimer;
+    public int prepareTimer;
     private int nextAssaultTimer;
 
     private int chargedTick;
-    private BlockPos targetPos;
 
     public WildRavagerEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -101,7 +108,7 @@ public class WildRavagerEntity extends MountEntity{
         this.reAcvivateEffectTick = 0;
         this.prepareTimer = 0;
         this.nextAssaultTimer = 0;
-        this.chargedTick = 0;
+        this.chargedTick = 100;
     }
 
     protected void registerGoals() {
@@ -194,14 +201,8 @@ public class WildRavagerEntity extends MountEntity{
 
     public void setIsChargedState(int pId){
         this.entityData.set(CHARGED,pId);
-        switch (pId){
-            case 1 -> {
-                this.prepareTimer = 20;
-                break;
-            }
-            case 3 ->{ this.nextAssaultTimer = 500;
-                break;
-            }
+        if(pId==3){
+            this.nextAssaultTimer = 20;
         }
     }
 
@@ -219,6 +220,11 @@ public class WildRavagerEntity extends MountEntity{
 
     public void setHasDrum(boolean pBoolean){
         this.entityData.set(HAS_DRUM,pBoolean);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> p_146754_) {
+        super.onSyncedDataUpdated(p_146754_);
     }
 
     public void addAdditionalSaveData(CompoundTag pCompound) {
@@ -295,7 +301,7 @@ public class WildRavagerEntity extends MountEntity{
     }
 
     public boolean isCharged(){
-        return this.getChargedState()==ChargedStates.CHARGED || this.getChargedState()==ChargedStates.PREPARE;
+        return this.prepareTimer>0 || this.chargedTick<100;
     }
 
     @Override
@@ -324,7 +330,7 @@ public class WildRavagerEntity extends MountEntity{
                 this.calculateEntityAnimation(this, false);
                 this.tryCheckInsideBlocks();
             } else {
-                if(this.isCharged()){
+                if(this.chargedTick<100){
                     this.charged(pTravelVector);
                 }else {
                     this.flyingSpeed = 0.02F;
@@ -371,8 +377,7 @@ public class WildRavagerEntity extends MountEntity{
                     playSound(SoundEvents.INK_SAC_USE, 1.0F, 1.0F);
                     return InteractionResult.SUCCESS;
                 }
-            }
-            else if(stack.is(Items.WATER_BUCKET) && this.isPainted()){
+            } else if(stack.is(Items.WATER_BUCKET) && this.isPainted()){
                 this.setPainted(false);
                 this.setColor(DyeColor.WHITE);
                 if (!pPlayer.getAbilities().instabuild) {
@@ -382,6 +387,15 @@ public class WildRavagerEntity extends MountEntity{
                     pPlayer.setItemSlot(EquipmentSlot.MAINHAND,stack);
                 }
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
+                return InteractionResult.CONSUME;
+            }if(stack.is(Items.APPLE)){
+                if(!this.level.isClientSide){
+                    this.prepareTimer = 20;
+                    this.level.broadcastEntityEvent(this,(byte) 59);
+                }
+                if(!pPlayer.getAbilities().instabuild){
+                    stack.shrink(1);
+                }
                 return InteractionResult.CONSUME;
             }
             if(Block.byItem(stack.getItem()) instanceof DrumBlock){
@@ -507,13 +521,14 @@ public class WildRavagerEntity extends MountEntity{
                 this.calculateEntityAnimation(this, false);
                 this.setDeltaMovement(Vec3.ZERO);
             }
-
             this.tryCheckInsideBlocks();
         } else {
             this.flyingSpeed = 0.02F;
             this.travelWithInput(p_20857_);
         }
     }
+
+
 
     public void travelWithInput(Vec3 pTravel){
         super.travel(pTravel);
@@ -544,7 +559,7 @@ public class WildRavagerEntity extends MountEntity{
             if(!this.level.isClientSide){
                 if(!this.isImmobile()){
                     this.roarTick=20;
-                    this.level.broadcastEntityEvent(this, (byte)63);
+                    this.level.broadcastEntityEvent(this, (byte)65);
                     this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
                 }
             }
@@ -582,9 +597,11 @@ public class WildRavagerEntity extends MountEntity{
 
     @Override
     public void attackC() {
-        if(this.prepareTimer==0 && this.chargedTick==0 && this.nextAssaultTimer==0){
-            this.setIsChargedState(1);
-            this.level.broadcastEntityEvent(this,(byte) 65);
+        if(this.prepareTimer==0 && this.chargedTick==100 && this.nextAssaultTimer==0){
+            if(!this.level.isClientSide){
+                this.prepareTimer = 20;
+                this.level.broadcastEntityEvent(this,(byte) 59);
+            }
         }
         super.attackC();
     }
@@ -594,7 +611,7 @@ public class WildRavagerEntity extends MountEntity{
         if(!this.level.isClientSide){
             if(!this.isImmobile()){
                 boolean flag=false;
-                this.attackTick=20;
+                this.attackTick=10;
                 this.level.broadcastEntityEvent(this, (byte)4);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
                 float f1 = Mth.sin(f);
@@ -679,37 +696,29 @@ public class WildRavagerEntity extends MountEntity{
     @Override
     public void tick() {
         super.tick();
-        if(this.getChargedId()>0 && this.getChargedId()<3){
-            this.yBodyRot=this.getYRot();
-            if(this.prepareTimer==0){
-                this.setIsChargedState(2);
-                this.nextAssaultTimer=300;
-            }
-        }
-
-        if(this.getChargedState() == ChargedStates.PREPARE){
-            this.prepareTimer--;
-        }
-
-        if(this.getChargedState() == ChargedStates.CHARGED){
-            this.chargedTick++;
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40D);
-            if(this.chargedTick>100){
-                this.setIsChargedState(3);
-                this.chargedTick=0;
-            }
-        }
-
-        if(this.getChargedState() == ChargedStates.FINISH){
-            this.nextAssaultTimer--;
-            if(this.nextAssaultTimer==0){
-                this.setIsChargedState(0);
-            }
-        }
+        this.refreshDimensions();
     }
 
     public void aiStep() {
         super.aiStep();
+        if(this.prepareTimer>0){
+            this.prepareTimer--;
+            if(this.prepareTimer==0){
+                this.chargedTick=0;
+            }
+        }
+
+        if(this.chargedTick<100){
+            this.chargedTick++;
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40D);
+            if(this.chargedTick>100){
+                this.nextAssaultTimer=0;
+            }
+        }
+
+        if(this.nextAssaultTimer>0){
+            this.nextAssaultTimer--;
+        }
         if(this.hasDrum()){
             if(this.drumTick>0){
                 this.drumTick--;
@@ -750,7 +759,7 @@ public class WildRavagerEntity extends MountEntity{
                     }
                 }
             }
-            if (this.isAlive() && this.getChargedState() == ChargedStates.CHARGED) {
+            if (this.isAlive() && this.chargedTick<100) {
                 for (Entity entity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.0D))) {
                     if (!(this.isTame() && isAlliedTo(entity)) && !(!this.isTame() && entity instanceof WildRavagerEntity) && entity != this) {
                         entity.hurt(DamageSource.mobAttack(this), 8.0F + random.nextFloat() * 8.0F);
@@ -783,6 +792,10 @@ public class WildRavagerEntity extends MountEntity{
                 }
             }
         }
+    }
+
+    public int getPrepareTimer() {
+        return this.prepareTimer;
     }
 
     @Override
@@ -876,14 +889,16 @@ public class WildRavagerEntity extends MountEntity{
             this.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);
         } else if (pId == 39) {
             this.stunnedTick = 40;
-        } else if (pId == 63) {
+        } else if (pId == 65) {
             this.roarTick = 20;
         }else if (pId == 64){
             this.level.playSound((Player) null,this,ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
-        }else if (pId == 65){
+        }else if (pId == 59){
             this.prepareTimer=20;
+        }else {
+            super.handleEntityEvent(pId);
         }
-        super.handleEntityEvent(pId);
+
     }
     public int getAttackTick() {
         return this.attackTick;
@@ -976,7 +991,7 @@ public class WildRavagerEntity extends MountEntity{
         }
     }
 
-    enum ChargedStates{
+    public enum ChargedStates{
         PREPARE(1),
         CHARGED(2),
         FINISH(3),
