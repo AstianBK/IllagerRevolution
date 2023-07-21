@@ -347,8 +347,8 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
                         this.doHurtTarget(this.getTarget());
                     }else{
                         this.useSand =true;
-                        if(!this.level.isClientSide && this.getTarget() instanceof ServerPlayer){
-                            sendPacketSand(this,this.getTarget());
+                        if(!this.level.isClientSide){
+                            this.sendPacketSand(this,this.getTarget());
                         }
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS,30,1));
                         this.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,1));
@@ -373,7 +373,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     }
 
-    public static void sendPacketSand(LivingEntity livingEntity,LivingEntity target) {
+    public void sendPacketSand(LivingEntity livingEntity,LivingEntity target) {
         if (target instanceof ServerPlayer player) {
             PacketHandler.sendToPlayer(new PacketSand(livingEntity,target), player);
         }
