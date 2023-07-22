@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.client.entitymodels;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.EntityModel;
@@ -30,6 +31,8 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
     private final ModelPart neck;
 
     private final ModelPart body;
+
+    private int prepareTick;
 
     public WildRavagerModel(ModelPart pRoot) {
         this.root = pRoot;
@@ -68,62 +71,14 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
      * Sets this entity's model rotation angles
      */
     public void setupAnim(WildRavagerEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        this.head.xRot = pHeadPitch * ((float)Math.PI / 180F);
-        this.head.yRot = pNetHeadYaw * ((float)Math.PI / 180F);
-        float f1 = Mth.cos(pAgeInTicks/5.0F)*0.01F;
-        if(pEntity.isSitting()){
-            this.body.xScale=1.0F + f1;
-            this.body.yScale=1.0F + f1;
-            this.body.zScale=1.0F + f1;
-        }else {
-            this.body.xScale=1.0F;
-            this.body.yScale=1.0F;
-            this.body.zScale=1.0F;
-        }
-        if(pEntity.getPrepareTimer()==0){
+        if(this.prepareTick==0){
+            this.head.xRot = pHeadPitch * ((float)Math.PI / 180F);
+            this.head.yRot = pNetHeadYaw * ((float)Math.PI / 180F);
             float f = 0.4F * pLimbSwingAmount;
             this.rightHindLeg.xRot =!pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F) * f: ((float)Math.PI * 1.5708F);
             this.leftHindLeg.xRot =!pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * f : (float)Math.PI * 1.5708F;
             this.rightFrontLeg.xRot =!pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * f : -1.23446F;
             this.leftFrontLeg.xRot = !pEntity.isSitting() ? Mth.cos(pLimbSwing * 0.6662F) * f : -1.23446F;
-        }else {
-            int pI = pEntity.getPrepareTimer();
-            if(pI>0){
-                float time =((float) (20 - pI))/20F;
-                float f2 = -13.0F * time;
-                float f22 = -13.0F * ((float) pI/20F);
-                float f3 = Mth.cos(-60+(((float) (20 - pI))/20F)*400)*5;
-                float f4 = Mth.sin( ((float) Math.PI * 2.0F)*time);
-                this.leftFrontLeg.xRot = 0.698132F*f4;
-                this.leftFrontLeg.y = Mth.lerp(time,-13.0F - 15.0F * time,-13.0F - 15.0F * ((float) pI/20F));
-                this.leftFrontLeg.x = Mth.lerp(time,8.0f + 10.0F * time,8.0f + 10.0F * ((float) pI/20F));
-                this.leftFrontLeg.z = Mth.lerp(time,-5.0F + 10.0F * time,-5.0F + 10.0F * ((float) pI/20F));
-                this.rightFrontLeg.xRot = 0.698132F*f4;
-                this.rightFrontLeg.y = Mth.lerp(time,-13.0F - 15.0F * time,-13.0F - 15.0F * ((float) pI/20F));
-                this.rightFrontLeg.x = Mth.lerp(time,-8.0f - 10.0F * time,-8.0f - 10.0F * ((float) pI/20F));
-                this.rightFrontLeg.z = Mth.lerp(time,-5.0F + 15.0F * time,-5.0F + 15.0F * ((float) pI/20F));
-                if(pI>15){
-                    float f5 = Mth.sin( ((float)(20-pI) / 4.0F * (float) Math.PI * 0.5F));
-                    this.body.xRot = ((float)Math.PI / 2F) - 0.698132F*f5;
-                    this.neck.xRot = -0.698132F*f5;
-                    this.mouth.xRot = ((float)Math.PI / 4F)*f5;
-                }else if(pI<10)  {
-                    float f5 = Mth.sin( ((float) (pI)) / 9.0F * (float) Math.PI * 0.5F);
-                    float f7 = Mth.sin( ((float) (9-pI)) / 9.0F * (float) Math.PI * 0.5F);
-                    this.body.xRot = (((float)Math.PI / 2F)) - (0.698132F*f5);
-                    if (pI<5) {
-                        float f6 = Mth.sin(((float) (pI)) / 4.0F * (float) Math.PI * 0.5F);
-                        float f8 = Mth.sin(((float) (4-pI)) / 4.0F * (float) Math.PI * 0.5F);
-                        this.neck.xRot = -0.698132F*f6;
-                        this.mouth.xRot = ((float)Math.PI / 4F) - 0.174533F - 0.698132F*f8;
-                    }else {
-                        this.mouth.xRot = ((float)Math.PI / 4F) - 0.174533F*f7;
-                    }
-                }
-                this.neck.y = Mth.lerp(time,-7.0F - 4.0F * time,-7.0f - 4.0F * ((float) pI/20F));
-                this.neck.z = Mth.lerp(time,5.5F - 2.0F * time,5.5f - 2.0F * ((float) pI/20F));
-                this.body.y = Mth.lerp(time,f2,f22);
-            }
         }
     }
 
@@ -134,9 +89,13 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
         int k = 20;
         int l = pEntity.getAttackTick();
         int i1 = 10;
-        if(pEntity.getPrepareTimer()>0){
-            this.body.xRot= (float) (Math.PI/2F);
+        this.prepareTick=pEntity.prepareTimer;
+        if(this.prepareTick==0){
             if(pEntity.isSitting()){
+                float f1 = Mth.cos(pEntity.tickCount/5.0F)*0.01F;
+                this.body.xScale=1.0F + f1;
+                this.body.yScale=1.0F + f1;
+                this.body.zScale=1.0F + f1;
                 this.body.y=14.5F;
                 this.rightHindLeg.y=13.5F;
                 this.leftHindLeg.y=13.5F;
@@ -151,6 +110,10 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
                 this.rightFrontLeg.yRot = 0.3926991F;
                 this.leftFrontLeg.yRot = -0.3926991F;
             }else {
+                this.body.xRot= (float) (Math.PI/2F);
+                this.body.xScale=1.0F;
+                this.body.yScale=1.0F;
+                this.body.zScale=1.0F;
                 this.body.y=1.0F;
                 this.rightHindLeg.yRot = 0.0F;
                 this.leftHindLeg.yRot =  0.0F;
@@ -193,9 +156,44 @@ public class WildRavagerModel extends HierarchicalModel<WildRavagerEntity> {
                 }
             }
         }
-
     }
-    public void animationPrepare(ModelPart pRightFrontLegs,ModelPart pLeftFrontLegs,ModelPart pBody,ModelPart pMouth,ModelPart pNeck,int pI){
-
+    public void animationPrepare(WildRavagerEntity pEntity){
+        int pI = this.prepareTick;
+        if(pI>0){
+            float time =((float) (20 - pI))/20F;
+            float f2 = -13.0F * time;
+            float f22 = -13.0F * ((float) pI/20F);
+            float f3 = Mth.cos(-60+(((float) (20 - pI))/20F)*400)*5;
+            float f4 = Mth.sin( ((float) Math.PI * 2.0F)*time);
+            this.leftFrontLeg.xRot = 0.698132F*f4;
+            this.leftFrontLeg.y = Mth.lerp(time,-13.0F - 15.0F * time,-13.0F - 15.0F * ((float) pI/20F));
+            this.leftFrontLeg.x = Mth.lerp(time,8.0f + 10.0F * time,8.0f + 10.0F * ((float) pI/20F));
+            this.leftFrontLeg.z = Mth.lerp(time,-5.0F + 10.0F * time,-5.0F + 10.0F * ((float) pI/20F));
+            this.rightFrontLeg.xRot = 0.698132F*f4;
+            this.rightFrontLeg.y = Mth.lerp(time,-13.0F - 15.0F * time,-13.0F - 15.0F * ((float) pI/20F));
+            this.rightFrontLeg.x = Mth.lerp(time,-8.0f - 10.0F * time,-8.0f - 10.0F * ((float) pI/20F));
+            this.rightFrontLeg.z = Mth.lerp(time,-5.0F + 15.0F * time,-5.0F + 15.0F * ((float) pI/20F));
+            if(pI>15){
+                float f5 = Mth.sin( ((float)(20-pI) / 4.0F * (float) Math.PI * 0.5F));
+                this.body.xRot = ((float)Math.PI / 2F) - 0.698132F*f5;
+                this.neck.xRot = -0.698132F*f5;
+                this.mouth.xRot = ((float)Math.PI / 4F)*f5;
+            }else if(pI<10)  {
+                float f5 = Mth.sin( ((float) (pI)) / 9.0F * (float) Math.PI * 0.5F);
+                float f7 = Mth.sin( ((float) (9-pI)) / 9.0F * (float) Math.PI * 0.5F);
+                this.body.xRot = (((float)Math.PI / 2F)) - (0.698132F*f5);
+                if (pI<5) {
+                    float f6 = Mth.sin(((float) (pI)) / 4.0F * (float) Math.PI * 0.5F);
+                    float f8 = Mth.sin(((float) (4-pI)) / 4.0F * (float) Math.PI * 0.5F);
+                    this.neck.xRot = -0.698132F*f6;
+                    this.mouth.xRot = ((float)Math.PI / 4F) - 0.174533F - 0.698132F*f8;
+                }else {
+                    this.mouth.xRot = ((float)Math.PI / 4F) - 0.174533F*f7;
+                }
+            }
+            this.neck.y = Mth.lerp(time,-7.0F - 4.0F * time,-7.0f - 4.0F * ((float) pI/20F));
+            this.neck.z = Mth.lerp(time,5.5F - 2.0F * time,5.5f - 2.0F * ((float) pI/20F));
+            this.body.y = Mth.lerp(time,f2,f22);
+        }
     }
 }

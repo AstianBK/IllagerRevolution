@@ -47,6 +47,7 @@ public class WildRavagerRenderer extends MobRenderer<WildRavagerEntity, WildRava
 
     @Override
     public void render(WildRavagerEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
+        this.model.animationPrepare(pEntity);
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }
 }
