@@ -101,10 +101,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 25.0D)
-                .add(Attributes.ATTACK_DAMAGE, 7.0D)
+                .add(Attributes.MAX_HEALTH, 35.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.15D)
                 .add(Attributes.FOLLOW_RANGE, 30.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.37f)
+                .add(Attributes.MOVEMENT_SPEED, 0.29f)
                 .add(Attributes.JUMP_STRENGTH,0.60d)
                 .build();
     }
@@ -529,7 +530,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void tick() {
         super.tick();
         if(!this.isImmobile()){
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.37D);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29D);
         }else {
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
         }
@@ -665,9 +666,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void setTame(boolean tamed) {
         super.setTame(tamed);
         if (tamed) {
-            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(40.0D);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(10.0D);
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40f);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29f);
         }
     }
     @Override
