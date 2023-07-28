@@ -23,7 +23,7 @@ public class DrumModel extends EntityModel<WildRavagerEntity> {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        partdefinition.addOrReplaceChild("drum", CubeListBuilder.create().texOffs(0, 0).addBox(-5, 0, -4, 16.0F, 16.0F, 16.0F), PartPose.offsetAndRotation(0.0f, -20f, 0.0f, 0.0F, 0.0F, 0.0F));
+        partdefinition.addOrReplaceChild("drum", CubeListBuilder.create().texOffs(0, 0).addBox(-5, 0, -4, 16.0F, 16.0F, 16.0F), PartPose.offsetAndRotation(0.0f, -20f, 0.0f, 0.0F, 0.0F, (float) Math.PI));
 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
@@ -39,12 +39,6 @@ public class DrumModel extends EntityModel<WildRavagerEntity> {
     @Override
     public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
         root.render(matrixStack, buffer, packedLight, packedOverlay);
-    }
-
-    public void setRotationAngle(ModelPart modelRenderer, float x, float y, float z) {
-        modelRenderer.xRot = x;
-        modelRenderer.yRot = y;
-        modelRenderer.zRot = z;
     }
 }
 

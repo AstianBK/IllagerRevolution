@@ -59,6 +59,10 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
     private int nextAssaultTimer;
     private int prepareTimer;
     private int attackTimer;
+
+    private boolean isLeftAttack;
+
+    private boolean isJump;
     Mob owner;
     private static final UUID RAKER_ARMOR_UUID= UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
     private static final UUID RAKER_ATTACK_DAMAGE_UUID= UUID.fromString("648D7064-6A60-4F59-8ABE-C2C23A6DD7A9");
@@ -76,6 +80,8 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         this.nextAssaultTimer = 0;
         this.attackTimer = 0;
         this.prepareTimer = 0;
+        this.isJump = false;
+        this.isLeftAttack = false;
     }
 
     @Override
@@ -138,11 +144,11 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
 
-        if (this.isAssaultMode() && !event.isMoving()) {
+        if (this.isAssaultMode() && this.isOnGround()) {
 
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrapper.prepare", ILoopType.EDefaultLoopTypes.LOOP));
 
-        } else if(event.isMoving() && this.isAssaultMode()) {
+        } else if(this.isAssaultMode() && !this.isOnGround()) {
 
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrapper.jump", ILoopType.EDefaultLoopTypes.LOOP));
 
@@ -156,7 +162,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
 
         } else if(this.isAttacking()) {
 
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrapper.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrapper.attack"+(this.isLeftAttack ? "" : "2"), ILoopType.EDefaultLoopTypes.PLAY_ONCE));
 
         } else if(this.isSitting() && this.isTame()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrapper.sit", ILoopType.EDefaultLoopTypes.LOOP));
@@ -188,8 +194,9 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
     }
 
     public boolean isAssaultMode(){
-        return this.getAssaultState() == AssaultStates.PREPARE || this.getAssaultState() == AssaultStates.ASSAULT;
+        return this.getAssaultState() == AssaultStates.ASSAULT || this.getAssaultState() == AssaultStates.PREPARE;
     }
+
     public void aiStep() {
         super.aiStep();
         if (this.isAttacking()) {
@@ -587,13 +594,18 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                     this.goalOwner.setYRot(-((float) Mth.atan2(vec.x, vec.z)) * (180F / (float) Math.PI));
                     this.goalOwner.yBodyRot = this.goalOwner.getYRot();
                     this.goalOwner.getLookControl().setLookAt(target);
-                    if(this.goalOwner.getAssaultState() == AssaultStates.ASSAULT && this.goalOwner.isOnGround()){
+                    if(this.goalOwner.getAssaultState() == AssaultStates.ASSAULT && this.goalOwner.isOnGround() && !this.goalOwner.isJump){
                         Vec3 vector3d1 = new Vec3(target.getX() - this.goalOwner.getX(), 0.0D, target.getZ() - this.goalOwner.getZ());
                         if (vector3d1.lengthSqr() > 1.0E-7D) {
                             vector3d1 = vector3d1.normalize().scale(Math.min(dx, 15) * 0.2F);
                         }
+                        this.goalOwner.isJump=true;
                         this.goalOwner.setDeltaMovement(vector3d1.x, vector3d1.y + 0.3F + 0.1F * Mth.clamp(target.getEyeY() - this.goalOwner.getY(), 0, 2), vector3d1.z);
+                    }else if(this.goalOwner.isOnGround() && this.goalOwner.isJump){
+                        this.goalOwner.isJump=false;
+                        this.goalOwner.setAssaultMode(3);
                     }
+
                     if (dx < target.getBbWidth() + 3) {
                         this.goalOwner.doHurtTarget(target);
                         this.goalOwner.setAssaultMode(3);
@@ -608,6 +620,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         protected void resetAttackCooldown() {
             super.resetAttackCooldown();
             this.goalOwner.setAttacking(true);
+            this.goalOwner.isLeftAttack = this.goalOwner.level.random.nextBoolean();
         }
 
     }

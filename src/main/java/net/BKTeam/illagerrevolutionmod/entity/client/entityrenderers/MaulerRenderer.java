@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class MaulerRenderer extends GeoEntityRenderer<MaulerEntity> {
@@ -25,6 +27,12 @@ public class MaulerRenderer extends GeoEntityRenderer<MaulerEntity> {
         this.addLayer(new MaulerArmorLayer(this,new MaulerModel()));
         this.shadowRadius = 0.5f;
     }
+
+    @Override
+    public void render(MaulerEntity animatable, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        super.render(animatable, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+
     @Override
     public RenderType getRenderType(MaulerEntity animatable, float partialTicks, PoseStack stack,
                                     MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
@@ -32,5 +40,10 @@ public class MaulerRenderer extends GeoEntityRenderer<MaulerEntity> {
         animatable.refreshDimensions();
         stack.scale(1.5f, 1.5f, 1.5f);
         return RenderType.entityTranslucent(getTextureLocation(animatable));
+    }
+
+    @Override
+    public Color getRenderColor(MaulerEntity animatable, float partialTick, PoseStack poseStack, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight) {
+        return !animatable.isSavager() ? Color.WHITE : Color.ofRGB(1.0f,0.6f,0.6f);
     }
 }
