@@ -27,6 +27,8 @@ public class WildRavagerCuteLayer<T extends WildRavagerEntity,M extends EntityMo
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel<T> model = this.getParentModel();
         if (entityLivingBaseIn.isCute()) {
+            model.prepareMobModel(entityLivingBaseIn,limbSwing,limbSwingAmount,partialTicks);
+            model.setupAnim(entityLivingBaseIn,limbSwing,limbSwingAmount,ageInTicks,netHeadYaw,headPitch);
             VertexConsumer ivertex = bufferIn.getBuffer(RenderType.armorCutoutNoCull(TEXTURE_CUTE));
             model.renderToBuffer(matrixStackIn, ivertex, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
         }

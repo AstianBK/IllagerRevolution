@@ -33,10 +33,14 @@ public class WildRavagerArmorLayer <T extends WildRavagerEntity,M extends Entity
         ItemStack itemstack = entityLivingBaseIn.getContainer().getItem(0);
         EntityModel<T> model = this.getParentModel();
         if (itemstack.getItem() instanceof BeastArmorItem armor) {
+            model.prepareMobModel(entityLivingBaseIn,limbSwing,limbSwingAmount,partialTicks);
+            model.setupAnim(entityLivingBaseIn,limbSwing,limbSwingAmount,ageInTicks,netHeadYaw,headPitch);
             VertexConsumer ivertex = bufferIn.getBuffer(RenderType.armorCutoutNoCull(armor.getArmorTexture(itemstack)));
             model.renderToBuffer(matrixStackIn, ivertex, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
         }
         if(itemstack.is(Items.SADDLE)){
+            model.prepareMobModel(entityLivingBaseIn,limbSwing,limbSwingAmount,partialTicks);
+            model.setupAnim(entityLivingBaseIn,limbSwing,limbSwingAmount,ageInTicks,netHeadYaw,headPitch);
             VertexConsumer ivertex = bufferIn.getBuffer(RenderType.armorCutoutNoCull(TEXTURE_SADDLE));
             model.renderToBuffer(matrixStackIn, ivertex, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
         }
