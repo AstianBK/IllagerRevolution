@@ -224,7 +224,7 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(FEATHER_PROJECTILE.get(), FeatherRender::new);
         EntityRenderers.register(MAULER.get(), MaulerRenderer::new);
         EntityRenderers.register(SCROUNGER.get(), ScroungerRenderer::new);
-
+        EntityRenderers.register(WILD_RAVAGER.get(), WildRavagerRenderer::new);
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
 

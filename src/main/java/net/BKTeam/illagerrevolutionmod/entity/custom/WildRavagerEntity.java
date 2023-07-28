@@ -14,6 +14,7 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -63,6 +64,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib3.GeckoLib;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -70,12 +72,16 @@ import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
 public class WildRavagerEntity extends MountEntity {
+
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private static final Predicate<Entity> NO_RAVAGER_AND_ALIVE = (p_33346_) -> {
         return p_33346_.isAlive() && !(p_33346_ instanceof WildRavagerEntity);
     };
@@ -201,8 +207,19 @@ public class WildRavagerEntity extends MountEntity {
 
     public void setIsChargedState(int pId){
         this.entityData.set(CHARGED,pId);
-        if(pId==3){
-            this.nextAssaultTimer = 20;
+        switch (pId){
+            case 1:{
+                this.prepareTimer=20;
+                if(!this.level.isClientSide){
+                    this.level.broadcastEntityEvent(this,(byte) 59);
+                }
+            }
+            case 2: {
+                this.chargedTick=0;
+            }
+            case 3: {
+                this.nextAssaultTimer = 20;
+            }
         }
     }
 
@@ -301,7 +318,7 @@ public class WildRavagerEntity extends MountEntity {
     }
 
     public boolean isCharged(){
-        return this.prepareTimer>0 || this.chargedTick<100;
+        return this.getChargedState()==ChargedStates.PREPARE || this.getChargedState()==ChargedStates.CHARGED;
     }
 
     @Override
@@ -345,11 +362,13 @@ public class WildRavagerEntity extends MountEntity {
         if (pPassenger instanceof Mob mob) {
             this.yBodyRot = mob.yBodyRot;
         }
-        float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
+
         float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
+        float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
         float f1 = 0.15F;
         float f2 = 0.1F;
-        pPassenger.setPos(this.getX() + (double)(f1 * f3), this.getY()+ this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset()-f2, this.getZ() - (double)(f1 * f));
+        float f4 = this.isCharged() ? Mth.cos(((float) 20-this.prepareTimer/20.0F)/10) : 0.0F;
+        pPassenger.setPos(this.getX() + (double)(f1 * f3), this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset()- f2 + f4, this.getZ() - (double)(f1 * f));
         ((LivingEntity)pPassenger).yBodyRot = this.yBodyRot;
     }
 
@@ -390,8 +409,8 @@ public class WildRavagerEntity extends MountEntity {
                 return InteractionResult.CONSUME;
             }if(stack.is(Items.APPLE)){
                 if(!this.level.isClientSide){
-                    this.prepareTimer = 20;
-                    this.level.broadcastEntityEvent(this,(byte) 59);
+                    this.setIsChargedState(1);
+
                 }
                 if(!pPlayer.getAbilities().instabuild){
                     stack.shrink(1);
@@ -597,11 +616,8 @@ public class WildRavagerEntity extends MountEntity {
 
     @Override
     public void attackC() {
-        if(this.prepareTimer==0 && this.chargedTick==100 && this.nextAssaultTimer==0){
-            if(!this.level.isClientSide){
-                this.prepareTimer = 20;
-                this.level.broadcastEntityEvent(this,(byte) 59);
-            }
+        if(this.getChargedState() == ChargedStates.CAN_CHARGED && !this.isImmobile()){
+            this.setIsChargedState(1);
         }
         super.attackC();
     }
@@ -701,24 +717,29 @@ public class WildRavagerEntity extends MountEntity {
 
     public void aiStep() {
         super.aiStep();
-        if(this.prepareTimer>0){
+        if(this.getChargedState() == ChargedStates.PREPARE){
             this.prepareTimer--;
             if(this.prepareTimer==0){
+                this.setIsChargedState(2);
                 this.chargedTick=0;
             }
         }
 
-        if(this.chargedTick<100){
+        if(this.getChargedState() == ChargedStates.CHARGED){
             this.chargedTick++;
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40D);
             if(this.chargedTick>100){
-                this.nextAssaultTimer=0;
+                this.setIsChargedState(3);
+                this.stunnedTick = 40;
+                this.level.broadcastEntityEvent(this,(byte) 39);
             }
         }
 
-        if(this.nextAssaultTimer>0){
+        if(this.getChargedState() == ChargedStates.FINISH){
             this.nextAssaultTimer--;
+            this.setIsChargedState(0);
         }
+
         if(this.hasDrum()){
             if(this.drumTick>0){
                 this.drumTick--;
@@ -809,13 +830,11 @@ public class WildRavagerEntity extends MountEntity {
     }
 
     private void stunEffect() {
-        if(!this.isVehicle()){
-            if (this.random.nextInt(6) == 0) {
-                double d0 = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
-                double d1 = this.getY() + (double)this.getBbHeight() - 0.3D;
-                double d2 = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
-                this.level.addParticle(ParticleTypes.ENTITY_EFFECT, d0, d1, d2, 0.4980392156862745D, 0.5137254901960784D, 0.5725490196078431D);
-            }
+        if (this.random.nextInt(6) == 0) {
+            double d0 = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
+            double d1 = this.getY() + (double)this.getBbHeight() - 0.3D;
+            double d2 = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
+            this.level.addParticle(ParticleTypes.ENTITY_EFFECT, d0, d1, d2, 0.4980392156862745D, 0.5137254901960784D, 0.5725490196078431D);
         }
     }
 
@@ -894,11 +913,47 @@ public class WildRavagerEntity extends MountEntity {
         }else if (pId == 64){
             this.level.playSound((Player) null,this,ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
         }else if (pId == 59){
+            Random random1 = new Random();
             this.prepareTimer=20;
+            float f = this.yBodyRot * ((float) Math.PI / 180F);
+            float f1 = Mth.cos(f);
+            float f2 = Mth.sin(f);
+            double dx0 = this.getX() - (this.getX() - f2 + f1 * 0.4d);
+            double dz0 = this.getZ() - (this.getZ() + f1 + f2 * 0.4d);
+            double dx1 = this.getX() - (this.getX() - f2  - f1 * 0.4d);
+            double dz1 = this.getZ() - (this.getZ() + f1  - f2 * 0.4d);
+            double d0 = Math.max(dx0*dx0 + dz0*dz0,0.001D);
+            double d1 = Math.max(dx1*dx1 + dz1*dz1,0.001D);
+            for(int i = 0; i<10;i++){
+                double r = random1.nextFloat(0.01F,0.2F);
+                this.level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX() - f2 + f1 * 0.4d, this.getY(), this.getZ() + f1 + f2 * 0.4d, (dx0/d0)*r, random1.nextFloat(0.05F,0.1F),(dz0/d0)*r);
+                this.level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX() - f2  - f1 * 0.4d, this.getY(), this.getZ() + f1  - f2 * 0.4d, (dx1/d1)*r   , random1.nextFloat(0.05F,0.1F), (dz1/d1)*r);
+            }
         }else {
             super.handleEntityEvent(pId);
         }
 
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        super.registerControllers(data);
+        data.addAnimationController(new AnimationController(this,"controller_States"
+                ,0,this::predicate));
+    }
+
+    private <E extends IAnimatable>PlayState predicate(AnimationEvent<E> event) {
+        if(this.getChargedState() == ChargedStates.PREPARE){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.ravager.prepare", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        }else if(this.getChargedState() == ChargedStates.CHARGED){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.ravager.charged", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if(this.isSitting()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.ravager.sit", ILoopType.EDefaultLoopTypes.LOOP));
+        }else {
+            event.getController().clearAnimationCache();
+            return PlayState.STOP;
+        }
+        return PlayState.CONTINUE;
     }
     public int getAttackTick() {
         return this.attackTick;
@@ -955,6 +1010,11 @@ public class WildRavagerEntity extends MountEntity {
 
     public boolean checkSpawnObstruction(LevelReader pLevel) {
         return !pLevel.containsAnyLiquid(this.getBoundingBox());
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return this.factory;
     }
 
     class RavagerMeleeAttackGoal extends MeleeAttackGoal {

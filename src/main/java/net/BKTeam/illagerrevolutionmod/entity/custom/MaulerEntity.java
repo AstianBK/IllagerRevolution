@@ -7,6 +7,7 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,6 +22,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -73,6 +75,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     private static final EntityDataAccessor<Boolean> MAULED =
             SynchedEntityData.defineId(MaulerEntity.class, EntityDataSerializers.BOOLEAN);
 
+    private static final EntityDataAccessor<Boolean> SAVAGER =
+            SynchedEntityData.defineId(MaulerEntity.class, EntityDataSerializers.BOOLEAN);
+
     public int attackTimer;
 
     public int mauledTimer;
@@ -81,13 +86,18 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     private int catchedTimer;
 
+    private int prepareTimer;
+
+    private int savagerTimer;
+
     public MaulerEntity(EntityType<? extends MountEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
         this.attackTimer=0;
         this.mauledTimer=0;
         this.mauledAttackTimer=0;
         this.catchedTimer=0;
-        //this.maxUpStep=1.0f;
+        this.prepareTimer = 0;
+        this.savagerTimer = 0;
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
@@ -123,12 +133,14 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.registerGoals();
     }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving() && !this.isAggressive() && !this.isSitting()) {
+        if (event.isMoving() && !this.isAggressive() && !this.isSitting() && !this.isPrepare()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.walk"+(!this.isVehicle() ? "1" : "2"), ILoopType.EDefaultLoopTypes.LOOP));
-        }else if(event.isMoving() && this.isAggressive() && !this.isSitting()){
+        }else if(event.isMoving() && this.isAggressive() && !this.isSitting() && !this.isPrepare()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.walk2", ILoopType.EDefaultLoopTypes.LOOP));
-        }else if(this.isSitting() && this.isTame()){
+        }else if(this.isSitting() && this.isTame() && !this.isPrepare()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.sit", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if(this.isPrepare()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.rage", ILoopType.EDefaultLoopTypes.LOOP));
         }else
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mauler.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
@@ -168,6 +180,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
             }
         }
+        if(this.isSavager())return false;
         return super.hurt(pSource, pAmount);
     }
 
@@ -192,6 +205,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public boolean hasArmor(){
         return !this.inventory.getItem(1).isEmpty() && this.isArmor(this.inventory.getItem(1));
+    }
+
+    @Override
+    protected boolean isImmobile() {
+        return super.isImmobile() || this.isPrepare();
+    }
+
+    public boolean isPrepare(){
+        return this.prepareTimer>0;
     }
 
     @Override
@@ -258,8 +280,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.setIsMauled(true);
         }else if(pId == 8){
             this.setAttacking(true);
+        } else if (pId == 60) {
+            this.setSavager(true);
+        }else {
+            super.handleEntityEvent(pId);
         }
-        super.handleEntityEvent(pId);
     }
 
     @Override
@@ -449,6 +474,22 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.aiStep();
         LivingEntity target = this.getCatchedEntity();
 
+        if(this.prepareTimer>0){
+            this.prepareTimer--;
+            if(this.prepareTimer==0){
+                this.setSavager(true);
+                this.level.broadcastEntityEvent(this,(byte) 60);
+            }
+        }
+
+        if(this.isSavager()){
+            this.savagerTimer--;
+        }
+
+        if(this.savagerTimer<0){
+            this.setSavager(false);
+        }
+
         if (this.isAttacking()) {
             this.attackTimer--;
         }
@@ -474,6 +515,32 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
         }
 
+        if(this.isSavager()){
+            float f = this.yBodyRot * ((float) Math.PI / 180F);
+            float f1 = Mth.cos(f);
+            float f2 = Mth.sin(f);
+            this.level.addParticle(ParticleTypes.SMOKE, this.getX() - f2 + f1 * 0.4d, this.getY()+this.getBbHeight()+0.1D, this.getZ() + f1 + f2 * 0.4d, 0.0F, 0.0F, 0.0F);
+            this.level.addParticle(ParticleTypes.SMOKE, this.getX() - f2  - f1 * 0.4d, this.getY()+this.getBbHeight()+0.1D, this.getZ() + f1  - f2 * 0.4d, 0.0F, 0.0F, 0.0F);
+        }
+
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(!this.isImmobile()){
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.37D);
+        }else {
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
+        }
+    }
+
+    @Override
+    public void attackC() {
+        if(this.savagerTimer<=0){
+            this.prepareTimer=20;
+        }
+        super.attackC();
     }
 
     public void setAttacking(boolean pBoolean) {
@@ -483,6 +550,20 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
+    }
+
+
+    public void setSavager(boolean pBoolean) {
+        this.entityData.set(SAVAGER,pBoolean);
+        this.savagerTimer=pBoolean ? 200 : 0;
+        if(pBoolean){
+            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,200,1));
+            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,200,0));
+        }
+    }
+
+    public boolean isSavager() {
+        return this.entityData.get(SAVAGER);
     }
 
     @Override
@@ -620,6 +701,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("Savager",this.isSavager());
         pCompound.putBoolean("Attacking",this.isAttacking());
         pCompound.putBoolean("isMauled",this.isMauled());
         ItemStack saddle = this.getItemBySlot(EquipmentSlot.FEET);
@@ -651,6 +733,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        this.setSavager(pCompound.getBoolean("Savager"));
         this.setAttacking(pCompound.getBoolean("Attacking"));
         this.setIsMauled(pCompound.getBoolean("isMauled"));
         CompoundTag compoundNBT1 = pCompound.getCompound("saddleItem");
@@ -674,6 +757,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.defineSynchedData();
         this.entityData.define(ATTACKING,false);
         this.entityData.define(MAULED,false);
+        this.entityData.define(SAVAGER,false);
     }
 
     @Override

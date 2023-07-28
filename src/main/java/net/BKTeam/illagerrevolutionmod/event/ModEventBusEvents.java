@@ -89,15 +89,11 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(WILD_RAVAGER.get(), WildRavagerRenderer::new);
         event.registerEntityRenderer(ARROWBEAST.get(), ArrowBeastRender::new);
     }
 
     @SubscribeEvent
     public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(RAVAGER, WildRavagerModel::createBodyLayer);
-        event.registerLayerDefinition(WAR_PAINT, WildRavagerModel::createBodyLayer);
-        event.registerLayerDefinition(RAVAGER_SADDLE, WildRavagerModel::createBodyLayer);
         event.registerLayerDefinition(DRUM, DrumModel::createBodyLayer);
 
     }
