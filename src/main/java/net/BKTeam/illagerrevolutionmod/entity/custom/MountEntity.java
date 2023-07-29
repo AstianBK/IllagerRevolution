@@ -298,13 +298,13 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
     public void setIsJumping(boolean pBoolean){
         this.isJumping=pBoolean;
     }
+
     public void containerChanged(Container pInvBasic) {
         boolean flag = this.isSaddled();
         this.updateContainerEquipment();
         if (this.tickCount > 20 && !flag && this.isSaddled()) {
             this.playSound(SoundEvents.HORSE_SADDLE, 0.5F, 1.0F);
         }
-
     }
 
     protected void updateContainerEquipment() {

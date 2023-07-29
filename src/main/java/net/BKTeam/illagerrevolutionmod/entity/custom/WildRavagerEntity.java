@@ -105,6 +105,8 @@ public class WildRavagerEntity extends MountEntity {
     public int prepareTimer;
     private int nextAssaultTimer;
 
+    private int roarCooldown;
+
     private int chargedTick;
 
     public WildRavagerEntity(EntityType<? extends TamableAnimal> p_20966_, Level p_20967_) {
@@ -115,6 +117,7 @@ public class WildRavagerEntity extends MountEntity {
         this.prepareTimer = 0;
         this.nextAssaultTimer = 0;
         this.chargedTick = 100;
+        this.roarCooldown = 0;
     }
 
     protected void registerGoals() {
@@ -210,6 +213,7 @@ public class WildRavagerEntity extends MountEntity {
         switch (pId){
             case 1:{
                 this.prepareTimer=20;
+                this.level.playSound(null,this,SoundEvents.RAVAGER_ROAR,SoundSource.HOSTILE,3.0F,1.0F);
                 if(!this.level.isClientSide){
                     this.level.broadcastEntityEvent(this,(byte) 59);
                 }
@@ -498,7 +502,7 @@ public class WildRavagerEntity extends MountEntity {
 
     @Override
     public boolean canJump() {
-        return this.isSaddled();
+        return this.isSaddled() && this.roarCooldown==0;
     }
 
     @Override
@@ -580,6 +584,7 @@ public class WildRavagerEntity extends MountEntity {
                     this.roarTick=20;
                     this.level.broadcastEntityEvent(this, (byte)65);
                     this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
+                    this.roarCooldown=300;
                 }
             }
         }
@@ -635,7 +640,7 @@ public class WildRavagerEntity extends MountEntity {
                 float f3 = 0.5f;
                 BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY()+1.5d,this.getZ()+(f3*f2));
                 for(LivingEntity living : this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(2.5d))){
-                    if(living!=this && living!=this.getOwner() && !flag){
+                    if(living!=this && living!=this.getOwner() && !flag && this.hasLineOfSight(living)){
                         flag=true;
                         living.hurt(DamageSource.mobAttack(this), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
                     }else if(flag){
@@ -717,6 +722,9 @@ public class WildRavagerEntity extends MountEntity {
 
     public void aiStep() {
         super.aiStep();
+        if(this.roarCooldown>0){
+            this.roarCooldown--;
+        }
         if(this.getChargedState() == ChargedStates.PREPARE){
             this.prepareTimer--;
             if(this.prepareTimer==0){
@@ -724,7 +732,6 @@ public class WildRavagerEntity extends MountEntity {
                 this.chargedTick=0;
             }
         }
-
         if(this.getChargedState() == ChargedStates.CHARGED){
             this.chargedTick++;
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40D);
@@ -898,6 +905,14 @@ public class WildRavagerEntity extends MountEntity {
         p_33340_.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
     }
 
+    private void strongKnockbackCharged(Entity p_33340_) {
+        double d0 = p_33340_.getX() - this.getX();
+        double d1 = p_33340_.getZ() - this.getZ();
+        double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
+        double d3= 1.0D;
+        p_33340_.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
+    }
+
     private double getKnockbackPower(){
         return this.roarPower > 0 ? 4.0D*this.roarPower : 4.0D;
     }
@@ -910,6 +925,7 @@ public class WildRavagerEntity extends MountEntity {
             this.stunnedTick = 40;
         } else if (pId == 65) {
             this.roarTick = 20;
+            this.roarCooldown=300;
         }else if (pId == 64){
             this.level.playSound((Player) null,this,ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
         }else if (pId == 59){

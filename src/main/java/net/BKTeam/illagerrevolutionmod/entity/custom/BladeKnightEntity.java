@@ -89,8 +89,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 90.0D)
-                .add(Attributes.ATTACK_DAMAGE, 8.0D)
+                .add(Attributes.MAX_HEALTH, 80.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.85D)
                 .add(Attributes.ARMOR, 0.0D)
@@ -216,6 +216,11 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         }
     }
 
+    protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.random.nextFloat() < 0.5f ? ModItems.ILLAGIUM_RUNED_BLADE.get() : ModItems.ILLAGIUM_ALT_RUNED_BLADE.get()));
+        this.setDropChance(EquipmentSlot.MAINHAND,0.10F);
+    }
+
     public List<FallenKnightEntity> getKnights() {
         return this.knights;
     }
@@ -288,6 +293,122 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         return super.hurt(pSource, pAmount);
     }
 
+    public void aiStep() {
+        super.aiStep();
+        if(this.getHealth() < this.getMaxHealth()*70/100 && !this.isLowLife()){
+            this.setLowLife(true);
+        }
+        if(this.attackShield>0){
+            this.attackShield--;
+        }
+        if(this.isAttacking()){
+            --this.attackTimer;
+            if(this.attackTimer!=0){
+                if(this.attackTimer==4 && this.getTarget()!=null){
+                    if(this.isAttackingShield()){
+                        ((Player)this.getTarget()).disableShield(true);
+                        this.playSound(SoundEvents.ANVIL_BREAK, 4.0F, -1.0F);
+                        this.playSound(SoundEvents.SHIELD_BREAK, 2.0F, 1.0F);
+                    }else{
+                        this.doHurtTarget(this.getTarget());
+                        SoundEvent Sound =this.level.getRandom().nextInt(0,2)==1 ? ModSounds.BLADE_KNIGHT_SWORDHIT1.get():ModSounds.BLADE_KNIGHT_SWORDHIT2.get();
+                        this.playSound(Sound, 1.2F, 1.0F);
+                    }
+                }
+            }else{
+                this.setAttacking(false);
+                this.setAttackingshield(false);
+            }
+        }
+    }
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING,false);
+        this.entityData.define(ATTACKINGSHIELD,false);
+        this.entityData.define(LOW_LIFE,false);
+        this.entityData.define(STARTANIMATIONLOWHEALTH,false);
+        this.entityData.define(PHASE2,false);
+    }
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.setAttacking(compound.getBoolean("isAttacking"));
+        this.setAttackingshield(compound.getBoolean("isAttackingShield"));
+        this.setLowLife(compound.getBoolean("isLowlife"));
+        this.setStartAnimationLowHealth(compound.getBoolean("isLowHealth"));
+        this.setPhase2(compound.getBoolean("isphase2"));
+
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("isAttacking",this.isAttacking());
+        compound.putBoolean("isAttackingShield",this.isAttackingShield());
+        compound.putBoolean("isLowlife",this.isLowLife());
+        compound.putBoolean("isLowHealth",this.isStartAnimationLowHealth());
+        compound.putBoolean("isphase2",this.isPhase2());
+    }
+
+    public void setAttacking(boolean attacking){
+        this.entityData.set(ATTACKING,attacking);
+        this.attackTimer = isAttacking() ? 10 : 0;
+    }
+    public void setLowLife(boolean lowLife){
+        this.entityData.set(LOW_LIFE,lowLife);
+        this.lowHealtTimer=lowLife ? 60 : 0;
+        if(lowLife){
+            this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.36D);
+            this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(1.5D);
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
+            this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(3.0D);
+            this.getAttribute(Attributes.ARMOR).setBaseValue(10.0D);
+            this.removeEffect(MobEffects.FIRE_RESISTANCE);
+            this.removeEffect(MobEffects.WATER_BREATHING);
+        }
+    }
+    public boolean  isLowLife(){
+        return this.entityData.get(LOW_LIFE);
+    }
+    public boolean isAttacking(){
+        return this.entityData.get(ATTACKING);
+    }
+
+
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
+        return ModSounds.BLADE_KNIGHT_HURT.get();
+    }
+    @Override
+    protected SoundEvent getCastingSoundEvent() {
+        return SoundEvents.EVOKER_PREPARE_SUMMON;
+    }
+
+    @Override
+    public SimpleContainer getInventory() {
+        return this.inventory;
+    }
+
+    @Override
+    public void applyRaidBuffs(int pWave, boolean p_37845_) {}
+
+    @Override
+    public SoundEvent getCelebrateSound() {
+        return null;
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController(this, "controller",
+                0, this::predicate));
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
+    }
+
     class BKSummonUpUndeadSpellGoal extends SpellcasterUseSpellGoal {
 
         BKSummonUpUndeadSpellGoal() {
@@ -358,10 +479,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 i++;
             }
         }
-    }
-
-    protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.random.nextFloat() < 0.5f ? ModItems.ILLAGIUM_RUNED_BLADE.get() :ModItems.ILLAGIUM_ALT_RUNED_BLADE.get()));
     }
 
     class BKSummonHunterSpellGoal extends SpellcasterUseSpellGoal {
@@ -467,121 +584,5 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             super.resetAttackCooldown();
             this.goalOwner.setAttacking(true);;
         }
-    }
-
-    public void aiStep() {
-        super.aiStep();
-        if(this.getHealth() < this.getMaxHealth()*50/100 && !this.isLowLife()){
-            this.setLowLife(true);
-        }
-        if(this.attackShield>0){
-            this.attackShield--;
-        }
-        if(this.isAttacking()){
-            --this.attackTimer;
-            if(this.attackTimer!=0){
-                if(this.attackTimer==4 && this.getTarget()!=null){
-                    if(this.isAttackingShield()){
-                        ((Player)this.getTarget()).disableShield(true);
-                        this.playSound(SoundEvents.ANVIL_BREAK, 4.0F, -1.0F);
-                        this.playSound(SoundEvents.SHIELD_BREAK, 2.0F, 1.0F);
-                    }else{
-                        this.doHurtTarget(this.getTarget());
-                        SoundEvent Sound =this.level.getRandom().nextInt(0,2)==1 ? ModSounds.BLADE_KNIGHT_SWORDHIT1.get():ModSounds.BLADE_KNIGHT_SWORDHIT2.get();
-                        this.playSound(Sound, 1.2F, 1.0F);
-                    }
-                }
-            }else{
-                this.setAttacking(false);
-                this.setAttackingshield(false);
-            }
-        }
-    }
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACKING,false);
-        this.entityData.define(ATTACKINGSHIELD,false);
-        this.entityData.define(LOW_LIFE,false);
-        this.entityData.define(STARTANIMATIONLOWHEALTH,false);
-        this.entityData.define(PHASE2,false);
-    }
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.setAttacking(compound.getBoolean("isAttacking"));
-        this.setAttackingshield(compound.getBoolean("isAttackingShield"));
-        this.setLowLife(compound.getBoolean("isLowlife"));
-        this.setStartAnimationLowHealth(compound.getBoolean("isLowHealth"));
-        this.setPhase2(compound.getBoolean("isphase2"));
-
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putBoolean("isAttacking",this.isAttacking());
-        compound.putBoolean("isAttackingShield",this.isAttackingShield());
-        compound.putBoolean("isLowlife",this.isLowLife());
-        compound.putBoolean("isLowHealth",this.isStartAnimationLowHealth());
-        compound.putBoolean("isphase2",this.isPhase2());
-        }
-
-    public void setAttacking(boolean attacking){
-        this.entityData.set(ATTACKING,attacking);
-        this.attackTimer = isAttacking() ? 10 : 0;
-    }
-    public void setLowLife(boolean lowLife){
-        this.entityData.set(LOW_LIFE,lowLife);
-        this.lowHealtTimer=lowLife ? 60 : 0;
-        if(lowLife){
-            this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.36D);
-            this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(1.5D);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
-            this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(3.0D);
-            this.getAttribute(Attributes.ARMOR).setBaseValue(10.0D);
-            this.removeEffect(MobEffects.FIRE_RESISTANCE);
-            this.removeEffect(MobEffects.WATER_BREATHING);
-        }
-    }
-    public boolean  isLowLife(){
-        return this.entityData.get(LOW_LIFE);
-    }
-    public boolean isAttacking(){
-        return this.entityData.get(ATTACKING);
-    }
-
-
-    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return ModSounds.BLADE_KNIGHT_HURT.get();
-    }
-    @Override
-    protected SoundEvent getCastingSoundEvent() {
-        return SoundEvents.EVOKER_PREPARE_SUMMON;
-    }
-
-    @Override
-    public SimpleContainer getInventory() {
-        return this.inventory;
-    }
-
-    @Override
-    public void applyRaidBuffs(int pWave, boolean p_37845_) {}
-
-    @Override
-    public SoundEvent getCelebrateSound() {
-        return null;
-    }
-
-    @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
-                0, this::predicate));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 }

@@ -39,7 +39,6 @@ public class PacketWhistle {
     @OnlyIn(Dist.CLIENT)
     private void handleEffect() {
         Minecraft mc = Minecraft.getInstance();
-
         mc.particleEngine.createParticle(ParticleTypes.NOTE,entity.getX(),entity.getY()+entity.getBbHeight()+0.3d,entity.getZ(),0.0f,0.5f,0.0f);
 
     }

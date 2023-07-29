@@ -37,7 +37,7 @@ public class WildRavagerDrumLayer extends GeoLayerRenderer<WildRavagerEntity> {
             if(Block.byItem(stack.getItem()) instanceof DrumBlock drumBlock){
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(0.7f,0.7f,0.7f);
-                matrixStackIn.translate(leftShoulderIn ? -0.9f : 1.2f , entitylivingbaseIn.isSitting() ? 3.5F : 4.5F, entitylivingbaseIn.isSitting() ? 0.7D : 0.3D);
+                matrixStackIn.translate(leftShoulderIn ? -0.9f : 1.2f , entitylivingbaseIn.isSitting() ? 2.8F : 4.5F, entitylivingbaseIn.isSitting() ? 0.7D : 0.3D);
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(model.renderType(drumBlock.getLocation()));
                 model.renderOnShoulder(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, limbSwing, limbSwingAmount, netHeadYaw, headPitch, entitylivingbaseIn.tickCount);
                 matrixStackIn.popPose();

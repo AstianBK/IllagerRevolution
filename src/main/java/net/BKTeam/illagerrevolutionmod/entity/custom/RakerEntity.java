@@ -465,6 +465,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
     public void setAttacking(boolean attacking) {
         this.entityData.set(ATTACKING, attacking);
         this.attackTimer = isAttacking() ? 7 : 0;
+        this.isLeftAttack = this.level.random.nextBoolean();
     }
 
     public boolean isAttacking(){
@@ -555,7 +556,14 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         }
     }
 
-
+    @Override
+    public void handleEntityEvent(byte pId) {
+        if(pId==4){
+            this.setAttacking(true);
+        }else {
+            super.handleEntityEvent(pId);
+        }
+    }
 
     static class RakerAttackGoal extends MeleeAttackGoal {
         private final RakerEntity goalOwner;
@@ -620,7 +628,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         protected void resetAttackCooldown() {
             super.resetAttackCooldown();
             this.goalOwner.setAttacking(true);
-            this.goalOwner.isLeftAttack = this.goalOwner.level.random.nextBoolean();
+            this.goalOwner.level.broadcastEntityEvent(this.goalOwner,(byte) 4);
         }
 
     }
