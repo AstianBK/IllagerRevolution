@@ -107,10 +107,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 25.0D)
-                .add(Attributes.ATTACK_DAMAGE, 7.0D)
+                .add(Attributes.MAX_HEALTH, 35.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.15D)
                 .add(Attributes.FOLLOW_RANGE, 30.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.37f)
+                .add(Attributes.MOVEMENT_SPEED, 0.29f)
                 .add(Attributes.JUMP_STRENGTH,0.60d)
                 .build();
     }
@@ -429,7 +430,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(this.level.random.nextFloat()>0.90f){
                         if (!ForgeEventFactory.onAnimalTame(this, pPlayer)) {
                             if (!this.level.isClientSide) {
-                                this.playSound(SoundEvents.FOX_EAT);
+                                this.playSound(SoundEvents.GENERIC_EAT, 1.0F, -1.0F);
                                 super.tame(pPlayer);
                                 this.navigation.recomputePath();
                                 this.setTarget(null);
@@ -451,7 +452,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(!this.level.isClientSide && this.getMaxHealth()!=this.getHealth()){
                         this.heal(this.getMaxHealth()*0.10f);
                     }
-                    this.playSound(SoundEvents.FOX_EAT);
+                    this.playSound(SoundEvents.GENERIC_EAT, 1.0F, -1.0F);
                 }
                 return InteractionResult.CONSUME;
             }
@@ -577,7 +578,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void tick() {
         super.tick();
         if(!this.isImmobile()){
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.37D);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29D);
         }else {
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
         }
@@ -715,9 +716,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void setTame(boolean tamed) {
         super.setTame(tamed);
         if (tamed) {
-            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(40.0D);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(10.0D);
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.40f);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29f);
         }
     }
     @Override

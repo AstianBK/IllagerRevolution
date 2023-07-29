@@ -57,9 +57,6 @@ public class ModItems {
     public static final RegistryObject<Item> BEAST_STAFF = ITEMS.register("beast_staff",
             ()-> new BeastStaffItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1)));
 
-    public static final RegistryObject<Item> ENCRUSTED_LAPIS = ITEMS.register("encrusted_lapis",()->
-            new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
-
     public static final RegistryObject<Item> RAKER_CLAW = ITEMS.register("raker_claw",()->
             new Item(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
