@@ -16,6 +16,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -48,7 +50,7 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
     private static final EntityDataAccessor<Boolean> ON_COMBAT =
             SynchedEntityData.defineId(IllagerBeastEntity.class, EntityDataSerializers.BOOLEAN);
 
-    private static final EntityDataAccessor<Boolean> EXCITED =
+    protected static final EntityDataAccessor<Boolean> EXCITED =
             SynchedEntityData.defineId(IllagerBeastEntity.class, EntityDataSerializers.BOOLEAN);
 
     private int combatTimer;
@@ -159,11 +161,15 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
         this.entityData.set(EXCITED,isExcited);
         if(isExcited){
             this.excitedTimer=500;
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getValue()+0.10D);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getSpeedBase()*1.1D);
         }else {
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue());
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getSpeedBase());
             this.excitedTimer=0;
         }
+    }
+
+    public double getSpeedBase(){
+        return this.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue();
     }
 
     @Override

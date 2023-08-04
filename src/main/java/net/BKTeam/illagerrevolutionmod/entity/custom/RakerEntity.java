@@ -197,6 +197,11 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         return this.getAssaultState() == AssaultStates.ASSAULT || this.getAssaultState() == AssaultStates.PREPARE;
     }
 
+    @Override
+    public double getSpeedBase() {
+        return this.isTame() ? 0.40D : 0.42D;
+    }
+
     public void aiStep() {
         super.aiStep();
         if (this.isAttacking()) {

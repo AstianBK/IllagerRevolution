@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -312,6 +313,16 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
             ItemStack stack = this.getContainer().getItem(0);
             boolean flag = !stack.isEmpty();
             this.setIsSaddled(flag);
+        }
+    }
+    protected void cooldownEffect() {
+        for (int i=0 ; i<10 ; i++){
+            if (this.random.nextInt(6) == 0) {
+                double d0 = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
+                double d1 = this.getY() + (double)this.getBbHeight() - 0.3D;
+                double d2 = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
+                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, d0, d1, d2, 0.4980392156862745D, 0.5137254901960784D, 0.5725490196078431D);
+            }
         }
     }
 

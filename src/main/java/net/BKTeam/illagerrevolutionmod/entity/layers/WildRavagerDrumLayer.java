@@ -2,16 +2,13 @@ package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
 import net.BKTeam.illagerrevolutionmod.block.custom.DrumBlock;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,7 +25,7 @@ public class WildRavagerDrumLayer extends GeoLayerRenderer<WildRavagerEntity> {
     }
 
 
-    private void renderRaven(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn,WildRavagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, boolean leftShoulderIn) {
+    private void renderDrum(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, WildRavagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, boolean leftShoulderIn) {
         if(entitylivingbaseIn.hasDrum()){
             if (model == null) {
                 model = new DrumModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEventBusEvents.DRUM));
@@ -37,7 +34,12 @@ public class WildRavagerDrumLayer extends GeoLayerRenderer<WildRavagerEntity> {
             if(Block.byItem(stack.getItem()) instanceof DrumBlock drumBlock){
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(0.7f,0.7f,0.7f);
-                matrixStackIn.translate(leftShoulderIn ? -0.9f : 1.2f , entitylivingbaseIn.isSitting() ? 2.8F : 4.5F, entitylivingbaseIn.isSitting() ? 0.7D : 0.3D);
+                float f4 = 0.0F;
+                if(entitylivingbaseIn.prepareTimer>0){
+                    float f5=(20.0F-(float) entitylivingbaseIn.prepareTimer)/20.0F;
+                    f4 = Mth.lerp(f5,0.0F+(0.5F*f5),0.5F-(0.5F*f5));
+                }
+                matrixStackIn.translate(leftShoulderIn ? -0.9f : 1.2f , entitylivingbaseIn.isSitting() ? 2.8F : 4.5F+f4 , entitylivingbaseIn.isSitting() ? 0.7D : 0.3D);
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(model.renderType(drumBlock.getLocation()));
                 model.renderOnShoulder(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, limbSwing, limbSwingAmount, netHeadYaw, headPitch, entitylivingbaseIn.tickCount);
                 matrixStackIn.popPose();
@@ -48,8 +50,8 @@ public class WildRavagerDrumLayer extends GeoLayerRenderer<WildRavagerEntity> {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, WildRavagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.renderRaven(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, netHeadYaw, headPitch, true);
-        this.renderRaven(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, netHeadYaw, headPitch, false);
+        this.renderDrum(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, netHeadYaw, headPitch, true);
+        this.renderDrum(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, netHeadYaw, headPitch, false);
     }
 }
 

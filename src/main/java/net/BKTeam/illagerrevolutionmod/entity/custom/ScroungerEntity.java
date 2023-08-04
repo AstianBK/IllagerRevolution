@@ -33,6 +33,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -74,8 +75,9 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     public float oFlap;
     private float flapping = 1.0F;
     private int helpOwnerTimer;
-
     public int nextAttack;
+
+    public boolean isTorrentAttack;
 
     LivingEntity ownerIllager;
 
@@ -93,14 +95,15 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         this.helpOwnerTimer=0;
         this.moveControl=new ScroungerFlyingMoveControl(this,5,false);
         this.partyParrot = false;
+        this.isTorrentAttack = false;
     }
 
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 9.0D)
                 .add(Attributes.FOLLOW_RANGE, 45.D)
-                .add(Attributes.MOVEMENT_SPEED, 1.0d)
-                .add(Attributes.FLYING_SPEED,1.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2d)
+                .add(Attributes.FLYING_SPEED,0.5D)
                 .build();
 
     }
@@ -168,7 +171,12 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             this.nextAttack--;
         }
         if(this.nextAttack==10){
-            this.shoot(this.getTarget());
+            if(this.isTorrentAttack){
+                this.torrentAttack();
+                this.isTorrentAttack=false;
+            }else {
+                this.shoot(this.getTarget());
+            }
         }
         if(this.nextAttack<0){
             this.setIsAttacking(false);
@@ -205,6 +213,29 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         this.flap += this.flapping * 2.0F;
     }
 
+    public void torrentAttack(){
+        List<LivingEntity> living = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(50.0D),e->{
+            if(e instanceof Mob mob){
+                if(this.isTame()){
+                    return this.getOwner()==mob.getTarget();
+                }else {
+                    return this.getOwnerIllager()==mob.getTarget();
+                }
+            }else if(e instanceof Player player){
+                if(this.isTame()){
+                    if(player.getLastHurtMob()==this.getOwner()){
+                        return player.getLastHurtMobTimestamp()<200;
+                    }
+                }else {
+                    return true;
+                }
+            }
+            return false;
+        });
+        for (LivingEntity entity : living){
+            this.shoot(entity);
+        }
+    }
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand pHand) {
         ItemStack itemstack = player.getItemInHand(pHand);
@@ -434,6 +465,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     public void setIsAttacking(boolean pBoolean){
         this.entityData.set(ATTACKING,pBoolean);
         this.nextAttack= pBoolean ? 20 : 0;
+        this.isTorrentAttack = this.level.random.nextFloat() < 0.3F;
     }
 
     public boolean isAttacking(){
@@ -443,6 +475,14 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     @Override
     public Beast getTypeBeast() {
         return Beast.SCROUNGER;
+    }
+
+    @Override
+    public void setIsExcited(boolean isExcited) {
+        this.entityData.set(EXCITED,isExcited);
+        if(isExcited){
+            this.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,250,1));
+        }
     }
 
     @Override
@@ -515,6 +555,28 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     public void performRangedAttack(@NotNull LivingEntity target, float pDistanceFactor) {
         this.setIsAttacking(true);
         this.setTarget(target);
+        this.getLookControl().setLookAt(target);
+        this.setYBodyRot(this.getYHeadRot());
+        this.yBodyRot=this.getYHeadRot();
+        double d0 = target.getX() - this.getX();
+        double d1 = target.getY() - this.getY();
+        double d2 = target.getZ() - this.getZ();
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        float f4 = (float)(-(Mth.atan2(-d1, d3) * (double)(180F / (float)Math.PI)));
+        this.setXRot(f4);
+        this.xRotO=this.getXRot();
+        if(!this.level.isClientSide){
+            this.level.broadcastEntityEvent(this,(byte) 4);
+        }
+    }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        if(pId == 4 ){
+            this.setIsAttacking(true);
+        }else {
+            super.handleEntityEvent(pId);
+        }
     }
 
     public void shoot(LivingEntity target){
@@ -715,7 +777,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             LivingEntity livingentity = this.mob.getTarget();
             if (livingentity != null && livingentity.isAlive()) {
                 this.target = livingentity;
-                return !((ScroungerEntity)this.mob).isSitting();
+                return !((ScroungerEntity)this.mob).isSitting() && !((ScroungerEntity) this.mob).isAttacking();
             } else {
                 return false;
             }
@@ -725,7 +787,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean canContinueToUse() {
-            return this.canUse() || this.target.isAlive() && !this.mob.getNavigation().isDone();
+            return this.canUse() || this.target.isAlive() && !this.mob.getNavigation().isDone() && !((ScroungerEntity) this.mob).isAttacking();
         }
 
         /**
