@@ -82,6 +82,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
         this.prepareTimer = 0;
         this.isJump = false;
         this.isLeftAttack = false;
+        this.maxUpStep=1.0F;
     }
 
     @Override
@@ -195,6 +196,11 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
 
     public boolean isAssaultMode(){
         return this.getAssaultState() == AssaultStates.ASSAULT || this.getAssaultState() == AssaultStates.PREPARE;
+    }
+
+    @Override
+    public double getSpeedBase() {
+        return this.isTame() ? 0.40D : 0.42D;
     }
 
     public void aiStep() {
@@ -608,7 +614,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                             vector3d1 = vector3d1.normalize().scale(Math.min(dx, 15) * 0.2F);
                         }
                         this.goalOwner.isJump=true;
-                        this.goalOwner.setDeltaMovement(vector3d1.x, vector3d1.y + 0.3F + 0.1F * Mth.clamp(target.getEyeY() - this.goalOwner.getY(), 0, 2), vector3d1.z);
+                        this.goalOwner.setDeltaMovement(vector3d1.x, vector3d1.y + 0.6F + 0.1F * Mth.clamp(target.getEyeY() - this.goalOwner.getY(), 0, 2), vector3d1.z);
                     }else if(this.goalOwner.isOnGround() && this.goalOwner.isJump){
                         this.goalOwner.isJump=false;
                         this.goalOwner.setAssaultMode(3);

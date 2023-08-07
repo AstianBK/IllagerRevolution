@@ -33,6 +33,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -74,8 +75,9 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     public float oFlap;
     private float flapping = 1.0F;
     private int helpOwnerTimer;
-
     public int nextAttack;
+
+    public boolean isTorrentAttack;
 
     LivingEntity ownerIllager;
 
@@ -93,14 +95,15 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         this.helpOwnerTimer=0;
         this.moveControl=new ScroungerFlyingMoveControl(this,5,false);
         this.partyParrot = false;
+        this.isTorrentAttack = false;
     }
 
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 9.0D)
                 .add(Attributes.FOLLOW_RANGE, 45.D)
-                .add(Attributes.MOVEMENT_SPEED, 1.0d)
-                .add(Attributes.FLYING_SPEED,1.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2d)
+                .add(Attributes.FLYING_SPEED,0.5D)
                 .build();
 
     }
@@ -110,7 +113,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             if(event.isMoving() && !this.isAttacking()){
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.fly", ILoopType.EDefaultLoopTypes.LOOP));
             }else if(this.isAttacking()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.attack1", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.attack"+(this.isTorrentAttack ? "2" : "1"), ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
             }else if(!this.isAttacking()){
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.scrounger.idle2", ILoopType.EDefaultLoopTypes.LOOP));
             }
@@ -168,10 +171,15 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             this.nextAttack--;
         }
         if(this.nextAttack==10){
-            this.shoot(this.getTarget());
+            if(this.isTorrentAttack){
+                this.torrentAttack();
+            }else {
+                this.shoot(this.getTarget());
+            }
         }
         if(this.nextAttack<0){
-            this.setIsAttacking(false);
+            this.setIsAttacking(false,false);
+            this.setTarget((LivingEntity)null);
         }
         if(this.helpOwnerTimer>0){
             this.helpOwnerTimer--;
@@ -181,9 +189,6 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
 
     @Override
     public void setRecordPlayingNearby(BlockPos pPos, boolean pIsPartying) {
-        if(this.isTame()){
-            this.getOwner().sendSystemMessage(Component.nullToEmpty("funciona"));
-        }
         this.partyParrot = pIsPartying;
         this.jukebox = pPos;
     }
@@ -205,6 +210,29 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         this.flap += this.flapping * 2.0F;
     }
 
+    public void torrentAttack(){
+        List<LivingEntity> living = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(50.0D),e->{
+            if(e instanceof Mob mob){
+                if(this.isTame()){
+                    return this.getOwner()==mob.getTarget() || e==this.getTarget();
+                }else {
+                    return this.getOwnerIllager()==mob.getTarget() || e==this.getTarget();
+                }
+            }else if(e instanceof Player player){
+                if(this.isTame()){
+                    if(player.getLastHurtMob()==this.getOwner()){
+                        return player.getLastHurtMobTimestamp()<200 || e==this.getTarget();
+                    }
+                }else {
+                    return true;
+                }
+            }
+            return false;
+        });
+        for (LivingEntity entity : living){
+            this.shoot(entity);
+        }
+    }
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand pHand) {
         ItemStack itemstack = player.getItemInHand(pHand);
@@ -377,7 +405,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.setIsAttacking(compound.getBoolean("isAttacking"));
+        this.setIsAttacking(compound.getBoolean("isAttacking"),false);
         this.setHasChest(compound.getBoolean("isHasChest"));
         if(this.hasChest()){
             ListTag tags = compound.getList("Potions",10);
@@ -418,6 +446,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     public int getRowInventory(int slot){
         return 18;
     }
+
     public int getColumnInventory(int slot){
         return 80+18*slot;
     }
@@ -431,9 +460,10 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         super.defineSynchedData();
     }
 
-    public void setIsAttacking(boolean pBoolean){
+    public void setIsAttacking(boolean pBoolean,boolean isTorrentAttack){
         this.entityData.set(ATTACKING,pBoolean);
-        this.nextAttack= pBoolean ? 20 : 0;
+        this.nextAttack= pBoolean ? 15 : 0;
+        this.isTorrentAttack = isTorrentAttack;
     }
 
     public boolean isAttacking(){
@@ -443,6 +473,14 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
     @Override
     public Beast getTypeBeast() {
         return Beast.SCROUNGER;
+    }
+
+    @Override
+    public void setIsExcited(boolean isExcited) {
+        this.entityData.set(EXCITED,isExcited);
+        if(isExcited){
+            this.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,250,1));
+        }
     }
 
     @Override
@@ -513,8 +551,26 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
 
     @Override
     public void performRangedAttack(@NotNull LivingEntity target, float pDistanceFactor) {
-        this.setIsAttacking(true);
+        if(this.level.random.nextFloat() < 0.3F){
+            this.setIsAttacking(true,true);
+            this.level.broadcastEntityEvent(this,(byte) 62);
+        }else {
+            this.setIsAttacking(true,false);
+            this.level.broadcastEntityEvent(this,(byte) 61);
+        }
         this.setTarget(target);
+
+    }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        if(pId == 61 ){
+            this.setIsAttacking(true,false);
+        }else if(pId == 62 ){
+            this.setIsAttacking(true,true);
+        }else {
+            super.handleEntityEvent(pId);
+        }
     }
 
     public void shoot(LivingEntity target){
@@ -525,7 +581,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
         target=flag  ? owner : target;
         if(target!=null){
             FeatherProjectile entityarrow = new FeatherProjectile(levelAccessor, this);
-            double i = flag ? 1.0d : 5.0D;
+            double i = 1.0d;
             if(this.hasChest()){
                 if(!this.level.isClientSide){
                     if(target instanceof Zombie){
@@ -548,7 +604,6 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             levelAccessor.addFreshEntity(entityarrow);
         }
-        this.setTarget((LivingEntity)null);
     }
     public void nextAction(LivingEntity target){
         LivingEntity owner = this.isTame() ? this.getOwner() : this.getOwnerIllager();
@@ -715,7 +770,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             LivingEntity livingentity = this.mob.getTarget();
             if (livingentity != null && livingentity.isAlive()) {
                 this.target = livingentity;
-                return !((ScroungerEntity)this.mob).isSitting();
+                return !((ScroungerEntity)this.mob).isSitting() && !((ScroungerEntity) this.mob).isAttacking();
             } else {
                 return false;
             }
@@ -725,7 +780,7 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean canContinueToUse() {
-            return this.canUse() || this.target.isAlive() && !this.mob.getNavigation().isDone();
+            return this.canUse() || this.target.isAlive() && !this.mob.getNavigation().isDone() && !((ScroungerEntity) this.mob).isAttacking();
         }
 
         /**
@@ -761,7 +816,16 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                 } else {
                     this.mob.getNavigation().moveTo(this.target.getX(),this.target.getY(0.5D),this.target.getZ(),this.speedModifier);
                 }
-
+                this.mob.getLookControl().setLookAt(target);
+                this.mob.setYBodyRot(this.mob.getYHeadRot());
+                this.mob.yBodyRot=this.mob.getYHeadRot();
+                double d0x = target.getX() - this.mob.getX();
+                double d1 = target.getY() - this.mob.getY();
+                double d2 = target.getZ() - this.mob.getZ();
+                double d3 = Math.sqrt(d0x * d0x + d2 * d2);
+                float f4 = (float)(-(Mth.atan2(-d1, d3) * (double)(180F / (float)Math.PI)));
+                this.mob.setXRot(f4);
+                this.mob.xRotO=this.mob.getXRot();
                 this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
                 if (--this.attackTime == 0) {
                     if (!flag) {

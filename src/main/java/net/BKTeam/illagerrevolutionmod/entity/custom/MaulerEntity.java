@@ -59,6 +59,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MaulerEntity extends MountEntity implements IAnimatable {
@@ -193,8 +194,10 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
             }
         }
-        if(this.isSavager())return false;
-
+        if(this.isSavager()){
+            this.savagerTimer=200;
+            pAmount = Math.max(1.0F,pAmount*0.10F);
+        }
         return super.hurt(pSource, pAmount);
     }
 
@@ -234,28 +237,43 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void attackG() {
         if(!this.isMauled() && !this.isAttacking()){
             if(this.getPassengers().size()<2){
+                if(!this.level.isClientSide){
+                    this.level.broadcastEntityEvent(this, (byte) 8);
+                }
                 boolean flag=false;
                 this.setAttacking(true);
-                this.level.broadcastEntityEvent(this, (byte) 8);
                 this.level.playSound(null,this.getOnPos(),ModSounds.MAULER_BARK.get(), SoundSource.HOSTILE,1.0f,1.0f);
                 float f = this.yBodyRot * ((float)Math.PI / 180F);
                 float f1 = Mth.sin(f);
                 float f2 = Mth.cos(f);
                 float f3 = 0.5f;
                 BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY()+1.5d,this.getZ()+(f3*f2));
-                for(LivingEntity living : this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(2.5d))){
-                    if(living!=this && living!=this.getOwner() && !flag){
-                        flag=true;
+                List<LivingEntity> targets = this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(3,3,3), e -> e != this && e!=this.getOwner() && distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= getY() + 3);
+                for(LivingEntity living : targets){
+                    float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
+                    float entityAttackingAngle = this.yBodyRot % 360;
+                    float arc = 180.0F;
+                    if (entityHitAngle < 0) {
+                        entityHitAngle += 360;
+                    }
+                    if (entityAttackingAngle < 0) {
+                        entityAttackingAngle += 360;
+                    }
+                    float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
+                    float entityHitDistance = (float) Math.sqrt((living.getZ() - this.getZ()) * (living.getZ() - this.getZ()) + (living.getX() - this.getX()) * (living.getX() - this.getX())) - living.getBbWidth() / 2f;
+                    if (entityHitDistance <= 3 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) && !flag ) {
+                        living.hurt(DamageSource.mobAttack(this), 3.0F);
                         this.catchedTarget(living);
-                        this.doHurtTarget(living);
+                        flag = true;
                     }else if(flag){
                         break;
                     }
                 }
             }else {
                 this.setAttacking(true);
-                this.isLeftAttack=this.level.random.nextBoolean();
-                this.level.broadcastEntityEvent(this, (byte) 8);
+                if(!this.level.isClientSide){
+                    this.level.broadcastEntityEvent(this, (byte) 8);
+                }
                 this.level.playSound(null,this.getOnPos(), ModSounds.MAULER_BARK.get(), SoundSource.HOSTILE,1.0f,1.0f);
                 if(this.getCatchedEntity()!=null){
                     this.getCatchedEntity().addEffect(new MobEffectInstance(InitEffect.MAULED.get(),100,0));
@@ -267,6 +285,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     }
 
     @Override
+    public double getSpeedBase() {
+        return this.isSavager() ? 0.29D : 0.45D;
+    }
+
+    @Override
     protected int getInventorySize() {
         return 2;
     }
@@ -275,7 +298,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     public void attackV() {
         if(!this.isMauled() && !this.isAttacking() && this.hasCatched()){
             this.setIsMauled(true);
-            this.level.broadcastEntityEvent(this, (byte) 4);
+            if(!this.level.isClientSide){
+                this.level.broadcastEntityEvent(this, (byte) 4);
+            }
         }
         super.attackV();
     }
@@ -301,6 +326,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.stunnedTimer=100;
         } else if (pId == 62) {
             this.prepareTimer=25;
+        }else if (pId == 63) {
+            this.cooldownEffect();
         }else {
             super.handleEntityEvent(pId);
         }
@@ -337,7 +364,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     protected void blockedByShield(LivingEntity pEntity) {
         if(this.stunnedTimer==0 && this.isSavager()){
             this.stunnedTimer=100;
-            this.level.broadcastEntityEvent(this,(byte) 61);
+            if(!this.level.isClientSide){
+                this.level.broadcastEntityEvent(this,(byte) 61);
+            }
         }
         super.blockedByShield(pEntity);
     }
@@ -407,15 +436,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
-            }else if(itemstack.is(Items.APPLE)){
-                this.stunnedTimer=100;
-                this.level.broadcastEntityEvent(this,(byte) 61);
-                if (!pPlayer.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
-                return InteractionResult.CONSUME;
-            }if(itemstack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(pPlayer)){
+            }
+            if(itemstack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(pPlayer)){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
@@ -442,7 +464,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                             }
                         }
                     }else {
-                        this.level.broadcastEntityEvent(this, (byte)6);
+                        if(!this.level.isClientSide){
+                            this.level.broadcastEntityEvent(this, (byte)6);
+                        }
                     }
                     return InteractionResult.SUCCESS;
                 }else{
@@ -513,7 +537,10 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.prepareTimer--;
             if(this.prepareTimer==0){
                 this.setSavager(true);
-                this.level.broadcastEntityEvent(this,(byte) 60);
+                if(!this.level.isClientSide){
+                    this.level.broadcastEntityEvent(this,(byte) 60);
+                }
+
             }
         }
 
@@ -527,7 +554,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
 
         if(this.savagerTimer<0){
+            this.stunnedTimer=100;
             this.setSavager(false);
+            if(!this.level.isClientSide){
+                this.level.broadcastEntityEvent(this,(byte)61);
+            }
         }
 
         if (this.isAttacking()) {
@@ -577,7 +608,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     @Override
     public void tick() {
         super.tick();
-        if(!this.isImmobile()){
+        if(!this.isImmobile() && !this.isSavager()){
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29D);
         }else {
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
@@ -587,10 +618,15 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     @Override
     public void attackC() {
         if(this.savagerTimer<=0){
-            this.prepareTimer=25;
-            this.level.broadcastEntityEvent(this,(byte) 62);
+            if(!this.level.isClientSide){
+                this.prepareTimer=25;
+                this.level.broadcastEntityEvent(this,(byte) 62);
+            }
+            super.attackC();
+        }else {
+            this.level.broadcastEntityEvent(this,(byte) 63);
+            this.level.playSound(null,this,SoundEvents.VILLAGER_NO,SoundSource.HOSTILE,1.0F,1.0F);
         }
-        super.attackC();
     }
 
     public void setAttacking(boolean pBoolean) {
@@ -608,8 +644,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         this.entityData.set(SAVAGER,pBoolean);
         this.savagerTimer=pBoolean ? 200 : 0;
         if(pBoolean){
-            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,200,1));
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,200,0));
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.45F);
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(8.00F);;
+        }else {
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29F);
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0F);;
         }
     }
 
@@ -662,7 +701,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed(!this.hasCatched() ?(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2:(float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/3);
+                    this.setSpeed(!this.hasCatched() ? (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) : (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/3);
                     super.travel(new Vec3((double) f, pTravelVector.y, (double) f1));
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);

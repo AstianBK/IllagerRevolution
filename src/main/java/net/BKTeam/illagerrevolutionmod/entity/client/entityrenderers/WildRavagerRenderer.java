@@ -1,20 +1,13 @@
 package net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers;
 
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerGModel;
-import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
-import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.layers.*;
-import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

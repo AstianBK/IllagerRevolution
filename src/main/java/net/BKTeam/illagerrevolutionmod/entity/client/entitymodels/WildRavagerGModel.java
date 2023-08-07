@@ -96,8 +96,8 @@ public class WildRavagerGModel extends AnimatedGeoModel<WildRavagerEntity> {
             } else {
                 float f5 = -1.0F;
                 float f6 = -1.0F * Mth.sin(neck.getRotationX());
-                neck.setPositionY( f6 );
                 boolean flag = i > 0;
+                neck.setPositionY( flag ? f6 -3.0F : f6 );
                 neck.setRotationX(flag ? -0.21991149F : 0.0F);
                 mouth.setRotationX((float)Math.PI * (flag ? -0.05F : -0.01F));
                 if (flag) {

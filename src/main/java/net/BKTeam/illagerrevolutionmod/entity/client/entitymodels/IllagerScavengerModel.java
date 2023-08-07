@@ -16,7 +16,10 @@ public class IllagerScavengerModel extends AnimatedGeoModel<IllagerScavengerEnti
 
     @Override
     public ResourceLocation getTextureResource(IllagerScavengerEntity object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png");
+        if(object.hasCustomName()){
+            return object.getCustomName().getString().equals("Swat Scavenger") ? new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+                    "textures/entity/illagerminerbadlands/swat_scavenger.png")  : new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png") ;
+        }return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/illagerminerbadlands/badlandsminer.png");
     }
 
     @Override
