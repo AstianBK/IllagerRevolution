@@ -107,6 +107,15 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
     }
 
     @Override
+    public void handleEntityEvent(byte pId) {
+        if (pId == 63) {
+            this.cooldownEffect();
+        }else {
+            super.handleEntityEvent(pId);
+        }
+    }
+
+    @Override
     public void handleStopJump() {
 
     }
@@ -315,14 +324,12 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
             this.setIsSaddled(flag);
         }
     }
-    protected void cooldownEffect() {
-        for (int i=0 ; i<10 ; i++){
-            if (this.random.nextInt(6) == 0) {
-                double d0 = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
-                double d1 = this.getY() + (double)this.getBbHeight() - 0.3D;
-                double d2 = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
-                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-            }
+    protected void cooldownEffect(){
+        for(int i = 0; i < 5; ++i) {
+            double d0 = this.random.nextGaussian() * 0.02D;
+            double d1 = this.random.nextGaussian() * 0.02D;
+            double d2 = this.random.nextGaussian() * 0.02D;
+            this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 1.0D, this.getRandomZ(1.0D), d0, d1, d2);
         }
     }
 

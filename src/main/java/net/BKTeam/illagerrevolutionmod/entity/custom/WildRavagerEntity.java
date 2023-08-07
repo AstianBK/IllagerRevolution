@@ -584,7 +584,7 @@ public class WildRavagerEntity extends MountEntity {
                 this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
                 this.roarCooldown=200;
             }else {
-                this.cooldownEffect();
+                this.level.broadcastEntityEvent(this, (byte)63);
                 this.playSound(SoundEvents.VILLAGER_NO);
             }
         }
@@ -625,7 +625,6 @@ public class WildRavagerEntity extends MountEntity {
             this.setIsChargedState(1);
             super.attackC();
         }else {
-            this.cooldownEffect();
             this.level.broadcastEntityEvent(this,(byte) 63);
             this.playSound(SoundEvents.VILLAGER_NO);
         }
@@ -843,10 +842,6 @@ public class WildRavagerEntity extends MountEntity {
                 }
             }
         }
-    }
-
-    public int getPrepareTimer() {
-        return this.prepareTimer;
     }
 
     @Override
