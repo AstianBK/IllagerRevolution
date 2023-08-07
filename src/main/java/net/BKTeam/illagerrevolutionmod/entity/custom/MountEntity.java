@@ -321,7 +321,7 @@ public class MountEntity extends IllagerBeastEntity implements IHasInventory, Pl
                 double d0 = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
                 double d1 = this.getY() + (double)this.getBbHeight() - 0.3D;
                 double d2 = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
-                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, d0, d1, d2, 0.4980392156862745D, 0.5137254901960784D, 0.5725490196078431D);
+                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
             }
         }
     }

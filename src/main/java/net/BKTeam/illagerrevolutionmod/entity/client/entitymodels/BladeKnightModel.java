@@ -47,7 +47,15 @@ public class BladeKnightModel<I extends AbstractIllager> extends AnimatedGeoMode
     @Override
     public ResourceLocation getTextureResource(BladeKnightEntity object) {
         if(!object.isPhase2()){
+            if(object.hasCustomName()){
+                return object.getCustomName().getString().equals("Edge Knight") ? new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+                        "textures/entity/blade_knight/edge_knight.png")  : TEXTURE_DEFAULT ;
+            }
             return TEXTURE_DEFAULT;
+        }
+        if(object.hasCustomName()){
+            return object.getCustomName().getString().equals("Edge Knight") ? new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+                    "textures/entity/blade_knight/edge_knight_lowhealth.png")  : TEXTURE_HURT ;
         }
         return TEXTURE_HURT;
     }

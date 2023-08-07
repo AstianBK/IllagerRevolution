@@ -5,6 +5,7 @@ import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -33,6 +34,9 @@ public class FeatherProjectile extends AbstractArrow implements ItemSupplier {
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
+        if(pResult.getEntity() instanceof LivingEntity living){
+            living.hurt(DamageSource.arrow(this,this.getOwner()).bypassArmor(),1.0F);
+        }
     }
 
     @Override

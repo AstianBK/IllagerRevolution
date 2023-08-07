@@ -418,15 +418,6 @@ public class WildRavagerEntity extends MountEntity {
                 }
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
-            }if(stack.is(Items.APPLE)){
-                if(!this.level.isClientSide){
-                    this.setIsChargedState(1);
-
-                }
-                if(!pPlayer.getAbilities().instabuild){
-                    stack.shrink(1);
-                }
-                return InteractionResult.CONSUME;
             }
             if(Block.byItem(stack.getItem()) instanceof DrumBlock){
                 this.setHasDrum(true);
@@ -635,6 +626,7 @@ public class WildRavagerEntity extends MountEntity {
             super.attackC();
         }else {
             this.cooldownEffect();
+            this.level.broadcastEntityEvent(this,(byte) 63);
             this.playSound(SoundEvents.VILLAGER_NO);
         }
     }
@@ -650,11 +642,23 @@ public class WildRavagerEntity extends MountEntity {
                 float f1 = Mth.sin(f);
                 float f2 = Mth.cos(f);
                 float f3 = 0.5f;
-                BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY()+1.5d,this.getZ()+(f3*f2));
-                for(LivingEntity living : this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(2.5d))){
-                    if(living!=this && living!=this.getOwner() && !flag && this.getSensing().hasLineOfSight(living)){
-                        flag=true;
+                BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY(),this.getZ()+(f3*f2));
+                List<LivingEntity> targets = this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(3,3,3),  e -> e != this && e!=this.getOwner() && distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= getY() + 3);
+                for(LivingEntity living : targets){
+                    float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
+                    float entityAttackingAngle = this.yBodyRot % 360;
+                    float arc = 180.0F;
+                    if (entityHitAngle < 0) {
+                        entityHitAngle += 360;
+                    }
+                    if (entityAttackingAngle < 0) {
+                        entityAttackingAngle += 360;
+                    }
+                    float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
+                    float entityHitDistance = (float) Math.sqrt((living.getZ() - this.getZ()) * (living.getZ() - this.getZ()) + (living.getX() - this.getX()) * (living.getX() - this.getX())) - living.getBbWidth() / 2f;
+                    if (entityHitDistance <= 3 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) && !flag) {
                         living.hurt(DamageSource.mobAttack(this), 8.0F);
+                        flag = true;
                     }else if(flag){
                         break;
                     }

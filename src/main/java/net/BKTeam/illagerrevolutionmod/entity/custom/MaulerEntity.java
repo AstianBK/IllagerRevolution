@@ -59,6 +59,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MaulerEntity extends MountEntity implements IAnimatable {
@@ -247,11 +248,23 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 float f2 = Mth.cos(f);
                 float f3 = 0.5f;
                 BlockPos pos = new BlockPos(this.getX()-(f3*f1),this.getY()+1.5d,this.getZ()+(f3*f2));
-                for(LivingEntity living : this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(2.5d))){
-                    if(living!=this && living!=this.getOwner() && !flag){
-                        flag=true;
+                List<LivingEntity> targets = this.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(3,3,3), e -> e != this && e!=this.getOwner() && distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= getY() + 3);
+                for(LivingEntity living : targets){
+                    float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
+                    float entityAttackingAngle = this.yBodyRot % 360;
+                    float arc = 180.0F;
+                    if (entityHitAngle < 0) {
+                        entityHitAngle += 360;
+                    }
+                    if (entityAttackingAngle < 0) {
+                        entityAttackingAngle += 360;
+                    }
+                    float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
+                    float entityHitDistance = (float) Math.sqrt((living.getZ() - this.getZ()) * (living.getZ() - this.getZ()) + (living.getX() - this.getX()) * (living.getX() - this.getX())) - living.getBbWidth() / 2f;
+                    if (entityHitDistance <= 3 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) && !flag ) {
+                        living.hurt(DamageSource.mobAttack(this), 3.0F);
                         this.catchedTarget(living);
-                        this.doHurtTarget(living);
+                        flag = true;
                     }else if(flag){
                         break;
                     }
@@ -313,6 +326,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.stunnedTimer=100;
         } else if (pId == 62) {
             this.prepareTimer=25;
+        }else if (pId == 63) {
+            this.cooldownEffect();
         }else {
             super.handleEntityEvent(pId);
         }
@@ -421,15 +436,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
                 playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
                 return InteractionResult.CONSUME;
-            }else if(itemstack.is(Items.APPLE)){
-                this.stunnedTimer=100;
-                this.level.broadcastEntityEvent(this,(byte) 61);
-                if (!pPlayer.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                playSound(SoundEvents.BUCKET_EMPTY, 1.0F, 1.0F);
-                return InteractionResult.CONSUME;
-            }if(itemstack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(pPlayer)){
+            }
+            if(itemstack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(pPlayer)){
                 if(pPlayer instanceof IOpenBeatsContainer){
                     this.openInventory(pPlayer);
                     this.gameEvent(GameEvent.ENTITY_INTERACT, pPlayer);
@@ -546,7 +554,11 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         }
 
         if(this.savagerTimer<0){
+            this.stunnedTimer=100;
             this.setSavager(false);
+            if(!this.level.isClientSide){
+                this.level.broadcastEntityEvent(this,(byte)61);
+            }
         }
 
         if (this.isAttacking()) {
@@ -596,7 +608,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     @Override
     public void tick() {
         super.tick();
-        if(!this.isImmobile()){
+        if(!this.isImmobile() && !this.isSavager()){
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29D);
         }else {
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
@@ -612,8 +624,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
             super.attackC();
         }else {
-            this.cooldownEffect();
-            this.playSound(SoundEvents.VILLAGER_NO);
+            this.level.broadcastEntityEvent(this,(byte) 63);
+            this.level.playSound(null,this,SoundEvents.VILLAGER_NO,SoundSource.HOSTILE,1.0F,1.0F);
         }
     }
 

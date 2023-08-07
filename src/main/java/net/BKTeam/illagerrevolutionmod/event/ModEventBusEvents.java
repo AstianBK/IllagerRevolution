@@ -3,9 +3,7 @@ package net.BKTeam.illagerrevolutionmod.event;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
-import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.WildRavagerModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
-import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.WildRavagerRenderer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.DrumModel;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
@@ -36,9 +34,6 @@ import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
 
 @Mod.EventBusSubscriber(modid = IllagerRevolutionMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ModEventBusEvents {
-    public static ModelLayerLocation RAVAGER = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "wild_ravager"), "wild_ravager");
-    public static ModelLayerLocation RAVAGER_SADDLE = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ravager_saddle"), "ravager_saddle");
-    public static ModelLayerLocation WAR_PAINT = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "war_paint"), "war_paint");
     public static ModelLayerLocation DRUM = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "drum"), "drum");
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
