@@ -34,7 +34,9 @@ public class BeastSlayerEnchantment extends Enchantment {
 
     @Override
     protected boolean checkCompatibility(Enchantment ench) {
-        return ench == Enchantments.MOB_LOOTING || ench == Enchantments.MENDING || ench == Enchantments.UNBREAKING || ench == Enchantments.SWEEPING_EDGE || ench == Enchantments.FIRE_ASPECT;
+        return ench == Enchantments.MOB_LOOTING || ench == Enchantments.MENDING
+                || ench == Enchantments.UNBREAKING || ench == Enchantments.SWEEPING_EDGE
+                || ench == Enchantments.FIRE_ASPECT;
     }
 
     @Override
@@ -58,9 +60,12 @@ public class BeastSlayerEnchantment extends Enchantment {
     @Override
     public float getDamageBonus(int level, MobType mobType, ItemStack enchantedItem) {
         if(mobType==BKMobType.BEAST_ILLAGER){
-            if(enchantedItem.getItem() instanceof SwordItem item)
-            return item.getDamage()*(0.15F*level);
+            if(enchantedItem.getItem() instanceof SwordItem item){
+                return item.getDamage()*(0.15F*level);
+            }
         }
         return super.getDamageBonus(level, mobType, enchantedItem);
     }
+
+
 }
