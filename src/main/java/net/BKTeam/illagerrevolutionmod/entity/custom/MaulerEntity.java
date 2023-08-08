@@ -35,6 +35,10 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.AbstractGolem;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
@@ -141,7 +145,20 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         this.goalSelector.addGoal(1,new MaulerMauled(this));
         this.goalSelector.addGoal(2,new MaulerAttackGoal(this,1.2d,true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Fox.class, true, false));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Ocelot.class, true, false));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, true){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && this.mob instanceof MaulerEntity mauler && !mauler.isTame() && !mauler.isVehicle();
+            }
+        });
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && this.mob instanceof MaulerEntity mauler && !mauler.isTame() && !mauler.isVehicle();
+            }
+        });
         super.registerGoals();
     }
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -305,7 +322,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public double getSpeedBase() {
-        return this.isSavager() ? 0.29D : 0.45D;
+        return this.isSavager() ? 0.29D : 0.42D;
     }
 
     @Override
@@ -658,7 +675,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             super.attackC();
         }else {
             this.level.broadcastEntityEvent(this,(byte) 63);
-            this.level.playSound(null,this,SoundEvents.VILLAGER_NO,SoundSource.HOSTILE,1.0F,1.0F);
+            this.level.playSound(null,this,SoundEvents.VILLAGER_TRADE,SoundSource.HOSTILE,1.0F,-1.5F);
         }
     }
 
@@ -677,11 +694,13 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         this.entityData.set(SAVAGER,pBoolean);
         this.savagerTimer=pBoolean ? 200 : 0;
         if(pBoolean){
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.45F);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(8.00F);;
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.42F);
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(10.00F);
+            this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.80D);
         }else {
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29F);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0F);;
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0F);
+            this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.15D);
         }
     }
 

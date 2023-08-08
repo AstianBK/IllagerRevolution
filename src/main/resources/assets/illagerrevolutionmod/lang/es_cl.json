@@ -1,5 +1,8 @@
 {
   "block.illagerrevolutionmod.rune_table_block": "Mesa runica",
+  "block.illagerrevolutionmod.drum_heal": "Tambor sanador",
+  "block.illagerrevolutionmod.drum_damage": "Tambor potenciador",
+  "block.illagerrevolutionmod.drum_speed": "Tambor acelerador",
 
   "item.illagerrevolutionmod.rune_fragment_bone": "Fragmento runico",
   "item.illagerrevolutionmod.rune_fragment_flesh": "Fragmento runico",
@@ -45,7 +48,7 @@
 
   "effect.illagerrevolutionmod.deep_wound": "Herida profunda",
   "effect.illagerrevolutionmod.death_mark": "Alma Atrapada",
-  "effect.illagerrevolutionmod.mauled": "Mauled",
+  "effect.illagerrevolutionmod.mauled": "Mutilado",
 
 
   "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
@@ -64,8 +67,12 @@
   "entity.illagerrevolutionmod.illager_miner": "Minero illager",
   "entity.illagerrevolutionmod.illager_scavenger": "Illager chatarrero",
   "entity.illagerrevolutionmod.blade_knight": "Illager caballero de la espada",
+  "entity.illagerrevolutionmod.fallen_knight": "Caballero Caido",
   "entity.illagerrevolutionmod.illager_beast_tamer": "Illager domador de bestias",
   "entity.illagerrevolutionmod.zombified": "Illager zombi",
+  "entity.illagerrevolutionmod.mauler": "Mutilador",
+  "entity.illagerrevolutionmod.wild_ravager": "Devastador salvaje",
+  "entity.illagerrevolutionmod.scrounger": "Plagador",
 
   "itemGroup.illagerrevolutiontab":"Illager Revolution",
 
@@ -100,5 +107,11 @@
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5while having at least 3 souls ",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2": "§5to summon a Fallen Knight follower to aid you in battle temporarily",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
-  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability"
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability",
+
+  "key.category.illagerrevolutionmod":"Illager Revolution",
+  "key.illagerrevolutionmod.attack_key2":"Ataque Primario",
+  "key.illagerrevolutionmod.attack_key1":"Ataque Secundario",
+  "key.illagerrevolutionmod.attack_key3":"Ataque Especial"
+
 }

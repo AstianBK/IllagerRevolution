@@ -585,7 +585,7 @@ public class WildRavagerEntity extends MountEntity {
                 this.roarCooldown=200;
             }else {
                 this.level.broadcastEntityEvent(this, (byte)63);
-                this.playSound(SoundEvents.VILLAGER_NO);
+                this.level.playSound(null,this,SoundEvents.VILLAGER_TRADE,SoundSource.HOSTILE,1.0F,-2.0F);
             }
         }
     }
@@ -626,7 +626,7 @@ public class WildRavagerEntity extends MountEntity {
             super.attackC();
         }else {
             this.level.broadcastEntityEvent(this,(byte) 63);
-            this.playSound(SoundEvents.VILLAGER_NO);
+            this.level.playSound(null,this,SoundEvents.VILLAGER_TRADE,SoundSource.HOSTILE,1.0F,-2.0F);
         }
     }
 
