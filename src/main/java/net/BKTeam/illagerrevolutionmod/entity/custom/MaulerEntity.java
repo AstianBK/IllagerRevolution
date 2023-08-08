@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
@@ -190,6 +191,17 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
+        if(this.savagerCooldown==0 && !this.isSavager() && !this.isVehicle()){
+            float healt = 1.0F-(this.getHealth()/this.getMaxHealth());
+            boolean flag = this.random.nextFloat()<healt;
+            if(flag){
+                this.prepareTimer=25;
+                this.level.playSound(null,this,SoundEvents.RAVAGER_ROAR,SoundSource.HOSTILE,3.0F,1.0F);
+                this.level.broadcastEntityEvent(this,(byte) 62);
+                return false;
+            }
+        }
+
         if(this.isVehicle()){
             for (Entity entity : this.getPassengers()){
                 if(entity==pSource.getEntity()){
@@ -197,6 +209,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
             }
         }
+
         if(this.isSavager()){
             this.savagerTimer=200;
             pAmount = Math.max(1.0F,pAmount*0.10F);
@@ -721,7 +734,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed(!this.hasCatched() ? (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) : (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/3);
+                    this.setSpeed(!this.hasCatched() ? (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2 : (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/3);
                     super.travel(new Vec3((double) f, pTravelVector.y, (double) f1));
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);
@@ -739,6 +752,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
         }
     }
+
+
     public boolean hasCatched(){
         return this.getCatchedEntity()!=null;
     }

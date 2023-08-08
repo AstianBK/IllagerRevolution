@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -20,18 +21,18 @@ public class SerratedEdgeEnchantment extends Enchantment {
     @Override
     public boolean canEnchant(ItemStack stack) {
         Item item = stack.getItem();
-        return item == ModItems.ILLAGIUM_SWORD.get();
+        return item instanceof SwordItem;
     }
 
     @Override
     protected boolean checkCompatibility(Enchantment ench) {
-        return ench== Enchantments.SMITE || ench == Enchantments.MENDING || ench == Enchantments.UNBREAKING || ench == Enchantments.SWEEPING_EDGE || ench == Enchantments.FIRE_ASPECT;
+        return ench == Enchantments.MOB_LOOTING || ench== Enchantments.SMITE || ench == Enchantments.MENDING || ench == Enchantments.UNBREAKING || ench == Enchantments.SWEEPING_EDGE || ench == Enchantments.FIRE_ASPECT;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         Item item = stack.getItem();
-        return item == ModItems.ILLAGIUM_SWORD.get();
+        return item instanceof SwordItem;
     }
     @Override
     public int getMaxLevel() {
