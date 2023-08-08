@@ -568,7 +568,7 @@ public class WildRavagerEntity extends MountEntity {
     @Override
     public void handleStartJump(int pJumpPower) {
         super.handleStartJump(pJumpPower);
-        if (this.isSaddled()) {
+        if (this.isSaddled() && !this.isImmobile() && !this.isCharged()) {
             if (pJumpPower < 0) {
                 pJumpPower = 0;
             }
@@ -633,7 +633,7 @@ public class WildRavagerEntity extends MountEntity {
     @Override
     public void attackG() {
         if(!this.level.isClientSide){
-            if(!this.isImmobile()){
+            if(!this.isImmobile() && !this.isCharged()){
                 boolean flag=false;
                 this.attackTick=10;
                 this.level.broadcastEntityEvent(this, (byte)4);
