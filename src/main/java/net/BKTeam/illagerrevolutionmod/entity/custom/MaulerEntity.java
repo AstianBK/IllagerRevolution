@@ -691,7 +691,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public boolean canJump() {
-        return this.isSaddled();
+        return this.isSaddled() && !this.isImmobile();
     }
 
     public void travel(Vec3 pTravelVector) {
