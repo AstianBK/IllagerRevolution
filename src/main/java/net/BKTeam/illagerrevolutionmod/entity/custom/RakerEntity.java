@@ -625,6 +625,7 @@ public class RakerEntity extends IllagerBeastEntity implements IAnimatable {
                         this.goalOwner.setAssaultMode(3);
                     }
                 } else {
+                    this.goalOwner.setAssaultMode(3);
                     super.tick();
                 }
             }

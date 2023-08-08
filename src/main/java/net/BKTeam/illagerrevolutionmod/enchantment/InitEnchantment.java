@@ -9,6 +9,9 @@ import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 public class InitEnchantment {
     public static final DeferredRegister<Enchantment> REGISTRY = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, IllagerRevolutionMod.MOD_ID);
     public static final RegistryObject<Enchantment>  SERRATED_EDGE= REGISTRY.register("serrated_edge", SerratedEdgeEnchantment::new);
+
+    public static final RegistryObject<Enchantment>  BEAST_SLAYER= REGISTRY.register("beast_slayer", BeastSlayerEnchantment::new);
+
     public static final RegistryObject<Enchantment>  WARYLENSES= REGISTRY.register("wary_lenses", WaryLensesEnchantment::new);
 
 }

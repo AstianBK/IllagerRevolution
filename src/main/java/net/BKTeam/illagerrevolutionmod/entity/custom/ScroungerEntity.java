@@ -299,6 +299,14 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
                     return InteractionResult.CONSUME;
                 }
             }
+            if(player.isSecondaryUseActive() && this.isOwnedBy(player) && this.hasChest() && itemstack.is(ModItems.BEAST_STAFF.get())){
+                this.setHasChest(false);
+                this.dropPotions();
+                if(!player.getAbilities().instabuild){
+                    player.setItemInHand(pHand,new ItemStack(ModItems.SCROUNGER_POUCH.get()));
+                }
+                return InteractionResult.CONSUME;
+            }
             if(itemstack.is(ModItems.BEAST_STAFF.get()) && this.isOwnedBy(player)){
                 this.openInventory(player);
                 this.gameEvent(GameEvent.ENTITY_INTERACT, player);
@@ -310,14 +318,6 @@ public class ScroungerEntity extends IllagerBeastEntity implements FlyingAnimal,
             }
             return super.mobInteract(player, pHand);
         }else {
-            if(player.isSecondaryUseActive() && this.isOwnedBy(player) && this.hasChest()){
-                this.setHasChest(false);
-                this.dropPotions();
-                if(!player.getAbilities().instabuild){
-                    player.setItemInHand(pHand,new ItemStack(ModItems.SCROUNGER_POUCH.get()));
-                }
-                return InteractionResult.CONSUME;
-            }
             if(!player.isSecondaryUseActive() && this.isOwnedBy(player) && this.isTame()){
                 this.setSitting(!this.isSitting());
                 return InteractionResult.SUCCESS;

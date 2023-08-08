@@ -4,6 +4,7 @@ import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.api.IHasInventory;
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
+import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketGlowEffect;
@@ -96,6 +97,11 @@ public class IllagerBeastEntity extends TamableAnimal implements IAnimatable,Con
         this.entityData.define(DATA_PAINT_COLOR, -1);
         this.entityData.define(PAINTED, false);
         this.entityData.define(EXCITED,false);
+    }
+
+    @Override
+    public MobType getMobType() {
+        return BKMobType.BEAST_ILLAGER;
     }
 
     @Override

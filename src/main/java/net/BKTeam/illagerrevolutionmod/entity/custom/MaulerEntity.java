@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.IOpenBeatsContainer;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
 import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
@@ -93,6 +94,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     private int savagerTimer;
 
+    private int savagerCooldown;
+
     private int stunnedTimer;
 
     public MaulerEntity(EntityType<? extends MountEntity> p_20966_, Level p_20967_) {
@@ -105,6 +108,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         this.savagerTimer = 0;
         this.isLeftAttack=false;
         this.stunnedTimer = 0;
+        this.savagerCooldown = 0;
     }
     public static AttributeSupplier setAttributes() {
         return TamableAnimal.createMobAttributes()
@@ -187,6 +191,17 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
+        if(this.savagerCooldown==0 && !this.isSavager() && !this.isVehicle()){
+            float healt = 1.0F-(this.getHealth()/this.getMaxHealth());
+            boolean flag = this.random.nextFloat()<healt;
+            if(flag){
+                this.prepareTimer=25;
+                this.level.playSound(null,this,SoundEvents.RAVAGER_ROAR,SoundSource.HOSTILE,3.0F,1.0F);
+                this.level.broadcastEntityEvent(this,(byte) 62);
+                return false;
+            }
+        }
+
         if(this.isVehicle()){
             for (Entity entity : this.getPassengers()){
                 if(entity==pSource.getEntity()){
@@ -194,6 +209,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
             }
         }
+
         if(this.isSavager()){
             this.savagerTimer=200;
             pAmount = Math.max(1.0F,pAmount*0.10F);
@@ -280,6 +296,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     this.releaseTarget(this.getCatchedEntity());
                 }
             }
+            if(this.isSavager()){
+                this.savagerTimer=200;
+            }
         }
         super.attackG();
     }
@@ -324,10 +343,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.setSavager(true);
         } else if (pId == 61) {
             this.stunnedTimer=100;
+            this.savagerCooldown=500;
         } else if (pId == 62) {
             this.prepareTimer=25;
-        }else if (pId == 63) {
-            this.cooldownEffect();
         }else {
             super.handleEntityEvent(pId);
         }
@@ -364,8 +382,12 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     protected void blockedByShield(LivingEntity pEntity) {
         if(this.stunnedTimer==0 && this.isSavager()){
             this.stunnedTimer=100;
+            this.savagerCooldown=500;
             if(!this.level.isClientSide){
                 this.level.broadcastEntityEvent(this,(byte) 61);
+            }
+            if(this.hasCatched()){
+                this.releaseTarget(this.getCatchedEntity());
             }
         }
         super.blockedByShield(pEntity);
@@ -533,6 +555,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.aiStep();
         LivingEntity target = this.getCatchedEntity();
 
+        if(this.savagerCooldown>0){
+            this.savagerCooldown--;
+        }
         if(this.prepareTimer>0){
             this.prepareTimer--;
             if(this.prepareTimer==0){
@@ -556,6 +581,10 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         if(this.savagerTimer<0){
             this.stunnedTimer=100;
             this.setSavager(false);
+            this.savagerCooldown=500;
+            if(this.hasCatched()){
+                this.releaseTarget(this.getCatchedEntity());
+            }
             if(!this.level.isClientSide){
                 this.level.broadcastEntityEvent(this,(byte)61);
             }
@@ -578,6 +607,9 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                     if(target!=null && target.isAlive()){
                         target.hurt(DamageSource.mobAttack(this),1.0f);
                         target.addEffect(new MobEffectInstance(InitEffect.MAULED.get(),350,0));
+                        if(this.isSavager()){
+                            this.savagerTimer=200;
+                        }
                     }
                 }
                 this.mauledAttackTimer--;
@@ -610,18 +642,19 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         super.tick();
         if(!this.isImmobile() && !this.isSavager()){
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29D);
-        }else {
+        }else if(this.isImmobile() && !this.isSavager()){
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
         }
     }
 
     @Override
     public void attackC() {
-        if(this.savagerTimer<=0){
+        if(this.savagerTimer<=0 && this.getCatchedEntity()==null && this.savagerCooldown==0){
             if(!this.level.isClientSide){
                 this.prepareTimer=25;
                 this.level.broadcastEntityEvent(this,(byte) 62);
             }
+            this.level.playSound(null,this,SoundEvents.RAVAGER_ROAR,SoundSource.HOSTILE,3.0F,1.0F);
             super.attackC();
         }else {
             this.level.broadcastEntityEvent(this,(byte) 63);
@@ -701,7 +734,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
-                    this.setSpeed(!this.hasCatched() ? (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) : (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/3);
+                    this.setSpeed(!this.hasCatched() ? (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/2 : (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)/3);
                     super.travel(new Vec3((double) f, pTravelVector.y, (double) f1));
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);
@@ -719,6 +752,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
         }
     }
+
+
     public boolean hasCatched(){
         return this.getCatchedEntity()!=null;
     }
