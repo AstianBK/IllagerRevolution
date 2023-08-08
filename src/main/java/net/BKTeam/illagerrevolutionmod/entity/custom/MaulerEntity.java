@@ -208,7 +208,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(this.savagerCooldown==0 && !this.isSavager() && !this.isVehicle()){
+        if(this.savagerCooldown==0 && !this.isSavager() && !this.isVehicle() && this.prepareTimer==0){
             float healt = 1.0F-(this.getHealth()/this.getMaxHealth());
             boolean flag = this.random.nextFloat()<healt;
             if(flag){
