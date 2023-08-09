@@ -7,6 +7,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.MaulerEntity;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -50,6 +51,9 @@ public class MaulerModel extends AnimatedGeoModel<MaulerEntity> {
         if (head != null && !entity.isSitting()) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+        }
+        if (entity.hasArmor()){
+
         }
     }
 }
