@@ -33,6 +33,18 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> MAULER_HURT =
                 registerSoundEvent("mauler_hurt");
 
+        public static final RegistryObject<SoundEvent> MAULER_RAGE =
+                registerSoundEvent("mauler_rage");
+
+        public static final RegistryObject<SoundEvent> MAULER_AMBIENT1 =
+                registerSoundEvent("mauler_ambient1");
+
+        public static final RegistryObject<SoundEvent> MAULER_AMBIENT2 =
+                registerSoundEvent("mauler_ambient2");
+
+        public static final RegistryObject<SoundEvent> MAULER_STUN =
+                registerSoundEvent("mauler_stun");
+
         public static final RegistryObject<SoundEvent> MAULER_BARK =
                 registerSoundEvent("mauler_bark");
 

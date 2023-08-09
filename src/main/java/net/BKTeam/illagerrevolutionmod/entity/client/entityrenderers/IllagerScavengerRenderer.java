@@ -49,7 +49,7 @@ public class IllagerScavengerRenderer extends ExtendedGeoEntityRenderer<IllagerS
     @Override
     public ResourceLocation getTextureLocation(IllagerScavengerEntity instance) {
         if(instance.hasCustomName()){
-            return instance.getCustomName().getString().equals("Swat Scavenger") ? new ResourceLocation(IllagerRevolutionMod.MOD_ID,
+            return instance.getCustomName().getString().equals("Swatvenger") ? new ResourceLocation(IllagerRevolutionMod.MOD_ID,
                     "textures/entity/illagerminerbadlands/swat_scavenger.png")  : LOCATION_BY_VARIANT.get(instance.getIdVariant()) ;
         }
         return LOCATION_BY_VARIANT.get(instance.getIdVariant());

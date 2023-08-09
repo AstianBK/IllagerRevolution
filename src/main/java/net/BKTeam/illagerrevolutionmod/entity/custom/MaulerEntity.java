@@ -217,7 +217,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 }
                 this.setSitting(false);
                 this.prepareTimer=25;
-                this.level.playSound(null,this,SoundEvents.RAVAGER_ROAR,SoundSource.HOSTILE,3.0F,1.0F);
+                this.level.playSound(null,this,ModSounds.MAULER_RAGE.get(),SoundSource.HOSTILE,2.0F,1.0F);
                 this.level.broadcastEntityEvent(this,(byte) 62);
                 return false;
             }
@@ -643,7 +643,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
     private void stunned(){
         this.stunnedTimer=100;
         this.savagerCooldown=500;
-        this.level.playSound(null,this,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+        this.level.playSound(null,this,ModSounds.MAULER_STUN.get(),SoundSource.HOSTILE,1.0F,1.0F);
         if(this.hasCatched()){
             this.releaseTarget(this.getCatchedEntity());
         }
@@ -675,7 +675,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
                 this.prepareTimer=25;
                 this.level.broadcastEntityEvent(this,(byte) 62);
             }
-            this.level.playSound(null,this,SoundEvents.RAVAGER_ROAR,SoundSource.HOSTILE,3.0F,1.0F);
+            this.level.playSound(null,this,ModSounds.MAULER_RAGE.get(),SoundSource.HOSTILE,2.0F,1.0F);
             super.attackC();
         }else {
             this.level.broadcastEntityEvent(this,(byte) 63);
@@ -935,9 +935,8 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
         return ModSounds.MAULER_HURT.get();
     }
 
-    @javax.annotation.Nullable
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.WOLF_GROWL;
+        return ModSounds.MAULER_AMBIENT1.get();
     }
 
     static class MaulerAttackGoal extends MeleeAttackGoal {

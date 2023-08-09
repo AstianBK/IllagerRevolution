@@ -27,6 +27,34 @@
     ]
   },
 
+  "mauler_rage": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_rage",
+    "sounds": [
+      "illagerrevolutionmod:mauler_rage"
+    ]
+  },
+
+  "mauler_ambient1": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_ambient1",
+    "sounds": [
+      "illagerrevolutionmod:mauler_ambient1"
+    ]
+  },
+
+  "mauler_ambient2": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_ambient2",
+    "sounds": [
+      "illagerrevolutionmod:mauler_ambient2"
+    ]
+  },
+
+  "mauler_stun": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_stun",
+    "sounds": [
+      "illagerrevolutionmod:mauler_stun"
+    ]
+  },
+
   "mauler_bark": {
     "subtitle": "sounds.illagerrevolutionmod.mauler_bark",
     "sounds": [
