@@ -770,26 +770,37 @@ public class WildRavagerEntity extends MountEntity {
             }
         }
 
-        if(this.hasDrum()){
-            if(this.drumTick>0){
-                this.drumTick--;
-                if(this.drumTick==0){
-                    this.stopDrumSound();
-                    this.level.playSound(null,this, ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
-                    this.level.broadcastEntityEvent(this,(byte) 64);
-                    this.drumTick=600;
-                }
-                this.reAcvivateEffectTick--;
-                if(this.reAcvivateEffectTick<0){
-                    this.activeEffectAura();
-                    this.reAcvivateEffectTick=200;
-                }
-                if(!this.hasPassenger(e->e==this.getOwner())){
+        if (this.isAlive()) {
+            if(this.hasDrum()){
+                if(this.drumTick>0){
+                    this.drumTick--;
+                    if(this.drumTick==0){
+                        this.stopDrumSound();
+                        this.level.playSound(null,this, ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
+                        this.level.broadcastEntityEvent(this,(byte) 64);
+                        this.drumTick=600;
+                    }
+                    this.reAcvivateEffectTick--;
+                    if(this.reAcvivateEffectTick<0){
+                        this.activeEffectAura();
+                        this.reAcvivateEffectTick=200;
+                    }
+                }if(!this.hasPassenger(e->e==this.getOwner())){
                     this.stopDrumSound();
                 }
             }
-        }
-        if (this.isAlive()) {
+
+            if(this.isCharged()){
+                if(!this.hasPassenger(e->e==this.getOwner())){
+                    this.setIsChargedState(3);
+                    this.isCharged = true;
+                    this.stunnedTick = 40;
+                    this.prepareTimer = 0;
+                    this.chargedTick = 100;
+                    this.level.broadcastEntityEvent(this,(byte) 39);
+                }
+            }
+
             if (this.isImmobile()) {
                 this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
             } else {
@@ -798,7 +809,7 @@ public class WildRavagerEntity extends MountEntity {
                 this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(Mth.lerp(0.1D, d1, d0));
             }
 
-            if (this.horizontalCollision && ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+            if (!this.level.isClientSide && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
                 boolean flag = false;
                 AABB aabb = this.getBoundingBox().inflate(0.2D);
 
@@ -838,6 +849,8 @@ public class WildRavagerEntity extends MountEntity {
                     if(!this.isCharged){
                         this.playSound(SoundEvents.RAVAGER_ROAR, 1.0F, 1.0F);
                         this.roarTick = 20;
+                    }else {
+                        this.isCharged = false;
                     }
                 }
             }
@@ -928,7 +941,7 @@ public class WildRavagerEntity extends MountEntity {
         double d0 = p_33340_.getX() - this.getX();
         double d1 = p_33340_.getZ() - this.getZ();
         double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
-        double d3= 1.0D;
+        double d3= 0.5D;
         p_33340_.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
     }
 
