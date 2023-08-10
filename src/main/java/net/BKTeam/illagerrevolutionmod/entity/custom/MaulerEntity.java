@@ -595,7 +595,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             this.savagerTimer--;
         }
 
-        if(this.savagerTimer<0){
+        if(this.savagerTimer<0 && this.isSavager()){
             this.stunned();
             this.setSavager(false);
             if(!this.level.isClientSide){
