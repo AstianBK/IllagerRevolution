@@ -160,7 +160,7 @@ public class SoulProjectile extends ThrowableItemProjectile {
             LivingEntity livingEntity = (LivingEntity) entity;
             boolean flag1= livingEntity.isInvulnerable() && livingEntity==this.getOwner();
             if ( flag1 || this.finalTarget==livingEntity) {
-                livingEntity.heal(5);
+                livingEntity.heal(2);
                 livingEntity.playSound(ModSounds.SOUL_RELEASE.get(), 2.0F, 1.0F);
                 discard();
             }else {

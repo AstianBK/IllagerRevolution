@@ -2,18 +2,16 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.Events;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
-import net.BKTeam.illagerrevolutionmod.entity.goals.GoalLowhealth;
+import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulCourt;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulHunter;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulProjectile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
-import net.BKTeam.illagerrevolutionmod.item.custom.SwordRuneBladeItem;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -39,11 +37,10 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,35 +54,30 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable, InventoryCarrier{
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SimpleContainer inventory = new SimpleContainer(1);
-    private int attackTimer;
-    private int attackShield;
-    public int lowHealtTimer;
-    public float count_expansion;
+    private static final EntityDataAccessor<Integer> ID_COMBO_STATE =
+            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.INT);
+
+    private static final EntityDataAccessor<Integer> ID_COMBO =
+            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.INT);
+    private int animationTimer;
+
+    private boolean continueAnim;
+
+    public int[] timers = new int[]{
+            9,
+            18,
+            10
+    };
+
     private final List<FallenKnightEntity> knights=new ArrayList<>();
 
-    private static final EntityDataAccessor<Boolean> STARTANIMATIONLOWHEALTH =
-            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
 
-    private static final EntityDataAccessor<Boolean> ATTACKING =
-            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Boolean> ATTACKINGSHIELD =
-            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Boolean> LOW_LIFE =
-            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Boolean> PHASE2 =
-            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.BOOLEAN);
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
@@ -101,47 +93,32 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     public BladeKnightEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
         super(entityType, level);
-        this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,99999999,0,false,false));
         this.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING,99999999,0,false,false));
-        this.attackTimer=0;
-        this.lowHealtTimer=40;
-        this.attackShield=0;
-        this.count_expansion=2.0f;
+        this.animationTimer=0;
+        this.continueAnim=false;
     }
     @Override
     public boolean canBeAffected(MobEffectInstance pPotioneffect) {
-        if(pPotioneffect.getEffect()== InitEffect.DEEP_WOUND.get()){
-            return this.isLowLife();
-        }
         return pPotioneffect.getEffect() != InitEffect.DEATH_MARK.get() && super.canBeAffected(pPotioneffect);
     }
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        String s1=this.isAttackingShield() ? "2"  : "1";
-        String s2=this.isLowLife() && this.isPhase2()? "2" : "1";
-        if (event.isMoving() && !this.isAggressive() && !this.isAttacking() && !this.isCastingSpell() && !this.isStartAnimationLowHealth()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.walk" + s2, ILoopType.EDefaultLoopTypes.LOOP));
-
-        }else if (this.isStartAnimationLowHealth()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.lowhealth", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-
-        }else if (event.isMoving() && this.isAggressive() && !this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.walkhostile"+s2, ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        else if (this.isAttacking()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.attack"+s1, ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        else if (this.isCastingSpell()){
+        if (event.isMoving() && !this.isAggressive() && !this.isCastingSpell() && (!this.hasCombo() || !this.continueAnim)) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.walk1", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if (event.isMoving() && this.isAggressive() && (!this.hasCombo() || !this.continueAnim)) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.walkhostile1", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if (this.hasCombo() && this.continueAnim) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(this.getCombo().location+(this.getCombo()==Combo.COMBO_SPIN ?this.getComboState().nameAttack1 : this.getComboState().nameAttack2), ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        } else if (this.isCastingSpell()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.summon1", ILoopType.EDefaultLoopTypes.LOOP));
         }
-        else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.idle"+s2, ILoopType.EDefaultLoopTypes.LOOP));
+        else event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.IllagerBladeKnight.idle1", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
     @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1,new GoalLowhealth(this,60));
         this.goalSelector.addGoal(1,new BKSummonUpUndeadSpellGoal());
         this.goalSelector.addGoal(1,new BKSummonHunterSpellGoal());
         this.goalSelector.addGoal(2, new BkAttackGoal(this,1.0,false));
@@ -154,10 +131,59 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
     }
 
+    public boolean hasCombo(){
+        return this.getCombo()!=Combo.NO_COMBO;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if(this.hasCombo()){
+            if(this.getCombo()==Combo.COMBO_PERFORATE){
+                if(this.getTarget()!=null && !this.continueAnim){
+                    LivingEntity target = this.getTarget();
+                    double dist = this.distanceToSqr(target.getX(), target.getY(), target.getZ());
+                    if(dist<this.getAttackReachSqr(target)){
+                        this.setContinueAnim(true);
+                        this.level.broadcastEntityEvent(this,(byte) 62);
+                    }
+                }
+            }
+
+            if(this.continueAnim){
+                this.animationTimer--;
+            }
+        }
+        int i = this.getIdComboState();
+        if (this.animationTimer<0 && this.continueAnim){
+            boolean flag = this.hasCombo() && i>0;
+            if(flag && this.getCombo()==Combo.COMBO_SPIN ){
+                if (i+1<4){
+                    this.setIdComboState(i+1);
+                }else {
+                    this.setIdComboState(0);
+                    this.setIdCombo(0);
+                }
+            }
+            if(flag && this.getCombo()==Combo.COMBO_PERFORATE){
+                if (i+1<4){
+                    this.setIdComboState(i+1);
+                    this.setContinueAnim(false);
+                }else {
+                    this.setIdComboState(0);
+                    this.setIdCombo(0);
+                }
+            }
+        }
+    }
+
+    protected double getAttackReachSqr(LivingEntity pAttackTarget) {
+        return (double)(this.getBbWidth() * 2.0F * this.getBbWidth() * 2.0F + pAttackTarget.getBbWidth());
+    }
+
     @Override
     public void tick() {
         super.tick();
-        Random random1 = new Random();
         if (level.random.nextInt(14) == 0 && this.isCastingSpell()) {
             if(this.isCastingSpell()){
                 for(int i=0;i<301;i+=30){
@@ -167,51 +193,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                     this.level.addParticle(ModParticles.RUNE_CURSED_PARTICLES.get(), this.getX() + (double) f1* (0.50f) , this.getY() + 3.4D, this.getZ() + (double) f2 * (0.50f), 0.0f, 0.0f, 0.0f);
                     this.level.addParticle(ModParticles.SOUL_PROJECTILE_PARTICLES.get(), this.getX() + (double) f1* (0.80f) , this.getY() + 3.9D, this.getZ() + (double) f2 * (0.80f), 0.0f, 0.0f, 0.0f);
                 }
-            }
-        }
-        if(this.isStartAnimationLowHealth()){
-            --this.lowHealtTimer;
-            if(this.lowHealtTimer==50 || this.lowHealtTimer==45 || this.lowHealtTimer==40){
-                this.playSound(SoundEvents.FIRECHARGE_USE,3.0f,0.0f);
-                for(int i=0;i<300;i+=10){
-                    float f4 = Mth.cos(i)*(1.0f+this.count_expansion);
-                    float f5 = Mth.sin(i)*(1.0f+this.count_expansion);
-                    this.level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX() + (double) f4, this.getY()+0.2d , this.getZ() + (double) f5,  0.0f, 0.0f,0.0f);
-                }
-                this.count_expansion--;
-            }
-            if(this.lowHealtTimer==3){
-                this.setPhase2(true);
-            }
-            if(this.lowHealtTimer<=39 && this.lowHealtTimer>=20){
-                if(this.lowHealtTimer==39){
-                    if(this.getMainHandItem().is(ModItems.ILLAGIUM_RUNED_BLADE.get())){
-                        Util.spawZombifiedBack(this.level,this,4);
-                    }else {
-                        Util.spawFallenKnightBack(this.level,this,2);
-                    }
-                    for (int i=0;i<6;i++){
-                        Vec3 pos=new Vec3(this.getX()+random1.nextDouble(-3.0d,3.0d),this.getY()+3.0D,this.getZ()+random1.nextDouble(-3.0d,3.0d));
-                        Player player=this.level.getNearestPlayer(this,40.0D);
-                        if(player!=null){
-                            SoulProjectile soul_projectile=new SoulProjectile(player,player.level,this);
-                            soul_projectile.moveTo(pos);
-                            this.level.addFreshEntity(soul_projectile);
-                        }
-                    }
-                }
-                ParticleOptions particle=ModParticles.BKSOULS_PARTICLES.get();
-                level.playLocalSound(this.getX(),this.getY(),this.getZ(),SoundEvents.SOUL_ESCAPE,SoundSource.HOSTILE,5.0f,-5.0f,false);
-                for(int i=0;i<3;i++){
-                    float f = this.yBodyRot * ((float) Math.PI / 180F);
-                    float f1 = Mth.cos(f);
-                    float f2 = Mth.sin(f);
-                    float f3 = 0.3f;
-                    this.level.addParticle(particle, this.getX()-(f2*f3), this.getY() , this.getZ()+(f1*f3),  random1.nextFloat(-0.1f,0.1f), random1.nextFloat(0.1f,0.15f),random1.nextFloat(-0.1f,0.1f));
-                }
-            }
-            if(this.lowHealtTimer==0){
-                this.setStartAnimationLowHealth(false);
             }
         }
     }
@@ -237,15 +218,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
-    public boolean isAttackingShield(){
-        return this.entityData.get(ATTACKINGSHIELD);
-    }
-
-    public void setAttackingshield(boolean pboolean){
-        this.entityData.set(ATTACKINGSHIELD,pboolean);
-        this.attackShield=pboolean ? 600 : this.attackShield;
-    }
-
     @Override
     public void die(DamageSource pCause) {
         this.knights.forEach(knight->{
@@ -255,127 +227,87 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         super.die(pCause);
     }
 
-    public boolean isStartAnimationLowHealth() {
-        return this.entityData.get(STARTANIMATIONLOWHEALTH);
-    }
-
-    public void setStartAnimationLowHealth(boolean startAnimationLowHealth) {
-        this.entityData.set(STARTANIMATIONLOWHEALTH,startAnimationLowHealth);
-    }
-    public boolean isPhase2() {
-        return this.entityData.get(PHASE2);
-    }
-
-    public void setPhase2(boolean phase2) {
-        this.entityData.set(PHASE2 ,phase2);
-    }
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(!this.isLowLife()){
-            if(pSource.getEntity() instanceof Player player){
-                if(player.getMainHandItem().getItem() instanceof TieredItem Item && Util.detectorTier(Item,3)){
-                    player.level.playSound(player,player.blockPosition(),SoundEvents.ANVIL_PLACE, SoundSource.HOSTILE,0.2f,-1.5f);
-                    playSound(ModSounds.BLADE_KNIGHT_LAUGH.get() ,5.0f,1.0f);
-                    return false;
-                }
-                if (player.getMainHandItem().getItem() instanceof SwordRuneBladeItem){
-                    pAmount=80;
-                }
-            }
-            if(pSource.getEntity() instanceof AbstractArrow abstractArrow){
-                pAmount=abstractArrow.isCritArrow() ? 3.0f : 2.0f;
-            }
-            if (pAmount>=4.0f){
-                pAmount=4.0f;
-            }
-
-        }
         return super.hurt(pSource, pAmount);
     }
 
-    public void aiStep() {
-        super.aiStep();
-        if(this.getHealth() < this.getMaxHealth()*70/100 && !this.isLowLife()){
-            this.setLowLife(true);
-        }
-        if(this.attackShield>0){
-            this.attackShield--;
-        }
-        if(this.isAttacking()){
-            --this.attackTimer;
-            if(this.attackTimer!=0){
-                if(this.attackTimer==4 && this.getTarget()!=null){
-                    if(this.isAttackingShield()){
-                        ((Player)this.getTarget()).disableShield(true);
-                        this.playSound(SoundEvents.ANVIL_BREAK, 4.0F, -1.0F);
-                        this.playSound(SoundEvents.SHIELD_BREAK, 2.0F, 1.0F);
-                    }else{
-                        this.doHurtTarget(this.getTarget());
-                        SoundEvent Sound =this.level.getRandom().nextInt(0,2)==1 ? ModSounds.BLADE_KNIGHT_SWORDHIT1.get():ModSounds.BLADE_KNIGHT_SWORDHIT2.get();
-                        this.playSound(Sound, 1.2F, 1.0F);
-                    }
-                }
-            }else{
-                this.setAttacking(false);
-                this.setAttackingshield(false);
-            }
-        }
-    }
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ATTACKING,false);
-        this.entityData.define(ATTACKINGSHIELD,false);
-        this.entityData.define(LOW_LIFE,false);
-        this.entityData.define(STARTANIMATIONLOWHEALTH,false);
-        this.entityData.define(PHASE2,false);
+        this.entityData.define(ID_COMBO_STATE,0);
+        this.entityData.define(ID_COMBO,0);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.setAttacking(compound.getBoolean("isAttacking"));
-        this.setAttackingshield(compound.getBoolean("isAttackingShield"));
-        this.setLowLife(compound.getBoolean("isLowlife"));
-        this.setStartAnimationLowHealth(compound.getBoolean("isLowHealth"));
-        this.setPhase2(compound.getBoolean("isphase2"));
-
+        this.setIdComboState(compound.getInt("ComboState"));
+        this.setIdCombo(compound.getInt("Combo"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putBoolean("isAttacking",this.isAttacking());
-        compound.putBoolean("isAttackingShield",this.isAttackingShield());
-        compound.putBoolean("isLowlife",this.isLowLife());
-        compound.putBoolean("isLowHealth",this.isStartAnimationLowHealth());
-        compound.putBoolean("isphase2",this.isPhase2());
+        compound.putInt("ComboState",this.getIdComboState());
+        compound.putInt("Combo",this.getIdCombo());
     }
-
-    public void setAttacking(boolean attacking){
-        this.entityData.set(ATTACKING,attacking);
-        this.attackTimer = isAttacking() ? 10 : 0;
-    }
-    public void setLowLife(boolean lowLife){
-        this.entityData.set(LOW_LIFE,lowLife);
-        this.lowHealtTimer=lowLife ? 60 : 0;
-        if(lowLife){
-            this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.36D);
-            this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(1.5D);
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(15.0D);
-            this.getAttribute(Attributes.ARMOR_TOUGHNESS).setBaseValue(3.0D);
-            this.getAttribute(Attributes.ARMOR).setBaseValue(10.0D);
-            this.removeEffect(MobEffects.FIRE_RESISTANCE);
-            this.removeEffect(MobEffects.WATER_BREATHING);
+    public void setIdComboState(int pId){
+        this.entityData.set(ID_COMBO_STATE,pId);
+        if(pId>0){
+            this.animationTimer = this.getCombo()==Combo.COMBO_PERFORATE ? timers[this.getIdComboState()-1] : 12;
+        }else {
+            this.animationTimer=0;
         }
     }
-    public boolean  isLowLife(){
-        return this.entityData.get(LOW_LIFE);
-    }
-    public boolean isAttacking(){
-        return this.entityData.get(ATTACKING);
+
+    public int getIdComboState() {
+        return this.entityData.get(ID_COMBO_STATE);
     }
 
+    public ComboState getComboState() {
+        return ComboState.byId(this.getIdComboState() & 255);
+    }
+
+    public void setIdCombo(int pId){
+        this.entityData.set(ID_COMBO,pId);
+        this.setContinueAnim(pId>0);
+    }
+
+    public int getIdCombo() {
+        return this.entityData.get(ID_COMBO);
+    }
+
+    public Combo getCombo() {
+        return Combo.byId(this.getIdCombo() & 255);
+    }
+
+    public void setContinueAnim(boolean continueAnim) {
+        this.continueAnim = continueAnim;
+    }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        if(pId==60){
+            this.setIdComboState(1);
+            this.setIdCombo(1);
+        }else if (pId==61){
+            this.setIdComboState(1);
+            this.setIdCombo(2);
+        }else if (pId==62){
+            this.setContinueAnim(true);
+        }else {
+            super.handleEntityEvent(pId);
+
+        }
+    }
+
+    public void damageZone(){
+        for (int i=0;i<8;i++){
+            SoulCourt court = new SoulCourt(this,this.level);
+            court.shootFromRotation(this,this.getXRot(),this.getYRot()+(45F*i),0.0F,0.5F,0.1F);
+            this.level.addFreshEntity(court);
+        }
+    }
 
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
         return ModSounds.BLADE_KNIGHT_HURT.get();
@@ -528,6 +460,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         protected SoundEvent getSpellPrepareSound() {
             return SoundEvents.EVOKER_PREPARE_SUMMON;
         }
+
         @Override
         protected IllagerSpell getSpell() {
             return IllagerSpell.BLINDNESS;
@@ -566,12 +499,119 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         }
 
         @Override
+        public boolean canUse() {
+            return super.canUse() || this.goalOwner.hasCombo();
+        }
+
+        @Override
+        public void tick(){
+            if(!this.goalOwner.hasCombo() && !this.goalOwner.continueAnim){
+                super.tick();
+            }
+            if(this.goalOwner.getCombo()!=Combo.NO_COMBO){
+                LivingEntity target = this.goalOwner.getTarget();
+                boolean flag = this.goalOwner.getCombo()==Combo.COMBO_SPIN;
+                if(flag){
+                    this.goalOwner.navigation.stop();
+                    if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
+                        if(this.goalOwner.animationTimer==8){
+                            if (target!=null){
+                                this.goalOwner.lookControl.setLookAt(target);
+                                this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
+                                this.goalOwner.yBodyRot=this.goalOwner.getYRot();
+                            }
+                            this.goalOwner.damageZone();
+                            BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
+                            List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
+                            for(LivingEntity living : targets){
+                                float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
+                                if (entityHitDistance <= 7 - 0.3 ) {
+                                    living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                }
+                            }
+                        }
+                    }else {
+                        if(this.goalOwner.animationTimer==5){
+                            if (target!=null){
+                                SoulCourt court = new SoulCourt(this.goalOwner,this.goalOwner.level);
+                                court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
+                                court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot(),0.0F,0.5F,0.1F);
+                                this.goalOwner.level.addFreshEntity(court);
+
+                            }
+                            BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
+                            List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
+                            for(LivingEntity living : targets){
+                                float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.goalOwner.getZ(), living.getX() - this.goalOwner.getX()) * (180 / Math.PI) - 90) % 360);
+                                float entityAttackingAngle = this.goalOwner.yBodyRot % 360;
+                                float arc = 180.0F;
+                                if (entityHitAngle < 0) {
+                                    entityHitAngle += 360;
+                                }
+                                if (entityAttackingAngle < 0) {
+                                    entityAttackingAngle += 360;
+                                }
+                                float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
+                                float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
+                                if (entityHitDistance <= 7 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
+                                    living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                }
+                            }
+                        }
+                    }
+                }else {
+                    if (this.goalOwner.continueAnim){
+                        if(target!=null){
+                            this.goalOwner.lookControl.setLookAt(target);
+                            this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
+                            this.goalOwner.yBodyRot=this.goalOwner.getYRot();
+                            if (this.goalOwner.getComboState()==ComboState.FIRST_HIT){
+                                if(this.goalOwner.animationTimer==5){
+                                    this.goalOwner.doHurtTarget(target);
+                                }
+                            }else if(this.goalOwner.getComboState()==ComboState.SECOND_HIT){
+                                if(this.goalOwner.animationTimer==10){
+                                    this.goalOwner.doHurtTarget(target);
+                                    if(target.isBlocking() && target instanceof Player pTarget){
+                                        pTarget.disableShield(true);
+
+                                    }
+                                }
+                            }else if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
+                                if(this.goalOwner.animationTimer==5){
+                                    BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
+                                    List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(10,10,10), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
+                                    for(LivingEntity living : targets){
+                                        float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.goalOwner.getZ(), living.getX() - this.goalOwner.getX()) * (180 / Math.PI) - 90) % 360);
+                                        float entityAttackingAngle = this.goalOwner.yBodyRot % 360;
+                                        float arc = 50.0F;
+                                        if (entityHitAngle < 0) {
+                                            entityHitAngle += 360;
+                                        }
+                                        if (entityAttackingAngle < 0) {
+                                            entityAttackingAngle += 360;
+                                        }
+                                        float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
+                                        float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
+                                        if (entityHitDistance <= 10 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
+                                            if(living.isBlocking() && living instanceof Player player){
+                                                player.disableShield(true);
+                                            }
+                                            living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
         protected void checkAndPerformAttack(@NotNull LivingEntity entity, double distance) {
             double d0 = this.getAttackReachSqr(entity) + 10.0D;
-            if (distance <= d0 && this.getTicksUntilNextAttack() <= 0 && this.goalOwner.attackTimer<=0 && !this.goalOwner.isAttacking()) {
-                if(entity instanceof Player player && player.isBlocking() && this.goalOwner.attackShield==0 && !this.goalOwner.isLowLife()){
-                    this.goalOwner.setAttackingshield(true);
-                }
+            if (distance <= d0 && this.goalOwner.animationTimer <= 0 && !this.goalOwner.hasCombo()) {
                 this.resetAttackCooldown();
                 this.goalOwner.getNavigation().stop();
                 this.goalOwner.getLookControl().setLookAt(entity,180,180);
@@ -581,8 +621,77 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
         @Override
         protected void resetAttackCooldown() {
-            super.resetAttackCooldown();
-            this.goalOwner.setAttacking(true);;
+            this.goalOwner.setIdComboState(1);
+            int i = this.goalOwner.level.random.nextBoolean() ? 1 : 2;
+            this.goalOwner.setIdCombo(i);
+            if(i==1){
+                this.goalOwner.level.broadcastEntityEvent(this.goalOwner,(byte) 60);
+            }else {
+                this.goalOwner.level.broadcastEntityEvent(this.goalOwner,(byte) 61);
+            }
+        }
+    }
+
+    public enum ComboState{
+        FIRST_HIT(1,"halfspin1","push"),
+        SECOND_HIT(2,"halfspin2","shieldbreak"),
+        THIRD_HIT(3,"fullspin","stab"),
+        CANCEL_COMBO(0,null,null);
+
+        private static final BladeKnightEntity.ComboState[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(BladeKnightEntity.ComboState::getId)).toArray(BladeKnightEntity.ComboState[]::new);
+        private final int  id;
+
+        private final String nameAttack1;
+
+        private final String nameAttack2;
+
+
+
+        ComboState(int pId,String nameAttack1,String nameAttack2){
+            this.id = pId;
+            this.nameAttack1 = nameAttack1;
+            this.nameAttack2 = nameAttack2;
+        }
+
+        public int getId(){
+            return this.id;
+        }
+
+        public String getNameAttack1() {
+            return this.nameAttack1;
+        }
+
+        public String getNameAttack2() {
+            return this.nameAttack2;
+        }
+
+        public static ComboState byId(int pId){
+            return BY_ID[pId % BY_ID.length];
+        }
+    }
+
+    public enum Combo{
+        COMBO_SPIN(1,"animation.IllagerBladeKnight.combo2"),
+        COMBO_PERFORATE(2,"animation.IllagerBladeKnight.combo1"),
+        NO_COMBO(0,null);
+
+        private static final BladeKnightEntity.Combo[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(BladeKnightEntity.Combo::getId)).toArray(BladeKnightEntity.Combo[]::new);
+
+        private final int id;
+
+        private final String location;
+
+        Combo(int id, String location){
+            this.id=id;
+            this.location=location;
+        }
+
+        public int getId() {
+            return this.id;
+        }
+
+        public static Combo byId(int pId){
+            return BY_ID[pId % BY_ID.length];
         }
     }
 }

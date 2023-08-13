@@ -92,9 +92,6 @@ public class BladeKnightRenderer extends ExtendedGeoEntityRenderer<BladeKnightEn
                 }
             }
             nbt=item.getOrCreateTag();
-            if(currentEntity.isLowLife()){
-                cc1=0;
-            }
             nbt.putInt("CustomModelData", cc1);
         }
     }

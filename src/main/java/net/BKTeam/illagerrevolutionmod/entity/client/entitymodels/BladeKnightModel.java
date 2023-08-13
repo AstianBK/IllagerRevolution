@@ -33,7 +33,7 @@ public class BladeKnightModel<I extends AbstractIllager> extends AnimatedGeoMode
         IBone head = this.getAnimationProcessor().getBone("bipedHead");
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        if (head != null && !entity.isCastingSpell() && !entity.isAttackingShield()) {
+        if (head != null && !entity.isCastingSpell()) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
@@ -46,18 +46,11 @@ public class BladeKnightModel<I extends AbstractIllager> extends AnimatedGeoMode
 
     @Override
     public ResourceLocation getTextureResource(BladeKnightEntity object) {
-        if(!object.isPhase2()){
-            if(object.hasCustomName()){
+        if(object.hasCustomName()){
                 return object.getCustomName().getString().equals("Edge Knight") ? new ResourceLocation(IllagerRevolutionMod.MOD_ID,
                         "textures/entity/blade_knight/edge_knight.png")  : TEXTURE_DEFAULT ;
-            }
-            return TEXTURE_DEFAULT;
         }
-        if(object.hasCustomName()){
-            return object.getCustomName().getString().equals("Edge Knight") ? new ResourceLocation(IllagerRevolutionMod.MOD_ID,
-                    "textures/entity/blade_knight/edge_knight_lowhealth.png")  : TEXTURE_HURT ;
-        }
-        return TEXTURE_HURT;
+        return TEXTURE_DEFAULT;
     }
 
     @Override

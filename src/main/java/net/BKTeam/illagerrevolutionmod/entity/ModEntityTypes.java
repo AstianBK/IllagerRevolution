@@ -80,6 +80,11 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.4f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "blade_knight").toString()));
 
+    public static final RegistryObject<EntityType<SoulCourt>> SOUL_COURT = ENTITY_TYPES
+            .register("soul_court", () -> EntityType.Builder.<SoulCourt>of(SoulCourt::new, MobCategory.MISC)
+                    .fireImmune().sized(3.0F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_court"));
+
+
     public static final RegistryObject<EntityType<SoulProjectile>> SOUL_PROJECTILE = ENTITY_TYPES
             .register("soul_projectile", () -> EntityType.Builder.<SoulProjectile>of(SoulProjectile::new, MobCategory.MISC)
                     .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_projectile"));
