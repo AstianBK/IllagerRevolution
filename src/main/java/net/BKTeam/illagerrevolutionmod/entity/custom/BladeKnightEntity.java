@@ -81,13 +81,13 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 80.0D)
+                .add(Attributes.MAX_HEALTH, 100.0D)
                 .add(Attributes.ATTACK_DAMAGE, 4.0D)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.90D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.85D)
-                .add(Attributes.ARMOR, 0.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 0.0D)
-                .add(Attributes.FOLLOW_RANGE, 36.D)
+                .add(Attributes.ARMOR, 15.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
+                .add(Attributes.FOLLOW_RANGE, 40.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
     }
 
