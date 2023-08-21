@@ -38,6 +38,7 @@ import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
@@ -65,7 +66,13 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     private static final EntityDataAccessor<Integer> ID_COMBO =
             SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.INT);
+
+    private static final UUID BLADE_KNIGHT_ATTACK_DAMAGE_UUID= UUID.fromString("648D7064-6A60-4F59-8ABE-C2C23A6DD7A9");
+
+
     private int animationTimer;
+
+    public int absorbedSouls;
 
     private boolean continueAnim;
 
@@ -82,7 +89,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 80.0D)
-                .add(Attributes.ATTACK_DAMAGE, 4.0D)
+                .add(Attributes.ATTACK_DAMAGE, 0.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.85D)
                 .add(Attributes.ARMOR, 0.0D)
@@ -96,10 +103,12 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING,99999999,0,false,false));
         this.animationTimer=0;
         this.continueAnim=false;
+        this.absorbedSouls=0;
     }
+
     @Override
     public boolean canBeAffected(MobEffectInstance pPotioneffect) {
-        return pPotioneffect.getEffect() != InitEffect.DEATH_MARK.get() && super.canBeAffected(pPotioneffect);
+        return pPotioneffect.getEffect() != InitEffect.DEATH_MARK.get() && pPotioneffect.getEffect() != InitEffect.DEEP_WOUND.get() && super.canBeAffected(pPotioneffect);
     }
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -181,6 +190,13 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         return (double)(this.getBbWidth() * 2.0F * this.getBbWidth() * 2.0F + pAttackTarget.getBbWidth());
     }
 
+    protected float getTotalDamage(){
+        if(this.getMainHandItem().getItem() instanceof SwordItem sword){
+            return sword.getDamage() + (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        }
+        return 0.0F;
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -229,6 +245,9 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
+        if(this.hasCombo() && this.continueAnim){
+            pAmount=pAmount-(pAmount*0.20F);
+        }
         return super.hurt(pSource, pAmount);
     }
 
@@ -243,6 +262,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         super.readAdditionalSaveData(compound);
         this.setIdComboState(compound.getInt("ComboState"));
         this.setIdCombo(compound.getInt("Combo"));
+        this.absorbedSouls=compound.getInt("absorbedSouls");
     }
 
     @Override
@@ -250,6 +270,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         super.addAdditionalSaveData(compound);
         compound.putInt("ComboState",this.getIdComboState());
         compound.putInt("Combo",this.getIdCombo());
+        compound.putInt("absorbedSouls",this.absorbedSouls);
     }
     public void setIdComboState(int pId){
         this.entityData.set(ID_COMBO_STATE,pId);
@@ -258,6 +279,10 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         }else {
             this.animationTimer=0;
         }
+    }
+
+    public void updateDamage(){
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(this.absorbedSouls*0.25F);
     }
 
     public int getIdComboState() {
@@ -272,6 +297,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.entityData.set(ID_COMBO,pId);
         this.setContinueAnim(pId>0);
     }
+
+
 
     public int getIdCombo() {
         return this.entityData.get(ID_COMBO);
@@ -300,6 +327,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
         }
     }
+
 
     public void damageZone(){
         for (int i=0;i<8;i++){
@@ -527,7 +555,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
                                 if(living instanceof LivingEntity){
                                     if (entityHitDistance <= 7 - 0.3 ) {
-                                        living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                        living.hurt(DamageSource.mobAttack(this.goalOwner), 1.0F+this.goalOwner.getTotalDamage()*0.4F);
                                     }
                                 }else if(living instanceof Projectile projectile && projectile.getOwner()!=this.goalOwner) {
                                     projectile.shoot(projectile.getX()-this.goalOwner.getX(),projectile.getY()-this.goalOwner.getY(),projectile.getZ()-this.goalOwner.getZ(),1f,0.1f);
@@ -560,7 +588,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
                                 if(living instanceof  LivingEntity){
                                     if (entityHitDistance <= 7 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
-                                        living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                        living.hurt(DamageSource.mobAttack(this.goalOwner), 1.0F+this.goalOwner.getTotalDamage()*0.25F);
                                     }
                                 }else if(living instanceof Projectile projectile && projectile.getOwner()!=this.goalOwner){
                                     projectile.shoot(projectile.getX()-this.goalOwner.getX(),projectile.getY()-this.goalOwner.getY(),projectile.getZ()-this.goalOwner.getZ(),1f,0.1f);
@@ -584,7 +612,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                     this.goalOwner.doHurtTarget(target);
                                     if(target.isBlocking() && target instanceof Player pTarget){
                                         pTarget.disableShield(true);
-
                                     }
                                 }
                             }else if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
@@ -607,7 +634,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                             if(living.isBlocking() && living instanceof Player player){
                                                 player.disableShield(true);
                                             }
-                                            living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                            living.hurt(DamageSource.mobAttack(this.goalOwner).bypassArmor(), 1.0F+this.goalOwner.getTotalDamage()*0.5F);
+                                            living.addEffect(new MobEffectInstance(InitEffect.DEEP_WOUND.get(),100,1));
                                         }
                                     }
                                 }

@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
 import com.google.common.collect.Lists;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -160,6 +161,10 @@ public class SoulProjectile extends ThrowableItemProjectile {
             LivingEntity livingEntity = (LivingEntity) entity;
             boolean flag1= livingEntity.isInvulnerable() && livingEntity==this.getOwner();
             if ( flag1 || this.finalTarget==livingEntity) {
+                if(livingEntity instanceof BladeKnightEntity bkEntity){
+                    bkEntity.absorbedSouls++;
+                    bkEntity.updateDamage();
+                }
                 livingEntity.heal(2);
                 livingEntity.playSound(ModSounds.SOUL_RELEASE.get(), 2.0F, 1.0F);
                 discard();
