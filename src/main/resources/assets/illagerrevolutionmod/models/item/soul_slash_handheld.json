@@ -2,7 +2,7 @@
   "parent": "item/handheld",
 
   "textures": {
-    "layer0": "illagerrevolutionmod:item/soul_court"
+    "layer0": "illagerrevolutionmod:item/soul_slash"
   },
   "display": {
     "thirdperson_righthand": {
