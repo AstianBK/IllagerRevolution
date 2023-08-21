@@ -50,7 +50,7 @@ public class SoulSlash extends ThrowableProjectile {
         if (!this.level.isClientSide()) {
             HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
             if (result.getType() == HitResult.Type.MISS && this.isAlive()) {
-                List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
+                List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1.0F,3.0F,1.0F), this::canHitEntity);
                 if (!intersecting.isEmpty())
                     this.onHit(new EntityHitResult(intersecting.get(0)));
             }

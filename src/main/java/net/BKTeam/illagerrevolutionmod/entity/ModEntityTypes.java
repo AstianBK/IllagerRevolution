@@ -82,7 +82,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<SoulSlash>> SOUL_SLASH = ENTITY_TYPES
             .register("soul_slash", () -> EntityType.Builder.<SoulSlash>of(SoulSlash::new, MobCategory.MISC)
-                    .fireImmune().sized(3.0F, 1.0F).build(IllagerRevolutionMod.MOD_ID + "soul_slash"));
+                    .fireImmune().sized(3.0F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_slash"));
 
 
     public static final RegistryObject<EntityType<SoulProjectile>> SOUL_PROJECTILE = ENTITY_TYPES
