@@ -1,0 +1,19 @@
+{
+  "parent": "item/handheld",
+  "loader": "forge:separate-perspective",
+
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/soul_court_gui"
+  },
+  "base": {
+    "parent": "illagerrevolutionmod:item/soul_court_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "illagerrevolutionmod:item/soul_court_gui"
+    },
+    "fixed": {
+      "parent": "illagerrevolutionmod:item/soul_court_gui"
+    }
+  }
+}

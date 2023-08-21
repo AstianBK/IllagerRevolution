@@ -88,7 +88,7 @@ public class SoulHunter extends ThrowableItemProjectile {
         float f = this.yRotO * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
         float f1 = Mth.cos(f);
         float f2 = Mth.sin(f);
-        this.setDeltaMovement(deltaMovement); //Undoes tampering by superclass
+        this.setDeltaMovement(deltaMovement);
         SimpleParticleType particleType = (SimpleParticleType) ModParticles.SMOKE_BK_PARTICLES.get();
         this.level.addParticle(particleType, this.getX(), this.getY(), this.getZ(), 0.0, 0.0, 0.0);++this.life;
         if (this.life>=150 || this.checkDistandOwner((LivingEntity) this.getOwner())){
