@@ -2,9 +2,8 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.Events;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
-import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulCourt;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulSlash;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulHunter;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -37,6 +36,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -303,7 +303,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     public void damageZone(){
         for (int i=0;i<8;i++){
-            SoulCourt court = new SoulCourt(this,this.level);
+            SoulSlash court = new SoulSlash(this,this.level);
             court.shootFromRotation(this,this.getXRot(),this.getYRot()+(45F*i),0.0F,0.5F,0.1F);
             this.level.addFreshEntity(court);
         }
@@ -522,26 +522,31 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             }
                             this.goalOwner.damageZone();
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
-                            List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
-                            for(LivingEntity living : targets){
+                            List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
+                            for(Entity living : targets){
                                 float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
-                                if (entityHitDistance <= 7 - 0.3 ) {
-                                    living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                if(living instanceof LivingEntity){
+                                    if (entityHitDistance <= 7 - 0.3 ) {
+                                        living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                    }
+                                }else if(living instanceof Projectile projectile && projectile.getOwner()!=this.goalOwner) {
+                                    projectile.shoot(projectile.getX()-this.goalOwner.getX(),projectile.getY()-this.goalOwner.getY(),projectile.getZ()-this.goalOwner.getZ(),1f,0.1f);
                                 }
+
                             }
                         }
                     }else {
                         if(this.goalOwner.animationTimer==5){
                             if (target!=null){
-                                SoulCourt court = new SoulCourt(this.goalOwner,this.goalOwner.level);
+                                SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level);
                                 court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
                                 court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot(),0.0F,0.5F,0.1F);
                                 this.goalOwner.level.addFreshEntity(court);
 
                             }
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
-                            List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
-                            for(LivingEntity living : targets){
+                            List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
+                            for(Entity living : targets){
                                 float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.goalOwner.getZ(), living.getX() - this.goalOwner.getX()) * (180 / Math.PI) - 90) % 360);
                                 float entityAttackingAngle = this.goalOwner.yBodyRot % 360;
                                 float arc = 180.0F;
@@ -553,9 +558,14 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 }
                                 float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
                                 float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
-                                if (entityHitDistance <= 7 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
-                                    living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                if(living instanceof  LivingEntity){
+                                    if (entityHitDistance <= 7 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
+                                        living.hurt(DamageSource.mobAttack(this.goalOwner), 3.0F);
+                                    }
+                                }else if(living instanceof Projectile projectile && projectile.getOwner()!=this.goalOwner){
+                                    projectile.shoot(projectile.getX()-this.goalOwner.getX(),projectile.getY()-this.goalOwner.getY(),projectile.getZ()-this.goalOwner.getZ(),1f,0.1f);
                                 }
+
                             }
                         }
                     }

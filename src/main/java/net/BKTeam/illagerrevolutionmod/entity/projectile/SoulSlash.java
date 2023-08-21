@@ -2,17 +2,12 @@ package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
-import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -21,16 +16,16 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class SoulCourt extends ThrowableProjectile {
+public class SoulSlash extends ThrowableProjectile {
 
     private int life;
-    public SoulCourt(EntityType<? extends SoulCourt> p_37248_, Level p_37249_) {
+    public SoulSlash(EntityType<? extends SoulSlash> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
         this.life = 30;
     }
 
-    public SoulCourt(LivingEntity thrower, Level level) {
-        super(ModEntityTypes.SOUL_COURT.get(),thrower,level);
+    public SoulSlash(LivingEntity thrower, Level level) {
+        super(ModEntityTypes.SOUL_SLASH.get(),thrower,level);
         this.setNoGravity(true);
         this.life = 30;
     }
@@ -76,7 +71,7 @@ public class SoulCourt extends ThrowableProjectile {
     }
 
     public ItemStack getItem(){
-        return new ItemStack(ModItems.SOUL_COURT.get());
+        return new ItemStack(ModItems.SOUL_SLASH.get());
     }
 
     @Override

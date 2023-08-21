@@ -69,7 +69,7 @@ public class ModItems {
     public static final RegistryObject<Item> SOUL_PROJECTILE = ITEMS.register("soul_projectile",
             ()->new Item(new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item> SOUL_COURT = ITEMS.register("soul_court",
+    public static final RegistryObject<Item> SOUL_SLASH = ITEMS.register("soul_slash",
             ()->new Item(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> ARROW_BEAST = ITEMS.register("arrow_beast",
