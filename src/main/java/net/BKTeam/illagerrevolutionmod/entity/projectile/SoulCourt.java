@@ -1,6 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
@@ -11,6 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -37,7 +40,7 @@ public class SoulCourt extends ThrowableProjectile {
         Vec3 deltaMovement = this.getDeltaMovement();
         super.tick();
         this.setDeltaMovement(deltaMovement);
-        if(this.level.isClientSide) {
+        /*if(this.level.isClientSide) {
             this.level.addParticle(ModParticles.BLOOD_PARTICLES.get(), this.getBoundingBox().getCenter().x, this.getBoundingBox().getCenter().y, this.getBoundingBox().getCenter().z, 0.0F, 0.0F, 0.0F);
 
             for (int i = 0; i < 5; i++) {
@@ -48,7 +51,7 @@ public class SoulCourt extends ThrowableProjectile {
                 this.level.addParticle(ModParticles.BKSOULS_PARTICLES.get(), this.getX() - f2 + f1 * d0, this.getY(), this.getZ() + f1 + f2 * d0, 0.0F, 0.0F, 0.0F);
                 this.level.addParticle(ModParticles.BKSOULS_PARTICLES.get(), this.getX() - f2 - f1 * d0, this.getY(), this.getZ() + f1 - f2 * d0, 0.0F, 0.0F, 0.0F);
             }
-        }
+        }*/
         if (!this.level.isClientSide()) {
             HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
             if (result.getType() == HitResult.Type.MISS && this.isAlive()) {
@@ -68,8 +71,12 @@ public class SoulCourt extends ThrowableProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if(pResult.getEntity() instanceof LivingEntity living){
-            living.hurt(DamageSource.GENERIC,5);
+            living.hurt(DamageSource.MAGIC,5);
         }
+    }
+
+    public ItemStack getItem(){
+        return new ItemStack(ModItems.SOUL_COURT.get());
     }
 
     @Override

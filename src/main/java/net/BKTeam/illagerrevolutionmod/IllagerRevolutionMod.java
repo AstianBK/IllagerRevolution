@@ -222,7 +222,7 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(ModEntityTypes.SOUL_PROJECTILE.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(SOUL_HUNTER.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(SUMMONED_SOUL.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
-        EntityRenderers.register(SOUL_COURT.get(), NoopRenderer::new);
+        EntityRenderers.register(SOUL_COURT.get(), CourtRender::new);
         EntityRenderers.register(SOUL_ENTITY.get(), ThrownItemRenderer<ThrowableItemProjectile>::new);
         EntityRenderers.register(ARROWBEAST.get(), ArrowBeastRender::new);
         EntityRenderers.register(FEATHER_PROJECTILE.get(), FeatherRender::new);
