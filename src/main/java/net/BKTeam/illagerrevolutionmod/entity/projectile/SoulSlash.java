@@ -1,11 +1,13 @@
 package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
+import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +52,7 @@ public class SoulSlash extends ThrowableProjectile {
         if (!this.level.isClientSide()) {
             HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
             if (result.getType() == HitResult.Type.MISS && this.isAlive()) {
-                List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
+                List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1.0F,3.0F,1.0F), this::canHitEntity);
                 if (!intersecting.isEmpty())
                     this.onHit(new EntityHitResult(intersecting.get(0)));
             }
@@ -66,7 +68,9 @@ public class SoulSlash extends ThrowableProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if(pResult.getEntity() instanceof LivingEntity living){
-            living.hurt(DamageSource.MAGIC,5);
+            if(living.getMobType() != MobType.ILLAGER && living.getMobType() != BKMobType.BEAST_ILLAGER){
+                living.hurt(DamageSource.MAGIC,5);
+            }
         }
     }
 
