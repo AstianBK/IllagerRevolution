@@ -77,9 +77,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public int absorbedSouls;
 
     private boolean continueAnim;
-
-    private boolean needResetCombo;
-
     private Combo oldCombo;
 
     public int[] timers = new int[]{
@@ -110,7 +107,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.animationTimer=0;
         this.continueAnim=false;
         this.absorbedSouls=0;
-        this.needResetCombo=false;
         this.oldCombo = Combo.NO_COMBO;
     }
 
@@ -144,12 +140,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(4, new RandomStrollGoal(this, 0.7));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this){
-            @Override
-            public boolean canUse() {
-                return super.canUse() && !BladeKnightEntity.this.hasCombo();
-            }
-        });
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
     }
 
@@ -310,13 +301,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public void setIdCombo(int pId){
         this.entityData.set(ID_COMBO,pId);
         this.setContinueAnim(pId>0);
-        if(this.needResetCombo && pId==0){
-            this.needResetCombo=false;
-            this.oldCombo=Combo.NO_COMBO;
-        }else {
-            this.needResetCombo=this.oldCombo!=Combo.NO_COMBO;
-            this.oldCombo=this.getCombo();
-        }
+        this.oldCombo=Combo.byId(pId & 255);
     }
 
 
@@ -683,7 +668,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             this.goalOwner.setIdComboState(1);
             int i;
             if(this.goalOwner.oldCombo!=Combo.NO_COMBO){
-                i = this.goalOwner.oldCombo==Combo.COMBO_PERFORATE? 1 : 2;
+                i = this.goalOwner.oldCombo==Combo.COMBO_PERFORATE ? 1 : 2;
             }else {
                 i = this.goalOwner.level.random.nextBoolean() ? 1 : 2;
             }
