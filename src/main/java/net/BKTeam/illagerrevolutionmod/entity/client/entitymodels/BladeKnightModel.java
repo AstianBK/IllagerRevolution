@@ -33,7 +33,7 @@ public class BladeKnightModel<I extends AbstractIllager> extends AnimatedGeoMode
         IBone head = this.getAnimationProcessor().getBone("bipedHead");
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        if (head != null && !entity.isCastingSpell()) {
+        if (head != null && !entity.isCastingSpell() && !entity.hasCombo()) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }

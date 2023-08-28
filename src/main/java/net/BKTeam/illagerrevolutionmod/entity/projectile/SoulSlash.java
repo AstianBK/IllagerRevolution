@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
 import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -68,7 +69,7 @@ public class SoulSlash extends ThrowableProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if(pResult.getEntity() instanceof LivingEntity living){
-            if(living.getMobType() != MobType.ILLAGER && living.getMobType() != BKMobType.BEAST_ILLAGER){
+            if(living.getMobType() != MobType.ILLAGER && !(living instanceof IllagerBeastEntity beast && !beast.isTame())){
                 living.hurt(DamageSource.MAGIC,5);
             }
         }

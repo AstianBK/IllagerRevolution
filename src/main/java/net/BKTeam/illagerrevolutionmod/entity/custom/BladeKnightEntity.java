@@ -12,6 +12,7 @@ import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -28,6 +29,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -75,6 +77,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public int absorbedSouls;
 
     private boolean continueAnim;
+    private Combo oldCombo;
 
     public int[] timers = new int[]{
             9,
@@ -104,6 +107,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.animationTimer=0;
         this.continueAnim=false;
         this.absorbedSouls=0;
+        this.oldCombo = Combo.NO_COMBO;
     }
 
     @Override
@@ -263,6 +267,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         this.setIdComboState(compound.getInt("ComboState"));
         this.setIdCombo(compound.getInt("Combo"));
         this.absorbedSouls=compound.getInt("absorbedSouls");
+        this.updateDamage();
     }
 
     @Override
@@ -296,6 +301,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public void setIdCombo(int pId){
         this.entityData.set(ID_COMBO,pId);
         this.setContinueAnim(pId>0);
+        this.oldCombo=Combo.byId(pId & 255);
     }
 
 
@@ -404,7 +410,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         public boolean canUse() {
             List<SoulEntity> listentity= BladeKnightEntity.this.level.getEntitiesOfClass(SoulEntity.class, BladeKnightEntity.this.getBoundingBox().inflate(50.0d));
             if(Events.checkOwnerSoul(listentity, BladeKnightEntity.this)){
-                return super.canUse();
+                return super.canUse() && !BladeKnightEntity.this.hasCombo();
             }
             return false;
         }
@@ -476,9 +482,9 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             if(BladeKnightEntity.this.getTarget() !=null){
             LivingEntity entity = BladeKnightEntity.this.getTarget();
             float Dx = distanceTo(entity) ;
-            if (!super.canUse()){
-                return false;
-            }return entity instanceof Player && (entity.getY() > BladeKnightEntity.this.getY()+3 || Dx > 4.0f);
+                if (!super.canUse()){
+                    return false;
+                }return entity instanceof Player && (entity.getY() > BladeKnightEntity.this.getY()+3 || Dx > 4.0f) && !BladeKnightEntity.this.hasCombo();
             }
             return false;
         }
@@ -531,6 +537,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             return super.canUse() || this.goalOwner.hasCombo();
         }
 
+
         @Override
         public void tick(){
             if(!this.goalOwner.hasCombo() && !this.goalOwner.continueAnim){
@@ -540,14 +547,14 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 LivingEntity target = this.goalOwner.getTarget();
                 boolean flag = this.goalOwner.getCombo()==Combo.COMBO_SPIN;
                 if(flag){
+                    if(this.goalOwner.animationTimer>5 && target!=null){
+                        this.goalOwner.lookAt(target, 30F, 30F);
+                    }else {
+                        this.goalOwner.setYRot(this.goalOwner.yRotO);
+                    }
                     this.goalOwner.navigation.stop();
                     if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
                         if(this.goalOwner.animationTimer==8){
-                            if (target!=null){
-                                this.goalOwner.lookControl.setLookAt(target);
-                                this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
-                                this.goalOwner.yBodyRot=this.goalOwner.getYRot();
-                            }
                             this.goalOwner.damageZone();
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
                             List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
@@ -565,13 +572,10 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                         }
                     }else {
                         if(this.goalOwner.animationTimer==5){
-                            if (target!=null){
-                                SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level);
-                                court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
-                                court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot(),0.0F,0.5F,0.1F);
-                                this.goalOwner.level.addFreshEntity(court);
-
-                            }
+                            SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level);
+                            court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
+                            court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot(),0.0F,0.5F,0.1F);
+                            this.goalOwner.level.addFreshEntity(court);
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
                             List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
                             for(Entity living : targets){
@@ -598,11 +602,14 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                         }
                     }
                 }else {
+
                     if (this.goalOwner.continueAnim){
                         if(target!=null){
-                            this.goalOwner.lookControl.setLookAt(target);
-                            this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
-                            this.goalOwner.yBodyRot=this.goalOwner.getYRot();
+                            if(this.goalOwner.animationTimer>5){
+                                this.goalOwner.lookAt(target, 30F, 30F);
+                            }else {
+                                this.goalOwner.setYRot(this.goalOwner.yRotO);
+                            }
                             if (this.goalOwner.getComboState()==ComboState.FIRST_HIT){
                                 if(this.goalOwner.animationTimer==5){
                                     this.goalOwner.doHurtTarget(target);
@@ -617,11 +624,11 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             }else if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
                                 if(this.goalOwner.animationTimer==5){
                                     BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
-                                    List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(10,10,10), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
+                                    List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(10,10,10), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 4 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
                                     for(LivingEntity living : targets){
                                         float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.goalOwner.getZ(), living.getX() - this.goalOwner.getX()) * (180 / Math.PI) - 90) % 360);
                                         float entityAttackingAngle = this.goalOwner.yBodyRot % 360;
-                                        float arc = 50.0F;
+                                        float arc = 60.0F;
                                         if (entityHitAngle < 0) {
                                             entityHitAngle += 360;
                                         }
@@ -651,8 +658,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             double d0 = this.getAttackReachSqr(entity) + 10.0D;
             if (distance <= d0 && this.goalOwner.animationTimer <= 0 && !this.goalOwner.hasCombo()) {
                 this.resetAttackCooldown();
-                this.goalOwner.getNavigation().stop();
-                this.goalOwner.getLookControl().setLookAt(entity,180,180);
+                this.goalOwner.getLookControl().setLookAt(entity,30,30);
                 this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
             }
         }
@@ -660,7 +666,12 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         @Override
         protected void resetAttackCooldown() {
             this.goalOwner.setIdComboState(1);
-            int i = this.goalOwner.level.random.nextBoolean() ? 1 : 2;
+            int i;
+            if(this.goalOwner.oldCombo!=Combo.NO_COMBO){
+                i = this.goalOwner.oldCombo==Combo.COMBO_PERFORATE ? 1 : 2;
+            }else {
+                i = this.goalOwner.level.random.nextBoolean() ? 1 : 2;
+            }
             this.goalOwner.setIdCombo(i);
             if(i==1){
                 this.goalOwner.level.broadcastEntityEvent(this.goalOwner,(byte) 60);
