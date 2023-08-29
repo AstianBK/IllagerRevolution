@@ -35,6 +35,9 @@ public class ModParticles {
     public static final RegistryObject<SimpleParticleType> RUNE_CURSED_PARTICLES =
             PARTICLE_TYPES.register("rune_cursed", () -> new SimpleParticleType(true));
 
+    public static final RegistryObject<SimpleParticleType> SOUL_FLAME =
+            PARTICLE_TYPES.register("soulflame", () -> new SimpleParticleType(true));
+
     public static void register(IEventBus eventBus) {
         PARTICLE_TYPES.register(eventBus);
     }

@@ -260,6 +260,9 @@ public class ModItems {
     public static final RegistryObject<Item> ILLAGIUM_ALT_RUNED_BLADE = ITEMS.register("illagium_alt_runed_blade",
             ()->new VariantRuneBladeItem(ModTiers.ILLAGIUM,6,-2.6F,props()));
 
+    public static final RegistryObject<Item> OMINOUS_GRIMOIRE = ITEMS.register("ominous_grimoire",
+            ()->new AnimatedItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1)));
+
     public static final RegistryObject<Item> JUNK_AXE = ITEMS.register("junk_axe",
             ()->new JunkAxeItem(ModTiers.JUNK,0,3.5F,props()));
 

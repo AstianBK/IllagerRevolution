@@ -16,10 +16,13 @@
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Generar illager domador de bestias",
   "item.illagerrevolutionmod.raker_spawn_egg": "Generar Rasgador",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Generar illager caballero de la espada",
+  "item.illagerrevolutionmod.mauler_spawn_egg":"Generar Mutilador",
+  "item.illagerrevolutionmod.wild_ravager_spawn_egg":"Generar Devastador Salvaje",
+  "item.illagerrevolutionmod.scrounger_spawn_egg":"Generar Plagador",
 
 
-  "item.illagerrevolutionmod.helmet_miner_reinforced": "Casco minero de illagium",
-  "item.illagerrevolutionmod.goggles_miner_reinforced": "Lentes de rastreador de illagium",
+  "item.illagerrevolutionmod.helmet_miner_reinforced": "Casco minero de illanio",
+  "item.illagerrevolutionmod.goggles_miner_reinforced": "Lentes de rastreador de illanio",
   "item.illagerrevolutionmod.helmet_miner": "Casco de minero",
   "item.illagerrevolutionmod.goggles_miner": "Lentes de rastreador",
   "item.illagerrevolutionmod.evoker_robe_armor": "Tunida de evocador",
@@ -31,19 +34,19 @@
   "item.illagerrevolutionmod.vindicator_leggins_armor": "Pantalones de vindicador",
 
 
-  "item.illagerrevolutionmod.scrapper_armor_illagium": "Armadura de illagium para rasgador",
+  "item.illagerrevolutionmod.scrapper_armor_illagium": "Armadura de illanio para rasgador",
   "item.illagerrevolutionmod.scrapper_armor_netherite": "Armadura de netherita para rasgador",
   "item.illagerrevolutionmod.scrapper_armor_diamond": "Armadura de diamante para rasgador",
   "item.illagerrevolutionmod.scrapper_armor_gold": "Armadura de oro para rasgador",
   "item.illagerrevolutionmod.scrapper_armor_iron": "Armadura de hierro para rasgador",
-  "item.illagerrevolutionmod.claws_armor_illagium": "Garras de illagium para rasgador",
+  "item.illagerrevolutionmod.claws_armor_illagium": "Garras de illanio para rasgador",
   "item.illagerrevolutionmod.claws_armor_netherite": "Garras de netherita para rasgador",
   "item.illagerrevolutionmod.claws_armor_diamond": "Garras de diamante para rasgador",
   "item.illagerrevolutionmod.claws_armor_gold": "Garras de oro para rasgador",
   "item.illagerrevolutionmod.claws_armor_iron": "Garras de hierro para rasgador",
 
 
-  "item.illagerrevolutionmod.illagium": "Lingote de illagium",
+  "item.illagerrevolutionmod.illagium": "Lingote de illanio",
   "item.illagerrevolutionmod.raker_claw": "Garra de rasgador",
 
 
@@ -52,13 +55,13 @@
   "effect.illagerrevolutionmod.mauled": "Mutilado",
 
 
-  "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
-  "item.illagerrevolutionmod.illagium_alt_runed_blade": "§eIllagium Runed Blade§r",
-  "item.illagerrevolutionmod.illagium_sword": "Espada de illagium",
-  "item.illagerrevolutionmod.illagium_axe": "Hacha de illagium",
-  "item.illagerrevolutionmod.illagium_pickaxe": "Pico de illagium",
-  "item.illagerrevolutionmod.illagium_hoe": "Hazada de illagium",
-  "item.illagerrevolutionmod.illagium_shovel": "Palade illagium",
+  "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illanio",
+  "item.illagerrevolutionmod.illagium_alt_runed_blade": "§eEspada runica de illanio§r",
+  "item.illagerrevolutionmod.illagium_sword": "Espada de illanio",
+  "item.illagerrevolutionmod.illagium_axe": "Hacha de illanio",
+  "item.illagerrevolutionmod.illagium_pickaxe": "Pico de illanio",
+  "item.illagerrevolutionmod.illagium_hoe": "Hazada de illanio",
+  "item.illagerrevolutionmod.illagium_shovel": "Pala de illanio",
   "item.illagerrevolutionmod.beast_staff": "Beast Taming Staff",
   "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
 

@@ -1,0 +1,27 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.grimoire.idle": {
+			"loop": true,
+			"animation_length": 0.75,
+			"bones": {
+				"flip_right_rotation": {
+					"rotation": {
+						"vector": [0, 7.5, 0]
+					}
+				},
+				"flip_left_rotation": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -7.5, 0]
+						},
+						"0.75": {
+							"vector": [0, 62.5, 0]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
