@@ -23,6 +23,7 @@ import net.BKTeam.illagerrevolutionmod.screen.RuneTableScreen;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.server.level.ServerLevel;
@@ -226,6 +227,8 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(MAULER.get(), MaulerRenderer::new);
         EntityRenderers.register(SCROUNGER.get(), ScroungerRenderer::new);
         EntityRenderers.register(WILD_RAVAGER.get(), WildRavagerRenderer::new);
+        EntityRenderers.register(SOUL_BOMB.get(), BombRender::new);
+        EntityRenderers.register(AREA_FIRE_COLUMN.get(),NoopRenderer::new);
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
 

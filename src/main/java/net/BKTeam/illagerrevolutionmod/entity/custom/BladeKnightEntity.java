@@ -366,7 +366,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
+        data.addAnimationController(new AnimationController<>(this, "controller",
                 0, this::predicate));
     }
 
@@ -429,9 +429,9 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
         @Override
         protected IllagerSpell getSpell() {
-
             return IllagerSpell.SUMMON_VEX;
         }
+
         protected void performSpellCasting()
         {
             int i=0;
