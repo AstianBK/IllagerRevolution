@@ -2,6 +2,8 @@ package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -34,6 +36,7 @@ public class DrumModel extends EntityModel<WildRavagerEntity> {
 
     @Override
     public void setupAnim(WildRavagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
+
     }
 
     @Override

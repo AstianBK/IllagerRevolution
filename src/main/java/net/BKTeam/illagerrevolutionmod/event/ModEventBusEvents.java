@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.event;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
+import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.SoulBombModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
 import net.BKTeam.illagerrevolutionmod.entity.layers.DrumModel;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
@@ -34,7 +35,11 @@ import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
 
 @Mod.EventBusSubscriber(modid = IllagerRevolutionMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ModEventBusEvents {
-    public static ModelLayerLocation DRUM = new ModelLayerLocation(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "drum"), "drum");
+    public static ModelLayerLocation DRUM = new ModelLayerLocation(
+            new ResourceLocation(IllagerRevolutionMod.MOD_ID, "drum"), "drum");
+    public static ModelLayerLocation ORB = new ModelLayerLocation(
+            new ResourceLocation(IllagerRevolutionMod.MOD_ID, "orb"), "orb");
+
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     @OnlyIn(Dist.CLIENT)
@@ -50,6 +55,9 @@ public class ModEventBusEvents {
         }
         if(SOUL_PROJECTILE_PARTICLES.isPresent()){
             event.register(SOUL_PROJECTILE_PARTICLES.get(), SoulProjectilePParticles.Factory::new);
+        }
+        if(SOUL_FLAME.isPresent()){
+            event.register(SOUL_FLAME.get(), BKFireSoulParticles.Factory::new);
         }
         if (RUNE_CURSED_PARTICLES.isPresent()){
             event.register(RUNE_CURSED_PARTICLES.get(), RuneCursedParticles.Factory::new);
@@ -90,7 +98,7 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(DRUM, DrumModel::createBodyLayer);
-
+        event.registerLayerDefinition(ORB, SoulBombModel::createBodyLayer);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

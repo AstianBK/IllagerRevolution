@@ -89,6 +89,10 @@ public class ModEntityTypes {
             .register("soul_projectile", () -> EntityType.Builder.<SoulProjectile>of(SoulProjectile::new, MobCategory.MISC)
                     .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_projectile"));
 
+    public static final RegistryObject<EntityType<SoulBomb>> SOUL_BOMB = ENTITY_TYPES
+            .register("soul_bomb", () -> EntityType.Builder.<SoulBomb>of(SoulBomb::new, MobCategory.MISC)
+                    .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_bomb"));
+
     public static final RegistryObject<EntityType<SoulHunter>> SOUL_HUNTER = ENTITY_TYPES
             .register("soul_hunter", () -> EntityType.Builder.<SoulHunter>of(SoulHunter::new, MobCategory.MISC)
                     .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_hunter"));
@@ -96,6 +100,10 @@ public class ModEntityTypes {
     public static final RegistryObject<EntityType<SummonedSoul>> SUMMONED_SOUL = ENTITY_TYPES
             .register("summoned_soul", () -> EntityType.Builder.<SummonedSoul>of(SummonedSoul::new, MobCategory.MISC)
                     .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "summoned_soul"));
+
+    public static final RegistryObject<EntityType<AreaFireColumnEntity>> AREA_FIRE_COLUMN = ENTITY_TYPES
+            .register("area_fire_column", () -> EntityType.Builder.<AreaFireColumnEntity>of(AreaFireColumnEntity::new, MobCategory.MISC)
+                    .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "area_fire_column"));
 
     public static final RegistryObject<EntityType<SoulEntity>> SOUL_ENTITY = ENTITY_TYPES
             .register("soul_entity", () -> EntityType.Builder.<SoulEntity>of(SoulEntity::new, MobCategory.MISC)
