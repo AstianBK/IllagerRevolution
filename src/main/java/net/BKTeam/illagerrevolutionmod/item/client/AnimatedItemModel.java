@@ -14,7 +14,7 @@ public class AnimatedItemModel extends AnimatedGeoModel<AnimatedItem> {
 
     @Override
     public ResourceLocation getTextureResource(AnimatedItem object) {
-        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/item/ominous_grimoire.png");
+        return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/item/ominous_grimoire_0.png");
     }
 
     @Override
