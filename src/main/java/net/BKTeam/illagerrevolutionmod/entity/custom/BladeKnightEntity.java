@@ -12,7 +12,6 @@ import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -29,7 +28,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -69,8 +67,13 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     private static final EntityDataAccessor<Integer> ID_COMBO =
             SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.INT);
 
+    private static final EntityDataAccessor<Integer> DATA_ID_ATTACK_TARGET =
+            SynchedEntityData.defineId(BladeKnightEntity.class, EntityDataSerializers.INT);
+
     private static final UUID BLADE_KNIGHT_ATTACK_DAMAGE_UUID= UUID.fromString("648D7064-6A60-4F59-8ABE-C2C23A6DD7A9");
 
+    @javax.annotation.Nullable
+    private LivingEntity clientSideCachedAttackTarget;
 
     private int animationTimer;
 
@@ -167,6 +170,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 this.animationTimer--;
             }
         }
+
         int i = this.getIdComboState();
         if (this.animationTimer<0 && this.continueAnim){
             boolean flag = this.hasCombo() && i>0;
@@ -215,6 +219,64 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 }
             }
         }
+        if(this.level.isClientSide){
+            if (this.hasActiveAttackTarget()) {
+                LivingEntity livingentity = this.getActiveAttackTarget();
+                if (livingentity != null) {
+                    this.getLookControl().setLookAt(livingentity, 90.0F, 90.0F);
+                    this.getLookControl().tick();
+                    double d5 = 1.0D;
+                    double d0 = livingentity.getX() - this.getX();
+                    double d1 = livingentity.getY(0.5D) - this.getEyeY();
+                    double d2 = livingentity.getZ() - this.getZ();
+                    double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                    d0 /= d3;
+                    d1 /= d3;
+                    d2 /= d3;
+                    double d4 = this.random.nextDouble();
+
+                    while(d4 < d3) {
+                        d4 += 1.8D - d5 + this.random.nextDouble() * (1.7D - d5);
+                        //this.level.addParticle(ModParticles.BKSOULS_PARTICLES.get(), this.getX() + d0 * d4, this.getEyeY() + d1 * d4, this.getZ() + d2 * d4, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+            }
+        }
+    }
+    void setActiveAttackTarget(int pEntityId) {
+        this.entityData.set(DATA_ID_ATTACK_TARGET, pEntityId);
+    }
+
+    public boolean hasActiveAttackTarget() {
+        return this.entityData.get(DATA_ID_ATTACK_TARGET) != 0;
+    }
+
+    public LivingEntity getActiveAttackTarget() {
+        if (!this.hasActiveAttackTarget()) {
+            return null;
+        } else if (this.level.isClientSide) {
+            if (this.clientSideCachedAttackTarget != null) {
+                return this.clientSideCachedAttackTarget;
+            } else {
+                Entity entity = this.level.getEntity(this.entityData.get(DATA_ID_ATTACK_TARGET));
+                if (entity instanceof LivingEntity) {
+                    this.clientSideCachedAttackTarget = (LivingEntity)entity;
+                    return this.clientSideCachedAttackTarget;
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            return this.getTarget();
+        }
+    }
+
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        super.onSyncedDataUpdated(pKey);
+        if (DATA_ID_ATTACK_TARGET.equals(pKey)) {
+            this.clientSideCachedAttackTarget = null;
+        }
+
     }
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
@@ -260,6 +322,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         super.defineSynchedData();
         this.entityData.define(ID_COMBO_STATE,0);
         this.entityData.define(ID_COMBO,0);
+        this.entityData.define(DATA_ID_ATTACK_TARGET, 0);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
@@ -537,6 +600,20 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             return super.canUse() || this.goalOwner.hasCombo();
         }
 
+        @Override
+        public void stop() {
+            super.stop();
+            this.goalOwner.setActiveAttackTarget(0);
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            if(this.goalOwner.getTarget()!=null){
+                this.goalOwner.setActiveAttackTarget(this.goalOwner.getTarget().getId());
+                this.goalOwner.level.broadcastEntityEvent(this.goalOwner,(byte) 21);
+            }
+        }
 
         @Override
         public void tick(){

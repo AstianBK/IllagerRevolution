@@ -96,6 +96,11 @@ public class Events {
                             scrounger.ordenAttack(attacker);
                         }
                     }
+                    List<SoulBomb> bombList =entity.level.getEntitiesOfClass(SoulBomb.class,entity.getBoundingBox().inflate(3.0d),e->e.getOwnerID()==entity.getId() && e.isDefender());
+                    for(SoulBomb bomb : bombList){
+                        bomb.expander();
+                        event.setCanceled(true);
+                    }
                 }
             }
             if(attacker instanceof Player player){
@@ -300,13 +305,6 @@ public class Events {
         Level world = entity.level;
         if(entity instanceof ScroungerEntity scrounger){
             scrounger.level.getBlockEntity(scrounger.getOnPos(), BlockEntityType.JUKEBOX);
-        }
-        if(entity instanceof Player player){
-            List<SoulBomb> soulBombs = player.level.getEntitiesOfClass(SoulBomb.class,player.getBoundingBox().inflate(3.0D),
-                    e-> e.getOwner()==player && e.inOrbit());
-            for(SoulBomb bomb : soulBombs){
-                bomb.setPosition(player);
-            }
         }
         if (entity.hasEffect(InitEffect.MAULED.get())) {
             IMauledCapability capability= CapabilityHandler.getEntityCapability(entity,CapabilityHandler.MAULED_CAPABILITY);

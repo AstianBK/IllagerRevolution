@@ -21,12 +21,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SoulBombModel<T extends SoulBomb> extends EntityModel<SoulBomb> {
+public class SoulBombModel extends EntityModel<LivingEntity> {
 
     public final ModelPart root;
 
@@ -38,13 +39,13 @@ public class SoulBombModel<T extends SoulBomb> extends EntityModel<SoulBomb> {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        partdefinition.addOrReplaceChild("orb", CubeListBuilder.create().texOffs(0, 0).addBox(0, 0, 0, 5.0F, 5.0F, 5.0F),
+        partdefinition.addOrReplaceChild("orb", CubeListBuilder.create().texOffs(0, 0).addBox(-10.0F, -6.0F, -10.0F, 20.0F, 20.0F, 20.0F),
                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
         
         return LayerDefinition.create(meshdefinition, 32, 32);
     }
     @Override
-    public void setupAnim(SoulBomb pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+    public void setupAnim(LivingEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
 
     }
 
