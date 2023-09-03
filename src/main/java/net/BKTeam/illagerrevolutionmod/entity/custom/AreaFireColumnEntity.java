@@ -82,11 +82,11 @@ public class AreaFireColumnEntity extends Entity {
         return this.entityData.get(IS_BURN);
     }
 
-    protected void setPowerLevel(int pLevel){
+    public void setPowerLevel(int pLevel){
         this.entityData.set(LEVEL,pLevel);
     }
 
-    protected int getPowerLevel(){
+    public int getPowerLevel(){
         return this.entityData.get(LEVEL);
     }
 
@@ -124,7 +124,7 @@ public class AreaFireColumnEntity extends Entity {
         }
         if(this.level.isClientSide){
             if(this.isBurn()){
-                for(int j = 0;j<i;j++){
+                for(int j = 0;j<i+1;j++){
                     this.applyRadius(this.getRadiusForLevel(j),0.5f);
                 }
             }else {
@@ -178,7 +178,10 @@ public class AreaFireColumnEntity extends Entity {
         for(int j=0;j<=i*2;j++){
             float f1 = Mth.sin(j * radius1)*radius;
             float f2 = Mth.cos(j * radius1)*radius;
-            this.level.addParticle(ModParticles.SOUL_FLAME.get(),this.getX()+f2 ,this.getY(),this.getZ()+f1,0.0F, random1.nextFloat(0.0F,speedY),0.0F);
+            this.level.addParticle(ModParticles.SOUL_FLAME.get(),this.getX()+f2 ,this.getY(),this.getZ()+f1,
+                    0.01F,
+                    random1.nextFloat(0.0F,speedY),
+                    0.01F);
         }
     }
 

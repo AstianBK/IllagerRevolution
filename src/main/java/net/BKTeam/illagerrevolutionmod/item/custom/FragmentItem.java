@@ -22,6 +22,33 @@ public class FragmentItem extends Item {
     }
 
     @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        if(!pLevel.isClientSide){
+            List<SoulBomb> souls = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0F),
+                    e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
+            if(!souls.isEmpty()){
+                boolean flag1 = false;
+                int i = 0;
+                for (SoulBomb soulBomb : souls){
+                    if(!flag1){
+                        flag1=true;
+                        soulBomb.setDefender(true);
+                    }else {
+                        if(soulBomb.getPositionSummon()>1){
+                            soulBomb.setPositionSummon(i+1);
+                        }
+                    }
+                    i++;
+                }
+            }
+        }
+
+        if(!pPlayer.getAbilities().instabuild){
+        }
+        return super.use(pLevel, pPlayer, pUsedHand);
+    }
+
+    @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod."+this.name));
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);

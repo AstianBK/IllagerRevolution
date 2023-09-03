@@ -17,20 +17,39 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class SoulBomb extends ThrowableProjectile {
 
-    public static final EntityDataAccessor<Integer> OWNER_UUID = SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> IN_ORBIT = SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> OWNER_UUID =
+            SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IN_ORBIT =
+            SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Boolean> DEFENDER =
+            SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Integer> POSITION_SUMMON =
+            SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.INT);
+
+    private static final EntityDataAccessor<Integer> POWER_LEVEL =
+            SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.INT);
+
     protected int life;
-    private static final EntityDataAccessor<Integer> POSITION_SUMMON = SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.INT);
+
+    public int discardTimer;
+
+    public boolean discardMoment;
 
     public SoulBomb(EntityType<? extends ThrowableProjectile> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
@@ -39,15 +58,18 @@ public class SoulBomb extends ThrowableProjectile {
     }
 
     public SoulBomb(LivingEntity thrower, Level level,int summonPosition) {
-        super(ModEntityTypes.SOUL_BOMB.get(), thrower, level);
+        super(ModEntityTypes.SOUL_BOMB.get(), level);
         this.setNoGravity(true);
         this.setInOrbit(true);
+        this.setOwner(thrower);
         this.life = 200;
         this.setPositionSummon(summonPosition);
+        this.discardMoment=false;
     }
 
     @Override
     public void tick() {
+        super.tick();
         Entity owner = level.getEntity(this.getOwnerID());
         if (!this.level.isClientSide && owner == null ) {
             this.remove(RemovalReason.DISCARDED);
@@ -59,25 +81,60 @@ public class SoulBomb extends ThrowableProjectile {
         this.yOld = this.getY();
         this.zOld = this.getZ();
 
-        if (this.inOrbit() && owner instanceof LivingEntity){
-            this.setPosition((LivingEntity) owner);
+        if(owner instanceof LivingEntity){
+            if (this.inOrbit() && !this.isDefender()){
+                this.setPosition((LivingEntity) owner);
+            }else if(this.isDefender()){
+                this.setDefenderPosition((LivingEntity) owner);
+            }
         }
+
         if(this.life>0){
             this.life--;
-        }else {
+        }else if(!this.isDefender()) {
             this.discard();
+        }
+
+        if(this.discardMoment){
+            this.discardTimer--;
+            if(this.discardTimer>8){
+                List<LivingEntity> livings = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(2.0D+(0.5D*this.getPowerLevel())),e->e!=owner && e!=owner.getVehicle());
+                for(LivingEntity living : livings){
+                    double d0 = living.getX() - owner.getX();
+                    double d1 = living.getZ() - owner.getZ();
+                    double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
+                    double d3 = 1.5D+ (0.5D * this.getPowerLevel());
+                    living.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
+                    if(owner instanceof LivingEntity){
+                        living.hurt(DamageSource.mobAttack((LivingEntity) owner),5.0F+1.0F*this.getPowerLevel());
+                    }else {
+                        living.hurt(DamageSource.GENERIC,5.0F+1.0F*this.getPowerLevel());
+                    }
+                }
+                if(this.level.isClientSide){
+                    Vec3 vec3 = owner.getBoundingBox().getCenter();
+                    for(int i = 0; i < 40; ++i) {
+                        double d0x = this.random.nextGaussian() * 0.2D;
+                        double d1y = this.random.nextGaussian() * 0.2D;
+                        double d2z = this.random.nextGaussian() * 0.2D;
+                        this.level.addParticle(ParticleTypes.POOF, vec3.x, vec3.y, vec3.z, d0x, d1y, d2z);
+                    }
+                }
+            }
+            if(this.discardTimer<0){
+                this.discard();
+            }
         }
         if(this.level.isClientSide){
             this.playParticles();
         }
-        super.tick();
     }
 
     public void playParticles() {
         for (int i = 0; i < 1; i++) {
-            double deltaX = getX() - xOld;
-            double deltaY = getY() - yOld;
-            double deltaZ = getZ() - zOld;
+            double deltaX = this.getX() - this.xOld;
+            double deltaY = this.getY() - this.yOld;
+            double deltaZ = this.getZ() - this.zOld;
             double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 6);
             for (double j = 0; j < dist; j++) {
                 double coeff = j / dist;
@@ -94,11 +151,16 @@ public class SoulBomb extends ThrowableProjectile {
                 ,0.0F,0.0F,0.0F);
     }
 
-    private int getOwnerID() {
+    public void expander(){
+        this.discardTimer=10;
+        this.discardMoment=true;
+    }
+
+    public int getOwnerID() {
         return this.entityData.get(OWNER_UUID);
     }
 
-    private void setOwnerId(int pId){
+    public void setOwnerId(int pId){
         this.entityData.set(OWNER_UUID,pId);
     }
 
@@ -108,6 +170,23 @@ public class SoulBomb extends ThrowableProjectile {
 
     public void setInOrbit(boolean pBoolean){
         this.entityData.set(IN_ORBIT,pBoolean);
+    }
+
+    public boolean isDefender() {
+        return this.entityData.get(DEFENDER);
+    }
+
+    public void setDefender(boolean pBoolean){
+        this.entityData.set(DEFENDER,pBoolean);
+        this.life = pBoolean ? 40 : 0 ;
+    }
+
+    public int getPowerLevel() {
+        return this.entityData.get(POWER_LEVEL);
+    }
+
+    public void setPowerLevel(int pPower){
+        this.entityData.set(POWER_LEVEL,pPower);
     }
 
     public void setPosition(LivingEntity owner) {
@@ -130,17 +209,21 @@ public class SoulBomb extends ThrowableProjectile {
         this.setPos(targetX, targetY, targetZ);
     }
 
+    public void setDefenderPosition(LivingEntity owner){
+        float f1 = (float) Math.cos(this.tickCount/10.0F) * (1.5F);
+        float f2 = (float) Math.sin(this.tickCount/10.0F) * (1.5F);
+        double targetX = owner.getX() - f2;
+        double targetY = owner.getY() + owner.getBbHeight()/2;
+        double targetZ = owner.getZ() - f1;
+        this.setPos(targetX, targetY, targetZ);
+    }
+
     @Override
     protected void onHit(HitResult pResult) {
         super.onHit(pResult);
         if (!this.inOrbit()) {
             this.discard();
         }
-    }
-
-    @Override
-    public void handleEntityEvent(byte pId) {
-        super.handleEntityEvent(pId);
     }
 
     @Override
@@ -157,6 +240,7 @@ public class SoulBomb extends ThrowableProjectile {
             AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level);
             areaFireColumn.setPos(living.getOnPos().getX(), living.getOnPos().getY() + 1, living.getOnPos().getZ());
             areaFireColumn.setOwner((LivingEntity) this.getOwner());
+            areaFireColumn.setPowerLevel(this.getPowerLevel());
             areaFireColumn.setDuration(200,50);
             this.level.addFreshEntity(areaFireColumn);
             if (this.getOwner() instanceof LivingEntity) {
@@ -184,6 +268,7 @@ public class SoulBomb extends ThrowableProjectile {
         AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level);
         areaFireColumn.setPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         areaFireColumn.setOwner((LivingEntity) this.getOwner());
+        areaFireColumn.setPowerLevel(this.getPowerLevel());
         areaFireColumn.setDuration(200,50);
         this.level.addFreshEntity(areaFireColumn);
     }
@@ -202,6 +287,8 @@ public class SoulBomb extends ThrowableProjectile {
         pCompound.putInt("Summon",this.getPositionSummon());
         pCompound.putInt("ownerId",this.getOwnerID());
         pCompound.putBoolean("inOrbit",this.inOrbit());
+        pCompound.putInt("powerLevel",this.getPowerLevel());
+        pCompound.putBoolean("defender",this.isDefender());
     }
 
     @Override
@@ -210,6 +297,8 @@ public class SoulBomb extends ThrowableProjectile {
         this.setPositionSummon(pCompound.getInt("Summon"));
         this.setOwnerId(pCompound.getInt("ownerId"));
         this.setInOrbit(pCompound.getBoolean("inOrbit"));
+        this.setPowerLevel(pCompound.getInt("powerLevel"));
+        this.setDefender(pCompound.getBoolean("defender"));
     }
 
     @Override
@@ -217,6 +306,8 @@ public class SoulBomb extends ThrowableProjectile {
         this.entityData.define(POSITION_SUMMON,1);
         this.entityData.define(OWNER_UUID,0);
         this.entityData.define(IN_ORBIT,false);
+        this.entityData.define(POWER_LEVEL,0);
+        this.entityData.define(DEFENDER,false);
     }
 
     @Override

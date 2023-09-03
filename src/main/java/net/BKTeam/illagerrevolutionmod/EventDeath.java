@@ -147,7 +147,6 @@ public class EventDeath {
                 souce.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 souce.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 5));
                 souce.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 3));
-                //souce.level.broadcastEntityEvent(souce, (byte)35);
         }
             return itemstack != null ;
         }
