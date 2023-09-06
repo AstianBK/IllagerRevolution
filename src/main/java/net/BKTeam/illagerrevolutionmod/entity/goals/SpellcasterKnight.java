@@ -1,12 +1,16 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
+import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 
@@ -42,6 +46,21 @@ public abstract class SpellcasterKnight extends KnightEntity {
         } else {
             return this.isCelebrating() ? IllagerArmPose.CELEBRATING : IllagerArmPose.CROSSED;
         }
+    }
+
+    @Override
+    public boolean isAlliedTo(Entity pEntity) {
+        if(pEntity instanceof LivingEntity target){
+            if(target==this.getTarget()){
+                return false;
+            }
+            if(this.hasActiveRaid() && target.getMobType() == MobType.ILLAGER){
+                return true;
+            }else if(target instanceof IllagerBeastEntity beast){
+                return !beast.isTame();
+            }
+        }
+        return super.isAlliedTo(pEntity);
     }
 
     public boolean isCastingSpell() {

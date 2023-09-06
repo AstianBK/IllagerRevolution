@@ -11,6 +11,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -144,10 +146,17 @@ public class AreaFireColumnEntity extends Entity {
 
         }
         if(this.isBurn()){
-            if(this.tickCount%5==0){
-                List<LivingEntity> targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)));
+            if(this.tickCount%10==0){
+                List<LivingEntity> targets;
+                if(this.getOwner()!=null){
+                    targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)),e->!this.getOwner().isAlliedTo(e));
+                }else {
+                    targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)));
+
+                }
                 for (LivingEntity living : targets){
-                    living.hurt(DamageSource.MAGIC,3.0F);
+                    living.hurt(DamageSource.MAGIC,3.0F+1.0F*this.getPowerLevel());
+                    living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,2));
                     living.setSecondsOnFire(3);
                 }
             }

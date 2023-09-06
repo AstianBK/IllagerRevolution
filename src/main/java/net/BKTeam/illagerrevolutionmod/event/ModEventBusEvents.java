@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.SoulBombModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
 import net.BKTeam.illagerrevolutionmod.entity.layers.DrumModel;
+import net.BKTeam.illagerrevolutionmod.entity.layers.GeckoLivingProtectionLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.LivingProtectionLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
@@ -31,7 +32,9 @@ import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
@@ -86,6 +89,9 @@ public class ModEventBusEvents {
             if(s instanceof LivingEntityRenderer l){
                 l.addLayer(new PlayerLikedLayer(l));
                 l.addLayer(new LivingProtectionLayer(l));
+            }
+            if(s instanceof GeoEntityRenderer l){
+                l.addLayer(new GeckoLivingProtectionLayer(l));
             }
         });
         GeoArmorRenderer.registerArmorRenderer(IllagiumArmorItem.class, HelmetMinerReinforcedRenderer::new);

@@ -45,8 +45,6 @@ public class SoulBomb extends ThrowableProjectile {
     private static final EntityDataAccessor<Integer> POWER_LEVEL =
             SynchedEntityData.defineId(SoulBomb.class, EntityDataSerializers.INT);
 
-    protected int life;
-
     public int discardTimer;
 
     public boolean discardMoment;
@@ -54,7 +52,6 @@ public class SoulBomb extends ThrowableProjectile {
     public SoulBomb(EntityType<? extends ThrowableProjectile> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
         this.setInOrbit(true);
-        this.life = 200;
     }
 
     public SoulBomb(LivingEntity thrower, Level level,int summonPosition) {
@@ -62,7 +59,6 @@ public class SoulBomb extends ThrowableProjectile {
         this.setNoGravity(true);
         this.setInOrbit(true);
         this.setOwner(thrower);
-        this.life = 200;
         this.setPositionSummon(summonPosition);
         this.discardMoment=false;
     }
@@ -87,12 +83,6 @@ public class SoulBomb extends ThrowableProjectile {
             }else if(this.isDefender()){
                 this.setDefenderPosition((LivingEntity) owner);
             }
-        }
-
-        if(this.life>0){
-            this.life--;
-        }else if(!this.isDefender()) {
-            this.discard();
         }
 
         if(this.discardMoment){
@@ -178,7 +168,6 @@ public class SoulBomb extends ThrowableProjectile {
 
     public void setDefender(boolean pBoolean){
         this.entityData.set(DEFENDER,pBoolean);
-        this.life = pBoolean ? 40 : 0 ;
     }
 
     public int getPowerLevel() {
@@ -229,7 +218,6 @@ public class SoulBomb extends ThrowableProjectile {
     @Override
     public void shootFromRotation(Entity pProjectile, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
         this.setInOrbit(false);
-        this.life=50;
         super.shootFromRotation(pProjectile, pX, pY, pZ, pVelocity, pInaccuracy);
     }
 

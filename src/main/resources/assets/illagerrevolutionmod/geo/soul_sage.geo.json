@@ -1,0 +1,244 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.soulsage",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "main",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "head",
+					"parent": "main",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4, 29, -4], "size": [8, 10, 8], "uv": [0, 53]}
+					]
+				},
+				{
+					"name": "mask",
+					"parent": "head",
+					"pivot": [0.025, 34.4875, -4.4375],
+					"cubes": [
+						{"origin": [-4.25, 28.75, -4.25], "size": [8.5, 10.5, 8.5], "uv": [0, 71]},
+						{"origin": [-1, 33.75, -4.75], "size": [2.1, 2.45, 0.75], "uv": [9, 90]}
+					]
+				},
+				{
+					"name": "nose",
+					"parent": "head",
+					"pivot": [0, 32, -5],
+					"cubes": [
+						{"origin": [-1, 28, -6], "size": [2, 4, 2], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "body",
+					"parent": "main",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4.5, 13, -3.5], "size": [9, 16, 7], "uv": [38, 0]}
+					]
+				},
+				{
+					"name": "tunic",
+					"parent": "body",
+					"pivot": [0, 30, 0]
+				},
+				{
+					"name": "middle",
+					"parent": "tunic",
+					"pivot": [8, 30, 0]
+				},
+				{
+					"name": "middle1",
+					"parent": "middle",
+					"pivot": [2.75, 29.125, 4.5],
+					"cubes": [
+						{"origin": [-2.5, 3, 4.5], "size": [10.5, 26.25, 0], "uv": [17, 9]}
+					]
+				},
+				{
+					"name": "middle2",
+					"parent": "middle",
+					"pivot": [-2.25, 29.125, 4.5],
+					"cubes": [
+						{"origin": [-7.5, 3, 4.5], "size": [10.5, 26.25, 0], "uv": [17, 9]}
+					]
+				},
+				{
+					"name": "middle3",
+					"parent": "middle",
+					"pivot": [-2.25, 29.125, 4.5],
+					"cubes": [
+						{"origin": [-5.25, 3, 4.5], "size": [10.5, 26.25, 0], "uv": [17, 9]}
+					]
+				},
+				{
+					"name": "left",
+					"parent": "tunic",
+					"pivot": [6, 30, 0],
+					"cubes": [
+						{"origin": [0, 3, -4.5], "size": [10.5, 26.25, 9], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "right",
+					"parent": "tunic",
+					"pivot": [-7, 30, 0],
+					"cubes": [
+						{"origin": [-10.5, 3, -4.5], "size": [10.5, 26.25, 9], "uv": [29, 26]}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "main",
+					"pivot": [-6.5, 27.5, 0],
+					"cubes": [
+						{"origin": [-8.5, 12, -2], "size": [4, 17, 4], "uv": [67, 19]}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "main",
+					"pivot": [6.5, 27.5, 0],
+					"mirror": true,
+					"cubes": [
+						{"origin": [4.5, 12, -2], "size": [4, 17, 4], "uv": [67, 19], "mirror": false}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "main",
+					"pivot": [-2, 12, 0],
+					"cubes": [
+						{"origin": [-4, 0, -2], "size": [4, 15, 4], "uv": [32, 61]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "main",
+					"pivot": [2, 12, 0],
+					"mirror": true,
+					"cubes": [
+						{"origin": [0, 0, -2], "size": [4, 15, 4], "uv": [32, 61], "mirror": false}
+					]
+				},
+				{
+					"name": "grimoire",
+					"parent": "main",
+					"pivot": [15, 22.75, 3.75],
+					"rotation": [89.01532, -0.29786, -146.29417]
+				},
+				{
+					"name": "flipping_page_right",
+					"parent": "grimoire",
+					"pivot": [15.41699, 23.06158, 3.12497]
+				},
+				{
+					"name": "flip_right_rotation",
+					"parent": "flipping_page_right",
+					"pivot": [15.16699, 23.06158, 3.64997],
+					"rotation": [0, -54.5, -180],
+					"cubes": [
+						{"origin": [10.16699, 19.06158, 3.64997], "size": [5, 8, 0], "uv": [97, 117]}
+					]
+				},
+				{
+					"name": "flipping_page_left",
+					"parent": "grimoire",
+					"pivot": [10.41699, 23.06158, 3.17497]
+				},
+				{
+					"name": "flip_left_rotation",
+					"parent": "flipping_page_left",
+					"pivot": [15.16699, 23.06158, 3.64997],
+					"rotation": [0, 70, -180],
+					"cubes": [
+						{"origin": [15.16699, 19.06158, 3.64997], "size": [5, 8, 0], "pivot": [15.16699, 23.06158, 3.64997], "rotation": [0, 55, 0], "uv": [97, 108]}
+					]
+				},
+				{
+					"name": "cover_right",
+					"parent": "grimoire",
+					"pivot": [19.41699, 23.06158, -0.75003],
+					"rotation": [0, 56, 0]
+				},
+				{
+					"name": "cover_right_rotation",
+					"parent": "cover_right",
+					"pivot": [16.41699, 23.06158, -0.75003],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [13.41699, 18.06158, -0.75003], "size": [6, 10, 0], "uv": [73, 98]}
+					]
+				},
+				{
+					"name": "pages_right",
+					"parent": "cover_right",
+					"pivot": [12.41699, 23.06158, -0.87503]
+				},
+				{
+					"name": "page_right_rotation",
+					"parent": "pages_right",
+					"pivot": [14.91699, 23.06158, -1.35003],
+					"rotation": [0, 180, -180],
+					"cubes": [
+						{"origin": [13.41699, 19.06158, -1.85003], "size": [5, 8, 1], "uv": [73, 108]}
+					]
+				},
+				{
+					"name": "book_spine",
+					"parent": "grimoire",
+					"pivot": [15.41699, 23.06158, 5.24997]
+				},
+				{
+					"name": "spine_rotation",
+					"parent": "book_spine",
+					"pivot": [15.66699, 18.06158, 4.49997],
+					"rotation": [180, -10, 0],
+					"cubes": [
+						{"origin": [12.40699, 8.06158, 4.49997], "size": [2, 10, 0.25], "pivot": [15.66699, 20.52246, 1.18294], "rotation": [0, 25, 0], "uv": [85, 98]}
+					]
+				},
+				{
+					"name": "cover_left",
+					"parent": "grimoire",
+					"pivot": [14.16699, 23.06158, 2.74997],
+					"rotation": [0, -123.5, 0]
+				},
+				{
+					"name": "cover_left_rotation",
+					"parent": "cover_left",
+					"pivot": [11.34422, 23.06158, 2.44111],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [8.34422, 18.06158, 2.44111], "size": [6, 10, 0], "uv": [89, 98]}
+					]
+				},
+				{
+					"name": "pages_left",
+					"parent": "cover_left",
+					"pivot": [10.34422, 23.06158, 1.36611]
+				},
+				{
+					"name": "page_left_rotation",
+					"parent": "pages_left",
+					"pivot": [12.84422, 23.06158, 1.84111],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [11.34422, 19.06158, 1.34111], "size": [5, 8, 1], "uv": [85, 108]}
+					]
+				}
+			]
+		}
+	]
+}

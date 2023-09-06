@@ -13,6 +13,7 @@ import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.*;
+import net.BKTeam.illagerrevolutionmod.entity.custom.SoulSageEntity;
 import net.BKTeam.illagerrevolutionmod.event.loot.LootModifiers;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
@@ -229,6 +230,7 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(WILD_RAVAGER.get(), WildRavagerRenderer::new);
         EntityRenderers.register(SOUL_BOMB.get(), BombRender::new);
         EntityRenderers.register(AREA_FIRE_COLUMN.get(),NoopRenderer::new);
+        EntityRenderers.register(SOUL_SAGE.get(), SoulSageRenderer::new);
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
 

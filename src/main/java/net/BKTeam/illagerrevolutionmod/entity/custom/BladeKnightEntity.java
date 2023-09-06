@@ -609,10 +609,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         @Override
         public void start() {
             super.start();
-            if(this.goalOwner.getTarget()!=null){
-                this.goalOwner.setActiveAttackTarget(this.goalOwner.getTarget().getId());
-                this.goalOwner.level.broadcastEntityEvent(this.goalOwner,(byte) 21);
-            }
         }
 
         @Override

@@ -73,12 +73,19 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.5f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "fallen_knight").toString()));
 
-
     public static final RegistryObject<EntityType<BladeKnightEntity>> BLADE_KNIGHT =
             ENTITY_TYPES.register("blade_knight",
                     () -> EntityType.Builder.of(BladeKnightEntity::new, MobCategory.MONSTER)
                             .sized(0.60f, 2.4f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "blade_knight").toString()));
+
+
+    public static final RegistryObject<EntityType<SoulSageEntity>> SOUL_SAGE =
+            ENTITY_TYPES.register("soul_sage",
+                    () -> EntityType.Builder.of(SoulSageEntity::new, MobCategory.MONSTER)
+                            .sized(0.60f, 2.4f)
+                            .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "soul_sage").toString()));
+
 
     public static final RegistryObject<EntityType<SoulSlash>> SOUL_SLASH = ENTITY_TYPES
             .register("soul_slash", () -> EntityType.Builder.<SoulSlash>of(SoulSlash::new, MobCategory.MISC)

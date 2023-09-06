@@ -49,7 +49,6 @@ public class LivingProtectionLayer<T extends LivingEntity,M extends EntityModel<
                 this.model.renderToBuffer(pMatrixStack, ivertex, pPackedLight, OverlayTexture.NO_OVERLAY, f, f1, f2, 1.0f);
                 pMatrixStack.popPose();
             }
-
         }
     }
 

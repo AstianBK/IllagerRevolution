@@ -69,9 +69,12 @@ public class SoulSlash extends ThrowableProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if(pResult.getEntity() instanceof LivingEntity living){
-            if(living.getMobType() != MobType.ILLAGER && !(living instanceof IllagerBeastEntity beast && !beast.isTame())){
-                living.hurt(DamageSource.MAGIC,5);
+            if(this.getOwner()!=null){
+                if(this.getOwner().isAlliedTo(living) && !(living instanceof IllagerBeastEntity beast && !beast.isTame())){
+                    living.hurt(DamageSource.MAGIC,3);
+                }
             }
+
         }
     }
 

@@ -105,7 +105,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                         e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
                 int i1 = 1;
                 nbt.putInt("casterTimer",40);
-                if(soulBombs.size()<6){
+                if(soulBombs.size()<3){
                     for (SoulBomb soul : soulBombs){
                         soul.setPositionSummon(i1);
                         i1++;
@@ -125,7 +125,7 @@ public class AnimatedItem extends Item implements IAnimatable {
         }else {
             if(!pLevel.isClientSide){
                 List<SoulBomb> souls = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0F),
-                        e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
+                        e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer && !e.isDefender());
                 if(!souls.isEmpty()){
                     boolean flag1 = false;
                     int i = 0;

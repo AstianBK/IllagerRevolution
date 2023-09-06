@@ -22,5 +22,6 @@ public class ServerEvent {
         event.put(MAULER.get(), MaulerEntity.setAttributes());
         event.put(WILD_RAVAGER.get(), WildRavagerEntity.createAttributes().build());
         event.put(SCROUNGER.get(),ScroungerEntity.setAttributes());
+        event.put(SOUL_SAGE.get(),SoulSageEntity.setAttributes());
     }
 }
