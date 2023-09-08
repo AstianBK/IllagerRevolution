@@ -80,11 +80,9 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.ARMOR, 17.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 7.0D)
-                .add(Attributes.FOLLOW_RANGE, 40.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
+                .add(Attributes.MAX_HEALTH, 30.0D)
+                .add(Attributes.FOLLOW_RANGE, 60.D)
+                .add(Attributes.MOVEMENT_SPEED, 0.30f).build();
     }
 
     public SoulSageEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
@@ -97,7 +95,6 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     @Override
     public boolean canBeAffected(MobEffectInstance pPotioneffect) {
         return pPotioneffect.getEffect() != InitEffect.DEATH_MARK.get()
-                && pPotioneffect.getEffect() != InitEffect.DEEP_WOUND.get()
                 && super.canBeAffected(pPotioneffect);
     }
 
@@ -422,7 +419,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     }
 
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return ModSounds.BLADE_KNIGHT_HURT.get();
+        return SoundEvents.ILLUSIONER_HURT;
     }
     @Override
     protected SoundEvent getCastingSoundEvent() {
