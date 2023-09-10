@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
+import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.AreaFireColumnEntity;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
@@ -17,7 +18,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -93,12 +94,15 @@ public class SoulBomb extends ThrowableProjectile {
                     double d0 = living.getX() - owner.getX();
                     double d1 = living.getZ() - owner.getZ();
                     double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
-                    double d3 = 1.5D+ (0.5D * this.getPowerLevel());
+                    double d3 = 1.5D + (0.5D * this.getPowerLevel());
                     living.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
                     if(owner instanceof LivingEntity){
                         living.hurt(DamageSource.mobAttack((LivingEntity) owner),5.0F+1.0F*this.getPowerLevel());
                     }else {
                         living.hurt(DamageSource.GENERIC,5.0F+1.0F*this.getPowerLevel());
+                    }
+                    if(!this.level.isClientSide){
+                        living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,100,0));
                     }
                 }
                 if(this.level.isClientSide){
@@ -114,6 +118,9 @@ public class SoulBomb extends ThrowableProjectile {
             if(this.discardTimer<0){
                 this.discard();
             }
+        }
+        if(!owner.isAlive()){
+            this.discard();
         }
         if(this.level.isClientSide){
             this.playParticles();
@@ -224,21 +231,21 @@ public class SoulBomb extends ThrowableProjectile {
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
-        if (pResult.getEntity() instanceof LivingEntity living) {
+        if (pResult.getEntity() instanceof LivingEntity initialTarget) {
             AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level);
-            areaFireColumn.setPos(living.getOnPos().getX(), living.getOnPos().getY() + 1, living.getOnPos().getZ());
+            areaFireColumn.setPos(initialTarget.getOnPos().getX(), initialTarget.getOnPos().getY() + 1, initialTarget.getOnPos().getZ());
             areaFireColumn.setOwner((LivingEntity) this.getOwner());
             areaFireColumn.setPowerLevel(this.getPowerLevel());
             areaFireColumn.setDuration(200,50);
             this.level.addFreshEntity(areaFireColumn);
             if (this.getOwner() instanceof LivingEntity) {
-                living.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(), 3);
+                initialTarget.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(), 3);
             } else {
-                living.hurt(DamageSource.MAGIC, 3);
+                initialTarget.hurt(DamageSource.MAGIC, 3);
             }
 
             if(!this.level.isClientSide){
-                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,200,2));
+                initialTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,200,2));
             }
         }
     }

@@ -21,6 +21,7 @@ import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -52,6 +53,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -177,6 +179,26 @@ public class Events {
                 }
             }
         }
+    }
+    @SubscribeEvent
+    public static void hurtEvent(LivingHurtEvent event){
+        if(event.getEntity()==null)return;
+
+        if(event.getEntity().hasEffect(InitEffect.SOUL_BURN.get())){
+            int level=event.getEntity().getEffect(InitEffect.SOUL_BURN.get()).getAmplifier();
+            float damage=event.getAmount()+event.getAmount()*(0.2F*level);
+            if (level < 2) {
+                if(event.getSource().isFire()){
+                    event.setAmount(damage);
+                }
+            }else {
+                if(event.getSource().isFire()){
+                    event.setCanceled(true);
+                    event.getEntity().hurt(DamageSource.MAGIC.bypassArmor().bypassMagic().bypassEnchantments(),damage);
+                }
+            }
+        }
+
     }
 
     @SubscribeEvent

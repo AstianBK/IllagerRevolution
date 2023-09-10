@@ -85,7 +85,7 @@ public class BladeKnightRenderer extends ExtendedGeoEntityRenderer<BladeKnightEn
         float cc = 290.0f;
         CompoundTag nbt;
         int cc1=6;
-        if ((item == currentEntity.getMainHandItem() || item == currentEntity.getOffhandItem()) && !currentEntity.hasCombo()) {
+        if ((item == currentEntity.getMainHandItem() || item == currentEntity.getOffhandItem()) && (!currentEntity.hasCombo() && currentEntity.continueAnim)) {
             stack.mulPose(Vector3f.XP.rotationDegrees(cc));
             stack.mulPose(Vector3f.YP.rotationDegrees(0f));
             boolean shieldFlag = item.getItem() instanceof ShieldItem;

@@ -58,7 +58,7 @@ public class AnimatedItem extends Item implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if(this.getCastinTimer()<=0){
+        if(this.getCastingTimer()<=0){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grimoire.idle", ILoopType.EDefaultLoopTypes.LOOP));
         }else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grimoire.use_spell", ILoopType.EDefaultLoopTypes.LOOP));
@@ -69,17 +69,18 @@ public class AnimatedItem extends Item implements IAnimatable {
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         CompoundTag nbt = pStack.getOrCreateTag();
-        if(!nbt.isEmpty() && pIsSelected){
+        if(!nbt.isEmpty() && pIsSelected) {
             int i = nbt.getInt("casterTimer");
             this.castingTimer = i;
-            if(i>0){
+            if (i > 0) {
                 i--;
-                nbt.putInt("casterTimer",i);
+                nbt.putInt("casterTimer", i);
             }
-
         }
+
         if(pEntity instanceof Player player){
             this.souls = (int) player.getAttributeValue(SoulTick.SOUL);
+            nbt.putInt("CustomModelData", this.souls);
         }
 
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
@@ -89,7 +90,7 @@ public class AnimatedItem extends Item implements IAnimatable {
         return this.souls;
     }
 
-    public int getCastinTimer(){
+    public int getCastingTimer(){
         return this.castingTimer;
     }
 
@@ -97,7 +98,6 @@ public class AnimatedItem extends Item implements IAnimatable {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         boolean flag = pPlayer.isShiftKeyDown();
         CompoundTag nbt = pPlayer.getItemInHand(pUsedHand).getOrCreateTag();
-        int cooldown = nbt.getInt("casterTimer");
         int cc =(int) pPlayer.getAttributeValue(SoulTick.SOUL);
         if(flag && cc>1){
             if (!pLevel.isClientSide) {

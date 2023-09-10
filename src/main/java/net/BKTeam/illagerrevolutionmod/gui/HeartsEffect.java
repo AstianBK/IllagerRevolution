@@ -1,10 +1,13 @@
 package net.BKTeam.illagerrevolutionmod.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
+import net.BKTeam.illagerrevolutionmod.potion.SoulBurnEffect;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
@@ -30,7 +33,8 @@ public class HeartsEffect implements IGuiOverlay {
         if (!gui.shouldDrawSurvivalElements()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if(player.hasEffect(InitEffect.DEEP_WOUND.get()) || player.hasEffect(InitEffect.DEATH_MARK.get())){
+        assert player != null;
+        if(player.hasEffect(InitEffect.DEEP_WOUND.get()) || player.hasEffect(InitEffect.SOUL_BURN.get())){
             mStack.pushPose();
             mStack.translate(0, 0, 0.01);
 
@@ -54,7 +58,7 @@ public class HeartsEffect implements IGuiOverlay {
             }
 
             Random rand = new Random();
-            rand.setSeed((long)(ticks * 312871));
+            rand.setSeed((long)(ticks * 312871L));
 
             int absorptionHearts = Mth.ceil(absorb / 2.0f) - 1;
             int hearts = Mth.ceil(healthMax / 2.0f) - 1;
@@ -72,7 +76,7 @@ public class HeartsEffect implements IGuiOverlay {
 
             gui.leftHeight += extraHealthRows * extraRowHeight;
 
-            String s1=player.hasEffect(InitEffect.DEEP_WOUND.get()) ? "" : "2";
+            String s1=player.hasEffect(InitEffect.SOUL_BURN.get()) ? "2" : "";
             RenderSystem.setShaderTexture(0, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/gui/icons"+s1+".png"));
 
             for (int i = absorptionHearts + hearts; i > absorptionHearts + hearts; -- i) {

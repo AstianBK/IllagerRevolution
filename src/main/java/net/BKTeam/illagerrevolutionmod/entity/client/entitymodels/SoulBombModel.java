@@ -49,9 +49,9 @@ public class SoulBombModel extends EntityModel<LivingEntity> {
     public void setupAnim(LivingEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
 
     }
-
     @Override
-    public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
-        this.root.render(pPoseStack,pBuffer,pPackedLight,pPackedOverlay);
+    public void renderToBuffer(PoseStack pMatrixStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
+        this.root.render(pMatrixStack,pBuffer,pPackedLight,pPackedOverlay);
     }
+
 }

@@ -9,6 +9,7 @@ import net.BKTeam.illagerrevolutionmod.entity.layers.DrumModel;
 import net.BKTeam.illagerrevolutionmod.entity.layers.GeckoLivingProtectionLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.LivingProtectionLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
+import net.BKTeam.illagerrevolutionmod.gui.BKGui;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.particle.custom.*;
@@ -117,6 +118,7 @@ public class ModEventBusEvents {
     @OnlyIn(Dist.CLIENT)
     public static void registerGui(RegisterGuiOverlaysEvent event){
         event.registerAbove(VanillaGuiOverlay.PLAYER_HEALTH.id(), "hearts",new HeartsEffect());
+        event.registerAbove(VanillaGuiOverlay.HELMET.id(), "shield",new BKGui());
     }
 
     @SubscribeEvent

@@ -735,7 +735,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     BlockPos posOwner = owner.getOnPos();
                     soulBomb.setInOrbit(false);
                     soulBomb.setYRot(owner.getYRot());
-                    soulBomb.shoot(posTarget1.getX()- posOwner.getX(), posTarget1.getY() -2F - posOwner.getY(), posTarget1.getZ()- posOwner.getZ(),1.0F,0.0F);
+                    soulBomb.shoot(posTarget1.getX()- posOwner.getX(), posTarget1.getY() -2F - posOwner.getY(), posTarget1.getZ()- posOwner.getZ(),2.0F,0.0F);
                 }
                 break;
             }

@@ -79,7 +79,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
     public int absorbedSouls;
 
-    private boolean continueAnim;
+    public boolean continueAnim;
     private Combo oldCombo;
 
     public int[] timers = new int[]{
@@ -604,6 +604,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         public void stop() {
             super.stop();
             this.goalOwner.setActiveAttackTarget(0);
+            this.goalOwner.setContinueAnim(false);
         }
 
         @Override
@@ -613,7 +614,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
         @Override
         public void tick(){
-            if(!this.goalOwner.hasCombo() && !this.goalOwner.continueAnim){
+            if(!this.goalOwner.hasCombo() || !this.goalOwner.continueAnim){
                 super.tick();
             }
             if(this.goalOwner.getCombo()!=Combo.NO_COMBO){
@@ -675,7 +676,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                         }
                     }
                 }else {
-
                     if (this.goalOwner.continueAnim){
                         if(target!=null){
                             if(this.goalOwner.animationTimer>5){

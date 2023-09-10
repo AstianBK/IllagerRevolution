@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -149,21 +150,27 @@ public class AreaFireColumnEntity extends Entity {
             if(this.tickCount%10==0){
                 List<LivingEntity> targets;
                 if(this.getOwner()!=null){
-                    targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)),e->!this.getOwner().isAlliedTo(e));
-                }else {
-                    targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)));
-
-                }
-                for (LivingEntity living : targets){
-                    living.hurt(DamageSource.MAGIC,3.0F+1.0F*this.getPowerLevel());
-                    living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,2));
-                    living.setSecondsOnFire(3);
+                    targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)),e->!this.getOwner().isAlliedTo(e) && this.getOwner()!=e);
+                    for (LivingEntity living : targets){
+                        living.hurt(DamageSource.IN_FIRE,2.0F+1.0F*this.getPowerLevel());
+                        living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,2));
+                        living.setSecondsOnFire(3);
+                    }
                 }
             }
             if(this.duration<0){
                 this.discard();
             }else {
                 this.duration--;
+            }
+        }else {
+            if(this.tickCount%20==0){
+                if(this.getOwner()!=null){
+                    List<LivingEntity> target = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(5.0D),e->!this.getOwner().isAlliedTo(e) && e!=this.getOwner());
+                    for(LivingEntity collateral : target){
+                        collateral.addEffect(new MobEffectInstance(InitEffect.SOUL_BURN.get(),200,this.getPowerLevel()));
+                    }
+                }
             }
         }
     }
