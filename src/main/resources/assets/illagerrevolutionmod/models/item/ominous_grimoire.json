@@ -1,18 +1,15 @@
 {
   "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "illagerrevolutionmod:item/ominous_grimoire_3d"
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/item_ominous_grimoire_0"
   },
-  "perspectives": {
-    "gui": {
-      "parent": "illagerrevolutionmod:item/ominous_grimoire_2d"
-    },
-    "ground": {
-      "parent": "illagerrevolutionmod:item/ominous_grimoire_2d"
-    },
-    "fixed": {
-      "parent": "illagerrevolutionmod:item/ominous_grimoire_2d"
-    }
-  }
+  "overrides": [
+    { "predicate":  { "custom_model_data": 0 }, "model": "illagerrevolutionmod:item/ominous_grimoire_0"},
+    { "predicate":  { "custom_model_data": 1 }, "model": "illagerrevolutionmod:item/ominous_grimoire_1"},
+    { "predicate":  { "custom_model_data": 2 }, "model": "illagerrevolutionmod:item/ominous_grimoire_2"},
+    { "predicate":  { "custom_model_data": 3 }, "model": "illagerrevolutionmod:item/ominous_grimoire_3"},
+    { "predicate":  { "custom_model_data": 4 }, "model": "illagerrevolutionmod:item/ominous_grimoire_4"},
+    { "predicate":  { "custom_model_data": 5 }, "model": "illagerrevolutionmod:item/ominous_grimoire_5"},
+    { "predicate":  { "custom_model_data": 6 }, "model": "illagerrevolutionmod:item/ominous_grimoire_6"}
+  ]
 }

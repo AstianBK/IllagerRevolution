@@ -42,14 +42,4 @@ public class BombRender<T extends SoulBomb> extends EntityRenderer<T> {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/entity/shield_bomb.png");
     }
 
-    public boolean shouldRender(T pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return super.shouldRender(pLivingEntity, pCamera, pCamX, pCamY, pCamZ);
-    }
-    public float getY(T p_114159_, float p_114160_) {
-        float f = (float)p_114159_.tickCount + p_114160_;
-        float f1 = Mth.sin(f * 0.2F) / 2.0F + 0.5F;
-        f1 = (f1 * f1 + f1) * 0.4F;
-        return f1 - 1.4F;
-    }
-
 }

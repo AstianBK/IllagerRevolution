@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class RunedSword extends SwordItem {
 
-    public int souls =0;
+    public int souls = 0;
 
     public RunedSword(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);

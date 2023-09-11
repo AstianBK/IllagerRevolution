@@ -219,29 +219,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 }
             }
         }
-        if(this.level.isClientSide){
-            if (this.hasActiveAttackTarget()) {
-                LivingEntity livingentity = this.getActiveAttackTarget();
-                if (livingentity != null) {
-                    this.getLookControl().setLookAt(livingentity, 90.0F, 90.0F);
-                    this.getLookControl().tick();
-                    double d5 = 1.0D;
-                    double d0 = livingentity.getX() - this.getX();
-                    double d1 = livingentity.getY(0.5D) - this.getEyeY();
-                    double d2 = livingentity.getZ() - this.getZ();
-                    double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-                    d0 /= d3;
-                    d1 /= d3;
-                    d2 /= d3;
-                    double d4 = this.random.nextDouble();
-
-                    while(d4 < d3) {
-                        d4 += 1.8D - d5 + this.random.nextDouble() * (1.7D - d5);
-                        //this.level.addParticle(ModParticles.BKSOULS_PARTICLES.get(), this.getX() + d0 * d4, this.getEyeY() + d1 * d4, this.getZ() + d2 * d4, 0.0D, 0.0D, 0.0D);
-                    }
-                }
-            }
-        }
     }
     void setActiveAttackTarget(int pEntityId) {
         this.entityData.set(DATA_ID_ATTACK_TARGET, pEntityId);
@@ -604,12 +581,13 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         public void stop() {
             super.stop();
             this.goalOwner.setActiveAttackTarget(0);
-            this.goalOwner.setContinueAnim(false);
         }
 
         @Override
         public void start() {
             super.start();
+            this.goalOwner.setContinueAnim(true);
+            this.goalOwner.level.broadcastEntityEvent(this.goalOwner,(byte) 62);
         }
 
         @Override
@@ -777,14 +755,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
         public int getId(){
             return this.id;
-        }
-
-        public String getNameAttack1() {
-            return this.nameAttack1;
-        }
-
-        public String getNameAttack2() {
-            return this.nameAttack2;
         }
 
         public static ComboState byId(int pId){

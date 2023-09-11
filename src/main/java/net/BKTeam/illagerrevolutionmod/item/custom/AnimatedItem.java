@@ -10,6 +10,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -79,8 +80,9 @@ public class AnimatedItem extends Item implements IAnimatable {
         }
 
         if(pEntity instanceof Player player){
-            this.souls = (int) player.getAttributeValue(SoulTick.SOUL);
-            nbt.putInt("CustomModelData", this.souls);
+            int cc = (int) player.getAttribute(SoulTick.SOUL).getValue();
+            this.souls = cc;
+            nbt.putInt("CustomModelData", cc);
         }
 
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
@@ -98,7 +100,7 @@ public class AnimatedItem extends Item implements IAnimatable {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         boolean flag = pPlayer.isShiftKeyDown();
         CompoundTag nbt = pPlayer.getItemInHand(pUsedHand).getOrCreateTag();
-        int cc =(int) pPlayer.getAttributeValue(SoulTick.SOUL);
+        int cc = (int) pPlayer.getAttributeValue(SoulTick.SOUL);
         if(flag && cc>1){
             if (!pLevel.isClientSide) {
                 List<SoulBomb> soulBombs = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0D),

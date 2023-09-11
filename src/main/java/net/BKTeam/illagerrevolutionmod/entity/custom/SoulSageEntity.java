@@ -221,6 +221,8 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     this.setActiveAttackTarget(0,index);
                     return false;
                 }
+            }else if(living.getLastHurtByMob()==this){
+                this.spawSoulBomb(1);
             }
         }
         this.setActiveAttackTarget(0,index);
@@ -228,7 +230,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     }
 
     public List<LivingEntity> getDrainEntities(){
-        List<LivingEntity> list=new ArrayList<>();
+        List<LivingEntity> list = new ArrayList<>();
         LivingEntity target0 = this.getActiveAttackTarget0();
         LivingEntity target1 = this.getActiveAttackTarget1();
         LivingEntity target2 = this.getActiveAttackTarget2();
@@ -241,9 +243,6 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     @Override
     public void tick() {
         super.tick();
-        if (level.random.nextInt(14) == 0 && this.isCastingSpell()) {
-
-        }
     }
     void setActiveAttackTarget(int pEntityId,int pIndex) {
         switch (pIndex){
@@ -530,7 +529,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
 
                 List<LivingEntity> targets = owner.level.getEntitiesOfClass(LivingEntity.class,
                         owner.getBoundingBox().inflate(30.0D),
-                        e->e.getMobType()!=MobType.ILLAGER);
+                        e->e.getMobType()!=MobType.ILLAGER && !(e instanceof Player player && player.isCreative()));
 
                 int k = 1;
 
@@ -623,7 +622,6 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     int k = 0;
                     for(SoulBomb soulBomb : souls){
                         if (!flag){
-                            mage.level.getNearestPlayer(mage,100.0D).sendSystemMessage(Component.nullToEmpty("entro"));
                             soulBomb.setInOrbit(false);
                             soulBomb.setDefender(true);
                             soulBomb.setOwner(target);

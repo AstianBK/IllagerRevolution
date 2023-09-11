@@ -40,7 +40,7 @@ public class SoulBombModel extends EntityModel<LivingEntity> {
         PartDefinition partdefinition = meshdefinition.getRoot();
 
         partdefinition.addOrReplaceChild("orb", CubeListBuilder.create().texOffs(0, 0).addBox(-10.0F, -6.0F, -10.0F, 20.0F, 20.0F, 20.0F),
-                PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(-2.0F, -6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
         
         return LayerDefinition.create(meshdefinition, 32, 32);
     }
