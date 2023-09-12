@@ -61,6 +61,7 @@ public class AnimatedItem extends Item implements IAnimatable {
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(this.getCastingTimer()<=0){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grimoire.idle", ILoopType.EDefaultLoopTypes.LOOP));
+            return PlayState.CONTINUE;
         }else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grimoire.use_spell", ILoopType.EDefaultLoopTypes.LOOP));
         }

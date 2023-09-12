@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,7 +26,7 @@ public class BKGui implements IGuiOverlay {
                 RenderSystem.defaultBlendFunc();
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                RenderSystem.setShaderTexture(0, new ResourceLocation("textures/misc/pumpkinblur.png"));
+                RenderSystem.setShaderTexture(0, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/gui/shield_bomb_overlay.png"));
                 Tesselator tesselator = Tesselator.getInstance();
                 BufferBuilder bufferbuilder = tesselator.getBuilder();
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);

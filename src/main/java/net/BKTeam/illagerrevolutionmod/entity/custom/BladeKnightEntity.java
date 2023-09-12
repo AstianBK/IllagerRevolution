@@ -765,7 +765,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public enum Combo{
         COMBO_SPIN(1,"animation.IllagerBladeKnight.combo2"),
         COMBO_PERFORATE(2,"animation.IllagerBladeKnight.combo1"),
-        NO_COMBO(0,null);
+        NO_COMBO(0,null),
+        EXHAUSTED(3,"animation.IllagerBladeKnight.stunned");
 
         private static final BladeKnightEntity.Combo[] BY_ID = Arrays.stream(values()).sorted(Comparator.comparingInt(BladeKnightEntity.Combo::getId)).toArray(BladeKnightEntity.Combo[]::new);
 

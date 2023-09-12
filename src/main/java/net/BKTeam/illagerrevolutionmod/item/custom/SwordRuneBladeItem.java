@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.Patreon;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -62,6 +63,8 @@ public class SwordRuneBladeItem extends RunedSword {
             if(nbt!=null){
                 nbt.putInt("CustomModelData", this.souls + cc1);
             }
+        } else if (entity instanceof BladeKnightEntity) {
+            this.souls=0;
         }
         super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
     }
