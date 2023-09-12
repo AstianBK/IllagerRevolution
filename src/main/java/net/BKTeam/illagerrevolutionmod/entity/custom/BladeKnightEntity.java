@@ -212,7 +212,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             if(this.isCastingSpell()){
                 for(int i=0;i<301;i+=30){
                     float f1 = Mth.cos(i);
-                    float f2 = Mth.sin(i);
+                    float f2 =   Mth.sin(i);
                     this.level.addParticle(ModParticles.RUNE_SOUL_PARTICLES.get(), this.getX() + (double) f1* (0.30f) , this.getY() + 2.9D, this.getZ() + (double) f2 * (0.30f),0.0f,0.0f, 0.0f);
                     this.level.addParticle(ModParticles.RUNE_CURSED_PARTICLES.get(), this.getX() + (double) f1* (0.50f) , this.getY() + 3.4D, this.getZ() + (double) f2 * (0.50f), 0.0f, 0.0f, 0.0f);
                     this.level.addParticle(ModParticles.SOUL_PROJECTILE_PARTICLES.get(), this.getX() + (double) f1* (0.80f) , this.getY() + 3.9D, this.getZ() + (double) f2 * (0.80f), 0.0f, 0.0f, 0.0f);
