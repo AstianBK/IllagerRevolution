@@ -47,9 +47,6 @@ public class GeckoLivingProtectionLayer<T extends LivingEntity & IAnimatable> ex
             float f = getY(entitylivingbaseIn, partialTicks);
             float f1 = ((float)entitylivingbaseIn.tickCount + partialTicks) * 3.0F;
             float f3 = (float) entitylivingbaseIn.tickCount +partialTicks;
-            float f4= 0.1f ;
-            float f5= 0.8f ;
-            float f6 = 0.4f ;
             matrixStackIn.translate(0.0D,0.2D,0.0D);
             matrixStackIn.translate(0.0D, (double)(1.5F + f / 2.0F), 0.0D);
             matrixStackIn.scale(entitylivingbaseIn.getBbHeight(),entitylivingbaseIn.getBbHeight(),entitylivingbaseIn.getBbHeight());
@@ -57,7 +54,7 @@ public class GeckoLivingProtectionLayer<T extends LivingEntity & IAnimatable> ex
 
             matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f1));
             matrixStackIn.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-            this.model.renderToBuffer(matrixStackIn,bufferIn.getBuffer(RenderType.energySwirl(LINKED_ARMOR  ,f3*0.01f,f3*0.01f)),packedLightIn,i,f4,f5,f6,1.0f);
+            this.model.renderToBuffer(matrixStackIn,bufferIn.getBuffer(RenderType.energySwirl(LINKED_ARMOR  ,f3*0.01f,f3*0.01f)),packedLightIn,i,1.0F,1.0F,1.0F ,1.0f);
             this.model.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
             this.model.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             matrixStackIn.popPose();
