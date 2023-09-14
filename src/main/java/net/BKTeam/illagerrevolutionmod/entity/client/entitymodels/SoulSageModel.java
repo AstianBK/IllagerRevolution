@@ -30,7 +30,7 @@ public class SoulSageModel<I extends AbstractIllager> extends AnimatedGeoModel<S
     @Override
     public void setCustomAnimations(SoulSageEntity entity, int instanceId, AnimationEvent customPredicate) {
         super.setCustomAnimations(entity, instanceId, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("bipedHead");
+        IBone head = this.getAnimationProcessor().getBone("head");
 
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         if (head != null && !entity.isCastingSpell()) {

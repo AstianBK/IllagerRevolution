@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
@@ -63,12 +64,9 @@ public class VariantRuneBladeItem extends RunedSword{
             if(nbt!=null){
                 nbt.putInt("CustomModelData", this.souls+cc1);
             }
+        } else if (entity instanceof BladeKnightEntity) {
+            this.souls=0;
         }
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     @Override

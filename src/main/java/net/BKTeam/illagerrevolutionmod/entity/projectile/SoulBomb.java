@@ -122,7 +122,7 @@ public class SoulBomb extends ThrowableProjectile {
         if(!owner.isAlive()){
             this.discard();
         }
-        if(this.level.isClientSide){
+        if(this.level.isClientSide && !this.isDefender()){
             this.playParticles();
         }
     }

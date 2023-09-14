@@ -85,26 +85,6 @@ public class BladeKnightRenderer extends ExtendedGeoEntityRenderer<BladeKnightEn
         float cc = 290.0f;
         CompoundTag nbt;
         int cc1=6;
-        if (item == currentEntity.getMainHandItem() &&
-                !(currentEntity.continueAnim &&
-                        (currentEntity.getComboState() != BladeKnightEntity.ComboState.SECOND_HIT ||
-                        currentEntity.getCombo() != BladeKnightEntity.Combo.COMBO_PERFORATE))) {
-
-            stack.mulPose(Vector3f.XP.rotationDegrees(cc));
-            stack.mulPose(Vector3f.YP.rotationDegrees(0f));
-            boolean shieldFlag = item.getItem() instanceof ShieldItem;
-
-            if (item == currentEntity.getMainHandItem()) {
-                if (shieldFlag) {
-                    stack.translate(0, 0.125, -15);
-                }
-            } else {
-                if (shieldFlag) {
-                    stack.translate(0, 0.125, 0.25);
-                    stack.mulPose(Vector3f.YP.rotationDegrees(120.0f));
-                }
-            }
-        }
         nbt=item.getOrCreateTag();
         nbt.putInt("CustomModelData", cc1);
     }

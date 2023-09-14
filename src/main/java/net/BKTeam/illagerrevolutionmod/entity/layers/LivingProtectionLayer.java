@@ -45,16 +45,26 @@ public class LivingProtectionLayer<T extends LivingEntity,M extends EntityModel<
                 float f = getY(pLivingEntity, pPartialTicks);
                 float f1 = ((float)pLivingEntity.tickCount + pPartialTicks) * 3.0F;
                 float f3 = (float) pLivingEntity.tickCount + pPartialTicks;
+                float f4;
+                float f5;
+                float f6;
                 int i = OverlayTexture.NO_OVERLAY;
+                if(souls.get(0).discardMoment){
+                    f4=1.0F;
+                    f5=0.0F;
+                    f6=0.0F;
+                }else {
+                    f4=1.0F;
+                    f5=1.0F;
+                    f6=1.0F;
+                }
 
                 pMatrixStack.translate(0.0D,-0.4D,0.0D);
                 pMatrixStack.translate(0.0D, (double)(1.5F + f / 2.0F), 0.0D);
                 pMatrixStack.scale(pLivingEntity.getBbHeight(),pLivingEntity.getBbHeight(),pLivingEntity.getBbHeight());
                 pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(f1));
                 pMatrixStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-                this.model.renderToBuffer(pMatrixStack,pBuffer.getBuffer(RenderType.energySwirl(LINKED_ARMOR,f3*0.01f,f3*0.01f)),pPackedLight,i,1.0F,1.0F,1.0F,1.0F);
-                float f2 = 0.875F;
-
+                this.model.renderToBuffer(pMatrixStack,pBuffer.getBuffer(RenderType.energySwirl(LINKED_ARMOR,f3*0.01f,f3*0.01f)),pPackedLight,i,f4,f5,f6,1.0F);
                 this.model.prepareMobModel(pLivingEntity, pLimbSwing, pLimbSwingAmount, pPartialTicks);
                 this.model.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
                 pMatrixStack.popPose();

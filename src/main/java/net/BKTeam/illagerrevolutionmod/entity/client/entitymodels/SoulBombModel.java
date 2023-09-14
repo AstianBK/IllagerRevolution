@@ -51,7 +51,7 @@ public class SoulBombModel extends EntityModel<LivingEntity> {
     }
     @Override
     public void renderToBuffer(PoseStack pMatrixStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
-        this.root.render(pMatrixStack,pBuffer,pPackedLight,pPackedOverlay);
+        this.root.render(pMatrixStack,pBuffer,pPackedLight,pPackedOverlay,pRed,pGreen,pBlue,pAlpha);
     }
 
 }

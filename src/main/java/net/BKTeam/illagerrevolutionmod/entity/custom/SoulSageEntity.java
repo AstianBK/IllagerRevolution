@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
@@ -152,23 +153,36 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                         int i = 0;
                         for(LivingEntity target : list){
                             if (this.checkIsAlive(target,i)){
-                                float f=Mth.clamp(1.0F+0.25F*this.absorbedSouls,1.0F,4.0f);
+                                float f=Mth.clamp(1.0F+0.25F*this.absorbedSouls,1.0F,2.0f);
                                 float f1=1.0F;
                                 if(list.size()>1){
                                     f1=0.5F*list.size()-1;
                                 }
+                                if(target instanceof Player pPlayer){
+                                    int j = (int) pPlayer.getAttribute(SoulTick.SOUL).getValue();
+                                    if(j>0 && this.random.nextFloat()<0.2F){
+                                        pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(j-1);
+                                        this.spawSoulBomb(1);
+                                    }
+                                    //sonido cuando roba alma.
+                                    pPlayer.playSound(SoundEvents.VILLAGER_NO,1.0F,1.0F);
+                                }
                                 if(target.hurt(DamageSource.mobAttack(this).setMagic(),f)){
+                                    //sonido cuando chupa vida.
+                                    target.playSound(SoundEvents.VILLAGER_NO,1.0F,1.0F);
                                     this.heal(Mth.clamp(f*f1,1.0F,f));
                                     this.absorbedSouls++;
                                     this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,1));
+                                    this.addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,0));
                                 }
 
                             }
                             i++;
                         }
                     }
+                }else {
+                    this.refreshTargetsDrain(list);
                 }
-                this.refreshTargetsDrain(list);
                 if(this.drainDuration==0){
                     this.setActiveAttackTarget(0,3);
                     this.setDrainSoul(false);
@@ -215,7 +229,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
         if (living!=null){
             if(living.isAlive()){
                 double dist = this.distanceTo(living);
-                if(dist<30){
+                if(dist<60){
                     return true;
                 }else {
                     this.setActiveAttackTarget(0,index);
@@ -240,10 +254,6 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
         return list;
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-    }
     void setActiveAttackTarget(int pEntityId,int pIndex) {
         switch (pIndex){
             case 0-> this.entityData.set(DATA_ID_ATTACK_TARGET_0, pEntityId);
@@ -407,13 +417,8 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     public void handleEntityEvent(byte pId) {
         if(pId==60){
             this.setDrainSoul(true);
-        }else if (pId==61){
-
-        }else if (pId==62){
-
         }else {
             super.handleEntityEvent(pId);
-
         }
     }
 

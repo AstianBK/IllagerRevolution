@@ -54,7 +54,7 @@ public class SoulHunter extends ThrowableItemProjectile {
         super.onHitEntity(result);
         if(result.getEntity() instanceof LivingEntity entity){
             LivingEntity owner = (LivingEntity) this.getOwner();
-            if (owner instanceof BladeKnightEntity && entity instanceof Player) {
+            if (owner instanceof BladeKnightEntity && entity==((BladeKnightEntity) owner).getTarget()) {
                 float f = owner.yBodyRotO * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
                 float f1 = Mth.cos(f);
                 float f2 = Mth.sin(f);
