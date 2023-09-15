@@ -91,7 +91,7 @@ public class FallenKnightEntity extends ReanimatedEntity implements IAnimatable,
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 32.0D)
+                .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)
                 .add(Attributes.ARMOR,8.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
