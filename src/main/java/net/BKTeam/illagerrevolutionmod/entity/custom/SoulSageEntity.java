@@ -153,6 +153,9 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
             List<LivingEntity> list = this.getDrainEntities();
             if(this.drainDuration > 0 ) {
                 this.drainDuration--;
+                if(this.tickCount%40==0){
+                    this.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,3.0F,1.0F);
+                }
                 if(this.tickCount%20==0){
                     if(!list.isEmpty()){
                         int i = 0;
@@ -420,10 +423,10 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
 
     public void setDrainSoul(boolean pBoolean){
         this.entityData.set(DRAIN_SOUL,pBoolean);
-        this.drainDuration = pBoolean ? 100 : 0;
+        this.drainDuration = pBoolean ? 40 : 0;
         if(pBoolean){
             // Inicia a drenar vida
-            this.level.playSound(null,this, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.HOSTILE,1.0F,1.0F);
+            this.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,3.0F,1.0F);
         }else {
             this.stopDrainSound();
         }
@@ -551,7 +554,9 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                 }
                 // sonido del escudo
                 if(flag){
-                    owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),ModSounds.SOUL_SAGE_SHIELD.get(),SoundSource.HOSTILE,1.0f,1.0f,false);
+                    owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),
+                            ModSounds.SOUL_SAGE_SHIELD.get(),
+                            SoundSource.HOSTILE,1.0f,1.0f,false);
                 }
             }
             owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),ModSounds.SOUL_SAGE_SHIELD.get(),SoundSource.HOSTILE,1.0f,1.0f,false);
@@ -669,7 +674,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     }
 
                     target.level.playLocalSound(target.getX(),target.getY(),target.getZ(),
-                            SoundEvents.AMBIENT_NETHER_WASTES_MOOD,
+                            ModSounds.SOUL_SAGE_SHIELD.get(),
                             SoundSource.HOSTILE,5.0f,-5.0f,false);
                     i++;
                     if(i>2){
@@ -770,12 +775,11 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     soulBomb.setYRot(owner.getYRot());
                     soulBomb.shoot(posTarget1.getX()- posOwner.getX(), posTarget1.getY() -2F - posOwner.getY(), posTarget1.getZ()- posOwner.getZ(),2.0F,0.0F);
                     //sonido del sould bomb al ser lanzado
-                    soulBomb.level.playSound(null,soulBomb,ModSounds.SOUL_SAGE_MISSILE.get(),SoundSource.HOSTILE,1.0F,1.0F);
+                    owner.level.playSound(null,owner,ModSounds.SOUL_SAGE_MISSILE.get(),SoundSource.HOSTILE,1.0F,1.0F);
 
                 }
                 break;
             }
-            owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),SoundEvents.AMBIENT_NETHER_WASTES_MOOD,SoundSource.HOSTILE,5.0f,-5.0f,false);
         }
     }
 }

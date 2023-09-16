@@ -127,6 +127,10 @@ public class AreaFireColumnEntity extends Entity {
     public void tick() {
         super.tick();
         int i = this.getPowerLevel();
+        if(this.prepareTimer==this.prepareDuration){
+            // sonido del anillo 1
+            this.level.playSound(null,this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE,5.0F,1.0F);
+        }
         if(this.prepareTimer==0){
             this.setIsBurn(true);
         }else {
@@ -138,31 +142,24 @@ public class AreaFireColumnEntity extends Entity {
                     this.applyRadius(this.getRadiusForLevel(j),0.5f);
                 }
             }else {
+                if(this.prepareTimer==this.prepareDuration-this.prepareDuration/4 ||
+                        this.prepareTimer==this.prepareDuration-this.prepareDuration/2 ||
+                        this.prepareTimer==this.prepareDuration-this.prepareDuration/1.25F){
+                    // sonido del anillo 2
+                    // sonido del anillo 3
+                    // sonido del anillo 4
+                    this.level.playSound(null,this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE,5.0F,1.0F);
+                }
+
                 if(this.level.random.nextBoolean()){
-                    if(this.prepareTimer==this.prepareDuration-this.prepareDuration/4){
-                        // sonido del anillo 2
-                        this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
-                    }
                     if(this.prepareTimer<this.prepareDuration-this.prepareDuration/4){
                         this.applyRadius(this.getRadius()/1.25F,0.05f);
-                        if(this.prepareTimer==this.prepareDuration-this.prepareDuration/2){
-                            // sonido del anillo 3
-                            this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
-                        }
                         if(this.prepareTimer<this.prepareDuration-this.prepareDuration/2){
                             this.applyRadius(this.getRadius()/2.0F,0.05f);
-                            if(this.prepareTimer==this.prepareDuration-this.prepareDuration/1.25F){
-                                // sonido del anillo 4
-                                this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
-                            }
                             if(this.prepareTimer<this.prepareDuration-this.prepareDuration/1.25){
                                 this.applyRadius(this.getRadius()/4F,0.05f);
                             }
                         }
-                    }
-                    if(this.prepareTimer==this.prepareDuration){
-                        // sonido del anillo 1
-                        this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
                     }
                     this.applyRadius(this.getRadius(),0.01F);
                 }
@@ -193,7 +190,7 @@ public class AreaFireColumnEntity extends Entity {
                     for(LivingEntity collateral : target){
                         int level = 0;
                         if(collateral.hasEffect(InitEffect.SOUL_BURN.get())){
-                            int levelEffect=Mth.clamp(collateral.getEffect(InitEffect.SOUL_BURN.get()).getAmplifier(),0,this.getPowerLevel());
+                            int levelEffect=Mth.clamp(collateral.getEffect(InitEffect.SOUL_BURN.get()).getAmplifier(),0,this.getPowerLevel()-1);
                             level=levelEffect+1;
                         }
                         collateral.addEffect(new MobEffectInstance(InitEffect.SOUL_BURN.get(),200,level));

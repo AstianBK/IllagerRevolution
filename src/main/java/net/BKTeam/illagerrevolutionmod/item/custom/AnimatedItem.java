@@ -59,12 +59,7 @@ public class AnimatedItem extends Item implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if(this.getCastingTimer()<=0){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grimoire.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grimoire.use_spell", ILoopType.EDefaultLoopTypes.LOOP));
-        }
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grimoire.use_spell", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
@@ -101,6 +96,7 @@ public class AnimatedItem extends Item implements IAnimatable {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         boolean flag = pPlayer.isShiftKeyDown();
         CompoundTag nbt = pPlayer.getItemInHand(pUsedHand).getOrCreateTag();
+        int cooldown = nbt.getInt("casterTimer");
         int cc = (int) pPlayer.getAttributeValue(SoulTick.SOUL);
         if(flag && cc>1){
             if (!pLevel.isClientSide) {
@@ -145,12 +141,12 @@ public class AnimatedItem extends Item implements IAnimatable {
                         }
                         i++;
                     }
-                    nbt.putInt("casterTimer",40);
-                }else {
+                }else if(cooldown<0){
                     SoulMissile missile = new SoulMissile(pPlayer,pLevel);
                     missile.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYRot(),0.0F,2.0F,0.0F);
                     missile.setPowerLevel(pPlayer.getMainHandItem().getEnchantmentLevel(InitEnchantment.INSIGHT.get()));
                     pLevel.addFreshEntity(missile);
+                    nbt.putInt("casterTimer",40);
                 }
             }
 

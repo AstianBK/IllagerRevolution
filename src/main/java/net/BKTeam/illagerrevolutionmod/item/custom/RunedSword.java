@@ -5,6 +5,7 @@ import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulSlash;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,17 +38,18 @@ public class RunedSword extends SwordItem {
     }
 
     @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        int i = EnchantmentHelper.getEnchantmentLevel(InitEnchantment.SOUL_SLASH.get(),entity);
+    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        int i = EnchantmentHelper.getEnchantmentLevel(InitEnchantment.SOUL_SLASH.get(),pAttacker);
         if(i!=0){
-            if(entity.level.random.nextFloat()<0.1F*i){
-                SoulSlash slash = new SoulSlash(entity,entity.level);
-                slash.shootFromRotation(entity,entity.getXRot(),entity.getYRot(),0.0F,1.0F,0.1F);
-                entity.level.addFreshEntity(slash);
-                stack.hurtAndBreak(5,entity,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+            if(pAttacker.level.random.nextFloat()<0.1F*i){
+                SoulSlash slash = new SoulSlash(pAttacker,pAttacker.level);
+                slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,1.0F,0.1F);
+                pAttacker.level.addFreshEntity(slash);
+                pAttacker.playSound(ModSounds.BLADE_SLASH_1.get(),1.0F,1.0F);
+                pStack.hurtAndBreak(5,pAttacker,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
             }
         }
-        return super.onEntitySwing(stack, entity);
+        return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
     @Override

@@ -36,7 +36,6 @@ public class RuneSoulParticles extends TextureSheetParticle {
         } else {
             this.setSpriteFromAge(this.sprites);
             this.move(this.xd, this.yd, this.zd);
-            this.yd-=0.005d;
             this.quadSize*=0.99f;
         }
     }
