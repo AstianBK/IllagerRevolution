@@ -167,6 +167,13 @@
     ]
   },
 
+  "blade_knight_blunt": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_knight_blunt",
+    "sounds": [
+      "illagerrevolutionmod:blade_knight_blunt"
+    ]
+  },
+
   "blade_slash_1": {
     "subtitle": "sounds.illagerrevolutionmod.blade_slash_1",
     "sounds": [

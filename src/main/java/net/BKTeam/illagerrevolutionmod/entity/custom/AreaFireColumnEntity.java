@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -83,7 +84,7 @@ public class AreaFireColumnEntity extends Entity {
         this.entityData.set(IS_BURN,isBurn);
         // sonido del inicio del burn
         if(isBurn){
-            this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,1.0F,1.0F);
+            this.level.playSound(null,this, ModSounds.SOUL_SAGE_FIRE.get(), SoundSource.HOSTILE,1.0F,1.0F);
         }
     }
 

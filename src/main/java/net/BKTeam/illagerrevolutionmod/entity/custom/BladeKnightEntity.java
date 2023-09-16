@@ -631,10 +631,10 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             }
                             if(sound){
                                 //sonido del tercer ataque de giro del BK con impacto
-                                this.goalOwner.level.playSound(null,this.goalOwner,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+                                this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_HIT2.get(),SoundSource.HOSTILE,1.0F,1.0F);
                             }else {
                                 //sonido del tercer ataque de giro del BK sin impacto
-                                this.goalOwner.level.playSound(null,this.goalOwner,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+                                this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_2.get(),SoundSource.HOSTILE,1.0F,1.0F);
                             }
                         }
                     }else {
@@ -666,7 +666,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 }
                             }
                             //sonido del primer y segundo ataque de giro del BK
-                            this.goalOwner.level.playSound(null,this.goalOwner,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+                            this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_1.get(),SoundSource.HOSTILE,1.0F,1.0F);
                         }
                     }
                 }else if(this.goalOwner.getCombo()==Combo.COMBO_PERFORATE){
@@ -682,7 +682,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 if(this.goalOwner.animationTimer==5){
                                     this.goalOwner.doHurtTarget(target);
                                     //sonido del primer ataque de perforar del BK
-                                    this.goalOwner.level.playSound(null,this.goalOwner,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+                                    this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_SWORDHIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
                                 }
                             }else if(this.goalOwner.getComboState()==ComboState.SECOND_HIT){
                                 if(this.goalOwner.animationTimer==10){
@@ -695,7 +695,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                     }else {
                                         this.goalOwner.doHurtTarget(target);
                                         //sonido del segundo ataque de perforar del BK
-                                        this.goalOwner.level.playSound(null,this.goalOwner,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+                                        this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_BLUNT.get(),SoundSource.HOSTILE,1.0F,1.0F);
                                         target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,0));
                                         target.addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,2));
                                     }
@@ -725,7 +725,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                         }
                                     }
                                     //sonido del tercer ataque de perforar del BK
-                                    this.goalOwner.level.playSound(null,this.goalOwner,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+                                    this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_HIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
                                 }
                             }
                         }

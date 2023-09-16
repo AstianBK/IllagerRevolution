@@ -92,6 +92,9 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_SWORDHIT2 =
             registerSoundEvent("blade_knight_swordhit2");
 
+        public static final RegistryObject<SoundEvent> BLADE_KNIGHT_BLUNT =
+                registerSoundEvent("blade_knight_blunt");
+
         public static final RegistryObject<SoundEvent> BLADE_SLASH_1 =
                 registerSoundEvent("blade_slash_1");
 

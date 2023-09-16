@@ -170,7 +170,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                                         this.spawSoulBomb(1);
                                     }
                                     //sonido cuando roba alma.
-                                    pPlayer.playSound(SoundEvents.VILLAGER_NO,1.0F,1.0F);
+                                    pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),1.0F,1.0F);
                                 }
                                 if(target.hurt(DamageSource.mobAttack(this).setMagic(),f)){
                                     //sonido cuando chupa vida.
@@ -178,7 +178,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                                     this.heal(Mth.clamp(f*f1,1.0F,f));
                                     this.absorbedSouls++;
                                     this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,1));
-                                    this.addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,0));
+                                    this.addEffect(new MobEffectInstance(MobEffects.CONFUSION,150,0));
                                 }
 
                             }
@@ -423,7 +423,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
         this.drainDuration = pBoolean ? 100 : 0;
         if(pBoolean){
             // Inicia a drenar vida
-            this.level.playSound(null,this, SoundEvents.MUSIC_DISC_CAT, SoundSource.HOSTILE,1.0F,1.0F);
+            this.level.playSound(null,this, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.HOSTILE,1.0F,1.0F);
         }else {
             this.stopDrainSound();
         }
@@ -431,7 +431,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     protected void stopDrainSound(){
         if(!this.level.isClientSide){
             // Para el sonido del drenar vida
-            PacketHandler.sendToAllTracking(new PacketStopSound(SoundEvents.MUSIC_DISC_CAT.getLocation(),SoundSource.HOSTILE),this);
+            PacketHandler.sendToAllTracking(new PacketStopSound(ModSounds.SOUL_SAGE_DRAIN.get().getLocation(),SoundSource.HOSTILE),this);
         }
     }
 
@@ -551,10 +551,10 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                 }
                 // sonido del escudo
                 if(flag){
-                    owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),SoundEvents.AMBIENT_NETHER_WASTES_MOOD,SoundSource.HOSTILE,5.0f,-5.0f,false);
+                    owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),ModSounds.SOUL_SAGE_SHIELD.get(),SoundSource.HOSTILE,1.0f,1.0f,false);
                 }
             }
-            owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),SoundEvents.AMBIENT_NETHER_WASTES_MOOD,SoundSource.HOSTILE,5.0f,-5.0f,false);
+            owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),ModSounds.SOUL_SAGE_SHIELD.get(),SoundSource.HOSTILE,1.0f,1.0f,false);
             owner.setDrainSoul(true);
             owner.level.broadcastEntityEvent(owner,(byte) 60);
             owner.getNavigation().stop();
@@ -770,7 +770,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     soulBomb.setYRot(owner.getYRot());
                     soulBomb.shoot(posTarget1.getX()- posOwner.getX(), posTarget1.getY() -2F - posOwner.getY(), posTarget1.getZ()- posOwner.getZ(),2.0F,0.0F);
                     //sonido del sould bomb al ser lanzado
-                    soulBomb.level.playSound(null,soulBomb,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+                    soulBomb.level.playSound(null,soulBomb,ModSounds.SOUL_SAGE_MISSILE.get(),SoundSource.HOSTILE,1.0F,1.0F);
 
                 }
                 break;
