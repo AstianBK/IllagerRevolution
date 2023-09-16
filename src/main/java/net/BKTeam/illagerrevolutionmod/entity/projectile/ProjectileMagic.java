@@ -93,7 +93,7 @@ public class ProjectileMagic extends ThrowableProjectile {
                         0.0125f * (this.random.nextFloat() - 0.5f));
             }
         }
-        this.level.addParticle(ModParticles.SOUL_FLAME.get(),this.getX(),this.getY(),this.getZ()
+        this.level.addParticle(this.getParticle(),this.getX(),this.getY(),this.getZ()
                 ,0.0F,0.0F,0.0F);
     }
 
