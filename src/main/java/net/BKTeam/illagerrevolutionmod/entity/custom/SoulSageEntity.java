@@ -82,7 +82,6 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     private int drainDuration;
 
     public int absorbedSouls;
-    private int soundDrianTick;
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
@@ -431,7 +430,9 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     protected void stopDrainSound(LivingEntity living){
         if(!this.level.isClientSide){
             // Para el sonido del drenar vida
-            PacketHandler.sendToAllTracking(new PacketStopSound(ModSounds.SOUL_SAGE_DRAIN.get().getLocation(),SoundSource.HOSTILE),living);
+            if(living!=null){
+                PacketHandler.sendToAllTracking(new PacketStopSound(ModSounds.SOUL_SAGE_DRAIN.get().getLocation(),SoundSource.HOSTILE),living);
+            }
         }
     }
 
