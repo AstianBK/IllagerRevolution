@@ -790,7 +790,11 @@
 					}
 				},
 				"itemHandRight": {
-					"rotation": [35, 0, 0],
+					"rotation": {
+						"0.0": [35, 0, 0],
+						"0.3333": [35, 0, 0],
+						"0.6667": [45, 0, 0]
+					},
 					"position": {
 						"0.0": [0, 0, 0],
 						"0.3333": [2.25, 0, 0.75],
@@ -830,7 +834,7 @@
 				}
 			}
 		},
-		"animation.IllagerBladeKnight.combo1shieldbreak": {
+		"animation.IllagerBladeKnight.disableshield": {
 			"loop": true,
 			"animation_length": 0.83333,
 			"bones": {
@@ -1114,7 +1118,8 @@
 				"itemHandRight": {
 					"rotation": {
 						"0.0": [35, 0, 0],
-						"0.6667": [35, 0, 0]
+						"0.3333": [35, 0, 0],
+						"0.6667": [45, 0, 0]
 					},
 					"position": {
 						"0.0": [0, 0, 0],
@@ -1229,7 +1234,7 @@
 					"position": [0, -1, 0.75]
 				},
 				"itemHandRight": {
-					"rotation": [30, 0, 0]
+					"rotation": [40, 0, 0]
 				}
 			}
 		}

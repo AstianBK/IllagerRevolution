@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.entity.projectile;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.AreaFireColumnEntity;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -79,7 +80,7 @@ public class SoulBomb extends ProjectileMagic {
                     }
                 }
                 //sonido de desactivar escudo
-                owner.playSound(SoundEvents.FOX_EAT,1.0F,1.0F);
+                owner.playSound(ModSounds.SOUL_SAGE_SHIELD.get(),1.0F,1.0F);
                 if(this.level.isClientSide){
                     Vec3 vec3 = owner.getBoundingBox().getCenter();
                     for(int i = 0; i < 40; ++i) {
