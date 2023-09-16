@@ -45,23 +45,27 @@
   "item.illagerrevolutionmod.claws_armor_iron": "Garras de hierro para rasgador",
 
 
-  "item.illagerrevolutionmod.encrusted_lapis": "Lapislàzuli incrustado",
-  "item.illagerrevolutionmod.illagium": "Lingote de illagium",
+  "item.illagerrevolutionmod.illagium": "Lingote de illanio",
   "item.illagerrevolutionmod.raker_claw": "Garra de rasgador",
+  "item.illagerrevolutionmod.mauler_pelt": "Piel de mutilador",
+  "item.illagerrevolutionmod.scrounger_feather": "Pluma de plagador",
 
 
   "effect.illagerrevolutionmod.deep_wound": "Herida profunda",
-  "effect.illagerrevolutionmod.death_mark": "Alma Atrapada",
-  "effect.illagerrevolutionmod.mauled": "Mauled",
+  "effect.illagerrevolutionmod.death_mark": "Marca de muerte",
+  "effect.illagerrevolutionmod.mauled": "Mutilado",
+  "effect.illagerrevolutionmod.soul_burn": "Quemadura de alma",
 
 
-  "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
-  "item.illagerrevolutionmod.illagium_alt_runed_blade": "§eIllagium Runed Blade§r",
-  "item.illagerrevolutionmod.illagium_sword": "Espada de illagium",
-  "item.illagerrevolutionmod.illagium_axe": "Hacha de illagium",
-  "item.illagerrevolutionmod.illagium_pickaxe": "Martillo de illagium",
-  "item.illagerrevolutionmod.illagium_hoe": "Guadaña de illagium",
-  "item.illagerrevolutionmod.illagium_shovel": "Espatula de illagium",
+  "item.illagerrevolutionmod.illagium_runed_blade": "Espada runica de illanio",
+  "item.illagerrevolutionmod.illagium_alt_runed_blade": "Espada runica de illanio",
+  "item.illagerrevolutionmod.ominous_grimoire": "Grimorio Ominoso",
+  "item.illagerrevolutionmod.illagium_sword": "Espada de illanio",
+  "item.illagerrevolutionmod.illagium_axe": "Hacha de illanio",
+  "item.illagerrevolutionmod.illagium_pickaxe": "Pico de illanio",
+  "item.illagerrevolutionmod.illagium_hoe": "Hazada de illanio",
+  "item.illagerrevolutionmod.illagium_shovel": "Pala de illanio",
+  "item.illagerrevolutionmod.beast_staff": "Bastòn domador de bestias",
   "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Filo dentado",
@@ -71,6 +75,7 @@
   "entity.illagerrevolutionmod.illager_miner": "Minero illager",
   "entity.illagerrevolutionmod.illager_scavenger": "Illager chatarrero",
   "entity.illagerrevolutionmod.blade_knight": "Illager caballero de la espada",
+  "entity.illagerrevolutionmod.soul_sage": "Illager erudito de las almas",
   "entity.illagerrevolutionmod.fallen_knight": "Caballero Caido",
   "entity.illagerrevolutionmod.illager_beast_tamer": "Illager domador de bestias",
   "entity.illagerrevolutionmod.zombified": "Illager zombi",

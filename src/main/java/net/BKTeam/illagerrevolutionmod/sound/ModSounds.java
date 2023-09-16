@@ -74,11 +74,35 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_HURT =
             registerSoundEvent("blade_knight_hurt");
 
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_FIRE =
+                registerSoundEvent("soul_sage_fire");
+
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_DRAIN =
+                registerSoundEvent("soul_sage_drain");
+
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_SHIELD =
+                registerSoundEvent("soul_sage_shield");
+
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_MISSILE =
+                registerSoundEvent("soul_sage_missile");
+
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_SWORDHIT1 =
             registerSoundEvent("blade_knight_swordhit1");
 
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_SWORDHIT2 =
             registerSoundEvent("blade_knight_swordhit2");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_1 =
+                registerSoundEvent("blade_slash_1");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_2 =
+                registerSoundEvent("blade_slash_2");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_HIT1 =
+                registerSoundEvent("blade_slash_hit1");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_HIT2 =
+                registerSoundEvent("blade_slash_hit2");
 
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_LAUGH =
             registerSoundEvent("blade_knight_laugh");

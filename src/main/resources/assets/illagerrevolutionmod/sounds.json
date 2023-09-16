@@ -167,6 +167,62 @@
     ]
   },
 
+  "blade_slash_1": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_1",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_1"
+    ]
+  },
+
+  "blade_slash_2": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_2",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_2"
+    ]
+  },
+
+  "blade_slash_hit1": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_hit1",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_hit1"
+    ]
+  },
+
+  "blade_slash_hit2": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_hit2",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_hit2"
+    ]
+  },
+
+  "soul_sage_fire": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_fire",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_fire"
+    ]
+  },
+
+  "soul_sage_drain": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_drain",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_drain"
+    ]
+  },
+
+  "soul_sage_shield": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_shield",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_shield"
+    ]
+  },
+
+  "soul_sage_missile": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_missile",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_missile"
+    ]
+  },
+
   "fallen_knight_revive": {
     "subtitle": "sounds.illagerrevolutionmod.fallen_knight_revive",
     "sounds": [

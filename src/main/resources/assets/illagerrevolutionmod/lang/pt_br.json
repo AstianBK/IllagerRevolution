@@ -16,6 +16,10 @@
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Gerar illager domador de feras",
   "item.illagerrevolutionmod.raker_spawn_egg": "Gerar Estripador",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Gerar illager cavaleiro da espada",
+  "item.illagerrevolutionmod.soul_sage_spawn_egg": "Gerar illager estudioso das almas",
+  "item.illagerrevolutionmod.mauler_spawn_egg":"Gerar mutilador",
+  "item.illagerrevolutionmod.wild_ravager_spawn_egg":"Gerar devastador salvagem",
+  "item.illagerrevolutionmod.scrounger_spawn_egg":"Gerar plagador",
 
 
   "item.illagerrevolutionmod.helmet_miner_reinforced": "Capacete Mineração de Illagium",
@@ -42,17 +46,20 @@
   "item.illagerrevolutionmod.claws_armor_iron": "Garras de ferro para estripador",
 
 
-  "item.illagerrevolutionmod.encrusted_lapis": "Lapislàzuli embutido",
   "item.illagerrevolutionmod.illagium": "Lingote de illagium",
   "item.illagerrevolutionmod.raker_claw": "Garra de estripador",
-
+  "item.illagerrevolutionmod.mauler_pelt": "Pelagem de mutilador",
+  "item.illagerrevolutionmod.scrounger_feather": "Pena de plagador",
 
   "effect.illagerrevolutionmod.deep_wound": "Ferida profunda",
   "effect.illagerrevolutionmod.death_mark": "Alma Presa",
   "effect.illagerrevolutionmod.mauled": "Mutilado",
+  "effect.illagerrevolutionmod.soul_burn": "Queimadura de alma",
 
 
-  "item.illagerrevolutionmod.illagium_runed_blade": "§eEspada runica de illagium",
+  "item.illagerrevolutionmod.illagium_runed_blade": "Espada runica de illagium",
+  "item.illagerrevolutionmod.illagium_alt_runed_blade": "Espada runica de illagium",
+  "item.illagerrevolutionmod.ominous_grimoire": "Grimório Sinistro",
   "item.illagerrevolutionmod.illagium_sword": "Espada de illagium",
   "item.illagerrevolutionmod.illagium_axe": "Machado de illagium",
   "item.illagerrevolutionmod.illagium_pickaxe": "Martelo de illagium",
@@ -67,6 +74,7 @@
   "entity.illagerrevolutionmod.illager_miner": "Mineiro illager",
   "entity.illagerrevolutionmod.illager_miner_badlands": "Illager rastreador",
   "entity.illagerrevolutionmod.blade_knight": "Illager cavaleiro da espada",
+  "entity.illagerrevolutionmod.soul_sage": "Illager erudito de las almas",
   "entity.illagerrevolutionmod.fallen_knight": "Cavaleiero caido",
   "entity.illagerrevolutionmod.illager_beast_tamer": "Illager domador de feras",
   "entity.illagerrevolutionmod.zombified": "Illager zombi",

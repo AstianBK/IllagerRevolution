@@ -110,7 +110,7 @@ public class ModItems {
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> SOUL_SAGE_SPAWN_EGG = ITEMS.register("soul_sage_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntityTypes.SOUL_SAGE,0x5e7371, 0x3e6b5a,
+            () -> new ForgeSpawnEggItem(ModEntityTypes.SOUL_SAGE,0x232529, 0xf2ce61,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
     public static final RegistryObject<Item> ILLAGERBEASTTAMER_SPAWN_EGG = ITEMS.register("illagerbeasttamer_spawn_egg",

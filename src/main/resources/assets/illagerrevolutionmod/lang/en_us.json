@@ -5,6 +5,7 @@
   "block.illagerrevolutionmod.drum_damage": "Damaging War Drum",
   "block.illagerrevolutionmod.drum_speed": "Speeding War Drum",
 
+
   "item.illagerrevolutionmod.rune_fragment_bone": "Rune Fragment",
   "item.illagerrevolutionmod.rune_fragment_flesh": "Rune Fragment",
   "item.illagerrevolutionmod.rune_fragment_undying": "Rune Fragment",
@@ -17,6 +18,7 @@
   "item.illagerrevolutionmod.illagerbeasttamer_spawn_egg": "Illager Beast Tamer Spawn Egg",
   "item.illagerrevolutionmod.raker_spawn_egg": "Raker Spawn Egg",
   "item.illagerrevolutionmod.blade_knight_spawn_egg": "Blade Knight Illager Spawn Egg",
+  "item.illagerrevolutionmod.soul_sage_spawn_egg": "Soul Sage Illager Spawn Egg",
   "item.illagerrevolutionmod.mauler_spawn_egg":"Mauler Spawn Egg",
   "item.illagerrevolutionmod.wild_ravager_spawn_egg":"Wild Ravager Spawn Egg",
   "item.illagerrevolutionmod.scrounger_spawn_egg":"Scrounger Spawn Egg",
@@ -67,6 +69,7 @@
   "effect.illagerrevolutionmod.deep_wound": "Deep Wound",
   "effect.illagerrevolutionmod.death_mark": "Death Bound",
   "effect.illagerrevolutionmod.mauled": "Mauled",
+  "effect.illagerrevolutionmod.soul_burn": "Soul Burn",
 
 
   "item.illagerrevolutionmod.illagium_runed_blade": "Illagium Runed Blade",
@@ -81,14 +84,17 @@
   "item.illagerrevolutionmod.junk_axe": "Junk Axe",
   "item.illagerrevolutionmod.arrow_beast": "Claw Arrow",
 
+
   "enchantment.illagerrevolutionmod.serrated_edge": "Serrated Edge",
   "enchantment.illagerrevolutionmod.wary_lenses": "Wary Lenses",
   "enchantment.illagerrevolutionmod.beast_slayer": "Beast Slayer",
+
 
   "entity.illagerrevolutionmod.raker": "Raker",
   "entity.illagerrevolutionmod.illager_miner": "Illager Miner",
   "entity.illagerrevolutionmod.illager_scavenger": "Illager Scavenger",
   "entity.illagerrevolutionmod.blade_knight": "Illager Blade Knight",
+  "entity.illagerrevolutionmod.soul_sage": "Illager Soul Sage",
   "entity.illagerrevolutionmod.fallen_knight": "Fallen Knight",
   "entity.illagerrevolutionmod.illager_beast_tamer": "Illager Beast Tamer",
   "entity.illagerrevolutionmod.zombified": "Zombified Illager",
@@ -96,9 +102,12 @@
   "entity.illagerrevolutionmod.wild_ravager": "Wild Ravager",
   "entity.illagerrevolutionmod.scrounger": "Scrounger",
 
+
   "itemGroup.illagerrevolutiontab": "Illager Revolution",
 
+
   "sounds.illagerrevolutionmod.tamer_whistle": "Beast Tamer Whistling",
+
 
   "tooltip.illagerrevolutionmod.beast_staff": "§6RIGHT CLICK§r on a tamed beast to open it's inventory.",
   "tooltip.illagerrevolutionmod.rune_fragment_bone": "§6Bone§r ",
@@ -115,6 +124,7 @@
   "tooltip.illagerrevolutionmod.junk_axe4": "§64 §rHits remaining",
   "tooltip.illagerrevolutionmod.junk_axe5": "§65 §rHits remaining",
 
+
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",
@@ -122,6 +132,7 @@
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5to release a stored soul",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2": "§5hold§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5to raise them as undead followers",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulward": "§5§lSoul Ward:§r §5If fully charged, your blade will protect you from death, consuming all souls in the process",
+
 
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1": "§l§5Undying Bone Rune§r",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2": "Hold §6SHIFT§r for more info",
@@ -132,9 +143,11 @@
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability",
 
+
   "event.illagerrevolutionmod.raid.defeat": "DEFEAT",
   "event.illagerrevolutionmod.raid.victory": "VICTORY",
   "event.illagerrevolutionmod.raid": "The Order",
+
 
   "key.category.illagerrevolutionmod":"Illager Revolution",
   "key.illagerrevolutionmod.attack_key2":"Primary Attack",
