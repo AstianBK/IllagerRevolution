@@ -14,7 +14,6 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 public class BKGui implements IGuiOverlay {
     @Override
     public void render(ForgeGui gui, PoseStack mStack, float partialTick, int screenWidth, int screenHeight) {
-        if (!gui.shouldDrawSurvivalElements()) return;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         assert player != null;
@@ -41,6 +40,5 @@ public class BKGui implements IGuiOverlay {
                 mStack.popPose();
             }
         }
-
     }
 }
