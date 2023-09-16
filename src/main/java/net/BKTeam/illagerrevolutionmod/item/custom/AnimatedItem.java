@@ -141,7 +141,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                         }
                         i++;
                     }
-                }else if(cooldown<0){
+                }else if(cooldown<=0){
                     SoulMissile missile = new SoulMissile(pPlayer,pLevel);
                     missile.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYRot(),0.0F,2.0F,0.0F);
                     missile.setPowerLevel(pPlayer.getMainHandItem().getEnchantmentLevel(InitEnchantment.INSIGHT.get()));

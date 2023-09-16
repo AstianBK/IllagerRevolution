@@ -41,12 +41,14 @@ public class RunedSword extends SwordItem {
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
         int i = EnchantmentHelper.getEnchantmentLevel(InitEnchantment.SOUL_SLASH.get(),pAttacker);
         if(i!=0){
-            if(pAttacker.level.random.nextFloat()<0.1F*i){
-                SoulSlash slash = new SoulSlash(pAttacker,pAttacker.level);
-                slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,1.0F,0.1F);
-                pAttacker.level.addFreshEntity(slash);
-                pAttacker.playSound(ModSounds.BLADE_SLASH_1.get(),1.0F,1.0F);
-                pStack.hurtAndBreak(5,pAttacker,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+            if(!pAttacker.level.isClientSide){
+                if(pAttacker.level.random.nextFloat()<0.1F*i){
+                    SoulSlash slash = new SoulSlash(pAttacker,pAttacker.level);
+                    slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,1.0F,0.1F);
+                    pAttacker.level.addFreshEntity(slash);
+                    pAttacker.playSound(ModSounds.BLADE_SLASH_1.get(),1.0F,1.0F);
+                    pStack.hurtAndBreak(5,pAttacker,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+                }
             }
         }
         return super.hurtEnemy(pStack, pTarget, pAttacker);

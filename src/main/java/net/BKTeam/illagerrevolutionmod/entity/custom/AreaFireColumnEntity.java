@@ -84,7 +84,8 @@ public class AreaFireColumnEntity extends Entity {
         this.entityData.set(IS_BURN,isBurn);
         // sonido del inicio del burn
         if(isBurn){
-            this.level.playSound(null,this, ModSounds.SOUL_SAGE_FIRE.get(), SoundSource.HOSTILE,1.0F,1.0F);
+            this.level.playSound(null,this, ModSounds.SOUL_SAGE_FIRE.get(),
+                    SoundSource.HOSTILE,1.0F,1.0F);
         }
     }
 
@@ -128,11 +129,23 @@ public class AreaFireColumnEntity extends Entity {
         super.tick();
         int i = this.getPowerLevel();
         if(this.prepareTimer==this.prepareDuration){
+
             // sonido del anillo 1
+            this.level.playSound(null,this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE
+                    ,5.0F,1.0F);
+
+        }
+        if(this.prepareTimer==this.prepareDuration-this.prepareDuration/4 ||
+                this.prepareTimer==this.prepareDuration-this.prepareDuration/2 ||
+                this.prepareTimer==this.prepareDuration-this.prepareDuration/1.25F){
+            // sonido del anillo 2
+            // sonido del anillo 3
+            // sonido del anillo 4
             this.level.playSound(null,this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE,5.0F,1.0F);
         }
         if(this.prepareTimer==0){
             this.setIsBurn(true);
+            this.prepareTimer--;
         }else {
             this.prepareTimer--;
         }
@@ -142,14 +155,6 @@ public class AreaFireColumnEntity extends Entity {
                     this.applyRadius(this.getRadiusForLevel(j),0.5f);
                 }
             }else {
-                if(this.prepareTimer==this.prepareDuration-this.prepareDuration/4 ||
-                        this.prepareTimer==this.prepareDuration-this.prepareDuration/2 ||
-                        this.prepareTimer==this.prepareDuration-this.prepareDuration/1.25F){
-                    // sonido del anillo 2
-                    // sonido del anillo 3
-                    // sonido del anillo 4
-                    this.level.playSound(null,this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE,5.0F,1.0F);
-                }
 
                 if(this.level.random.nextBoolean()){
                     if(this.prepareTimer<this.prepareDuration-this.prepareDuration/4){

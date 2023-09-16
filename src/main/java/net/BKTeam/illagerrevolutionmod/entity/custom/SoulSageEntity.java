@@ -153,9 +153,6 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
             List<LivingEntity> list = this.getDrainEntities();
             if(this.drainDuration > 0 ) {
                 this.drainDuration--;
-                if(this.tickCount%40==0){
-                    this.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,3.0F,1.0F);
-                }
                 if(this.tickCount%20==0){
                     if(!list.isEmpty()){
                         int i = 0;
@@ -166,14 +163,18 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                                 if(list.size()>1){
                                     f1=0.5F*list.size()-1;
                                 }
+                                if(this.tickCount%40==0){
+                                    target.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,3.0F,1.0F);
+                                }
                                 if(target instanceof Player pPlayer){
                                     int j = (int) pPlayer.getAttribute(SoulTick.SOUL).getValue();
                                     if(j>0 && this.random.nextFloat()<0.2F){
                                         pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(j-1);
                                         this.spawSoulBomb(1);
+                                        //sonido cuando roba alma.
+                                        pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),1.0F,1.0F);
                                     }
-                                    //sonido cuando roba alma.
-                                    pPlayer.playSound(ModSounds.SOUL_LIMIT.get(),1.0F,1.0F);
+
                                 }
                                 if(target.hurt(DamageSource.mobAttack(this).setMagic(),f)){
                                     //sonido cuando chupa vida.
@@ -248,14 +249,16 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                 double dist = this.distanceTo(living);
                 if(dist<60){
                     return true;
-                }else {
-                    this.setActiveAttackTarget(0,index);
-                    return false;
+                }else if (living instanceof Player player && !player.isCreative()){
+                    return true;
+                }else if (this.hasLineOfSight(living)){
+                    return true;
                 }
             }else if(living.getLastHurtByMob()==this){
                 this.spawSoulBomb(1);
             }
         }
+        this.stopDrainSound(living);
         this.setActiveAttackTarget(0,index);
         return false;
     }
@@ -424,17 +427,11 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     public void setDrainSoul(boolean pBoolean){
         this.entityData.set(DRAIN_SOUL,pBoolean);
         this.drainDuration = pBoolean ? 40 : 0;
-        if(pBoolean){
-            // Inicia a drenar vida
-            this.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,3.0F,1.0F);
-        }else {
-            this.stopDrainSound();
-        }
     }
-    protected void stopDrainSound(){
+    protected void stopDrainSound(LivingEntity living){
         if(!this.level.isClientSide){
             // Para el sonido del drenar vida
-            PacketHandler.sendToAllTracking(new PacketStopSound(ModSounds.SOUL_SAGE_DRAIN.get().getLocation(),SoundSource.HOSTILE),this);
+            PacketHandler.sendToAllTracking(new PacketStopSound(ModSounds.SOUL_SAGE_DRAIN.get().getLocation(),SoundSource.HOSTILE),living);
         }
     }
 
@@ -574,10 +571,12 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                 int k = 1;
 
                 for (LivingEntity living: targets){
-                    owner.setActiveAttackTarget(living.getId(), k);
-                    k++;
-                    if(k == 3){
-                        break;
+                    if(owner.hasLineOfSight(living)){
+                        owner.setActiveAttackTarget(living.getId(), k);
+                        k++;
+                        if(k == 3){
+                            break;
+                        }
                     }
                 }
             }
