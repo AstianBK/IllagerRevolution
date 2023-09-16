@@ -222,7 +222,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                     } else if (i + 1 == 3) {
                         this.level.broadcastEntityEvent(this,(byte)(64));
                     }
-                    this.setContinueAnim(false);
+                    this.setContinueAnim(i + 1 == 3);
                 } else {
                     this.setIdComboState(0);
                     this.setIdCombo(0);
