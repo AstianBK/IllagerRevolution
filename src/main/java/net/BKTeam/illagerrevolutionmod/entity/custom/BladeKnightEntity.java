@@ -11,6 +11,7 @@ import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -164,7 +165,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     @Override
     public void tick() {
         super.tick();
-        boolean continueAnim=this.continueAnim;
         if (this.hasCombo()) {
             if(this.stunnedTimer > 0){
                 this.stunnedTimer--;
@@ -172,6 +172,24 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                     this.setIdComboState(0);
                     this.setIdCombo(0);
                     this.countCombo=0;
+                    List<LivingEntity> livings = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(3.0D),e->e!=this && e!=this.getVehicle() && this.isAlliedTo(e));
+                    for(LivingEntity living : livings){
+                        double d0 = living.getX() - this.getX();
+                        double d1 = living.getZ() - this.getZ();
+                        double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
+                        double d3 = 3.5F;
+                        living.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
+                    }
+                    this.playSound(SoundEvents.RAVAGER_ROAR,3.0F,-10.0F);
+                    if(this.level.isClientSide){
+                        Vec3 vec3 = this.getBoundingBox().getCenter();
+                        for(int i = 0; i < 40; ++i) {
+                            double d0x = this.random.nextGaussian() * 0.2D;
+                            double d1y = this.random.nextGaussian() * 0.2D;
+                            double d2z = this.random.nextGaussian() * 0.2D;
+                            this.level.addParticle(ParticleTypes.POOF, vec3.x, vec3.y, vec3.z, d0x, d1y, d2z);
+                        }
+                    }
                 }
             }
             if (this.getCombo() == Combo.COMBO_PERFORATE) {
@@ -181,12 +199,12 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                         double dist = this.distanceToSqr(target.getX(), target.getY(), target.getZ());
                         if (dist < this.getAttackReachSqr(target)) {
                             this.setContinueAnim(true);
-                            continueAnim=true;
+                            this.continueAnim=true;
                             this.level.broadcastEntityEvent(this, (byte) 62);
                         }
                     } else if (!this.getTarget().isAlive()) {
                         this.setContinueAnim(false);
-                        continueAnim=false;
+                        this.continueAnim=false;
                     }
                 }
 
@@ -198,7 +216,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         }
 
         int i = this.getIdComboState();
-        if (this.animationTimer < 0 && continueAnim) {
+        if (this.animationTimer < 0 && this.continueAnim) {
             boolean flag = this.hasCombo() && i > 0;
             if (flag && this.getCombo() == Combo.COMBO_SPIN) {
                 if (i + 1 < 4) {
@@ -262,7 +280,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.populateDefaultEquipmentSlots(pDifficulty);
-        if(this.getMainHandItem().is(ModItems.ILLAGIUM_RUNED_BLADE.get())){
+        if(this.getMainHandItem().is(ModItems.FAKE_RUNED_BLADE.get())){
             Util.spawZombifiedBack(this.level,this,4);
         }else {
             Util.spawFallenKnightBack(this.level,this,2);
@@ -658,6 +676,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 this.goalOwner.lookAt(target, 30F, 30F);
                             }else {
                                 this.goalOwner.setYRot(this.goalOwner.yRotO);
+                                this.goalOwner.getNavigation().stop();
                             }
                             if (this.goalOwner.getComboState()==ComboState.FIRST_HIT){
                                 if(this.goalOwner.animationTimer==5){

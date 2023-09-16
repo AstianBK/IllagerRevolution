@@ -423,7 +423,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
         this.drainDuration = pBoolean ? 100 : 0;
         if(pBoolean){
             // Inicia a drenar vida
-            this.level.playSound(null,this, SoundEvents.RAVAGER_ROAR, SoundSource.HOSTILE,1.0F,1.0F);
+            this.level.playSound(null,this, SoundEvents.MUSIC_DISC_CAT, SoundSource.HOSTILE,1.0F,1.0F);
         }else {
             this.stopDrainSound();
         }
@@ -431,7 +431,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     protected void stopDrainSound(){
         if(!this.level.isClientSide){
             // Para el sonido del drenar vida
-            PacketHandler.sendToAllTracking(new PacketStopSound(ModSounds.DRUM_SOUND.getId(),SoundSource.HOSTILE),this);
+            PacketHandler.sendToAllTracking(new PacketStopSound(SoundEvents.MUSIC_DISC_CAT.getLocation(),SoundSource.HOSTILE),this);
         }
     }
 

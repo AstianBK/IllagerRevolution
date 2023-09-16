@@ -5,6 +5,7 @@ import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.particle.custom.BloodBKParticles;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
@@ -26,7 +27,12 @@ public class SoulMissile extends ProjectileMagic{
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if(pResult.getEntity() instanceof LivingEntity target){
-            target.hurt(DamageSource.MAGIC,2.0F+1.0F*this.getPowerLevel());
+            Entity entity = this.level.getEntity(this.getOwnerID());
+            if(entity instanceof LivingEntity){
+                target.hurt(DamageSource.mobAttack((LivingEntity) entity),2.0F+1.0F*this.getPowerLevel());
+            }else {
+                target.hurt(DamageSource.MAGIC,2.0F+1.0F*this.getPowerLevel());
+            }
             this.discard();
         }
     }
@@ -39,6 +45,6 @@ public class SoulMissile extends ProjectileMagic{
 
     @Override
     protected SimpleParticleType getParticle() {
-        return ModParticles.RUNE_SOUL_PARTICLES.get();
+        return ModParticles.RUNE_CURSED_PARTICLES.get();
     }
 }
