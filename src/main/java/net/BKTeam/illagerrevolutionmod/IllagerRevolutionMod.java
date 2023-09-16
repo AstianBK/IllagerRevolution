@@ -228,7 +228,8 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(MAULER.get(), MaulerRenderer::new);
         EntityRenderers.register(SCROUNGER.get(), ScroungerRenderer::new);
         EntityRenderers.register(WILD_RAVAGER.get(), WildRavagerRenderer::new);
-        EntityRenderers.register(SOUL_BOMB.get(), BombRender::new);
+        EntityRenderers.register(SOUL_BOMB.get(), NoopRenderer::new);
+        EntityRenderers.register(SOUL_MISSILE.get(), NoopRenderer::new);
         EntityRenderers.register(AREA_FIRE_COLUMN.get(),NoopRenderer::new);
         EntityRenderers.register(SOUL_SAGE.get(), SoulSageRenderer::new);
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);

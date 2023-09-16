@@ -1,14 +1,14 @@
-package net.BKTeam.illagerrevolutionmod.enchantment;
+package net.BKTeam.illagerrevolutionmod.enchantment.custom;
 
+import net.BKTeam.illagerrevolutionmod.item.custom.ArmorGogglesItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorGogglesItem;
 
 public class WaryLensesEnchantment extends Enchantment {
-    protected WaryLensesEnchantment(EquipmentSlot... slots) {
+    public WaryLensesEnchantment(EquipmentSlot... slots) {
         super(Rarity.RARE, EnchantmentCategory.ARMOR_HEAD, slots);
     }
     @Override

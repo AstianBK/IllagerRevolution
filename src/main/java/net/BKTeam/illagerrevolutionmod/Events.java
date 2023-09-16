@@ -12,10 +12,7 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModArmorMaterials;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorIllusionerRobeItem;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorPillagerVestItem;
-import net.BKTeam.illagerrevolutionmod.item.custom.ArmorVindicatorJacketItem;
-import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumArmorItem;
+import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
@@ -28,6 +25,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -169,6 +167,17 @@ public class Events {
                     }
                 }
             }
+            if(event.getEntity().hasEffect(InitEffect.SOUL_BURN.get())){
+                int level=event.getEntity().getEffect(InitEffect.SOUL_BURN.get()).getAmplifier()+1;
+                float damage=1.0F+event.getAmount()*(0.2F*level);
+                if(event.getSource()==DamageSource.ON_FIRE || event.getSource()==DamageSource.IN_FIRE){
+                    if (level < 3) {
+                        event.getEntity().hurt(DamageSource.GENERIC.setIsFire(),damage);
+                    }else {
+                        event.getEntity().hurt(DamageSource.MAGIC.bypassArmor().bypassMagic().bypassEnchantments(),damage);
+                    }
+                }
+            }
             if(entity.hasEffect(InitEffect.DEATH_MARK.get() ) && entity.level.random.nextInt(0,7)==1){
                 Random random=new Random();
                 for (int i=0;i<3;i++){
@@ -179,26 +188,6 @@ public class Events {
                 }
             }
         }
-    }
-    @SubscribeEvent
-    public static void hurtEvent(LivingHurtEvent event){
-        if(event.getEntity()==null)return;
-
-        if(event.getEntity().hasEffect(InitEffect.SOUL_BURN.get())){
-            int level=event.getEntity().getEffect(InitEffect.SOUL_BURN.get()).getAmplifier();
-            float damage=event.getAmount()+event.getAmount()*(0.2F*level);
-            if (level < 2) {
-                if(event.getSource().isFire()){
-                    event.setAmount(damage);
-                }
-            }else {
-                if(event.getSource().isFire()){
-                    event.setCanceled(true);
-                    event.getEntity().hurt(DamageSource.MAGIC.bypassArmor().bypassMagic().bypassEnchantments(),damage);
-                }
-            }
-        }
-
     }
 
     @SubscribeEvent

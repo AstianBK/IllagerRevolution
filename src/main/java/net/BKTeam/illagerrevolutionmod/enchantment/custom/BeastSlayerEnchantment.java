@@ -1,6 +1,7 @@
-package net.BKTeam.illagerrevolutionmod.enchantment;
+package net.BKTeam.illagerrevolutionmod.enchantment.custom;
 
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
 import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.world.InteractionHand;
@@ -59,7 +60,7 @@ public class BeastSlayerEnchantment extends Enchantment {
 
     @Override
     public float getDamageBonus(int level, MobType mobType, ItemStack enchantedItem) {
-        if(mobType==BKMobType.BEAST_ILLAGER){
+        if(mobType== BKMobType.BEAST_ILLAGER){
             if(enchantedItem.getItem() instanceof SwordItem item){
                 return item.getDamage()*(0.15F*level);
             }

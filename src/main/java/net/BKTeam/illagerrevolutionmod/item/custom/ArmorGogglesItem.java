@@ -60,7 +60,7 @@ public class ArmorGogglesItem extends GeoArmorItem implements IAnimatable {
             if(player.hasEffect(MobEffects.BLINDNESS)){
                 player.removeEffect(MobEffects.BLINDNESS);
             }
-            cc+=5*EnchantmentHelper.getItemEnchantmentLevel(InitEnchantment.WARYLENSES.get(),stack);
+            cc+=5*EnchantmentHelper.getItemEnchantmentLevel(InitEnchantment.WARY_LENSES.get(),stack);
             if(world.getMaxLocalRawBrightness(player.blockPosition())<=1){
                 player.level.getEntitiesOfClass(Monster.class,player.getBoundingBox().inflate(cc)).forEach(entity ->{
                     if(!entity.hasEffect(MobEffects.GLOWING)){

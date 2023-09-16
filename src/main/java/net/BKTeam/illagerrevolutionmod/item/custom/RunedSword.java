@@ -3,12 +3,17 @@ package net.BKTeam.illagerrevolutionmod.item.custom;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.Patreon;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
+import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulSlash;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
 public class RunedSword extends SwordItem {
@@ -29,6 +34,20 @@ public class RunedSword extends SwordItem {
 
     public boolean isFrostRune(Player player, ItemStack stack){
         return Patreon.isPatreon(player, IllagerRevolutionMod.KNIGHTS_SKIN_UUID) && stack.getHoverName().getString().equals("FrostRune");
+    }
+
+    @Override
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+        int i = EnchantmentHelper.getEnchantmentLevel(InitEnchantment.SOUL_SLASH.get(),entity);
+        if(i!=0){
+            if(entity.level.random.nextFloat()<0.1F*i){
+                SoulSlash slash = new SoulSlash(entity,entity.level);
+                slash.shootFromRotation(entity,entity.getXRot(),entity.getYRot(),0.0F,1.0F,0.1F);
+                entity.level.addFreshEntity(slash);
+                stack.hurtAndBreak(5,entity,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+            }
+        }
+        return super.onEntitySwing(stack, entity);
     }
 
     @Override

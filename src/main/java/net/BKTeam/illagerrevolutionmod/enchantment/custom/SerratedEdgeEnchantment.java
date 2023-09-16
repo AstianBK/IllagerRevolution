@@ -1,4 +1,4 @@
-package net.BKTeam.illagerrevolutionmod.enchantment;
+package net.BKTeam.illagerrevolutionmod.enchantment.custom;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
