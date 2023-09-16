@@ -27,7 +27,7 @@ public class SoulMissile extends ProjectileMagic{
         super.onHitEntity(pResult);
         if(pResult.getEntity() instanceof LivingEntity target){
             target.hurt(DamageSource.MAGIC,2.0F+1.0F*this.getPowerLevel());
-            target.discard();
+            this.discard();
         }
     }
 
