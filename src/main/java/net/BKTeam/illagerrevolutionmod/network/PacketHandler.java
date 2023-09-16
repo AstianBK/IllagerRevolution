@@ -75,6 +75,7 @@ public class PacketHandler {
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
         MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),message);
     }
+
     public static <MSG> void sendToServer(MSG message) {
         MOD_CHANNEL.sendToServer(message);
     }

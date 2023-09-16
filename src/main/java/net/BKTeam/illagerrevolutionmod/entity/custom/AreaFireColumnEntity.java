@@ -10,6 +10,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -79,6 +81,10 @@ public class AreaFireColumnEntity extends Entity {
 
     protected void setIsBurn(boolean isBurn){
         this.entityData.set(IS_BURN,isBurn);
+        // sonido del inicio del burn
+        if(isBurn){
+            this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,1.0F,1.0F);
+        }
     }
 
     protected boolean isBurn(){
@@ -132,14 +138,30 @@ public class AreaFireColumnEntity extends Entity {
                 }
             }else {
                 if(this.level.random.nextBoolean()){
+                    if(this.prepareTimer==this.prepareDuration-this.prepareDuration/4){
+                        // sonido del anillo 2
+                        this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
+                    }
                     if(this.prepareTimer<this.prepareDuration-this.prepareDuration/4){
                         this.applyRadius(this.getRadius()/1.25F,0.05f);
+                        if(this.prepareTimer==this.prepareDuration-this.prepareDuration/2){
+                            // sonido del anillo 3
+                            this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
+                        }
                         if(this.prepareTimer<this.prepareDuration-this.prepareDuration/2){
                             this.applyRadius(this.getRadius()/2.0F,0.05f);
+                            if(this.prepareTimer==this.prepareDuration-this.prepareDuration/1.25F){
+                                // sonido del anillo 4
+                                this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
+                            }
                             if(this.prepareTimer<this.prepareDuration-this.prepareDuration/1.25){
                                 this.applyRadius(this.getRadius()/4F,0.05f);
                             }
                         }
+                    }
+                    if(this.prepareTimer==this.prepareDuration){
+                        // sonido del anillo 1
+                        this.level.playSound(null,this, SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE,5.0F,1.0F);
                     }
                     this.applyRadius(this.getRadius(),0.01F);
                 }
@@ -164,11 +186,16 @@ public class AreaFireColumnEntity extends Entity {
                 this.duration--;
             }
         }else {
-            if(this.tickCount%20==0){
+            if(this.tickCount%10==0){
                 if(this.getOwner()!=null){
                     List<LivingEntity> target = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(5.0D),e->!this.getOwner().isAlliedTo(e) && e!=this.getOwner());
                     for(LivingEntity collateral : target){
-                        collateral.addEffect(new MobEffectInstance(InitEffect.SOUL_BURN.get(),200,this.getPowerLevel()));
+                        int level = 0;
+                        if(collateral.hasEffect(InitEffect.SOUL_BURN.get())){
+                            int levelEffect=Mth.clamp(collateral.getEffect(InitEffect.SOUL_BURN.get()).getAmplifier(),0,this.getPowerLevel());
+                            level=levelEffect+1;
+                        }
+                        collateral.addEffect(new MobEffectInstance(InitEffect.SOUL_BURN.get(),200,level));
                     }
                 }
             }

@@ -100,6 +100,11 @@ public class ModEntityTypes {
             .register("soul_bomb", () -> EntityType.Builder.<SoulBomb>of(SoulBomb::new, MobCategory.MISC)
                     .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_bomb"));
 
+    public static final RegistryObject<EntityType<SoulMissile>> SOUL_MISSILE = ENTITY_TYPES
+            .register("soul_missile", () -> EntityType.Builder.<SoulMissile>of(SoulMissile::new, MobCategory.MISC)
+                    .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_missile"));
+
+
     public static final RegistryObject<EntityType<SoulHunter>> SOUL_HUNTER = ENTITY_TYPES
             .register("soul_hunter", () -> EntityType.Builder.<SoulHunter>of(SoulHunter::new, MobCategory.MISC)
                     .fireImmune().sized(0.2F, 0.2F).build(IllagerRevolutionMod.MOD_ID + "soul_hunter"));

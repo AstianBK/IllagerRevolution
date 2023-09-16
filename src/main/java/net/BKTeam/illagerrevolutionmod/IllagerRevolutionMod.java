@@ -17,6 +17,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.SoulSageEntity;
 import net.BKTeam.illagerrevolutionmod.event.loot.LootModifiers;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrderCommand;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.screen.ModMenuTypes;
@@ -85,6 +86,7 @@ public class IllagerRevolutionMod {
         ModBlocks.register(eventBus);
         ModMenuTypes.register(eventBus);
         LootModifiers.register(eventBus);
+        TheKnightOrderCommand.REGISTRY.register(eventBus);
         
         
         InitEffect.REGISTRY.register(eventBus);
@@ -186,7 +188,6 @@ public class IllagerRevolutionMod {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT,()->()->{
             eventBus.addListener(this::registerRenderers);
         });
-
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,CapabilityHandler::attachEntityCapability);
         MinecraftForge.EVENT_BUS.addListener(this::onLoadingLevel);
         DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, IllagerRevolutionMod.MOD_ID);
@@ -228,7 +229,8 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(MAULER.get(), MaulerRenderer::new);
         EntityRenderers.register(SCROUNGER.get(), ScroungerRenderer::new);
         EntityRenderers.register(WILD_RAVAGER.get(), WildRavagerRenderer::new);
-        EntityRenderers.register(SOUL_BOMB.get(), BombRender::new);
+        EntityRenderers.register(SOUL_BOMB.get(), NoopRenderer::new);
+        EntityRenderers.register(SOUL_MISSILE.get(), NoopRenderer::new);
         EntityRenderers.register(AREA_FIRE_COLUMN.get(),NoopRenderer::new);
         EntityRenderers.register(SOUL_SAGE.get(), SoulSageRenderer::new);
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);

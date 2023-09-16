@@ -1,11 +1,17 @@
 package net.BKTeam.illagerrevolutionmod.network;
 
 import net.BKTeam.illagerrevolutionmod.entity.custom.MountEntity;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.server.command.ModIdArgument;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 
@@ -33,6 +39,8 @@ public class PacketSyncMountAttacks {
             Player player=context.get().getSender();
             assert player!=null;
             LivingEntity vehicle = (LivingEntity) player.getVehicle();
+            ItemStack book=player.getItemBySlot(EquipmentSlot.MAINHAND);
+            handleEnchantmet(book,player);
             handlePlayActivateAnimation(vehicle);
         });
         context.get().setPacketHandled(true);
@@ -41,5 +49,30 @@ public class PacketSyncMountAttacks {
         if(vehicle instanceof MountEntity mount){
             mount.handledEventKey(this.pId);
         }
+    }
+
+    private void handleEnchantmet(ItemStack pStack,Player pPlayer) {
+        if(pStack.is(ModItems.OMINOUS_GRIMOIRE.get())){
+            if(!pPlayer.level.isClientSide){
+                List<SoulBomb> souls = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0F),
+                        e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
+                if(!souls.isEmpty()){
+                    boolean flag1 = false;
+                    int i = 0;
+                    for (SoulBomb soulBomb : souls){
+                        if(!flag1){
+                            flag1=true;
+                            soulBomb.setDefender(true);
+                        }else {
+                            if(soulBomb.getPositionSummon()>1){
+                                soulBomb.setPositionSummon(i+1);
+                            }
+                        }
+                        i++;
+                    }
+                }
+            }
+        }
+
     }
 }

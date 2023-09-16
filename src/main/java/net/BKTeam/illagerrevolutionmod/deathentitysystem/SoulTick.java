@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.deathentitysystem;
 
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
+import net.BKTeam.illagerrevolutionmod.item.custom.AnimatedItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.RunedSword;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -21,7 +22,7 @@ public class SoulTick {
     public static void soulDeathEvent(LivingDeathEvent event){
         Entity assasin=event.getSource().getEntity();
         if(assasin instanceof Player player && !(event.getEntity() instanceof FallenKnightEntity)){
-            if(player.getMainHandItem().getItem() instanceof RunedSword){
+            if(player.getMainHandItem().getItem() instanceof RunedSword || player.getMainHandItem().getItem() instanceof AnimatedItem){
                 if(player.getAttribute(SoulTick.SOUL).getValue()<6){
                     player.getAttribute(SoulTick.SOUL).setBaseValue(player.getAttribute(SoulTick.SOUL).getValue()+1);
                     event.getEntity().playSound(ModSounds.SOUL_ABSORB.get(),2.0f,1.0f);

@@ -4,6 +4,9 @@ import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketStopSound;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -32,6 +35,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +82,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     private int drainDuration;
 
     public int absorbedSouls;
+    private int soundDrianTick;
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
@@ -214,6 +219,15 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
         for(SoulBomb bombs : soulBombs){
             bombs.setPositionSummon(i+1);
             i++;
+        }
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+        if (this.random.nextFloat()<0.10){
+            ItemStack drop = new ItemStack(ModItems.OMINOUS_GRIMOIRE.get());
+            this.spawnAtLocation(drop);
         }
     }
 
@@ -407,6 +421,18 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
     public void setDrainSoul(boolean pBoolean){
         this.entityData.set(DRAIN_SOUL,pBoolean);
         this.drainDuration = pBoolean ? 100 : 0;
+        if(pBoolean){
+            // Inicia a drenar vida
+            this.level.playSound(null,this, SoundEvents.MUSIC_DISC_CAT, SoundSource.HOSTILE,1.0F,1.0F);
+        }else {
+            this.stopDrainSound();
+        }
+    }
+    protected void stopDrainSound(){
+        if(!this.level.isClientSide){
+            // Para el sonido del drenar vida
+            PacketHandler.sendToAllTracking(new PacketStopSound(SoundEvents.MUSIC_DISC_CAT.getLocation(),SoundSource.HOSTILE),this);
+        }
     }
 
     public boolean isDrainSoul(){
@@ -522,6 +548,10 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                         soulBomb.setPositionSummon(i+1);
                         i++;
                     }
+                }
+                // sonido del escudo
+                if(flag){
+                    owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),SoundEvents.AMBIENT_NETHER_WASTES_MOOD,SoundSource.HOSTILE,5.0f,-5.0f,false);
                 }
             }
             owner.level.playLocalSound(owner.getX(),owner.getY(),owner.getZ(),SoundEvents.AMBIENT_NETHER_WASTES_MOOD,SoundSource.HOSTILE,5.0f,-5.0f,false);
@@ -739,6 +769,9 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     soulBomb.setInOrbit(false);
                     soulBomb.setYRot(owner.getYRot());
                     soulBomb.shoot(posTarget1.getX()- posOwner.getX(), posTarget1.getY() -2F - posOwner.getY(), posTarget1.getZ()- posOwner.getZ(),2.0F,0.0F);
+                    //sonido del sould bomb al ser lanzado
+                    soulBomb.level.playSound(null,soulBomb,SoundEvents.CHICKEN_DEATH,SoundSource.HOSTILE,1.0F,1.0F);
+
                 }
                 break;
             }

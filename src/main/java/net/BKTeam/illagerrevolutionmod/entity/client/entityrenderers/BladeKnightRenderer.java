@@ -82,7 +82,6 @@ public class BladeKnightRenderer extends ExtendedGeoEntityRenderer<BladeKnightEn
 
     @Override
     protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, BladeKnightEntity currentEntity, IBone bone) {
-        float cc = 290.0f;
         CompoundTag nbt;
         int cc1=6;
         nbt=item.getOrCreateTag();

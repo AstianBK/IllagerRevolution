@@ -12,6 +12,7 @@ import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 
 public class InitEffect {
     public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, IllagerRevolutionMod.MOD_ID);
+
     public static final RegistryObject<MobEffect> DEEP_WOUND = REGISTRY.register("deep_wound", EffectBleeding::new);
     public static final RegistryObject<MobEffect> MAULED = REGISTRY.register("mauled", MauledEffect::new);
     public static final RegistryObject<MobEffect> DEATH_MARK = REGISTRY.register("death_mark", DeathMarkEffect::new);

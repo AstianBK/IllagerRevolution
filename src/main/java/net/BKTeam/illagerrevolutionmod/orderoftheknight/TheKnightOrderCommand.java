@@ -1,18 +1,21 @@
 package net.BKTeam.illagerrevolutionmod.orderoftheknight;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ComponentArgument;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -22,10 +25,17 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 
 public class TheKnightOrderCommand{
+
+    public static final DeferredRegister<ArgumentTypeInfo<?,?>> REGISTRY = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, IllagerRevolutionMod.MOD_ID);
+
+    //public static final RegistryObject<ArgumentTypeInfo<?,?>> THE_ORDER = REGISTRY.register("theorder",()->this::start);
     public static void register(CommandDispatcher<CommandSourceStack> p_180469_) {
         p_180469_.register(Commands.literal("theorder").requires((p_180498_) -> {
             return p_180498_.hasPermission(3);

@@ -830,7 +830,7 @@
 				}
 			}
 		},
-		"animation.IllagerBladeKnight.disableshield": {
+		"animation.IllagerBladeKnight.combo1shieldbreak": {
 			"loop": true,
 			"animation_length": 0.83333,
 			"bones": {

@@ -273,6 +273,12 @@ public class ModItems {
     public static final RegistryObject<Item> FAKE_JUNK_AXE = ITEMS.register("fake_junk_axe",
             ()->new AxeItem(ModTiers.JUNK,0,3.5F,new Item.Properties()));
 
+    public static final RegistryObject<Item> FAKE_RUNED_BLADE = ITEMS.register("fake_runed_blade",
+            ()->new SwordItem(ModTiers.ILLAGIUM,8,-2.6F,new Item.Properties()));
+
+    public static final RegistryObject<Item> FAKE_ALT_RUNED_BLADE = ITEMS.register("fake_alt_runed_blade",
+            ()->new SwordItem(ModTiers.ILLAGIUM,6,-2.6F,new Item.Properties()));
+
     private static Item.Properties props() {
         return new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
     }
