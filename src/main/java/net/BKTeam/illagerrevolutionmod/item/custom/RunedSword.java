@@ -46,7 +46,7 @@ public class RunedSword extends SwordItem {
                 if(pAttacker.level.random.nextFloat()<0.1F*i){
                     if(pAttacker instanceof  Player player){
                         int cc = (int) player.getAttribute(SoulTick.SOUL).getValue();
-                        if(cc>0){
+                        if(cc>5){
                             SoulSlash slash = new SoulSlash(pAttacker,pAttacker.level);
                             slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,0.4F,0.1F);
                             pAttacker.level.addFreshEntity(slash);
