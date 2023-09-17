@@ -202,6 +202,13 @@
     ]
   },
 
+  "soul_slash": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_slash",
+    "sounds": [
+      "illagerrevolutionmod:soul_slash"
+    ]
+  },
+
   "soul_sage_fire": {
     "subtitle": "sounds.illagerrevolutionmod.soul_sage_fire",
     "sounds": [
