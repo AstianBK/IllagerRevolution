@@ -13,7 +13,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class SoulSlashEnchantment extends Enchantment {
     public SoulSlashEnchantment(EquipmentSlot... slots) {
-        super(Rarity.RARE, EnchantmentCategory.ARMOR_HEAD, slots);
+        super(Rarity.RARE, EnchantmentCategory.WEAPON, slots);
     }
     @Override
     public boolean canEnchant(ItemStack stack) {

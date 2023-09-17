@@ -201,10 +201,17 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             this.setContinueAnim(true);
                             this.continueAnim=true;
                             this.level.broadcastEntityEvent(this, (byte) 62);
+                        }else {
+                            this.setContinueAnim(false);
+                            this.continueAnim=false;
+                            this.level.broadcastEntityEvent(this, (byte) 66);
+
                         }
-                    } else if (!this.getTarget().isAlive()) {
+                    } else if (!this.getTarget().isAlive() ) {
                         this.setContinueAnim(false);
                         this.continueAnim=false;
+                        this.level.broadcastEntityEvent(this, (byte) 66);
+
                     }
                 }
 
@@ -234,13 +241,20 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             }
             if (flag && this.getCombo() == Combo.COMBO_PERFORATE) {
                 if (i + 1 < 4) {
+                    boolean bO=false;
                     this.setIdComboState(i + 1);
                     if(i + 1 == 2){
                         this.level.broadcastEntityEvent(this,(byte)(63));
                     } else if (i + 1 == 3) {
                         this.level.broadcastEntityEvent(this,(byte)(64));
+                        bO=true;
                     }
-                    this.setContinueAnim(i + 1 == 3);
+                    this.setContinueAnim(bO);
+                    if(bO){
+                        this.level.broadcastEntityEvent(this, (byte) 62);
+                    }else {
+                        this.level.broadcastEntityEvent(this, (byte) 66);
+                    }
                 } else {
                     this.setIdComboState(0);
                     this.setIdCombo(0);
@@ -388,6 +402,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         }else if (pId==65){
             this.setIdComboState(4);
             this.setIdCombo(3);
+        }else if (pId==66){
+            this.setContinueAnim(false);
         }else {
             super.handleEntityEvent(pId);
         }
@@ -631,10 +647,10 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             }
                             if(sound){
                                 //sonido del tercer ataque de giro del BK con impacto
-                                this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_HIT2.get(),SoundSource.HOSTILE,1.0F,1.0F);
+                                this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_SWORDHIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
                             }else {
                                 //sonido del tercer ataque de giro del BK sin impacto
-                                this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_2.get(),SoundSource.HOSTILE,1.0F,1.0F);
+                                this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_SWORDHIT2.get(),SoundSource.HOSTILE,1.0F,1.0F);
                             }
                         }
                     }else {
@@ -666,7 +682,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 }
                             }
                             //sonido del primer y segundo ataque de giro del BK
-                            this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_1.get(),SoundSource.HOSTILE,1.0F,1.0F);
+                            this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_SWORDHIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
                         }
                     }
                 }else if(this.goalOwner.getCombo()==Combo.COMBO_PERFORATE){
@@ -680,6 +696,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             }
                             if (this.goalOwner.getComboState()==ComboState.FIRST_HIT){
                                 if(this.goalOwner.animationTimer==5){
+                                    this.goalOwner.getNavigation().stop();
                                     this.goalOwner.doHurtTarget(target);
                                     //sonido del primer ataque de perforar del BK
                                     this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_SWORDHIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
@@ -703,7 +720,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             }else if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
                                 if(this.goalOwner.animationTimer==5){
                                     BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
-                                    List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(10,10,10), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 4 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
+                                    List<LivingEntity> targets = this.goalOwner.level.getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(5,5,5), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 4 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
                                     for(LivingEntity living : targets){
                                         float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.goalOwner.getZ(), living.getX() - this.goalOwner.getX()) * (180 / Math.PI) - 90) % 360);
                                         float entityAttackingAngle = this.goalOwner.yBodyRot % 360;
@@ -716,16 +733,17 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                         }
                                         float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
                                         float entityHitDistance = (float) Math.sqrt((living.getZ() - this.goalOwner.getZ()) * (living.getZ() - this.goalOwner.getZ()) + (living.getX() - this.goalOwner.getX()) * (living.getX() - this.goalOwner.getX())) - living.getBbWidth() / 2f;
-                                        if (entityHitDistance <= 10 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
+                                        if (entityHitDistance <= 5 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
                                             if(living.isBlocking() && living instanceof Player player){
                                                 player.disableShield(true);
                                             }
-                                            living.hurt(DamageSource.mobAttack(this.goalOwner).bypassArmor(), 1.0F+this.goalOwner.getTotalDamage()*0.5F);
-                                            living.addEffect(new MobEffectInstance(InitEffect.DEEP_WOUND.get(),100,1));
+                                            if(living.hurt(DamageSource.mobAttack(this.goalOwner).bypassArmor(), 1.0F+this.goalOwner.getTotalDamage()*0.5F)){
+                                                living.addEffect(new MobEffectInstance(InitEffect.DEEP_WOUND.get(),100,1));
+                                            }
                                         }
                                     }
                                     //sonido del tercer ataque de perforar del BK
-                                    this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_SLASH_HIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
+                                    this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_SWORDHIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
                                 }
                             }
                         }

@@ -5,8 +5,10 @@ import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulMissile;
 import net.BKTeam.illagerrevolutionmod.item.client.AnimatedItemRenderer;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -146,6 +148,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                     missile.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYRot(),0.0F,2.0F,0.0F);
                     missile.setPowerLevel(pPlayer.getMainHandItem().getEnchantmentLevel(InitEnchantment.INSIGHT.get()));
                     pLevel.addFreshEntity(missile);
+                    pLevel.playSound(null,pPlayer, ModSounds.SOUL_SAGE_MISSILE.get(), SoundSource.HOSTILE,1.0F,1.0F);
                     nbt.putInt("casterTimer",40);
                 }
             }

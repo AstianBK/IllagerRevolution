@@ -222,7 +222,7 @@ public class SoulSageRenderer extends ExtendedGeoEntityRenderer<SoulSageEntity> 
                                     MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                                     ResourceLocation textureLocation) {
         stack.scale(1, 1, 1);
-        return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
+        return RenderType.entityTranslucent(this.getTextureLocation(animatable));
     }
 
 }

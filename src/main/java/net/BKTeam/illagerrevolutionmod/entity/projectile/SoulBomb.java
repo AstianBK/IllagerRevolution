@@ -80,7 +80,7 @@ public class SoulBomb extends ProjectileMagic {
                     }
                 }
                 //sonido de desactivar escudo
-                owner.playSound(ModSounds.SOUL_SAGE_SHIELD.get(),1.0F,1.0F);
+                owner.playSound(ModSounds.SOUL_SAGE_SHIELD.get(),3.0F,1.0F);
                 if(this.level.isClientSide){
                     Vec3 vec3 = owner.getBoundingBox().getCenter();
                     for(int i = 0; i < 40; ++i) {

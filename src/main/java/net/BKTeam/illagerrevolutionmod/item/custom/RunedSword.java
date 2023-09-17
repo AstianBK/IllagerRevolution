@@ -39,7 +39,7 @@ public class RunedSword extends SwordItem {
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        int i = EnchantmentHelper.getEnchantmentLevel(InitEnchantment.SOUL_SLASH.get(),pAttacker);
+        int i = pStack.getEnchantmentLevel(InitEnchantment.SOUL_SLASH.get());
         if(i!=0){
             if(!pAttacker.level.isClientSide){
                 if(pAttacker.level.random.nextFloat()<0.1F*i){

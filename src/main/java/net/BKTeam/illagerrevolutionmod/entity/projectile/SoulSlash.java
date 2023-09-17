@@ -38,18 +38,6 @@ public class SoulSlash extends ThrowableProjectile {
         Vec3 deltaMovement = this.getDeltaMovement();
         super.tick();
         this.setDeltaMovement(deltaMovement);
-        /*if(this.level.isClientSide) {
-            this.level.addParticle(ModParticles.BLOOD_PARTICLES.get(), this.getBoundingBox().getCenter().x, this.getBoundingBox().getCenter().y, this.getBoundingBox().getCenter().z, 0.0F, 0.0F, 0.0F);
-
-            for (int i = 0; i < 5; i++) {
-                float f = this.yRotO * ((float) Math.PI / 180F);
-                float f1 = Mth.cos(f);
-                float f2 = Mth.sin(f);
-                double d0 = 0.0F + (0.1f * i);
-                this.level.addParticle(ModParticles.BKSOULS_PARTICLES.get(), this.getX() - f2 + f1 * d0, this.getY(), this.getZ() + f1 + f2 * d0, 0.0F, 0.0F, 0.0F);
-                this.level.addParticle(ModParticles.BKSOULS_PARTICLES.get(), this.getX() - f2 - f1 * d0, this.getY(), this.getZ() + f1 - f2 * d0, 0.0F, 0.0F, 0.0F);
-            }
-        }*/
         if (!this.level.isClientSide()) {
             HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
             if (result.getType() == HitResult.Type.MISS && this.isAlive()) {

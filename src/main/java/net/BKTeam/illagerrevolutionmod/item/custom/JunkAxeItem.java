@@ -131,7 +131,12 @@ public class JunkAxeItem extends AxeItem {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         CompoundTag nbt = pStack.getOrCreateTag();
-        pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe"+this.count_hit));
+        if(Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe_use"));
+
+        } else {
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.junk_axe"+this.count_hit));
+        }
         this.count_hit=nbt.getInt("countHit");
         this.upgrade=nbt.getInt("upgrade");
     }
