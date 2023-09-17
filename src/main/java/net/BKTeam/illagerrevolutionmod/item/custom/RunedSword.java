@@ -6,8 +6,6 @@ import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulSlash;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -50,9 +48,9 @@ public class RunedSword extends SwordItem {
                         int cc = (int) player.getAttribute(SoulTick.SOUL).getValue();
                         if(cc>0){
                             SoulSlash slash = new SoulSlash(pAttacker,pAttacker.level);
-                            slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,0.5F,0.1F);
+                            slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,0.4F,0.1F);
                             pAttacker.level.addFreshEntity(slash);
-                            pAttacker.level.playSound(null,pAttacker, SoundEvents.CHICKEN_DEATH, SoundSource.NEUTRAL,1.0F,1.0F);
+                            pAttacker.level.playSound(null,pAttacker, ModSounds.SOUL_SLASH.get(), SoundSource.PLAYERS,5.0F,1.0F);
                             pStack.hurtAndBreak(5,pAttacker,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
                             player.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
                         }

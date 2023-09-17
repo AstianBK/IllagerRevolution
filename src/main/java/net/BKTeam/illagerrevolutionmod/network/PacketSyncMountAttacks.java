@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.network;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MountEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -64,7 +65,7 @@ public class PacketSyncMountAttacks {
                     if(!flag1){
                         flag1=true;
                         soulBomb.setDefender(true);
-                        pPlayer.level.playSound(pPlayer,pPlayer, SoundEvents.CHICKEN_DEATH, SoundSource.PLAYERS,1.0F,1.0f);
+                        pPlayer.level.playSound(pPlayer,pPlayer, ModSounds.SOUL_RELEASE.get(), SoundSource.PLAYERS,2.0F,2.0f);
                     }else {
                         if(soulBomb.getPositionSummon()>1){
                             soulBomb.setPositionSummon(i+1);

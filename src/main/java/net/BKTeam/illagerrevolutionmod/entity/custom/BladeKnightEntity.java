@@ -180,7 +180,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                         double d3 = 3.5F;
                         living.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
                     }
-                    this.playSound(SoundEvents.RAVAGER_ROAR,2.0F,-5.0F);
+                    this.playSound(SoundEvents.RAVAGER_ROAR,2.0F,-4.0F);
                     if(this.level.isClientSide){
                         Vec3 vec3 = this.getBoundingBox().getCenter();
                         for(int i = 0; i < 40; ++i) {
@@ -640,7 +640,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot()+(45F*i),0.0F,0.5F,0.1F);
                                 this.goalOwner.level.addFreshEntity(court);
                             }
-                            this.goalOwner.level.playSound(null,this.goalOwner, SoundEvents.CHICKEN_DEATH, SoundSource.NEUTRAL,1.0F,1.0F);
+                            this.goalOwner.level.playSound(null,this.goalOwner, ModSounds.SOUL_SLASH.get(), SoundSource.HOSTILE,5.0F,1.0F);
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
                             List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
                             for(Entity living : targets){
@@ -672,7 +672,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
                             court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot(),0.0F,0.5F,0.1F);
                             this.goalOwner.level.addFreshEntity(court);
-                            this.goalOwner.level.playSound(null,this.goalOwner, SoundEvents.CHICKEN_DEATH, SoundSource.NEUTRAL,1.0F,1.0F);
+                            this.goalOwner.level.playSound(null,this.goalOwner, ModSounds.SOUL_SLASH.get(), SoundSource.HOSTILE,5.0F,1.0F);
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
                             List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
                             for(Entity living : targets){

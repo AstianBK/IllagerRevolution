@@ -8,6 +8,7 @@ import net.BKTeam.illagerrevolutionmod.item.client.AnimatedItemRenderer;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -27,6 +28,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.classic.Mod;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -120,7 +122,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                     pLevel.addFreshEntity(bomb);
                 }
             }
-            pLevel.playSound(null,pPlayer, ModSounds.SOUL_SAGE_MISSILE.get(), SoundSource.HOSTILE,1.0F,1.0F);
+            pLevel.playSound(null,pPlayer, SoundEvents.ILLUSIONER_PREPARE_BLINDNESS, SoundSource.PLAYERS,1.0F,1.5F);
             pPlayer.awardStat(Stats.ITEM_USED.get(this));
             if (!pPlayer.getAbilities().instabuild) {
                 pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
@@ -135,7 +137,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                     for (SoulBomb soulBomb : souls){
                         if(!flag1){
                             flag1=true;
-                            pLevel.playSound(null,pPlayer, ModSounds.SOUL_SAGE_MISSILE.get(), SoundSource.HOSTILE,1.0F,1.0F);
+                            pLevel.playSound(null,pPlayer, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS,1.0F,-1.0F);
                             soulBomb.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYHeadRot(),0.0F,1.0F,0.1F);
                         }else {
                             if(soulBomb.getPositionSummon()>1){
