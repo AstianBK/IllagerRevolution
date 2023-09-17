@@ -120,7 +120,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                     pLevel.addFreshEntity(bomb);
                 }
             }
-
+            pLevel.playSound(null,pPlayer, ModSounds.SOUL_SAGE_MISSILE.get(), SoundSource.HOSTILE,1.0F,1.0F);
             pPlayer.awardStat(Stats.ITEM_USED.get(this));
             if (!pPlayer.getAbilities().instabuild) {
                 pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
