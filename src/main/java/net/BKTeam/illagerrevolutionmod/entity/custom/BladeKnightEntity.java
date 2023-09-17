@@ -180,7 +180,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                         double d3 = 3.5F;
                         living.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
                     }
-                    this.playSound(SoundEvents.RAVAGER_ROAR,3.0F,-10.0F);
+                    this.playSound(SoundEvents.RAVAGER_ROAR,2.0F,-5.0F);
                     if(this.level.isClientSide){
                         Vec3 vec3 = this.getBoundingBox().getCenter();
                         for(int i = 0; i < 40; ++i) {

@@ -85,7 +85,7 @@ public class AreaFireColumnEntity extends Entity {
         // sonido del inicio del burn
         if(isBurn){
             this.level.playSound(null,this, ModSounds.SOUL_SAGE_FIRE.get(),
-                    SoundSource.HOSTILE,4.0F,1.0F);
+                    SoundSource.HOSTILE,10.0F,1.0F);
         }
     }
 
