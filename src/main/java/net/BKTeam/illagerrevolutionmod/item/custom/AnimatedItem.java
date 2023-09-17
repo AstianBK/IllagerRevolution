@@ -6,8 +6,10 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulMissile;
 import net.BKTeam.illagerrevolutionmod.item.client.AnimatedItemRenderer;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -30,6 +33,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 import software.bernie.shadowed.eliotlash.mclib.math.functions.classic.Mod;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -92,10 +96,6 @@ public class AnimatedItem extends Item implements IAnimatable {
         return this.souls;
     }
 
-    public int getCastingTimer(){
-        return this.castingTimer;
-    }
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         boolean flag = pPlayer.isShiftKeyDown();
@@ -103,14 +103,14 @@ public class AnimatedItem extends Item implements IAnimatable {
         int cooldown = nbt.getInt("casterTimer");
         int cc = (int) pPlayer.getAttributeValue(SoulTick.SOUL);
         if(flag && cc>0){
+            List<SoulBomb> soulBombs = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0D),
+                    e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
+            int i1 = 1;
+            int size = soulBombs.size();
             if (!pLevel.isClientSide) {
-                List<SoulBomb> soulBombs = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0D),
-                        e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
-                int i1 = 1;
-                int size = soulBombs.size();
                 nbt.putInt("casterTimer",40);
 
-                if(size <3){
+                if(size < 3){
                     for (SoulBomb soul : soulBombs){
                         soul.setPositionSummon(i1);
                         i1++;
@@ -120,11 +120,12 @@ public class AnimatedItem extends Item implements IAnimatable {
                     bomb.setPosition(pPlayer);
                     bomb.setPowerLevel(pPlayer.getMainHandItem().getEnchantmentLevel(InitEnchantment.INSIGHT.get()));
                     pLevel.addFreshEntity(bomb);
+                    size++;
                 }
             }
             pLevel.playSound(null,pPlayer, SoundEvents.ILLUSIONER_PREPARE_BLINDNESS, SoundSource.PLAYERS,1.0F,1.5F);
             pPlayer.awardStat(Stats.ITEM_USED.get(this));
-            if (!pPlayer.getAbilities().instabuild) {
+            if (!pPlayer.getAbilities().instabuild && size<3) {
                 pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
             }
         }else {
@@ -138,7 +139,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                         if(!flag1){
                             flag1=true;
                             pLevel.playSound(null,pPlayer, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS,1.0F,-1.0F);
-                            soulBomb.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYHeadRot(),0.0F,1.0F,0.1F);
+                            soulBomb.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYRot(),0.0F,1.0F,0.1F);
                         }else {
                             if(soulBomb.getPositionSummon()>1){
                                 soulBomb.setPositionSummon(i+1);
@@ -161,6 +162,19 @@ public class AnimatedItem extends Item implements IAnimatable {
             }
         }
         return InteractionResultHolder.consume(pPlayer.getItemInHand(pUsedHand));
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        if(Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip1"));
+            
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip2"));
+
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip3"));
+            
+
+        }
     }
 
     @Override
