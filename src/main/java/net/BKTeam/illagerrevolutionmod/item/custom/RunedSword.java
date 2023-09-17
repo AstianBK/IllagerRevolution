@@ -6,6 +6,9 @@ import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulSlash;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,11 +46,17 @@ public class RunedSword extends SwordItem {
         if(i!=0){
             if(!pAttacker.level.isClientSide){
                 if(pAttacker.level.random.nextFloat()<0.1F*i){
-                    SoulSlash slash = new SoulSlash(pAttacker,pAttacker.level);
-                    slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,1.0F,0.1F);
-                    pAttacker.level.addFreshEntity(slash);
-                    pAttacker.playSound(ModSounds.BLADE_SLASH_1.get(),1.0F,1.0F);
-                    pStack.hurtAndBreak(5,pAttacker,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+                    if(pAttacker instanceof  Player player){
+                        int cc = (int) player.getAttribute(SoulTick.SOUL).getValue();
+                        if(cc>0){
+                            SoulSlash slash = new SoulSlash(pAttacker,pAttacker.level);
+                            slash.shootFromRotation(pAttacker,pAttacker.getXRot(),pAttacker.getYRot(),0.0F,0.5F,0.1F);
+                            pAttacker.level.addFreshEntity(slash);
+                            pAttacker.level.playSound(null,pAttacker, SoundEvents.CHICKEN_DEATH, SoundSource.NEUTRAL,1.0F,1.0F);
+                            pStack.hurtAndBreak(5,pAttacker,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+                            player.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
+                        }
+                    }
                 }
             }
         }

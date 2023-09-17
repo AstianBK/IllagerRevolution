@@ -193,28 +193,32 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                 }
             }
             if (this.getCombo() == Combo.COMBO_PERFORATE) {
-                if(this.getTarget() != null){
-                    if (this.getTarget().isAlive() && !this.continueAnim) {
-                        LivingEntity target = this.getTarget();
-                        double dist = this.distanceToSqr(target.getX(), target.getY(), target.getZ());
-                        if (dist < this.getAttackReachSqr(target)) {
-                            this.setContinueAnim(true);
-                            this.continueAnim=true;
-                            this.level.broadcastEntityEvent(this, (byte) 62);
-                        }else {
+                if(!this.level.isClientSide){
+                    if(this.getTarget() != null){
+                        if (this.getTarget().isAlive() && !this.continueAnim) {
+                            LivingEntity target = this.getTarget();
+                            double dist = this.distanceToSqr(target.getX(), target.getY(), target.getZ());
+                            if (dist < this.getAttackReachSqr(target)) {
+                                this.setContinueAnim(true);
+                                this.continueAnim=false;
+                                this.level.broadcastEntityEvent(this, (byte) 62);
+                            }else {
+                                this.setContinueAnim(false);
+                                this.continueAnim=false;
+                                this.level.broadcastEntityEvent(this, (byte) 66);
+
+                            }
+                        } else if (!this.getTarget().isAlive() ) {
                             this.setContinueAnim(false);
                             this.continueAnim=false;
                             this.level.broadcastEntityEvent(this, (byte) 66);
-
                         }
-                    } else if (!this.getTarget().isAlive() ) {
+                    }else {
                         this.setContinueAnim(false);
                         this.continueAnim=false;
                         this.level.broadcastEntityEvent(this, (byte) 66);
-
                     }
                 }
-
             }
 
             if (this.continueAnim) {
@@ -624,7 +628,11 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                     }
                     this.goalOwner.navigation.stop();
                     if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
-                        if(this.goalOwner.animationTimer==8){
+                        if(target!=null){
+                            this.goalOwner.getLookControl().setLookAt(target,30,30);
+                            this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
+                        }
+                        if(this.goalOwner.animationTimer==8 ){
                             boolean sound = false;
                             for (int i=0;i<8;i++){
                                 SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level);
@@ -632,6 +640,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot()+(45F*i),0.0F,0.5F,0.1F);
                                 this.goalOwner.level.addFreshEntity(court);
                             }
+                            this.goalOwner.level.playSound(null,this.goalOwner, SoundEvents.CHICKEN_DEATH, SoundSource.NEUTRAL,1.0F,1.0F);
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
                             List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
                             for(Entity living : targets){
@@ -654,11 +663,16 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             }
                         }
                     }else {
+                        if(target!=null){
+                            this.goalOwner.getLookControl().setLookAt(target,30,30);
+                            this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
+                        }
                         if(this.goalOwner.animationTimer==5){
                             SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level);
                             court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
                             court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot(),0.0F,0.5F,0.1F);
                             this.goalOwner.level.addFreshEntity(court);
+                            this.goalOwner.level.playSound(null,this.goalOwner, SoundEvents.CHICKEN_DEATH, SoundSource.NEUTRAL,1.0F,1.0F);
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());
                             List<Entity> targets = this.goalOwner.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(7,7,7), e -> e != this.goalOwner && this.goalOwner.distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= this.goalOwner.getY() + 3);
                             for(Entity living : targets){
