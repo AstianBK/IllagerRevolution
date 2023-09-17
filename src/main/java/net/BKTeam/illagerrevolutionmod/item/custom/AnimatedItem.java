@@ -6,8 +6,10 @@ import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulMissile;
 import net.BKTeam.illagerrevolutionmod.item.client.AnimatedItemRenderer;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -30,6 +33,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 import software.bernie.shadowed.eliotlash.mclib.math.functions.classic.Mod;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -90,10 +94,6 @@ public class AnimatedItem extends Item implements IAnimatable {
 
     public int getSouls() {
         return this.souls;
-    }
-
-    public int getCastingTimer(){
-        return this.castingTimer;
     }
 
     @Override
@@ -162,6 +162,19 @@ public class AnimatedItem extends Item implements IAnimatable {
             }
         }
         return InteractionResultHolder.consume(pPlayer.getItemInHand(pUsedHand));
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        if(Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip1"));
+            
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip2"));
+
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip3"));
+            
+
+        }
     }
 
     @Override
