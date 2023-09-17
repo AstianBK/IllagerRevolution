@@ -100,7 +100,7 @@ public class AnimatedItem extends Item implements IAnimatable {
         CompoundTag nbt = pPlayer.getItemInHand(pUsedHand).getOrCreateTag();
         int cooldown = nbt.getInt("casterTimer");
         int cc = (int) pPlayer.getAttributeValue(SoulTick.SOUL);
-        if(flag && cc>1){
+        if(flag && cc>0){
             if (!pLevel.isClientSide) {
                 List<SoulBomb> soulBombs = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0D),
                         e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
@@ -135,6 +135,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                     for (SoulBomb soulBomb : souls){
                         if(!flag1){
                             flag1=true;
+                            pLevel.playSound(null,pPlayer, ModSounds.SOUL_SAGE_MISSILE.get(), SoundSource.HOSTILE,1.0F,1.0F);
                             soulBomb.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYHeadRot(),0.0F,1.0F,0.1F);
                         }else {
                             if(soulBomb.getPositionSummon()>1){

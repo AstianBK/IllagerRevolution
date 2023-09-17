@@ -63,7 +63,7 @@ public class SoulBomb extends ProjectileMagic {
         if(this.discardMoment){
             this.discardTimer--;
             if(this.discardTimer>8){
-                List<LivingEntity> livings = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(2.0D+(0.5D*this.getPowerLevel())),e->e!=owner && e!=owner.getVehicle());
+                List<LivingEntity> livings = owner.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(2.0D+(0.5D*this.getPowerLevel())),e->e!=owner && e!=owner.getVehicle());
                 for(LivingEntity living : livings){
                     double d0 = living.getX() - owner.getX();
                     double d1 = living.getZ() - owner.getZ();

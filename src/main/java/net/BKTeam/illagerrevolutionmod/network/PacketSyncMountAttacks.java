@@ -4,6 +4,8 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.MountEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -52,24 +54,23 @@ public class PacketSyncMountAttacks {
     }
 
     private void handleEnchantmet(ItemStack pStack,Player pPlayer) {
-        if(pStack.is(ModItems.OMINOUS_GRIMOIRE.get())){
-            if(!pPlayer.level.isClientSide){
-                List<SoulBomb> souls = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0F),
-                        e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
-                if(!souls.isEmpty()){
-                    boolean flag1 = false;
-                    int i = 0;
-                    for (SoulBomb soulBomb : souls){
-                        if(!flag1){
-                            flag1=true;
-                            soulBomb.setDefender(true);
-                        }else {
-                            if(soulBomb.getPositionSummon()>1){
-                                soulBomb.setPositionSummon(i+1);
-                            }
+        if(pStack.is(ModItems.OMINOUS_GRIMOIRE.get()) && this.pId==2){
+            List<SoulBomb> souls = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0F),
+                    e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
+            if(!souls.isEmpty()){
+                boolean flag1 = false;
+                int i = 0;
+                for (SoulBomb soulBomb : souls){
+                    if(!flag1){
+                        flag1=true;
+                        soulBomb.setDefender(true);
+                        pPlayer.level.playSound(pPlayer,pPlayer, SoundEvents.CHICKEN_DEATH, SoundSource.PLAYERS,1.0F,1.0f);
+                    }else {
+                        if(soulBomb.getPositionSummon()>1){
+                            soulBomb.setPositionSummon(i+1);
                         }
-                        i++;
                     }
+                    i++;
                 }
             }
         }
