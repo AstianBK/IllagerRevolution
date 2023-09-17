@@ -200,7 +200,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             double dist = this.distanceToSqr(target.getX(), target.getY(), target.getZ());
                             if (dist < this.getAttackReachSqr(target)) {
                                 this.setContinueAnim(true);
-                                this.continueAnim=false;
+                                this.continueAnim=true;
                                 this.level.broadcastEntityEvent(this, (byte) 62);
                             }else {
                                 this.setContinueAnim(false);
