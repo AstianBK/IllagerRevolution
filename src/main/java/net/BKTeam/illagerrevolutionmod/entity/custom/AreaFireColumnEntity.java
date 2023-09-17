@@ -47,7 +47,7 @@ public class AreaFireColumnEntity extends Entity {
         super(pEntityType, pLevel);
         this.noPhysics = true;
         this.setRadius(5.0F);
-        this.setDuration(200,50);
+        this.setDuration(100,50);
     }
 
     public void setDuration(int duration,int prepareDuration) {
@@ -177,7 +177,7 @@ public class AreaFireColumnEntity extends Entity {
                 if(this.getOwner()!=null){
                     targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)),e->!this.getOwner().isAlliedTo(e) && this.getOwner()!=e);
                     for (LivingEntity living : targets){
-                        living.hurt(DamageSource.IN_FIRE,2.0F+1.0F*this.getPowerLevel());
+                        living.hurt(DamageSource.mobAttack(this.getOwner()).setIsFire(),2.0F+1.0F*this.getPowerLevel());
                         living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,2));
                         living.setSecondsOnFire(3);
                     }

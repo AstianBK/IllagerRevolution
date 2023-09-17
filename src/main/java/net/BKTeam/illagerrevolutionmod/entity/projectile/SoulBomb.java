@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -63,7 +64,7 @@ public class SoulBomb extends ProjectileMagic {
         if(this.discardMoment){
             this.discardTimer--;
             if(this.discardTimer>8){
-                List<LivingEntity> livings = owner.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(2.0D+(0.5D*this.getPowerLevel())),e->e!=owner && e!=owner.getVehicle());
+                List<LivingEntity> livings = owner.level.getEntitiesOfClass(LivingEntity.class,owner.getBoundingBox().inflate(2.0D+(0.5D*this.getPowerLevel())),e->e!=owner && e!=owner.getVehicle());
                 for(LivingEntity living : livings){
                     double d0 = living.getX() - owner.getX();
                     double d1 = living.getZ() - owner.getZ();
@@ -79,17 +80,20 @@ public class SoulBomb extends ProjectileMagic {
                         living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,100,0));
                     }
                 }
-                //sonido de desactivar escudo
-                owner.playSound(ModSounds.SOUL_SAGE_SHIELD.get(),3.0F,1.0F);
-                if(this.level.isClientSide){
-                    Vec3 vec3 = owner.getBoundingBox().getCenter();
-                    for(int i = 0; i < 40; ++i) {
-                        double d0x = this.random.nextGaussian() * 0.2D;
-                        double d1y = this.random.nextGaussian() * 0.2D;
-                        double d2z = this.random.nextGaussian() * 0.2D;
-                        this.level.addParticle(ParticleTypes.POOF, vec3.x, vec3.y, vec3.z, d0x, d1y, d2z);
+                if(owner instanceof LivingEntity living){
+                    //sonido de desactivar escudo
+                    living.level.playSound(null,living,ModSounds.SOUL_SAGE_SHIELD.get(), SoundSource.NEUTRAL,3.0F,1.0F);
+                    if(living.level.isClientSide){
+                        Vec3 vec3 = living.getBoundingBox().getCenter();
+                        for(int i = 0; i < 40; ++i) {
+                            double d0x = living.level.random.nextGaussian() * 0.2D;
+                            double d1y = living.level.random.nextGaussian() * 0.2D;
+                            double d2z = living.level.random.nextGaussian() * 0.2D;
+                            living.level.addParticle(ParticleTypes.POOF, vec3.x, vec3.y, vec3.z, d0x, d1y, d2z);
+                        }
                     }
                 }
+
             }
             if(this.discardTimer<0){
                 this.discard();
@@ -122,7 +126,7 @@ public class SoulBomb extends ProjectileMagic {
             areaFireColumn.setPos(initialTarget.getOnPos().getX(), initialTarget.getOnPos().getY() + 1, initialTarget.getOnPos().getZ());
             areaFireColumn.setOwner((LivingEntity) this.getOwner());
             areaFireColumn.setPowerLevel(this.getPowerLevel());
-            areaFireColumn.setDuration(200,50);
+            areaFireColumn.setDuration(100,50);
             this.level.addFreshEntity(areaFireColumn);
             if (this.getOwner() instanceof LivingEntity) {
                 initialTarget.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(), 3);
@@ -150,7 +154,7 @@ public class SoulBomb extends ProjectileMagic {
         areaFireColumn.setPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         areaFireColumn.setOwner((LivingEntity) this.getOwner());
         areaFireColumn.setPowerLevel(this.getPowerLevel());
-        areaFireColumn.setDuration(200,50);
+        areaFireColumn.setDuration(100,50);
         this.level.addFreshEntity(areaFireColumn);
     }
 

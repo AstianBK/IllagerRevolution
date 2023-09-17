@@ -103,14 +103,14 @@ public class AnimatedItem extends Item implements IAnimatable {
         int cooldown = nbt.getInt("casterTimer");
         int cc = (int) pPlayer.getAttributeValue(SoulTick.SOUL);
         if(flag && cc>0){
+            List<SoulBomb> soulBombs = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0D),
+                    e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
+            int i1 = 1;
+            int size = soulBombs.size();
             if (!pLevel.isClientSide) {
-                List<SoulBomb> soulBombs = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0D),
-                        e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
-                int i1 = 1;
-                int size = soulBombs.size();
                 nbt.putInt("casterTimer",40);
 
-                if(size <3){
+                if(size < 3){
                     for (SoulBomb soul : soulBombs){
                         soul.setPositionSummon(i1);
                         i1++;
@@ -120,11 +120,12 @@ public class AnimatedItem extends Item implements IAnimatable {
                     bomb.setPosition(pPlayer);
                     bomb.setPowerLevel(pPlayer.getMainHandItem().getEnchantmentLevel(InitEnchantment.INSIGHT.get()));
                     pLevel.addFreshEntity(bomb);
+                    size++;
                 }
             }
             pLevel.playSound(null,pPlayer, SoundEvents.ILLUSIONER_PREPARE_BLINDNESS, SoundSource.PLAYERS,1.0F,1.5F);
             pPlayer.awardStat(Stats.ITEM_USED.get(this));
-            if (!pPlayer.getAbilities().instabuild) {
+            if (!pPlayer.getAbilities().instabuild && size<3) {
                 pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
             }
         }else {
@@ -138,7 +139,7 @@ public class AnimatedItem extends Item implements IAnimatable {
                         if(!flag1){
                             flag1=true;
                             pLevel.playSound(null,pPlayer, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS,1.0F,-1.0F);
-                            soulBomb.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYHeadRot(),0.0F,1.0F,0.1F);
+                            soulBomb.shootFromRotation(pPlayer,pPlayer.getXRot(),pPlayer.getYRot(),0.0F,1.0F,0.1F);
                         }else {
                             if(soulBomb.getPositionSummon()>1){
                                 soulBomb.setPositionSummon(i+1);

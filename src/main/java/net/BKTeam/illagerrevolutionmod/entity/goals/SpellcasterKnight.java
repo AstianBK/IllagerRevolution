@@ -71,6 +71,11 @@ public abstract class SpellcasterKnight extends KnightEntity {
         }
     }
 
+    @Override
+    public boolean canBeLeader() {
+        return false;
+    }
+
     public void setIsCastingSpell(IllagerSpell pSpellType) {
         this.currentSpell = pSpellType;
         this.entityData.set(DATA_SPELL_CASTING_ID, (byte)pSpellType.id);
