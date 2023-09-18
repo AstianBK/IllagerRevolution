@@ -751,15 +751,13 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
         @Override
         public boolean canUse() {
             if(SoulSageEntity.this.getTarget() !=null){
-                LivingEntity entity = SoulSageEntity.this.getTarget();
                 List<SoulBomb> souls = SoulSageEntity.this.level.getEntitiesOfClass(SoulBomb.class
                         ,SoulSageEntity.this.getBoundingBox().inflate(3.0D),
                         e->e.getOwnerID()==SoulSageEntity.this.getId() && !e.isDefender());
-                float Dx = distanceTo(entity) ;
                     if (!super.canUse()){
                         return false;
                     }
-                    return !souls.isEmpty() ;
+                    return !souls.isEmpty() && !SoulSageEntity.this.isDrainSoul();
             }
             return false;
         }
