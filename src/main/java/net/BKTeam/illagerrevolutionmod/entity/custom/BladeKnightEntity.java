@@ -91,11 +91,11 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 100.0D)
-                .add(Attributes.ATTACK_DAMAGE, 0.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.85D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.80D)
-                .add(Attributes.ARMOR, 15.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 7.0D)
+                .add(Attributes.ARMOR, 10.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
                 .add(Attributes.FOLLOW_RANGE, 40.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
     }
@@ -301,7 +301,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         if(this.getMainHandItem().is(ModItems.FAKE_RUNED_BLADE.get())){
             Util.spawZombifiedBack(this.level,this,4);
         }else {
-            Util.spawFallenKnightBack(this.level,this,2);
+            Util.spawFallenKnightBack(this.level,this,3);
         }
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
@@ -726,9 +726,9 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                     }else {
                                         this.goalOwner.doHurtTarget(target);
                                         //sonido del segundo ataque de perforar del BK
-                                        this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_BLUNT.get(),SoundSource.HOSTILE,1.0F,1.0F);
-                                        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,0));
-                                        target.addEffect(new MobEffectInstance(MobEffects.CONFUSION,100,2));
+                                        this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_BLUNT.get(),SoundSource.HOSTILE,1.5F,1.0F);
+                                        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,150,1));
+                                        target.addEffect(new MobEffectInstance(MobEffects.CONFUSION,200,2));
                                     }
                                 }
                             }else if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
