@@ -166,11 +166,15 @@ public class AnimatedItem extends Item implements IAnimatable {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         if(Screen.hasShiftDown()) {
-            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip1"));
-            
-            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip2"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.runemissile1"));
 
-            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip3"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.soulbomb1"));
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.soulbomb2"));
+
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.runeshield1"));
+
+        } else {
+            pTooltipComponents.add(Component.translatable("tooltip.illagerrevolutionmod.ominous_grimoire.tooltip1"));
 
         }
     }
