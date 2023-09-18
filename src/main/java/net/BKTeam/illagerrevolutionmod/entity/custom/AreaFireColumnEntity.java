@@ -47,7 +47,7 @@ public class AreaFireColumnEntity extends Entity {
         super(pEntityType, pLevel);
         this.noPhysics = true;
         this.setRadius(5.0F);
-        this.setDuration(100,50);
+        this.setDuration(100,25);
     }
 
     public void setDuration(int duration,int prepareDuration) {
@@ -128,48 +128,32 @@ public class AreaFireColumnEntity extends Entity {
     public void tick() {
         super.tick();
         int i = this.getPowerLevel();
-        if(this.prepareTimer==this.prepareDuration){
-
-            // sonido del anillo 1
-            this.level.playSound(null,this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE
-                    ,5.0F,1.0F);
-
-        }
-        if(this.prepareTimer==Mth.ceil(this.prepareDuration- (float) this.prepareDuration /4) ||
-                this.prepareTimer==Mth.ceil(this.prepareDuration - (float) this.prepareDuration /2) ||
-                this.prepareTimer==Mth.ceil(this.prepareDuration-this.prepareDuration/1.25)){
-            // sonido del anillo 2
-            // sonido del anillo 3
-            // sonido del anillo 4
+        if(this.prepareTimer==this.prepareDuration || this.prepareTimer==Mth.ceil((float)this.prepareDuration- (float) this.prepareDuration /4.0F) ||
+                this.prepareTimer==Mth.ceil((float)this.prepareDuration - (float) this.prepareDuration /2.0F) ||
+                this.prepareTimer==Mth.ceil((float)this.prepareDuration- (float)this.prepareDuration/1.25F)){
             this.level.playSound(null,this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE,5.0F,1.0F);
+        }
+        if(this.isBurn()){
+            for(int j = 0;j<i+1;j++){
+                this.applyRadius(this.getRadiusForLevel(j),0.5f);
+            }
+        }else {
+            if(this.prepareTimer<=Mth.ceil((float)this.prepareDuration- (float) this.prepareDuration /4.0F)){
+                this.applyRadius(this.getRadius()/1.25F,0.05f);
+                if(this.prepareTimer<=Mth.ceil((float)this.prepareDuration - (float) this.prepareDuration /2.0F)){
+                    this.applyRadius(this.getRadius()/2.0F,0.05f);
+                    if(this.prepareTimer<=Mth.ceil((float)this.prepareDuration-(float) this.prepareDuration/1.25F)){
+                        this.applyRadius(this.getRadius()/4F,0.05f);
+                    }
+                }
+            }
+            this.applyRadius(this.getRadius(),0.01F);
         }
         if(this.prepareTimer==0){
             this.setIsBurn(true);
             this.prepareTimer--;
         }else {
             this.prepareTimer--;
-        }
-        if(this.level.isClientSide){
-            if(this.isBurn()){
-                for(int j = 0;j<i+1;j++){
-                    this.applyRadius(this.getRadiusForLevel(j),0.5f);
-                }
-            }else {
-
-                if(this.level.random.nextBoolean()){
-                    if(this.prepareTimer<=Mth.ceil(this.prepareDuration- (float) this.prepareDuration /4)){
-                        this.applyRadius(this.getRadius()/1.25F,0.05f);
-                        if(this.prepareTimer<=Mth.ceil(this.prepareDuration - (float) this.prepareDuration /2)){
-                            this.applyRadius(this.getRadius()/2.0F,0.05f);
-                            if(this.prepareTimer<=Mth.ceil(this.prepareDuration-(float) this.prepareDuration/1.25)){
-                                this.applyRadius(this.getRadius()/4F,0.05f);
-                            }
-                        }
-                    }
-                    this.applyRadius(this.getRadius(),0.01F);
-                }
-            }
-
         }
         if(this.isBurn()){
             if(this.tickCount%10==0){
