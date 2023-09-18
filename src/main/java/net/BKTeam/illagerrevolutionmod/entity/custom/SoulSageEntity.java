@@ -450,7 +450,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
 
     public void setDrainSoul(boolean pBoolean){
         this.entityData.set(DRAIN_SOUL,pBoolean);
-        this.drainDuration = pBoolean ? 40 : 0;
+        this.drainDuration = pBoolean ? 200 : 0;
     }
     protected void stopDrainSound(LivingEntity living){
         if(!this.level.isClientSide){
@@ -757,7 +757,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     if (!super.canUse()){
                         return false;
                     }
-                    return !souls.isEmpty() && !SoulSageEntity.this.isDrainSoul();
+                    return !souls.isEmpty();
             }
             return false;
         }
