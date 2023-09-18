@@ -169,7 +169,7 @@ public class Events {
             }
             if(event.getEntity().hasEffect(InitEffect.SOUL_BURN.get())){
                 int level=event.getEntity().getEffect(InitEffect.SOUL_BURN.get()).getAmplifier()+1;
-                float damage=1.0F+event.getAmount()*(0.2F*level);
+                float damage=2.0F+event.getAmount()*(0.35F*level);
                 if(event.getSource()==DamageSource.ON_FIRE || event.getSource()==DamageSource.IN_FIRE){
                     if (level < 3) {
                         event.getEntity().hurt(DamageSource.GENERIC.setIsFire(),damage);
