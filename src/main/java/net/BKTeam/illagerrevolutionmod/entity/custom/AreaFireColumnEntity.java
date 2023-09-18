@@ -161,7 +161,7 @@ public class AreaFireColumnEntity extends Entity {
                         this.applyRadius(this.getRadius()/1.25F,0.05f);
                         if(this.prepareTimer<=Mth.ceil(this.prepareDuration - (float) this.prepareDuration /2)){
                             this.applyRadius(this.getRadius()/2.0F,0.05f);
-                            if(this.prepareTimer<=Mth.ceil(this.prepareDuration-this.prepareDuration/1.25)){
+                            if(this.prepareTimer<=Mth.ceil(this.prepareDuration-(float) this.prepareDuration/1.25)){
                                 this.applyRadius(this.getRadius()/4F,0.05f);
                             }
                         }
