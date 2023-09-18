@@ -168,7 +168,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                                     f1=0.5F*list.size()-1;
                                 }
                                 if(this.tickCount%40==0){
-                                    target.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,3.0F,1.0F);
+                                    target.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,1.0F,1.0F);
                                 }
                                 if(target instanceof Player pPlayer){
                                     int j = (int) pPlayer.getAttribute(SoulTick.SOUL).getValue();
