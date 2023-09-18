@@ -72,6 +72,8 @@
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Filo dentado",
   "enchantment.illagerrevolutionmod.wary_lenses": "Lentes cautelosos",
+  "enchantment.illagerrevolutionmod.soul_slash": "Corte de alma",
+  "enchantment.illagerrevolutionmod.insight": "Sabiduria",
 
   "entity.illagerrevolutionmod.raker": "Rasgador",
   "entity.illagerrevolutionmod.illager_miner": "Minero illager",
@@ -95,7 +97,7 @@
   "tooltip.illagerrevolutionmod.junk_axe3": "§63 §rGolpes restantes §6SHIFT§r para mas informaciòn",
   "tooltip.illagerrevolutionmod.junk_axe4": "§64 §rGolpes restantes §6SHIFT§r para mas informaciòn",
   "tooltip.illagerrevolutionmod.junk_axe5": "§65 §rGolpes restantes §6SHIFT§r para mas informaciòn",
-  "tooltip.illagerrevolutionmod.junk_axe_use": "§5§oCLICK DERECHO§r con hierro o illanio en tu mano secundaria para mejorar su daño temporalmente",
+  "tooltip.illagerrevolutionmod.junk_axe_use": "§6CLICK DERECHO§r con hierro o illanio en tu mano secundaria para mejorar su daño temporalmente",
 
   "tooltip.illagerrevolutionmod.ominous_grimoire.tooltip1": "Manten §6SHIFT§r para mas informaciòn",
   "tooltip.illagerrevolutionmod.ominous_grimoire.runemissile1": "§5§lMisil Runico:§r §5Press §oRIGHT CLICK§r §5while no souls are active to throw a harmful rune",
