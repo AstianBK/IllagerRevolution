@@ -252,7 +252,9 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
             }else if(this.random.nextFloat()<0.1F){
                 i=2;
             }
-            stack=EnchantedBookItem.createForEnchantment(new EnchantmentInstance(this.random.nextBoolean() ? InitEnchantment.INSIGHT.get() : InitEnchantment.SOUL_SLASH.get() , i));
+            if(i>0){
+                stack=EnchantedBookItem.createForEnchantment(new EnchantmentInstance(this.random.nextBoolean() ? InitEnchantment.INSIGHT.get() : InitEnchantment.SOUL_SLASH.get() , i));
+            }
         }
         return stack;
     }
