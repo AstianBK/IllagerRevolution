@@ -86,13 +86,13 @@
 
   "sounds.illagerrevolutionmod.tamer_whistle": "domador de feras assobio",
 
-  "tooltip.illagerrevolutionmod.junk_axe0": "§60 §rGolpes restantes",
-  "tooltip.illagerrevolutionmod.junk_axe1": "§61 §rGolpes restantes",
-  "tooltip.illagerrevolutionmod.junk_axe2": "§62 §rGolpes restantes",
-  "tooltip.illagerrevolutionmod.junk_axe3": "§63 §rGolpes restantes",
-  "tooltip.illagerrevolutionmod.junk_axe4": "§64 §rGolpes restantes",
-  "tooltip.illagerrevolutionmod.junk_axe5": "§65 §rGolpes restantes",
-  "tooltip.illagerrevolutionmod.junk_axe_use": "",
+  "tooltip.illagerrevolutionmod.junk_axe0": "§60 §rHits remaining §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.junk_axe1": "§61 §rHits remaining §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.junk_axe2": "§62 §rHits remaining §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.junk_axe3": "§63 §rHits remaining §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.junk_axe4": "§64 §rHits remaining §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.junk_axe5": "§65 §rHits remaining §6SHIFT§r for more info",
+  "tooltip.illagerrevolutionmod.junk_axe_use": "Right click with an iron or illagium ingot in your offhand to upgrade it's damage temporarily",
 
   "tooltip.illagerrevolutionmod.ominous_grimoire.tooltip1": "",
   "tooltip.illagerrevolutionmod.ominous_grimoire.tooltip2": "",
