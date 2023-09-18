@@ -52,7 +52,9 @@ public class RunedSword extends SwordItem {
                             pAttacker.level.addFreshEntity(slash);
                             pAttacker.level.playSound(null,pAttacker, ModSounds.SOUL_SLASH.get(), SoundSource.PLAYERS,5.0F,1.0F);
                             pStack.hurtAndBreak(5,pAttacker,e->e.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-                            player.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
+                            if(!player.isCreative()){
+                                player.getAttribute(SoulTick.SOUL).setBaseValue(cc-1);
+                            }
                         }
                     }
                 }

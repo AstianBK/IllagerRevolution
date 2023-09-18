@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -35,7 +36,11 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -232,6 +237,24 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
             ItemStack drop = new ItemStack(ModItems.OMINOUS_GRIMOIRE.get());
             this.spawnAtLocation(drop);
         }
+        ItemStack book=this.getEnchantedBook();
+        if(book!=null){
+            this.spawnAtLocation(book);
+        }
+    }
+
+    protected ItemStack getEnchantedBook(){
+        ItemStack stack = null;
+        int i = 0;
+        if(this.random.nextFloat()<0.7F){
+            if(this.random.nextFloat()<0.4F){
+                i=1;
+            }else if(this.random.nextFloat()<0.1F){
+                i=2;
+            }
+            stack=EnchantedBookItem.createForEnchantment(new EnchantmentInstance(this.random.nextBoolean() ? InitEnchantment.INSIGHT.get() : InitEnchantment.SOUL_SLASH.get() , i));
+        }
+        return stack;
     }
 
     public void refreshTargetsDrain(List<LivingEntity> targets){

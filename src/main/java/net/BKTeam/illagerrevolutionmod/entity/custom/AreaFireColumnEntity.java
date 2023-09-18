@@ -210,7 +210,7 @@ public class AreaFireColumnEntity extends Entity {
             return this.getRadius()/2F;
         }else if (level == 2) {
             return this.getRadius()/1.25F;
-        }else if (level == 3) {
+        }else if (level >= 3) {
             return this.getRadius();
         }
         return this.getRadius()/4F;

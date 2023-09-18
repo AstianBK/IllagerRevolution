@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.network;
 
+import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
+import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MountEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -57,21 +59,17 @@ public class PacketSyncMountAttacks {
     private void handleEnchantmet(ItemStack pStack,Player pPlayer) {
         if(pStack.is(ModItems.OMINOUS_GRIMOIRE.get()) && this.pId==2){
             List<SoulBomb> souls = pPlayer.level.getEntitiesOfClass(SoulBomb.class,pPlayer.getBoundingBox().inflate(3.0F),
-                    e-> e.inOrbit() && e.getOwner()!=null && e.getOwner()==pPlayer);
-            if(!souls.isEmpty()){
-                boolean flag1 = false;
-                int i = 0;
-                for (SoulBomb soulBomb : souls){
-                    if(!flag1){
-                        flag1=true;
-                        soulBomb.setDefender(true);
-                        pPlayer.level.playSound(pPlayer,pPlayer, ModSounds.SOUL_RELEASE.get(), SoundSource.PLAYERS,2.0F,2.0f);
-                    }else {
-                        if(soulBomb.getPositionSummon()>1){
-                            soulBomb.setPositionSummon(i+1);
-                        }
-                    }
-                    i++;
+                    e->e.getOwner()!=null && e.getOwner()==pPlayer && e.isDefender());
+            int cc = (int) pPlayer.getAttribute(SoulTick.SOUL).getValue();
+            if(souls.isEmpty() && cc>1){
+                SoulBomb bomb = new SoulBomb(pPlayer,pPlayer.level,0);
+                bomb.setPosition(pPlayer);
+                bomb.setPowerLevel(pPlayer.getMainHandItem().getEnchantmentLevel(InitEnchantment.INSIGHT.get()));
+                bomb.setDefender(true);
+                bomb.setInOrbit(false);
+                pPlayer.level.addFreshEntity(bomb);
+                if(!pPlayer.getAbilities().instabuild){
+                    pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc-2);
                 }
             }
         }
