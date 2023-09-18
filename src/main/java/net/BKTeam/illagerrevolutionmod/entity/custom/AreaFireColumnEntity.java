@@ -52,7 +52,7 @@ public class AreaFireColumnEntity extends Entity {
 
     public void setDuration(int duration,int prepareDuration) {
         int i = Mth.clamp(duration,100,1000);
-        int j = Mth.clamp(prepareDuration,50,100);
+        int j = Mth.clamp(prepareDuration,25,100);
         this.duration = i;
         this.maxDuration = i;
         this.prepareDuration = j;
@@ -135,9 +135,9 @@ public class AreaFireColumnEntity extends Entity {
                     ,5.0F,1.0F);
 
         }
-        if(this.prepareTimer==this.prepareDuration-this.prepareDuration/4 ||
-                this.prepareTimer==this.prepareDuration-this.prepareDuration/2 ||
-                this.prepareTimer==this.prepareDuration-this.prepareDuration/1.25F){
+        if(this.prepareTimer==Mth.ceil(this.prepareDuration- (float) this.prepareDuration /4) ||
+                this.prepareTimer==Mth.ceil(this.prepareDuration - (float) this.prepareDuration /2) ||
+                this.prepareTimer==Mth.ceil(this.prepareDuration-this.prepareDuration/1.25)){
             // sonido del anillo 2
             // sonido del anillo 3
             // sonido del anillo 4
@@ -157,11 +157,11 @@ public class AreaFireColumnEntity extends Entity {
             }else {
 
                 if(this.level.random.nextBoolean()){
-                    if(this.prepareTimer<this.prepareDuration-this.prepareDuration/4){
+                    if(this.prepareTimer<=Mth.ceil(this.prepareDuration- (float) this.prepareDuration /4)){
                         this.applyRadius(this.getRadius()/1.25F,0.05f);
-                        if(this.prepareTimer<this.prepareDuration-this.prepareDuration/2){
+                        if(this.prepareTimer<=Mth.ceil(this.prepareDuration - (float) this.prepareDuration /2)){
                             this.applyRadius(this.getRadius()/2.0F,0.05f);
-                            if(this.prepareTimer<this.prepareDuration-this.prepareDuration/1.25){
+                            if(this.prepareTimer<=Mth.ceil(this.prepareDuration-this.prepareDuration/1.25)){
                                 this.applyRadius(this.getRadius()/4F,0.05f);
                             }
                         }
@@ -189,7 +189,7 @@ public class AreaFireColumnEntity extends Entity {
                 this.duration--;
             }
         }else {
-            if(this.tickCount%10==0){
+            if(this.tickCount%5==0){
                 if(this.getOwner()!=null){
                     List<LivingEntity> target = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(5.0D),e->!this.getOwner().isAlliedTo(e) && e!=this.getOwner());
                     for(LivingEntity collateral : target){

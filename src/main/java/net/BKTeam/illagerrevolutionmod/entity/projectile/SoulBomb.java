@@ -126,7 +126,7 @@ public class SoulBomb extends ProjectileMagic {
             areaFireColumn.setPos(initialTarget.getOnPos().getX(), initialTarget.getOnPos().getY() + 1, initialTarget.getOnPos().getZ());
             areaFireColumn.setOwner((LivingEntity) this.getOwner());
             areaFireColumn.setPowerLevel(this.getPowerLevel());
-            areaFireColumn.setDuration(100,50);
+            areaFireColumn.setDuration(100,25);
             this.level.addFreshEntity(areaFireColumn);
             if (this.getOwner() instanceof LivingEntity) {
                 initialTarget.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(), 3);
@@ -154,7 +154,7 @@ public class SoulBomb extends ProjectileMagic {
         areaFireColumn.setPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         areaFireColumn.setOwner((LivingEntity) this.getOwner());
         areaFireColumn.setPowerLevel(this.getPowerLevel());
-        areaFireColumn.setDuration(100,50);
+        areaFireColumn.setDuration(100,25);
         this.level.addFreshEntity(areaFireColumn);
     }
 
