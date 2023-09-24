@@ -131,7 +131,7 @@ public class IllagiumCrossbowItem extends CrossbowItem {
 
     public static int getChargeDuration(ItemStack pCrossbowStack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, pCrossbowStack);
-        return i == 0 ? 30 : 30 - 5 * i;
+        return i == 0 ? 25 : 25 - 5 * i;
     }
 
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
