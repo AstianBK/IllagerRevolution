@@ -267,6 +267,9 @@ public class ModItems {
     public static final RegistryObject<Item> OMINOUS_GRIMOIRE = ITEMS.register("ominous_grimoire",
             ()->new AnimatedItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1)));
 
+    public static final RegistryObject<Item> ILLAGIUM_CROSSBOW = ITEMS.register("illagium_crossbow",
+            ()->new IllagiumCrossbowItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1)));
+
     public static final RegistryObject<Item> JUNK_AXE = ITEMS.register("junk_axe",
             ()->new JunkAxeItem(ModTiers.JUNK,0,3.5F,props()));
 

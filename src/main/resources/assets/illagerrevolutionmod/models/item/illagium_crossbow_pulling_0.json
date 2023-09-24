@@ -1,0 +1,6 @@
+{
+  "parent": "illagerrevolutionmod:item/illagium_crossbow",
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/illagium_crossbow_pulling_0"
+  }
+}

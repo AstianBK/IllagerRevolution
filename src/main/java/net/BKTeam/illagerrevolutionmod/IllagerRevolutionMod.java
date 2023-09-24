@@ -5,6 +5,7 @@ import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.data.server.tags.BKEntityTypeTagsProvider;
+import net.BKTeam.illagerrevolutionmod.data.server.tags.BKItemProperties;
 import net.BKTeam.illagerrevolutionmod.data.server.tags.BkBlockTagsProvider;
 import net.BKTeam.illagerrevolutionmod.data.server.tags.BkItemTagsProvider;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
@@ -16,6 +17,7 @@ import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.*;
 import net.BKTeam.illagerrevolutionmod.entity.custom.SoulSageEntity;
 import net.BKTeam.illagerrevolutionmod.event.loot.LootModifiers;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.item.custom.IllagiumCrossbowItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrderCommand;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
@@ -41,8 +43,10 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -86,6 +90,7 @@ public class IllagerRevolutionMod {
         ModBlocks.register(eventBus);
         ModMenuTypes.register(eventBus);
         LootModifiers.register(eventBus);
+
         TheKnightOrderCommand.REGISTRY.register(eventBus);
         
         

@@ -1,10 +1,12 @@
 package net.BKTeam.illagerrevolutionmod;
 
+import net.BKTeam.illagerrevolutionmod.data.server.tags.BKItemProperties;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.*;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 
@@ -23,5 +25,9 @@ public class ServerEvent {
         event.put(WILD_RAVAGER.get(), WildRavagerEntity.createAttributes().build());
         event.put(SCROUNGER.get(),ScroungerEntity.setAttributes());
         event.put(SOUL_SAGE.get(),SoulSageEntity.setAttributes());
+    }
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(BKItemProperties::register);
     }
 }
