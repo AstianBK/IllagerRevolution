@@ -24,6 +24,9 @@ public class BKItemProperties {
         ItemProperties.register(ModItems.ILLAGIUM_CROSSBOW.get(), new ResourceLocation(IllagerRevolutionMod.MOD_ID, "charged"), (p_239425_0_, p_239425_1_, p_239425_2_, intIn) -> {
             return p_239425_2_ != null && IllagiumCrossbowItem.isCharged(p_239425_0_) ?  1.0F : 0.0F;
         });
+        ItemProperties.register(ModItems.ILLAGIUM_CROSSBOW.get(), new ResourceLocation(IllagerRevolutionMod.MOD_ID, "ammo"), (p_239425_0_, p_239425_1_, p_239425_2_, intIn) -> {
+            return p_239425_2_ != null && IllagiumCrossbowItem.isCharged(p_239425_0_) ?  (float) IllagiumCrossbowItem.storeAmmo(p_239425_0_) : 0.0F;
+        });
         ItemProperties.register(ModItems.ILLAGIUM_CROSSBOW.get(), new ResourceLocation(IllagerRevolutionMod.MOD_ID, "firework"), (p_239424_0_, p_239424_1_, p_239424_2_, intIn) -> {
             return p_239424_2_ != null && IllagiumCrossbowItem.isCharged(p_239424_0_) && IllagiumCrossbowItem.containsChargedProjectile(p_239424_0_, Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
         });

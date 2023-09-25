@@ -48,9 +48,24 @@
     },
     {
       "predicate": {
-        "illagerrevolutionmod:charged": 1
+        "illagerrevolutionmod:charged": 1,
+        "illagerrevolutionmod:ammo": 1
       },
       "model": "illagerrevolutionmod:item/illagium_crossbow_arrow"
+    },
+    {
+      "predicate": {
+        "illagerrevolutionmod:charged": 1,
+        "illagerrevolutionmod:ammo": 2
+      },
+      "model": "illagerrevolutionmod:item/illagium_crossbow_arrow2"
+    },
+    {
+      "predicate": {
+        "illagerrevolutionmod:charged": 1,
+        "illagerrevolutionmod:ammo": 3
+      },
+      "model": "illagerrevolutionmod:item/illagium_crossbow_arrow3"
     },
     {
       "predicate": {

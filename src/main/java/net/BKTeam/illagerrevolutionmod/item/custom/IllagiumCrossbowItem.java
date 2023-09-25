@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.item.custom;
 import com.google.common.collect.Lists;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
@@ -404,6 +405,11 @@ public class IllagiumCrossbowItem extends CrossbowItem {
             }
 
         }
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack pStack, ItemStack pRepairCandidate) {
+        return pRepairCandidate.is(ModItems.ILLAGIUM.get());
     }
 
     /**
