@@ -170,28 +170,16 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         if (this.hasCombo()) {
             if(this.stunnedTimer > 0){
                 this.stunnedTimer--;
+                float f = this.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
+                double d0 = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
+                double d1 = this.getY() + (double)this.getBbHeight() - 0.3D;
+                double d2 = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
+                this.level.addParticle(ParticleTypes.ENTITY_EFFECT, d0, d1, d2, 0.4980392156862745D, 0.5137254901960784D, 0.5725490196078431D);
+
                 if(this.stunnedTimer==0){
                     this.setIdComboState(0);
                     this.setIdCombo(0);
                     this.countCombo=0;
-                    List<LivingEntity> livings = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(3.0D),e->e!=this && e!=this.getVehicle() && this.isAlliedTo(e));
-                    for(LivingEntity living : livings){
-                        double d0 = living.getX() - this.getX();
-                        double d1 = living.getZ() - this.getZ();
-                        double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
-                        double d3 = 3.5F;
-                        living.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
-                    }
-                    this.playSound(SoundEvents.RAVAGER_ROAR,2.0F,-4.0F);
-                    if(this.level.isClientSide){
-                        Vec3 vec3 = this.getBoundingBox().getCenter();
-                        for(int i = 0; i < 40; ++i) {
-                            double d0x = this.random.nextGaussian() * 0.2D;
-                            double d1y = this.random.nextGaussian() * 0.2D;
-                            double d2z = this.random.nextGaussian() * 0.2D;
-                            this.level.addParticle(ParticleTypes.POOF, vec3.x, vec3.y, vec3.z, d0x, d1y, d2z);
-                        }
-                    }
                 }
             }
             if (this.getCombo() == Combo.COMBO_PERFORATE) {
@@ -739,15 +727,16 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                                 this.goalOwner.setYRot(this.goalOwner.yRotO);
                                 this.goalOwner.getNavigation().stop();
                             }
+                            double dist = this.goalOwner.distanceToSqr(target.getX(), target.getY(), target.getZ());
                             if (this.goalOwner.getComboState()==ComboState.FIRST_HIT){
-                                if(this.goalOwner.animationTimer==5){
+                                if(this.goalOwner.animationTimer==5 && dist<=this.getAttackReachSqr(target)+5F){
                                     this.goalOwner.getNavigation().stop();
                                     this.goalOwner.doHurtTarget(target);
                                     //sonido del primer ataque de perforar del BK
                                     this.goalOwner.level.playSound(null,this.goalOwner,ModSounds.BLADE_KNIGHT_SWORDHIT1.get(),SoundSource.HOSTILE,1.0F,1.0F);
                                 }
                             }else if(this.goalOwner.getComboState()==ComboState.SECOND_HIT){
-                                if(this.goalOwner.animationTimer==10){
+                                if(this.goalOwner.animationTimer==10 && dist<=this.getAttackReachSqr(target)+5F){
                                     if(target.isBlocking() && target instanceof Player pTarget){
                                         pTarget.disableShield(true);
                                         this.goalOwner.setIdComboState(4);
@@ -801,7 +790,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
 
         @Override
         protected void checkAndPerformAttack(@NotNull LivingEntity entity, double distance) {
-            double d0 = this.getAttackReachSqr(entity) + 10.0D;
+            double d0 = this.getAttackReachSqr(entity) + 5.0D;
             if (distance <= d0 && this.goalOwner.animationTimer <= 0 && !this.goalOwner.hasCombo()) {
                 this.resetAttackCooldown();
                 this.goalOwner.getLookControl().setLookAt(entity,30,30);
