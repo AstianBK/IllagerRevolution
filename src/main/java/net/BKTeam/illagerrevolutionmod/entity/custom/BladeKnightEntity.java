@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.BKTeam.illagerrevolutionmod.Events;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
@@ -212,6 +214,9 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             this.setContinueAnim(false);
                             this.continueAnim=false;
                             this.level.broadcastEntityEvent(this, (byte) 66);
+                            if(this.getCombo()==Combo.COMBO_PERFORATE){
+                                this.resetCombo();
+                            }
                         }
                     }else {
                         this.setContinueAnim(false);
@@ -285,6 +290,11 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         }
     }
 
+    public void resetCombo(){
+        this.setIdCombo(0);
+        this.setIdComboState(0);
+    }
+
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.random.nextFloat() < 0.5f ? ModItems.FAKE_RUNED_BLADE.get() : ModItems.FAKE_ALT_RUNED_BLADE.get()));
         this.setDropChance(EquipmentSlot.MAINHAND,0.10F);
@@ -313,6 +323,16 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
             knight.hurt(DamageSource.MAGIC.bypassMagic().bypassArmor(),knight.getMaxHealth());
         });
         super.die(pCause);
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        ItemStack itemstack = new ItemStack(this.getMainHandItem().is(ModItems.FAKE_RUNED_BLADE.get())? ModItems.ILLAGIUM_RUNED_BLADE.get() : ModItems.ILLAGIUM_ALT_RUNED_BLADE.get());
+        if (this.random.nextFloat()<0.1F+0.05F*pLooting) {
+            itemstack.setDamageValue(itemstack.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(itemstack.getMaxDamage() - 3, 1))));
+            this.spawnAtLocation(itemstack);
+            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        }
     }
 
     @Override
@@ -636,8 +656,13 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                             boolean sound = false;
                             for (int i=0;i<8;i++){
                                 SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level);
+                                Vec3 vec31 = this.goalOwner.getUpVector(1.0F);
+                                Quaternion quaternion = new Quaternion(new Vector3f(vec31), 45*i, true);
+                                Vec3 vec3 = this.goalOwner.getViewVector(1.0F);
+                                Vector3f vector3f = new Vector3f(vec3);
+                                vector3f.transform(quaternion);
                                 court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
-                                court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot()+(45F*i),0.0F,0.5F,0.1F);
+                                court.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), 0.5F, 0.0F);
                                 this.goalOwner.level.addFreshEntity(court);
                             }
                             this.goalOwner.level.playSound(null,this.goalOwner, ModSounds.SOUL_SLASH.get(), SoundSource.HOSTILE,5.0F,1.0F);
@@ -670,7 +695,13 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
                         if(this.goalOwner.animationTimer==5){
                             SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level);
                             court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
-                            court.shootFromRotation(this.goalOwner,this.goalOwner.getXRot(),this.goalOwner.getYRot(),0.0F,0.5F,0.1F);
+                            Vec3 vec31 = this.goalOwner.getUpVector(1.0F);
+                            Quaternion quaternion = new Quaternion(new Vector3f(vec31), 0.0F, true);
+                            Vec3 vec3 = this.goalOwner.getViewVector(1.0F);
+                            Vector3f vector3f = new Vector3f(vec3);
+                            vector3f.transform(quaternion);
+                            court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
+                            court.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), 0.5F, 0.0F);
                             this.goalOwner.level.addFreshEntity(court);
                             this.goalOwner.level.playSound(null,this.goalOwner, ModSounds.SOUL_SLASH.get(), SoundSource.HOSTILE,5.0F,1.0F);
                             BlockPos pos = new BlockPos(this.goalOwner.getX(),this.goalOwner.getY()+1.5d,this.goalOwner.getZ());

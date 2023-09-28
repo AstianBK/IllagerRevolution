@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.PoiTypeTags;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TheKnightOrders extends SavedData {
-    private final Map<Integer, TheKnightOrder> raidMap = Maps.newHashMap();
+    public final Map<Integer, TheKnightOrder> raidMap = Maps.newHashMap();
     private final ServerLevel level;
     private int nextAvailableID;
     private int tick;
@@ -82,8 +83,8 @@ public class TheKnightOrders extends SavedData {
             } else {
                 BlockPos blockpos = pPlayer.blockPosition();
                 List<PoiRecord> list = this.level.getPoiManager().getInRange((p_219845_) -> {
-                    return p_219845_.is(PoiTypeTags.VILLAGE);
-                }, blockpos, 64, PoiManager.Occupancy.IS_OCCUPIED).toList();
+                    return true;
+                }, blockpos, 64, PoiManager.Occupancy.HAS_SPACE).toList();
                 int i = 0;
                 Vec3 vec3 = Vec3.ZERO;
 
@@ -93,6 +94,7 @@ public class TheKnightOrders extends SavedData {
                     ++i;
                 }
 
+                pPlayer.sendSystemMessage(Component.nullToEmpty("entro"));
                 BlockPos blockpos1;
                 if (i > 0) {
                     vec3 = vec3.scale(1.0D / (double)i);
@@ -105,6 +107,7 @@ public class TheKnightOrders extends SavedData {
                 boolean flag = false;
                 if (!raid.isStarted()) {
                     if (!this.raidMap.containsKey(raid.getId())) {
+                        pPlayer.sendSystemMessage(Component.nullToEmpty("La raid no Inicio"+!this.raidMap.containsKey(raid.getId())));
                         this.raidMap.put(raid.getId(), raid);
                     }
 

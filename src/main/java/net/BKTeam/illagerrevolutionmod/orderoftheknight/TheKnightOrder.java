@@ -28,7 +28,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.NaturalSpawner;
@@ -48,7 +47,7 @@ public class TheKnightOrder {
     private static final Component RAID_BAR_VICTORY_COMPONENT = RAID_NAME_COMPONENT.copy().append(" - ").append(VICTORY);
     private static final Component RAID_BAR_DEFEAT_COMPONENT = RAID_NAME_COMPONENT.copy().append(" - ").append(DEFEAT);
     private final Map<Integer, Raider> groupToLeaderMap = Maps.newHashMap();
-    private final Map<Integer, Set<Raider>> groupRaiderMap = Maps.newHashMap();
+    private final Map<Integer, Set<KnightEntity>> groupRaiderMap = Maps.newHashMap();
     private final Set<UUID> defender = Sets.newHashSet();
     private long ticksActive;
     private BlockPos center;
@@ -58,7 +57,7 @@ public class TheKnightOrder {
     private float totalHealth;
     private boolean active;
     private int groupsSpawned;
-    private final ServerBossEvent raidEvent = new ServerBossEvent(RAID_NAME_COMPONENT, BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+    private final ServerBossEvent raidEvent = new ServerBossEvent(RAID_NAME_COMPONENT, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10);
     private int postRaidTicks;
     private int raidCooldownTicks;
     private final RandomSource random = RandomSource.create();
@@ -129,10 +128,10 @@ public class TheKnightOrder {
         return this.totalHealth;
     }
 
-    public Set<Raider> getAllRaiders() {
-        Set<Raider> set = Sets.newHashSet();
+    public Set<KnightEntity> getAllRaiders() {
+        Set<KnightEntity> set = Sets.newHashSet();
 
-        for(Set<Raider> set1 : this.groupRaiderMap.values()) {
+        for(Set<KnightEntity> set1 : this.groupRaiderMap.values()) {
             set.addAll(set1);
         }
 
@@ -155,32 +154,23 @@ public class TheKnightOrder {
 
     public void tick() {
         if (!this.isStopped()) {
-            if (this.status == Status.STOPPED) {
+            if (this.status == Status.TOBEGIN) {
                 boolean flag = this.active;
                 this.active = this.level.hasChunkAt(this.center);
                 if (this.level.getDifficulty() == Difficulty.PEACEFUL) {
                     this.stop();
+                    System.out.print("\n Stop Raid Esta en Pasifico");
                     return;
                 }
 
                 if (flag != this.active) {
                     this.raidEvent.setVisible(this.active);
+                    System.out.print("\n se establecio la barra de vida"+this.active);
                 }
 
                 if (!this.active) {
+                    System.out.print("\n La raid no esta activa");
                     return;
-                }
-
-                if (!this.level.isVillage(this.center)) {
-                    this.moveRaidCenterToNearbyVillageSection();
-                }
-
-                if (!this.level.isVillage(this.center)) {
-                    if (this.groupsSpawned > 0) {
-                        this.status = Status.DEFEAT;
-                    } else {
-                        this.stop();
-                    }
                 }
 
                 ++this.ticksActive;
@@ -190,6 +180,7 @@ public class TheKnightOrder {
                 }
 
                 int i = this.getTotalRaidersAlive();
+                System.out.print("\tHay"+i+"raiders");
                 if (i == 0 && this.hasMoreWaves()) {
                     if (this.raidCooldownTicks <= 0) {
                         if (this.raidCooldownTicks == 0 && this.groupsSpawned > 0) {
@@ -283,6 +274,7 @@ public class TheKnightOrder {
                 this.setDirty();
             } else if (this.isOver()) {
                 ++this.celebrationTicks;
+                System.out.print("\n se termino la raid");
                 if (this.celebrationTicks >= 600) {
                     this.stop();
                     return;
@@ -372,13 +364,13 @@ public class TheKnightOrder {
     }
 
     private void updateRaiders() {
-        Iterator<Set<Raider>> iterator = this.groupRaiderMap.values().iterator();
-        Set<Raider> set = Sets.newHashSet();
+        Iterator<Set<KnightEntity>> iterator = this.groupRaiderMap.values().iterator();
+        Set<KnightEntity> set = Sets.newHashSet();
 
         while(iterator.hasNext()) {
-            Set<Raider> set1 = iterator.next();
+            Set<KnightEntity> set1 = iterator.next();
 
-            for(Raider raider : set1) {
+            for(KnightEntity raider : set1) {
                 BlockPos blockpos = raider.blockPosition();
                 if (!raider.isRemoved() && raider.level.dimension() == this.level.dimension() && !(this.center.distSqr(blockpos) >= 12544.0D)) {
                     if (raider.tickCount > 600) {
@@ -400,7 +392,7 @@ public class TheKnightOrder {
             }
         }
 
-        for(Raider raider1 : set) {
+        for(KnightEntity raider1 : set) {
             this.removeFromRaid(raider1, true);
         }
 
@@ -432,25 +424,28 @@ public class TheKnightOrder {
         DifficultyInstance difficultyinstance = this.level.getCurrentDifficultyAt(p_37756_);
         boolean flag1 = this.shouldSpawnBonusGroup();
 
-        for(TheKnightOrder.KnightType knightType : TheKnightOrder.KnightType.VALUES) {
+        for(KnightType knightType : KnightType.VALUES) {
             int j = this.getDefaultNumSpawns(knightType, i, flag1) + this.getPotentialBonusSpawns(knightType, this.random, i, difficultyinstance, flag1);
             int k = 0;
 
             for(int l = 0; l < j; ++l) {
                 KnightEntity raider = knightType.entityType.create(this.level);
-                if (!flag) {
-                    raider.setPatrolLeader(true);
-                    //this.setLeader(i, raider);
-                    flag = true;
-                }
                 this.joinRaid(i, raider, p_37756_, false);
-                if (knightType.entityType == ModEntityTypes.BLADE_KNIGHT.get()) {
-                    ++k;
-                }
             }
+        }
+        if(this.isFinalWave()){
+            int k =level.random.nextInt(0,BossType.VALUES.length);
+            KnightEntity boss;
+            if(k==0){
+                boss= BossType.SHIELD_MASTER.entityType.create(this.level);
+            }else {
+                boss= BossType.SHIELD_MASTER.entityType.create(this.level);
+            }
+            this.joinRaid(i,boss,p_37756_,false);
         }
         this.waveSpawnPos = Optional.empty();
         ++this.groupsSpawned;
+        System.out.print("\t Vida maxima de la raid"+this.totalHealth);
         this.updateBossbar();
         this.setDirty();
     }
@@ -479,12 +474,12 @@ public class TheKnightOrder {
     public float getHealthOfLivingRaiders() {
         float f = 0.0F;
 
-        for(Set<Raider> set : this.groupRaiderMap.values()) {
-            for(Raider raider : set) {
+        for(Set<KnightEntity> set : this.groupRaiderMap.values()) {
+            for(KnightEntity raider : set) {
                 f += raider.getHealth();
             }
         }
-
+        System.out.print("\t La vida de todos los knight es :"+f);
         return f;
     }
 
@@ -496,8 +491,8 @@ public class TheKnightOrder {
         return this.groupRaiderMap.values().stream().mapToInt(Set::size).sum();
     }
 
-    public void removeFromRaid(Raider p_37741_, boolean p_37742_) {
-        Set<Raider> set = this.groupRaiderMap.get(p_37741_.getWave());
+    public void removeFromRaid(KnightEntity p_37741_, boolean p_37742_) {
+        Set<KnightEntity> set = this.groupRaiderMap.get(p_37741_.getWaveOfTheOrder());
         if (set != null) {
             boolean flag = set.remove(p_37741_);
             if (flag) {
@@ -505,7 +500,7 @@ public class TheKnightOrder {
                     this.totalHealth -= p_37741_.getHealth();
                 }
 
-                p_37741_.setCurrentRaid((Raid)null);
+                p_37741_.setRaidOfOrder((TheKnightOrder) null);
                 this.updateBossbar();
                 this.setDirty();
             }
@@ -542,10 +537,10 @@ public class TheKnightOrder {
         this.groupRaiderMap.computeIfAbsent(p_37719_, (p_37746_) -> {
             return Sets.newHashSet();
         });
-        Set<Raider> set = this.groupRaiderMap.get(p_37719_);
-        Raider raider = null;
+        Set<KnightEntity> set = this.groupRaiderMap.get(p_37719_);
+        KnightEntity raider = null;
 
-        for(Raider raider1 : set) {
+        for(KnightEntity raider1 : set) {
             if (raider1.getUUID().equals(p_37720_.getUUID())) {
                 raider = raider1;
                 break;
@@ -587,7 +582,7 @@ public class TheKnightOrder {
         boolean flag = difficulty == Difficulty.EASY;
         boolean flag1 = difficulty == Difficulty.NORMAL;
 
-        return 0;
+        return 1;
     }
 
     public boolean isActive() {
@@ -666,9 +661,8 @@ public class TheKnightOrder {
 
     public static enum KnightType implements net.minecraftforge.common.IExtensibleEnum {
         BLADE_KNIGHT(ModEntityTypes.BLADE_KNIGHT.get(), new int[]{0, 0, 2, 0, 1, 4, 2, 5}),
-        ILLAGER_BEAST_TAMER(ModEntityTypes.ILLAGER_BEAST_TAMER.get(), new int[]{0, 1, 1, 1, 1, 1, 1, 2});
-
-        static TheKnightOrder.KnightType[] VALUES = values();
+        SOUL_SAGE(ModEntityTypes.SOUL_SAGE.get(), new int[]{1, 0, 2, 0, 1, 4, 2, 5});
+        static KnightType[] VALUES = values();
         final EntityType<? extends SpellcasterKnight> entityType;
         final int[] spawnsPerWaveBeforeBonus;
 
@@ -681,10 +675,34 @@ public class TheKnightOrder {
          * The waveCountsIn integer decides how many entities of the EntityType defined in typeIn will spawn in each wave.
          * For example, one ravager will always spawn in wave 3.
          */
-        public static TheKnightOrder.KnightType create(String name, EntityType<? extends SpellcasterKnight> typeIn, int[] waveCountsIn) {
+        public static KnightType create(String name, EntityType<? extends SpellcasterKnight> typeIn, int[] waveCountsIn) {
             throw new IllegalStateException("Enum not extended");
         }
 
+        @Override
+        @Deprecated
+        public void init() {
+            VALUES = values();
+        }
+    }
+
+    public static enum BossType implements net.minecraftforge.common.IExtensibleEnum {
+        SHIELD_MASTER(ModEntityTypes.ILLAGER_BEAST_TAMER.get());
+
+        static BossType[] VALUES = values();
+        final EntityType<? extends SpellcasterKnight> entityType;
+
+        private BossType(EntityType<? extends SpellcasterKnight> p_37821_) {
+            this.entityType = p_37821_;
+        }
+
+        /**
+         * The waveCountsIn integer decides how many entities of the EntityType defined in typeIn will spawn in each wave.
+         * For example, one ravager will always spawn in wave 3.
+         */
+        public static BossType create(String name, EntityType<? extends SpellcasterKnight> typeIn, int[] waveCountsIn) {
+            throw new IllegalStateException("Enum not extended");
+        }
         @Override
         @Deprecated
         public void init() {

@@ -60,7 +60,7 @@ public class SoulSlash extends ThrowableProjectile {
             if(this.getOwner()!=null){
                 if(!this.getOwner().isAlliedTo(living) &&
                         !(living instanceof IllagerBeastEntity beast && !beast.isTame())){
-                    living.hurt(DamageSource.MAGIC,3);
+                    living.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(),3);
                 }
             }
         }

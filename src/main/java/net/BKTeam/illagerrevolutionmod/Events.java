@@ -15,6 +15,8 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
+import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrder;
+import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
@@ -269,6 +271,14 @@ public class Events {
                     }
                 }
             }
+            /*if(itemStack.is(Items.HORN_CORAL)){
+                TheKnightOrders raids = IllagerRevolutionMod.getTheOrders(player.getLevel());
+                TheKnightOrder raid = raids.createOrExtendRaid(player);
+                if(raid!=null){
+                    player.sendSystemMessage(Component.nullToEmpty("entro"));
+                    raids.setDirty();
+                }
+            }*/
         }
     }
     public static void sendSmoke(LivingEntity livingEntity) {

@@ -12,6 +12,7 @@ public class DataSaver extends SavedData{
 
     DataSaver(ServerLevel level){
         this.level=level;
+        this.orders=new TheKnightOrders(level);
     }
 
     DataSaver(ServerLevel level,CompoundTag tag){

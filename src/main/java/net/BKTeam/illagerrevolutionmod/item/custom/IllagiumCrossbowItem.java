@@ -403,8 +403,8 @@ public class IllagiumCrossbowItem extends CrossbowItem {
                     pTooltip.addAll(list1);
                 }
             }
-
         }
+        pTooltip.add(Component.translatable("tooltip.illagerrevolutionmod.illagium_crossbow_tip1"));
     }
 
     @Override

@@ -84,6 +84,8 @@
   "item.illagerrevolutionmod.junk_axe": "Junk Axe",
   "item.illagerrevolutionmod.arrow_beast": "Claw Arrow",
 
+  "tooltip.illagerrevolutionmod.FakeItems": "",
+
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Serrated Edge",
   "enchantment.illagerrevolutionmod.wary_lenses": "Wary Lenses",
@@ -151,6 +153,8 @@
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2": "§5to summon a Fallen Knight follower to aid you in battle temporarily",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability",
+
+  "tooltip.illagerrevolutionmod.illagium_crossbow_tip1": "",
 
 
   "event.illagerrevolutionmod.raid.defeat": "DEFEAT",

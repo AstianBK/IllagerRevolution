@@ -1,8 +1,15 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrder;
+import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.level.Level;
 
@@ -18,11 +25,18 @@ public class KnightEntity extends AbstractIllager {
         super(p_32105_, p_32106_);
     }
 
+    public TheKnightOrder getRaidOfOrder(){
+        return this.order;
+    }
     public void setRaidOfOrder(TheKnightOrder raidOfOrder){
         this.order=raidOfOrder;
     }
     public void setWaveOfOrder(int wave) {
         this.waveOfTheOrder = wave;
+    }
+
+    public int getWaveOfTheOrder(){
+        return this.waveOfTheOrder;
     }
 
     public void setCanJoinRaidOfTheOrder(boolean isCanJoin){
@@ -34,8 +48,68 @@ public class KnightEntity extends AbstractIllager {
     }
 
     @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1,new PathfindToRaidGoal<>(this));
+        this.goalSelector.addGoal(1,new KnightMoveThroughVillageGoal(this,(double)1.05F, 1));
+    }
+
+    @Override
+    public void die(DamageSource pCause) {
+        if(this.level instanceof ServerLevel){
+            Entity entity = pCause.getEntity();
+            TheKnightOrder raid = this.getRaidOfOrder();
+            if (raid != null) {
+                raid.removeFromRaid(this, false);
+            }
+        }
+
+        super.die(pCause);
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (this.hasActiveRaidOfOrder()) {
+            this.getRaidOfOrder().updateBossbar();
+        }
+        return super.hurt(pSource, pAmount);
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.level instanceof ServerLevel && this.isAlive()) {
+            TheKnightOrder raid = this.getRaidOfOrder();
+            if (this.canJoinRaid()) {
+                if (raid == null) {
+                    if (this.level.getGameTime() % 20L == 0L) {
+                        TheKnightOrder raid1 = IllagerRevolutionMod.getTheOrders((ServerLevel) this.level).getNearbyRaid(this.blockPosition(),9123);
+                        if (raid1 != null && TheKnightOrders.canJoinRaid(this,raid1)) {
+                            raid1.joinRaid(raid1.getGroupsSpawned(), this, (BlockPos)null, true);
+                        }
+                    }
+                } else {
+                    LivingEntity livingentity = this.getTarget();
+                    if (livingentity != null && (livingentity.getType() == EntityType.PLAYER || livingentity.getType() == EntityType.IRON_GOLEM)) {
+                        this.noActionTime = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public void applyRaidBuffs(int pWave, boolean p_37845_) {
 
+    }
+
+    @Override
+    public boolean hasActiveRaid() {
+        return super.hasActiveRaid();
+    }
+
+    public boolean hasActiveRaidOfOrder(){
+        return (this.getRaidOfOrder() != null && this.getRaidOfOrder().isActive());
     }
 
     @Override
