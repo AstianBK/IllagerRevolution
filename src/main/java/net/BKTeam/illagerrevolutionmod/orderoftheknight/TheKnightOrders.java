@@ -94,7 +94,6 @@ public class TheKnightOrders extends SavedData {
                     ++i;
                 }
 
-                pPlayer.sendSystemMessage(Component.nullToEmpty("entro"));
                 BlockPos blockpos1;
                 if (i > 0) {
                     vec3 = vec3.scale(1.0D / (double)i);
@@ -107,7 +106,6 @@ public class TheKnightOrders extends SavedData {
                 boolean flag = false;
                 if (!raid.isStarted()) {
                     if (!this.raidMap.containsKey(raid.getId())) {
-                        pPlayer.sendSystemMessage(Component.nullToEmpty("La raid no Inicio"+!this.raidMap.containsKey(raid.getId())));
                         this.raidMap.put(raid.getId(), raid);
                     }
 

@@ -159,17 +159,17 @@ public class TheKnightOrder {
                 this.active = this.level.hasChunkAt(this.center);
                 if (this.level.getDifficulty() == Difficulty.PEACEFUL) {
                     this.stop();
-                    System.out.print("\n Stop Raid Esta en Pasifico");
+                    //System.out.print("\n Stop Raid Esta en Pasifico");
                     return;
                 }
 
                 if (flag != this.active) {
                     this.raidEvent.setVisible(this.active);
-                    System.out.print("\n se establecio la barra de vida"+this.active);
+                    //System.out.print("\n se establecio la barra de vida"+this.active);
                 }
 
                 if (!this.active) {
-                    System.out.print("\n La raid no esta activa");
+                    //System.out.print("\n La raid no esta activa");
                     return;
                 }
 
@@ -180,7 +180,7 @@ public class TheKnightOrder {
                 }
 
                 int i = this.getTotalRaidersAlive();
-                System.out.print("\tHay"+i+"raiders");
+                //System.out.print("\tHay"+i+"raiders");
                 if (i == 0 && this.hasMoreWaves()) {
                     if (this.raidCooldownTicks <= 0) {
                         if (this.raidCooldownTicks == 0 && this.groupsSpawned > 0) {
@@ -274,7 +274,7 @@ public class TheKnightOrder {
                 this.setDirty();
             } else if (this.isOver()) {
                 ++this.celebrationTicks;
-                System.out.print("\n se termino la raid");
+                //System.out.print("\n se termino la raid");
                 if (this.celebrationTicks >= 600) {
                     this.stop();
                     return;
@@ -445,7 +445,7 @@ public class TheKnightOrder {
         }
         this.waveSpawnPos = Optional.empty();
         ++this.groupsSpawned;
-        System.out.print("\t Vida maxima de la raid"+this.totalHealth);
+        //System.out.print("\t Vida maxima de la raid"+this.totalHealth);
         this.updateBossbar();
         this.setDirty();
     }
@@ -479,7 +479,7 @@ public class TheKnightOrder {
                 f += raider.getHealth();
             }
         }
-        System.out.print("\t La vida de todos los knight es :"+f);
+        //System.out.print("\t La vida de todos los knight es :"+f);
         return f;
     }
 
