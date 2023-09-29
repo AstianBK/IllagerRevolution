@@ -68,7 +68,7 @@
   "item.illagerrevolutionmod.beast_staff": "Bastòn domador de bestias",
   "item.illagerrevolutionmod.arrow_beast": "Flecha de garra",
 
-  "tooltip.illagerrevolutionmod.FakeItems": "",
+  "tooltip.illagerrevolutionmod.FakeItems": "§5§lITEM CREATIVO-Colocar en crafteo para obtener version utilizable.",
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Filo dentado",
   "enchantment.illagerrevolutionmod.wary_lenses": "Lentes cautelosos",
@@ -129,7 +129,7 @@
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability",
 
-  "tooltip.illagerrevolutionmod.illagium_crossbow_tip1": "",
+  "tooltip.illagerrevolutionmod.illagium_crossbow_tip1": "Manten §6CLICK DERECHO§r para cargar flechas §6(MAX 3)§r",
 
   "key.category.illagerrevolutionmod":"Illager Revolution",
   "key.illagerrevolutionmod.attack_key2":"Ataque Primario",
