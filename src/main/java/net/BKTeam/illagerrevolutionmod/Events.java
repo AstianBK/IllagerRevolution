@@ -180,15 +180,6 @@ public class Events {
                     }
                 }
             }
-            if(entity.hasEffect(InitEffect.DEATH_MARK.get() ) && entity.level.random.nextInt(0,7)==1){
-                Random random=new Random();
-                for (int i=0;i<3;i++){
-                    double xp=entity.getX()+random.nextDouble(-1.0,1.0);
-                    double yp=entity.getY()+random.nextDouble(0.0d,2.0d);
-                    double zp=entity.getZ()+random.nextDouble(-1.0,1.0);
-                    entity.level.addParticle(ModParticles.RUNE_SOUL_PARTICLES.get(),xp,yp,zp,random.nextFloat(-0.1f,0.1f),-0.1F,random.nextFloat(-0.1f,0.1f));
-                }
-            }
         }
     }
 

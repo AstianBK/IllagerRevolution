@@ -1,5 +1,7 @@
 package net.BKTeam.illagerrevolutionmod.entity.projectile;
 
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
@@ -17,11 +19,16 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class SoulSlash extends ThrowableProjectile {
 
     private int life;
+    @Nullable
+    private IntOpenHashSet piercingIgnoreEntityIds;
+    @Nullable
+    private List<Entity> piercedAndKilledEntities;
     public SoulSlash(EntityType<? extends SoulSlash> p_37248_, Level p_37249_) {
         super(p_37248_, p_37249_);
         this.life = 30;
@@ -57,13 +64,48 @@ public class SoulSlash extends ThrowableProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if(pResult.getEntity() instanceof LivingEntity living){
+            if (this.piercingIgnoreEntityIds == null) {
+                this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
+            }
+
+            if (this.piercedAndKilledEntities == null) {
+                this.piercedAndKilledEntities = Lists.newArrayListWithCapacity(5);
+            }
+
+            if (this.piercingIgnoreEntityIds.size() >= 7) {
+                this.discard();
+                return;
+            }
+
+            this.piercingIgnoreEntityIds.add(living.getId());
             if(this.getOwner()!=null){
                 if(!this.getOwner().isAlliedTo(living) &&
                         !(living instanceof IllagerBeastEntity beast && !beast.isTame())){
-                    living.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(),3);
+                    if(living.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(),3)){
+                        if (!living.isAlive() && this.piercedAndKilledEntities != null) {
+                            this.piercedAndKilledEntities.add(living);
+                        }
+                    }
                 }
             }
+
         }
+    }
+
+    @Override
+    protected boolean canHitEntity(Entity p_37250_) {
+        return super.canHitEntity(p_37250_) && (this.piercingIgnoreEntityIds == null || !this.piercingIgnoreEntityIds.contains(p_37250_.getId()));
+    }
+
+    private void resetPiercedEntities() {
+        if (this.piercedAndKilledEntities != null) {
+            this.piercedAndKilledEntities.clear();
+        }
+
+        if (this.piercingIgnoreEntityIds != null) {
+            this.piercingIgnoreEntityIds.clear();
+        }
+
     }
 
     public ItemStack getItem(){

@@ -328,13 +328,6 @@ public class TheKnightOrder {
         };
     }
 
-    private void moveRaidCenterToNearbyVillageSection() {
-        Stream<SectionPos> stream = SectionPos.cube(SectionPos.of(this.center), 2);
-        stream.filter(this.level::isVillage).map(SectionPos::center).min(Comparator.comparingDouble((p_37766_) -> {
-            return p_37766_.distSqr(this.center);
-        })).ifPresent(this::setCenter);
-    }
-
     private boolean hasMoreWaves() {
         if (this.hasBonusWave()) {
             return !this.hasSpawnedBonusWave();
@@ -433,19 +426,18 @@ public class TheKnightOrder {
                 this.joinRaid(i, raider, p_37756_, false);
             }
         }
-        if(this.isFinalWave()){
-            int k =level.random.nextInt(0,BossType.VALUES.length);
+        if(i==this.numGroups){
+            int k =this.level.random.nextInt(0,2);
             KnightEntity boss;
             if(k==0){
-                boss= BossType.SHIELD_MASTER.entityType.create(this.level);
+                boss = BossType.SHIELD_MASTER.entityType.create(this.level);
             }else {
-                boss= BossType.SHIELD_MASTER.entityType.create(this.level);
+                boss = BossType.SHIELD_MASTER.entityType.create(this.level);
             }
             this.joinRaid(i,boss,p_37756_,false);
         }
         this.waveSpawnPos = Optional.empty();
         ++this.groupsSpawned;
-        //System.out.print("\t Vida maxima de la raid"+this.totalHealth);
         this.updateBossbar();
         this.setDirty();
     }
