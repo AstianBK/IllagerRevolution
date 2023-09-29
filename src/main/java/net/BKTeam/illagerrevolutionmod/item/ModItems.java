@@ -90,6 +90,10 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntityTypes.ILLAGER_MINER,0x948e8d, 0x3b3635,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
 
+    public static final RegistryObject<Item> ACOLYTE_SPAWN_EGG = ITEMS.register("acolyte_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.ACOLYTE,0x948e8d, 0x3b3635,
+                    new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));
+
     public static final RegistryObject<Item> RAKER_SPAWN_EGG = ITEMS.register("raker_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntityTypes.RAKER,0x575554, 0xd1c299,
                     new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB)));

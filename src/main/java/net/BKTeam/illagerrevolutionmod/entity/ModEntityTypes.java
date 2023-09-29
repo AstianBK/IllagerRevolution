@@ -29,6 +29,13 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.0f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "illager_miner").toString()));
 
+    public static final RegistryObject<EntityType<AcolyteEntity>> ACOLYTE =
+            ENTITY_TYPES.register("acolyte",
+                    () -> EntityType.Builder.of(AcolyteEntity::new, MobCategory.MONSTER)
+                            .sized(0.60f, 2.0f)
+                            .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "acolyte").toString()));
+
+
     public static final RegistryObject<EntityType<ScroungerEntity>> SCROUNGER =
             ENTITY_TYPES.register("scrounger",
                     () -> EntityType.Builder.of(ScroungerEntity::new, MobCategory.MONSTER)

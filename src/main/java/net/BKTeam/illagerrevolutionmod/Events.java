@@ -262,14 +262,13 @@ public class Events {
                     }
                 }
             }
-            /*if(itemStack.is(Items.HORN_CORAL)){
+            if(itemStack.is(Items.HORN_CORAL)){
                 TheKnightOrders raids = IllagerRevolutionMod.getTheOrders(player.getLevel());
                 TheKnightOrder raid = raids.createOrExtendRaid(player);
                 if(raid!=null){
-                    player.sendSystemMessage(Component.nullToEmpty("entro"));
                     raids.setDirty();
                 }
-            }*/
+            }
         }
     }
     public static void sendSmoke(LivingEntity livingEntity) {

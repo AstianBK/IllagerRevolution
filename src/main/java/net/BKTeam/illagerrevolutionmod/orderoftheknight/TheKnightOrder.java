@@ -159,17 +159,14 @@ public class TheKnightOrder {
                 this.active = this.level.hasChunkAt(this.center);
                 if (this.level.getDifficulty() == Difficulty.PEACEFUL) {
                     this.stop();
-                    //System.out.print("\n Stop Raid Esta en Pasifico");
                     return;
                 }
 
                 if (flag != this.active) {
                     this.raidEvent.setVisible(this.active);
-                    //System.out.print("\n se establecio la barra de vida"+this.active);
                 }
 
                 if (!this.active) {
-                    //System.out.print("\n La raid no esta activa");
                     return;
                 }
 
@@ -180,7 +177,6 @@ public class TheKnightOrder {
                 }
 
                 int i = this.getTotalRaidersAlive();
-                //System.out.print("\tHay"+i+"raiders");
                 if (i == 0 && this.hasMoreWaves()) {
                     if (this.raidCooldownTicks <= 0) {
                         if (this.raidCooldownTicks == 0 && this.groupsSpawned > 0) {
@@ -428,13 +424,10 @@ public class TheKnightOrder {
         }
         if(i==this.numGroups){
             int k =this.level.random.nextInt(0,2);
-            KnightEntity boss;
-            if(k==0){
-                boss = BossType.SHIELD_MASTER.entityType.create(this.level);
-            }else {
-                boss = BossType.SHIELD_MASTER.entityType.create(this.level);
+            for(BossType bossType : BossType.VALUES){
+                KnightEntity boss = bossType.entityType.create(this.level);
+                this.joinRaid(i,boss,p_37756_,false);
             }
-            this.joinRaid(i,boss,p_37756_,false);
         }
         this.waveSpawnPos = Optional.empty();
         ++this.groupsSpawned;
@@ -471,7 +464,6 @@ public class TheKnightOrder {
                 f += raider.getHealth();
             }
         }
-        //System.out.print("\t La vida de todos los knight es :"+f);
         return f;
     }
 
@@ -652,8 +644,9 @@ public class TheKnightOrder {
     }
 
     public static enum KnightType implements net.minecraftforge.common.IExtensibleEnum {
-        BLADE_KNIGHT(ModEntityTypes.BLADE_KNIGHT.get(), new int[]{0, 0, 2, 0, 1, 4, 2, 5}),
-        SOUL_SAGE(ModEntityTypes.SOUL_SAGE.get(), new int[]{1, 0, 2, 0, 1, 4, 2, 5});
+        BLADE_KNIGHT(ModEntityTypes.BLADE_KNIGHT.get(), new int[]{1, 0, 1, 2, 0, 2, 2, 2}),
+        SOUL_SAGE(ModEntityTypes.SOUL_SAGE.get(), new int[]{0,1, 1, 0, 2, 2, 2, 2}),
+        ACOLYTE(ModEntityTypes.ACOLYTE.get(), new int[]{5, 5, 6, 6, 7, 8, 9, 9});
         static KnightType[] VALUES = values();
         final EntityType<? extends SpellcasterKnight> entityType;
         final int[] spawnsPerWaveBeforeBonus;
@@ -663,10 +656,6 @@ public class TheKnightOrder {
             this.spawnsPerWaveBeforeBonus = p_37822_;
         }
 
-        /**
-         * The waveCountsIn integer decides how many entities of the EntityType defined in typeIn will spawn in each wave.
-         * For example, one ravager will always spawn in wave 3.
-         */
         public static KnightType create(String name, EntityType<? extends SpellcasterKnight> typeIn, int[] waveCountsIn) {
             throw new IllegalStateException("Enum not extended");
         }
@@ -688,11 +677,7 @@ public class TheKnightOrder {
             this.entityType = p_37821_;
         }
 
-        /**
-         * The waveCountsIn integer decides how many entities of the EntityType defined in typeIn will spawn in each wave.
-         * For example, one ravager will always spawn in wave 3.
-         */
-        public static BossType create(String name, EntityType<? extends SpellcasterKnight> typeIn, int[] waveCountsIn) {
+        public static BossType create(String name, EntityType<? extends SpellcasterKnight> typeIn) {
             throw new IllegalStateException("Enum not extended");
         }
         @Override
