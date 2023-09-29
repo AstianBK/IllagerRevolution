@@ -82,7 +82,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.FOLLOW_RANGE, 35.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.22f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.21f).build();
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
