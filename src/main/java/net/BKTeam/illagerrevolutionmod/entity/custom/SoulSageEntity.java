@@ -182,7 +182,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                                 }
                                 if(target.hurt(DamageSource.mobAttack(this).setMagic(),f)){
                                     //sonido cuando chupa vida.
-                                    target.playSound(SoundEvents.VILLAGER_NO,1.0F,1.0F);
+                                    target.playSound(SoundEvents.VILLAGER_NO,0.0F,1.0F);
                                     this.heal(Mth.clamp(f*f1,1.0F,f));
                                     this.absorbedSouls++;
                                     this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,1));

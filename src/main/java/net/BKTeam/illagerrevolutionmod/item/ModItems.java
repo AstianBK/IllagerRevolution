@@ -262,6 +262,9 @@ public class ModItems {
     public static final RegistryObject<Item> ILLAGIUM_SHOVEL = ITEMS.register("illagium_shovel",
             ()->new ShovelItem(ModTiers.ILLAGIUM,4,-3.1F,props()));
 
+    public static final RegistryObject<Item> ILLAGIUM_CROSSBOW = ITEMS.register("illagium_crossbow",
+            ()->new IllagiumCrossbowItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1).durability(1000)));
+
     public static final RegistryObject<Item> ILLAGIUM_RUNED_BLADE = ITEMS.register("illagium_runed_blade",
             ()->new SwordRuneBladeItem(ModTiers.ILLAGIUM,8,-2.6F,props()));
 
@@ -270,9 +273,6 @@ public class ModItems {
 
     public static final RegistryObject<Item> OMINOUS_GRIMOIRE = ITEMS.register("ominous_grimoire",
             ()->new AnimatedItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1)));
-
-    public static final RegistryObject<Item> ILLAGIUM_CROSSBOW = ITEMS.register("illagium_crossbow",
-            ()->new IllagiumCrossbowItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).stacksTo(1).durability(1000)));
 
     public static final RegistryObject<Item> JUNK_AXE = ITEMS.register("junk_axe",
             ()->new JunkAxeItem(ModTiers.JUNK,0,3.5F,props()));

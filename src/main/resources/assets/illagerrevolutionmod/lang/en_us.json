@@ -80,11 +80,12 @@
   "item.illagerrevolutionmod.illagium_pickaxe": "Illagium Pickaxe",
   "item.illagerrevolutionmod.illagium_hoe": "Illagium Hoe",
   "item.illagerrevolutionmod.illagium_shovel": "Illagium Shovel",
+  "item.illagerrevolutionmod.illagium_crossbow":"Illagium Crossbow",
   "item.illagerrevolutionmod.beast_staff": "Beast Taming Staff",
   "item.illagerrevolutionmod.junk_axe": "Junk Axe",
   "item.illagerrevolutionmod.arrow_beast": "Claw Arrow",
 
-  "tooltip.illagerrevolutionmod.FakeItems": "",
+  "tooltip.illagerrevolutionmod.FakeItems": "§5§lCREATIVE ITEM ONLY-Place on a workbench to obtain real version",
 
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Serrated Edge",
@@ -139,7 +140,7 @@
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip1": "§l§5Undying Flesh Rune§r",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.fleshtooltip2": "Hold §6SHIFT§r for more info",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon1": "§5§lSoul Siphon:§r §5Slain mobs will have their souls siphoned into the sword increasing it's damage",
-  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_runed_blade.soulsiphon2": "§5§l(MAX. 6)",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5to release a stored soul",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulrelease2": "§5hold§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5to raise them as undead followers",
   "tooltip.illagerrevolutionmod.illagium_runed_blade.soulward": "§5§lSoul Ward:§r §5If fully charged, your blade will protect you from death, consuming all souls in the process",
@@ -148,13 +149,13 @@
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip1": "§l§5Undying Bone Rune§r",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonetooltip2": "Hold §6SHIFT§r for more info",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish1": "§5§lSoul Nourish:§r §5Slain mobs will have their souls absorbed into the sword increasing your armor and healing all summoned followers",
-  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2": "§5§l(MAX 6)",
+  "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.soulnourish2": "§5§l(MAX. 6)",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon1": "§5§lSoul Release:§r §5Press §oRIGHT CLICK§r §5while having at least 3 souls ",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.bonesummon2": "§5to summon a Fallen Knight follower to aid you in battle temporarily",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield1": "§5§lSoul Split:§r §5Press§r §5§oSHIFT§r §5and §oRIGHT CLICK§r §5while having active followers to split your soul between them§r",
   "tooltip.illagerrevolutionmod.illagium_variant_runed_blade.boneshield2": "§5redirecting any damage taken to them and draining your blade's durability",
 
-  "tooltip.illagerrevolutionmod.illagium_crossbow_tip1": "",
+  "tooltip.illagerrevolutionmod.illagium_crossbow_tip1": "Hold §6RIGHT CLICK§r to charge arrows §6(MAX. 3)§r",
 
 
   "event.illagerrevolutionmod.raid.defeat": "DEFEAT",
