@@ -76,14 +76,6 @@
 					]
 				},
 				{
-					"name": "nose",
-					"parent": "main",
-					"pivot": [0, 27, -5],
-					"cubes": [
-						{"origin": [-1, 23, -6], "size": [2, 4, 2], "uv": [24, 0]}
-					]
-				},
-				{
 					"name": "head",
 					"parent": "main",
 					"pivot": [0, 24, 0],
@@ -97,6 +89,14 @@
 					"pivot": [0, 24, 0],
 					"cubes": [
 						{"origin": [-4, 23, -4.25], "size": [8, 11, 8], "inflate": 0.45, "uv": [32, 0]}
+					]
+				},
+				{
+					"name": "nose",
+					"parent": "head",
+					"pivot": [0, 27, -5],
+					"cubes": [
+						{"origin": [-1, 23, -6], "size": [2, 4, 2], "uv": [24, 0]}
 					]
 				}
 			]
