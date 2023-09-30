@@ -112,16 +112,7 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        if(this.level.getRandom().nextFloat() < 0.2F){
-            ItemStack item =new ItemStack(ModItems.GOGGLES_MINER.get());
-            item.setDamageValue(item.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(item.getMaxDamage() - 3, 1))));
-            this.spawnAtLocation(item);
-        }
-        if(this.level.getRandom().nextFloat() < 0.3F){
-            ItemStack item =new ItemStack(ModItems.JUNK_AXE.get());
-            item.setDamageValue(item.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(item.getMaxDamage() - 3, 1))));
-            this.spawnAtLocation(item);
-        }
+
     }
 
     public static AttributeSupplier setAttributes() {
@@ -266,7 +257,16 @@ public class IllagerScavengerEntity extends AbstractIllager implements IAnimatab
 
     @Override
     protected void dropAllDeathLoot(DamageSource pDamageSource) {
-        super.dropAllDeathLoot(pDamageSource);
+        if(this.level.getRandom().nextFloat() < 0.2F){
+            ItemStack item =new ItemStack(ModItems.GOGGLES_MINER.get());
+            item.setDamageValue(item.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(item.getMaxDamage() - 3, 1))));
+            this.spawnAtLocation(item);
+        }
+        if(this.level.getRandom().nextFloat() < 0.3F){
+            ItemStack item =new ItemStack(ModItems.JUNK_AXE.get());
+            item.setDamageValue(item.getMaxDamage() - this.random.nextInt(1 + this.random.nextInt(Math.max(item.getMaxDamage() - 3, 1))));
+            this.spawnAtLocation(item);
+        }
     }
 
     @Override

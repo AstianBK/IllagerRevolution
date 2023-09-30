@@ -127,9 +127,9 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
-        this.goalSelector.addGoal(0,new SoulMissileSpellGoal());
-        this.goalSelector.addGoal(2,new AcolyteAttack(this,1.0D,true));
-        this.goalSelector.addGoal(2, new AcolyteRangedCrossbowAttackGoal<AcolyteEntity>(this, 0.5D, 20) {
+        this.goalSelector.addGoal(1,new SoulMissileSpellGoal());
+        this.goalSelector.addGoal(1,new AcolyteAttack(this,1.0D,true));
+        this.goalSelector.addGoal(1, new AcolyteRangedCrossbowAttackGoal<AcolyteEntity>(this, 0.5D, 20) {
         });
     }
 

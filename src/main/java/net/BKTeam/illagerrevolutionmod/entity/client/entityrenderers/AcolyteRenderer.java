@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.block.state.BlockState;
@@ -70,18 +71,17 @@ public class AcolyteRenderer extends ExtendedGeoEntityRenderer<AcolyteEntity> {
         if (item == currentEntity.getMainHandItem() || item == currentEntity.getOffhandItem()) {
 
             stack.mulPose(Vector3f.XP.rotationDegrees(270F));
-            boolean shieldFlag = item.getItem() instanceof ShieldItem;
+            boolean shieldFlag = item.getItem() instanceof CrossbowItem;
 
             if (item == currentEntity.getMainHandItem()) {
                 if (shieldFlag) {
-                    stack.translate(0, 0.125, -15);
+                    stack.translate(0.0F, 0.125F, 0.0F);
                 }else {
 
                 }
             } else {
                 if (shieldFlag) {
-                    stack.translate(0, 0.125, 0.25);
-                    stack.mulPose(Vector3f.YP.rotationDegrees(180));
+                    stack.translate(0, 0.0, -15);
                 }else {
 
                 }

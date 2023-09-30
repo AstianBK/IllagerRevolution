@@ -50,8 +50,8 @@ public class KnightEntity extends AbstractIllager {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1,new PathfindToRaidGoal<>(this));
-        this.goalSelector.addGoal(1,new KnightMoveThroughVillageGoal(this,(double)1.05F, 1));
+        this.goalSelector.addGoal(3,new PathfindToRaidGoal<>(this));
+        this.goalSelector.addGoal(3,new KnightMoveThroughVillageGoal(this,(double)1.05F, 1));
     }
 
     @Override
