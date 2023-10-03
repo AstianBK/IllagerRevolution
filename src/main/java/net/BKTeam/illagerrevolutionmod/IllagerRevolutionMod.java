@@ -239,6 +239,7 @@ public class IllagerRevolutionMod {
         EntityRenderers.register(SOUL_MISSILE.get(), NoopRenderer::new);
         EntityRenderers.register(AREA_FIRE_COLUMN.get(),NoopRenderer::new);
         EntityRenderers.register(SOUL_SAGE.get(), SoulSageRenderer::new);
+        EntityRenderers.register(SOUL_EATER.get(), SoulEaterRenderer::new);
         MenuScreens.register(ModMenuTypes.RUNE_TABLE_MENU.get(), RuneTableScreen::new);
     }
 
@@ -256,6 +257,7 @@ public class IllagerRevolutionMod {
                 );
     }
 
+
     @Nullable
     private static ServerLevel getOverworld(LevelAccessor levelAccessor ) {
         ServerLevel overworld = levelAccessor.getServer() != null ? levelAccessor.getServer().getLevel( Level.OVERWORLD ) : null;
@@ -264,6 +266,12 @@ public class IllagerRevolutionMod {
 
     public static TheKnightOrders getTheOrders(ServerLevel level){
         return GAME_DATA_SAVER.getTheOrderAttack();
+    }
+
+    public static void setDirty(){
+        if(GAME_DATA_SAVER!=null){
+            GAME_DATA_SAVER.setDirty();
+        }
     }
 
     public static void setupD() {

@@ -1,13 +1,18 @@
 package net.BKTeam.illagerrevolutionmod.entity.client.entitymodels;
 
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.entity.client.AnimationVanillaG;
 import net.BKTeam.illagerrevolutionmod.entity.custom.AcolyteEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.AcolyteEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerScavengerEntity;
 import net.minecraft.Util;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
@@ -58,35 +63,35 @@ public class AcolyteModel<I extends AbstractIllager> extends AnimatedGeoModel<Ac
         IBone leftArm = this.getAnimationProcessor().getBone("left_arm");
         IBone rightLeg = this.getAnimationProcessor().getBone("right_leg");
         IBone leftLeg = this.getAnimationProcessor().getBone("left_leg");
+        IBone cape = this.getAnimationProcessor().getBone("cape");
         float pLimbSwing = animationEvent.getLimbSwing();
         float pLimbSwingAmount = animationEvent.getLimbSwingAmount();
         float pAgeInTicks = animatable.tickCount;
         float pNetHeadYaw = extraData.netHeadYaw;
         float pHeadPitch = extraData.headPitch;
         float i = animatable.getAttackAnim(animationEvent.getPartialTick());
-        
+        float f = Mth.cos(pLimbSwing * 0.261799F) * pLimbSwingAmount * 0.5F;
+        float f2 = -f;
+
+        if(f2>0.0F){
+            f2-=f-f*2F;
+        }
+
         head.setRotationY(pNetHeadYaw * ((float)Math.PI / 180F));
         head.setRotationX(pHeadPitch * ((float)Math.PI / 180F));
 
-        rightArm.setRotationX(Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * 2.0F * pLimbSwingAmount * 0.5F);
-        rightArm.setRotationY(0.0F);
-        rightArm.setRotationZ(0.0F);
-        leftArm.setRotationX(Mth.cos(pLimbSwing * 0.6662F) * 2.0F * pLimbSwingAmount * 0.5F);
-        leftArm.setRotationY(0.0F);
-        leftArm.setRotationZ(0.0F);
-        rightLeg.setRotationX(Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount * 0.5F);
-        rightLeg.setRotationY(0.0F);
-        rightLeg.setRotationZ(0.0F);
-        leftLeg.setRotationX(Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * 1.4F * pLimbSwingAmount * 0.5F);
-        leftLeg.setRotationY(0.0F);
-        leftLeg.setRotationZ(0.0F);
+        AnimationVanillaG.setRotationBone(rightArm,Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * 2.0F * pLimbSwingAmount * 0.5F,0.0F,0.0F);
+        AnimationVanillaG.setRotationBone(leftArm,Mth.cos(pLimbSwing * 0.6662F) * 2.0F * pLimbSwingAmount * 0.5F,0.0F,0.0F);
+        AnimationVanillaG.setRotationBone(rightLeg,Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount * 0.5F,0.0F,0.0F);
+        AnimationVanillaG.setRotationBone(leftLeg,Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * 1.4F * pLimbSwingAmount * 0.5F,0.0F,0.0F);
+        AnimationVanillaG.setRotationBone(cape,f2,0.0F,0.0F);
 
         AbstractIllager.IllagerArmPose abstractillager$illagerarmpose = animatable.getArmPose();
         if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.ATTACKING) {
             if (animatable.getMainHandItem().isEmpty()) {
-                animateZombieArms(leftArm, rightArm, true, i, pAgeInTicks);
+                AnimationVanillaG.animateZombieArms(leftArm, rightArm, true, i, pAgeInTicks);
             } else {
-                swingWeaponDown(rightArm, leftArm, animatable, i, pAgeInTicks);
+                AnimationVanillaG.swingWeaponDown(rightArm, leftArm, animatable, i, pAgeInTicks);
             }
         } else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.SPELLCASTING) {
             rightArm.setPositionZ(0.0F);
@@ -106,9 +111,9 @@ public class AcolyteModel<I extends AbstractIllager> extends AnimatedGeoModel<Ac
             leftArm.setRotationY(head.getRotationY() - 0.4F);
             leftArm.setRotationZ(((float)Math.PI / 2F));
         } else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSBOW_HOLD) {
-            animateCrossbowHold(rightArm, leftArm, head, true);
+            AnimationVanillaG.animateCrossbowHold(rightArm, leftArm, head, true);
         } else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSBOW_CHARGE) {
-            animateCrossbowCharge(rightArm, leftArm, animatable, true);
+            AnimationVanillaG.animateCrossbowCharge(rightArm, leftArm, animatable, true);
         } else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CELEBRATING) {
             rightArm.setPositionZ(0.0F);
             rightArm.setPositionX(-5.0F);
@@ -122,74 +127,5 @@ public class AcolyteModel<I extends AbstractIllager> extends AnimatedGeoModel<Ac
             leftArm.setRotationZ(0.0F);
         }
 
-    }
-
-    public static void animateCrossbowHold(IBone pRightArm, IBone pLeftArm, IBone pHead, boolean pRightHanded) {
-        IBone modelpart = pRightHanded ? pRightArm : pLeftArm;
-        IBone modelpart1 = pRightHanded ? pLeftArm : pRightArm;
-        pRightArm.setRotationY((pRightHanded ? 0.3F : -0.3F) - pHead.getRotationY());
-        pLeftArm.setRotationY((pRightHanded ? -0.6F : 0.6F) - pHead.getRotationY());
-        pRightArm.setRotationX(((float)Math.PI / 2F) - pHead.getRotationX() - 0.1F);
-        pLeftArm.setRotationX(1.5F - pHead.getRotationX());
-    }
-
-    public static void animateCrossbowCharge(IBone pRightArm, IBone pLeftArm, LivingEntity pLivingEntity, boolean pRightHanded) {
-        IBone modelpart = pRightHanded ? pRightArm : pLeftArm;
-        IBone modelpart1 = pRightHanded ? pLeftArm : pRightArm;
-        pRightArm.setRotationZ(pRightHanded ? -0.8F : 0.8F);
-        pRightArm.setRotationX(0.97079635F);
-        pLeftArm.setRotationX(pRightArm.getRotationX());
-        float f = (float) CrossbowItem.getChargeDuration(pLivingEntity.getUseItem());
-        float f1 = Mth.clamp((float)pLivingEntity.getTicksUsingItem(), 0.0F, f);
-        float f2 = f1 / f;
-        pLeftArm.setRotationY(Mth.lerp(f2, -0.4F, -0.85F) * (float)(pRightHanded ? 1 : -1));
-        pLeftArm.setRotationX(Mth.lerp(f2, pLeftArm.getRotationX(), ((float)Math.PI / 2F)));
-    }
-
-    public static <T extends Mob> void swingWeaponDown(IBone pRightArm, IBone pLeftArm, T pMob, float pAttackTime, float pAgeInTicks) {
-        float f = Mth.sin(pAttackTime * (float)Math.PI);
-        float f1 = Mth.sin((1.0F - (1.0F - pAttackTime) * (1.0F - pAttackTime)) * (float)Math.PI);
-        pRightArm.setRotationZ(0.0F);
-        pLeftArm.setRotationZ(0.0F);
-        pRightArm.setRotationY(0.15707964F);
-        pLeftArm.setRotationY(-0.15707964F);
-        if (pMob.getMainArm() == HumanoidArm.RIGHT) {
-            pRightArm.setRotationX(1.8849558F - Mth.cos(pAgeInTicks * 0.09F) * 0.15F);
-            pLeftArm.setRotationX(0.0F - Mth.cos(pAgeInTicks * 0.19F) * 0.5F);
-            pRightArm.setRotationX(pRightArm.getRotationX() - f * 2.2F - f1 * 0.4F);
-            pLeftArm.setRotationX(pLeftArm.getRotationX() - f * 1.2F - f1 * 0.4F) ;
-        } else {
-            pRightArm.setRotationX(-0.0F + Mth.cos(pAgeInTicks * 0.19F) * 0.5F) ;
-            pLeftArm.setRotationX(-1.0472F + Mth.cos(pAgeInTicks * 0.09F) * 0.15F);
-            pRightArm.setRotationX(pRightArm.getRotationX()-f * 1.2F - f1 * 0.4F) ;
-            pLeftArm.setRotationX(pLeftArm.getRotationX()-f * 2.2F - f1 * 0.4F) ;
-        }
-
-        bobArms(pRightArm, pLeftArm, pAgeInTicks);
-    }
-
-    public static void bobModelPart(IBone pModelPart, float pAgeInTicks, float pMultiplier) {
-        pModelPart.setRotationZ(pModelPart.getRotationZ() + pMultiplier * (Mth.cos(pAgeInTicks * 0.09F) * 0.05F + 0.05F));
-        pModelPart.setRotationX(pModelPart.getRotationX() + pMultiplier * Mth.sin(pAgeInTicks * 0.067F) * 0.05F);
-    }
-
-    public static void bobArms(IBone pRightArm, IBone pLeftArm, float pAgeInTicks) {
-        bobModelPart(pRightArm, pAgeInTicks, 1.0F);
-        bobModelPart(pLeftArm, pAgeInTicks, -1.0F);
-    }
-
-    public static void animateZombieArms(IBone pLeftArm, IBone pRightArm, boolean pIsAggressive, float pAttackTime, float pAgeInTicks) {
-        float f = Mth.sin(pAttackTime * (float)Math.PI);
-        float f1 = Mth.sin((1.0F - (1.0F - pAttackTime) * (1.0F - pAttackTime)) * (float)Math.PI);
-        pRightArm.setRotationZ(0.0F);
-        pLeftArm.setRotationZ(0.0F);
-        pRightArm.setRotationY(-(0.1F - f * 0.6F));
-        pLeftArm.setRotationY(0.1F - f * 0.6F);
-        float f2 = -(float)Math.PI / (pIsAggressive ? 1.5F : 2.25F);
-        pRightArm.setRotationX(f2);
-        pLeftArm.setRotationX(f2);
-        pRightArm.setRotationX(pRightArm.getRotationX()+f * 1.2F - f1 * 0.4F);
-        pLeftArm.setRotationX(pLeftArm.getRotationX()+f * 1.2F - f1 * 0.4F);
-        bobArms(pRightArm, pLeftArm, pAgeInTicks);
     }
 }

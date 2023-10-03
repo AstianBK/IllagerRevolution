@@ -51,6 +51,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -262,13 +263,6 @@ public class Events {
                     }
                 }
             }
-            if(itemStack.is(Items.HORN_CORAL)){
-                TheKnightOrders raids = IllagerRevolutionMod.getTheOrders(player.getLevel());
-                TheKnightOrder raid = raids.createOrExtendRaid(player);
-                if(raid!=null){
-                    raids.setDirty();
-                }
-            }
         }
     }
     public static void sendSmoke(LivingEntity livingEntity) {
@@ -289,6 +283,20 @@ public class Events {
         }
     }
 
+    @SubscribeEvent
+    public static void onExpirePotionEffect(MobEffectEvent.Expired event){
+        if(event.getEffectInstance()==null)return;
+        if(event.getEffectInstance().getEffect()==InitEffect.THE_ORDER_MARK.get()){
+            if(event.getEntity() instanceof ServerPlayer){
+                ServerPlayer player= (ServerPlayer) event.getEntity();
+                TheKnightOrders raids = IllagerRevolutionMod.getTheOrders(player.getLevel());
+                TheKnightOrder raid = raids.createOrExtendRaid(player);
+                if(raid!=null){
+                    raids.setDirty();
+                }
+            }
+        }
+    }
     private static void hurtHelmet(ItemStack itemStack, Player player){
         float i=0;
         int j=((IllagiumArmorItem)itemStack.getItem()).getMaterial()== ModArmorMaterials.ILLAGIUM ? 2 : 10;

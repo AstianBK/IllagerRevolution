@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.client.entitymodels;
 
 import com.google.common.collect.Maps;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.entity.client.AnimationVanillaG;
 import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.minecraft.Util;
@@ -69,17 +70,17 @@ public class WildRavagerGModel extends AnimatedGeoModel<WildRavagerEntity> {
             body.setScaleX(1.0f);
             body.setScaleY(1.0f);
             body.setScaleZ(1.0f);
-            setPositionBone(leftFrontLeg,0.0F,0.0F,0.0F);
-            setRotationBone(leftFrontLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setPositionBone(leftFrontLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setRotationBone(leftFrontLeg,0.0F,0.0F,0.0F);
 
-            setPositionBone(rightFrontLeg,0.0F,0.0F,0.0F);
-            setRotationBone(rightFrontLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setPositionBone(rightFrontLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setRotationBone(rightFrontLeg,0.0F,0.0F,0.0F);
 
-            setPositionBone(leftHindLeg,0.0F,0.0F,0.0F);
-            setRotationBone(leftHindLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setPositionBone(leftHindLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setRotationBone(leftHindLeg,0.0F,0.0F,0.0F);
 
-            setPositionBone(rightHindLeg,0.0F,0.0F,0.0F);
-            setRotationBone(rightHindLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setPositionBone(rightHindLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.setRotationBone(rightHindLeg,0.0F,0.0F,0.0F);
 
             if (l > 0) {
                 float f = Mth.triangleWave((float)l - pPartialTick, 10.0F);
@@ -121,16 +122,5 @@ public class WildRavagerGModel extends AnimatedGeoModel<WildRavagerEntity> {
             rightFrontLeg.setRotationX(Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * f );
             leftFrontLeg.setRotationX( Mth.cos(pLimbSwing * 0.6662F) * f);
         }
-    }
-    public void setPositionBone(IBone bone ,float x,float y, float z){
-        bone.setPositionX(x);
-        bone.setPositionY(y);
-        bone.setPositionZ(z);
-    }
-
-    public void setRotationBone(IBone bone,float x,float y,float z){
-        bone.setRotationX(x);
-        bone.setRotationY(y);
-        bone.setRotationZ(z);
     }
 }

@@ -99,10 +99,6 @@ public class SoulBomb extends ProjectileMagic {
                 this.discard();
             }
         }
-        if(!owner.isAlive()){
-            this.discard();
-        }
-
         super.tick();
     }
 

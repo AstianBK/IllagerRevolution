@@ -26,6 +26,7 @@ public class ServerEvent {
         event.put(SCROUNGER.get(),ScroungerEntity.setAttributes());
         event.put(SOUL_SAGE.get(),SoulSageEntity.setAttributes());
         event.put(ACOLYTE.get(),AcolyteEntity.setAttributes());
+        event.put(SOUL_EATER.get(),SoulEaterEntity.createAttributes().build());
     }
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {

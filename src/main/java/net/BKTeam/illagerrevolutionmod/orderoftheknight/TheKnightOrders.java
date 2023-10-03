@@ -1,6 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.orderoftheknight;
 
 import com.google.common.collect.Maps;
+import net.BKTeam.illagerrevolutionmod.DataSaver;
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.goals.KnightEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -108,9 +110,10 @@ public class TheKnightOrders extends SavedData {
                     if (!this.raidMap.containsKey(raid.getId())) {
                         this.raidMap.put(raid.getId(), raid);
                     }
-
                     flag = true;
+                    raid.absorbTheOrderMark(pPlayer);
                 }
+
                 this.setDirty();
                 return raid;
             }
@@ -133,7 +136,6 @@ public class TheKnightOrders extends SavedData {
             TheKnightOrder raid = new TheKnightOrder(p_150236_, compoundtag);
             raids.raidMap.put(raid.getId(), raid);
         }
-
         return raids;
     }
     public CompoundTag save(CompoundTag pCompound) {
@@ -146,7 +148,6 @@ public class TheKnightOrders extends SavedData {
             raid.save(compoundtag);
             listtag.add(compoundtag);
         }
-
         pCompound.put("Raids", listtag);
         return pCompound;
     }
@@ -173,5 +174,11 @@ public class TheKnightOrders extends SavedData {
         }
 
         return raid;
+    }
+
+    @Override
+    public void setDirty() {
+        IllagerRevolutionMod.setDirty();
+        super.setDirty();
     }
 }

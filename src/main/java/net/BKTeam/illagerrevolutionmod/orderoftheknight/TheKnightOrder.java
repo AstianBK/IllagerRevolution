@@ -3,12 +3,14 @@ package net.BKTeam.illagerrevolutionmod.orderoftheknight;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.goals.KnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
+import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -25,10 +27,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.Blocks;
@@ -38,7 +40,6 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class TheKnightOrder {
     private static final Component RAID_NAME_COMPONENT = Component.translatable("event.illagerrevolutionmod.raid");
@@ -48,7 +49,9 @@ public class TheKnightOrder {
     private static final Component RAID_BAR_DEFEAT_COMPONENT = RAID_NAME_COMPONENT.copy().append(" - ").append(DEFEAT);
     private final Map<Integer, Raider> groupToLeaderMap = Maps.newHashMap();
     private final Map<Integer, Set<KnightEntity>> groupRaiderMap = Maps.newHashMap();
+    private final Map<UUID, Integer> defenderScoreKillMap = Maps.newHashMap();
     private final Set<UUID> defender = Sets.newHashSet();
+    private final Set<UUID> targetPlayers = Sets.newHashSet();
     private long ticksActive;
     private BlockPos center;
     private final ServerLevel level;
@@ -74,7 +77,7 @@ public class TheKnightOrder {
         this.raidEvent.setProgress(0.0F);
         this.center = p_37694_;
         this.numGroups = 5;
-        this.status = Status.TOBEGIN;
+        this.status = Status.TO_BEGIN;
     }
     public TheKnightOrder(ServerLevel p_37696_, CompoundTag p_37697_){
         this.level = p_37696_;
@@ -90,11 +93,26 @@ public class TheKnightOrder {
         this.numGroups = p_37697_.getInt("NumGroups");
         this.status = TheKnightOrder.Status.getByName(p_37697_.getString("Status"));
         this.defender.clear();
+        this.defenderScoreKillMap.clear();
+        this.targetPlayers.clear();
         if (p_37697_.contains("Defender", 9)) {
             ListTag listtag = p_37697_.getList("Defender", 11);
 
             for(int i = 0; i < listtag.size(); ++i) {
                 this.defender.add(NbtUtils.loadUUID(listtag.get(i)));
+            }
+        }
+        if (p_37697_.contains("Targets", 9)) {
+            ListTag listtag = p_37697_.getList("Targets", 11);
+            for(int i = 0; i < listtag.size(); ++i) {
+                this.targetPlayers.add(NbtUtils.loadUUID(listtag.get(i)));
+            }
+        }
+        if(p_37697_.contains("ScoreKill",9)){
+            ListTag listTag = p_37697_.getList("ScoreKill",10);
+            for(int i = 0 ; i<listTag.size() ; i++){
+                TheKnightOrderScores scores = new TheKnightOrderScores(listTag.getCompound(i));
+                this.defenderScoreKillMap.put(scores.uuid,scores.kill);
             }
         }
 
@@ -154,9 +172,18 @@ public class TheKnightOrder {
 
     public void tick() {
         if (!this.isStopped()) {
-            if (this.status == Status.TOBEGIN) {
+            if (this.status == Status.TO_BEGIN) {
                 boolean flag = this.active;
                 this.active = this.level.hasChunkAt(this.center);
+
+                if(!this.targetPlayers.isEmpty()){
+                    for (UUID uuid : this.targetPlayers){
+                        Entity entity = this.level.getEntity(uuid);
+                        if(entity instanceof Player player && !player.isAlive()){
+                            this.stop();
+                        }
+                    }
+                }
                 if (this.level.getDifficulty() == Difficulty.PEACEFUL) {
                     this.stop();
                     return;
@@ -252,16 +279,23 @@ public class TheKnightOrder {
                         ++this.postRaidTicks;
                     } else {
                         this.status = Status.VICTORY;
-
+                        Entity leader = this.getLeaderScoreKill();
                         for(UUID uuid : this.defender) {
                             Entity entity = this.level.getEntity(uuid);
                             if (entity instanceof LivingEntity && !entity.isSpectator()) {
                                 LivingEntity livingentity = (LivingEntity)entity;
-                                livingentity.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 48000, 2, false, false, true));
                                 if (livingentity instanceof ServerPlayer) {
                                     ServerPlayer serverplayer = (ServerPlayer)livingentity;
-                                    serverplayer.awardStat(Stats.RAID_WIN);
-                                    CriteriaTriggers.RAID_WIN.trigger(serverplayer);
+                                    if(this.defenderScoreKillMap.containsKey(uuid)){
+                                        boolean isLeader = leader==serverplayer;
+                                        serverplayer.sendSystemMessage(this.showScoreKill(uuid,isLeader));
+                                        if(isLeader){
+                                            ItemStack itemStack = new ItemStack(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get());
+                                            itemStack.setHoverName(Component.nullToEmpty("FrostRune"));
+                                            itemStack.enchant(InitEnchantment.SOUL_SLASH.get(),4);
+                                            serverplayer.getInventory().add(itemStack);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -270,7 +304,6 @@ public class TheKnightOrder {
                 this.setDirty();
             } else if (this.isOver()) {
                 ++this.celebrationTicks;
-                //System.out.print("\n se termino la raid");
                 if (this.celebrationTicks >= 600) {
                     this.stop();
                     return;
@@ -298,13 +331,44 @@ public class TheKnightOrder {
         return Optional.empty();
     }
 
+    private Component showScoreKill(UUID uuid,boolean isLeader){
+        Component s = Component.translatable("event.illagerrevolutionmod.raid_score_kill");
+        int kills = this.defenderScoreKillMap.get(uuid);
+        return isLeader ? s.copy().append("-"+kills+"-is Leader") :s.copy().append("-"+kills);
+    }
+
+    public void setScoreKillForUUID(Player player){
+        int i = this.defenderScoreKillMap.get(player.getUUID());
+        this.defenderScoreKillMap.put(player.getUUID(),i+1);
+    }
+
+    public Entity getLeaderScoreKill(){
+        Entity entity = null;
+        int killMax=0;
+        for (UUID uuid : this.defender){
+            int kill = this.defenderScoreKillMap.get(uuid);
+            if(killMax<kill){
+                killMax=kill;
+                entity=this.level.getEntity(uuid);
+            }
+        }
+        return entity;
+    }
+
+    public void absorbTheOrderMark(Player pTarget){
+        pTarget.removeEffect(InitEffect.THE_ORDER_MARK.get());
+        this.targetPlayers.add(pTarget.getUUID());
+    }
+
     private void updatePlayers() {
         Set<ServerPlayer> set = Sets.newHashSet(this.raidEvent.getPlayers());
         List<ServerPlayer> list = this.level.getPlayers(this.validPlayer());
-
         for(ServerPlayer serverplayer : list) {
             if (!set.contains(serverplayer)) {
                 this.raidEvent.addPlayer(serverplayer);
+            }
+            if(!this.defenderScoreKillMap.containsKey(serverplayer.getUUID())){
+                this.defenderScoreKillMap.put(serverplayer.getUUID(),0);
             }
         }
 
@@ -413,20 +477,21 @@ public class TheKnightOrder {
         DifficultyInstance difficultyinstance = this.level.getCurrentDifficultyAt(p_37756_);
         boolean flag1 = this.shouldSpawnBonusGroup();
 
-        for(KnightType knightType : KnightType.VALUES) {
-            int j = this.getDefaultNumSpawns(knightType, i, flag1) + this.getPotentialBonusSpawns(knightType, this.random, i, difficultyinstance, flag1);
-            int k = 0;
-
-            for(int l = 0; l < j; ++l) {
-                KnightEntity raider = knightType.entityType.create(this.level);
-                this.joinRaid(i, raider, p_37756_, false);
-            }
-        }
         if(i==this.numGroups){
             int k =this.level.random.nextInt(0,2);
             for(BossType bossType : BossType.VALUES){
                 KnightEntity boss = bossType.entityType.create(this.level);
                 this.joinRaid(i,boss,p_37756_,false);
+            }
+        }else {
+            for(KnightType knightType : KnightType.VALUES) {
+                int j = this.getDefaultNumSpawns(knightType, i, flag1) + this.getPotentialBonusSpawns(knightType, this.random, i, difficultyinstance, flag1);
+                int k = 0;
+
+                for(int l = 0; l < j; ++l) {
+                    KnightEntity raider = knightType.entityType.create(this.level);
+                    this.joinRaid(i, raider, p_37756_, false);
+                }
             }
         }
         this.waveSpawnPos = Optional.empty();
@@ -566,7 +631,7 @@ public class TheKnightOrder {
         boolean flag = difficulty == Difficulty.EASY;
         boolean flag1 = difficulty == Difficulty.NORMAL;
 
-        return 1;
+        return 0;
     }
 
     public boolean isActive() {
@@ -588,12 +653,22 @@ public class TheKnightOrder {
         pNbt.putInt("CY", this.center.getY());
         pNbt.putInt("CZ", this.center.getZ());
         ListTag listtag = new ListTag();
-
+        ListTag listTag1= new ListTag();
         for(UUID uuid : this.defender) {
             listtag.add(NbtUtils.createUUID(uuid));
+            CompoundTag tag = new CompoundTag();
+            TheKnightOrderScores orderScores = new TheKnightOrderScores(uuid,this.defenderScoreKillMap.get(uuid));
+            orderScores.save(tag);
+            listTag1.add(tag);
+        }
+        ListTag listTag2 = new ListTag();
+        for(UUID uuid : this.targetPlayers){
+            listTag2.add(NbtUtils.createUUID(uuid));
         }
 
         pNbt.put("Defender", listtag);
+        pNbt.put("ScoreKill",listTag1);
+        pNbt.put("Targets",listTag2);
         return pNbt;
     }
 
@@ -616,12 +691,16 @@ public class TheKnightOrder {
         this.defender.add(p_37727_.getUUID());
     }
 
+    public void addTarget(Entity p_37727_) {
+        this.targetPlayers.add(p_37727_.getUUID());
+    }
+
     private void setDirty() {
         this.level.getRaids().setDirty();
     }
 
     public enum Status {
-        TOBEGIN,
+        TO_BEGIN,
         VICTORY,
         DEFEAT,
         STOPPED;
@@ -635,7 +714,7 @@ public class TheKnightOrder {
                 }
             }
 
-            return TOBEGIN;
+            return TO_BEGIN;
         }
 
         public String getName() {

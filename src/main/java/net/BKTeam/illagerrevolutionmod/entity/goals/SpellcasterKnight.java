@@ -54,7 +54,7 @@ public abstract class SpellcasterKnight extends KnightEntity {
             if(target==this.getTarget()){
                 return false;
             }
-            if(this.hasActiveRaid() && target.getMobType() == MobType.ILLAGER){
+            if((this.hasActiveRaid() || this.hasActiveRaidOfOrder()) && target.getMobType() == MobType.ILLAGER){
                 return true;
             }else if(target instanceof IllagerBeastEntity beast){
                 return !beast.isTame();

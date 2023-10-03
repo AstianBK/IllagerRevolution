@@ -200,7 +200,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                 return false;
             } else {
                 int i = IllagerBeastTamerEntity.this.level.getNearbyEntities(IllagerBeastEntity.class, this.beastCountTargeting, IllagerBeastTamerEntity.this, IllagerBeastTamerEntity.this.getBoundingBox().inflate(20.0D)).size();
-                return i<4;
+                return i<2;
             }
         }
 
@@ -265,7 +265,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
                         scrounger.setOwnerIllager(illager);
                         cc++;
                     }
-                    if (cc>2){
+                    if (cc>1){
                         break;
                     }
                 }

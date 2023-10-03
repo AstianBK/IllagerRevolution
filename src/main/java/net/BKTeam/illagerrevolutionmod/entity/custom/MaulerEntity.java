@@ -32,6 +32,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
@@ -140,6 +141,7 @@ public class MaulerEntity extends MountEntity implements IAnimatable {
             }
 
         });
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1,new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2,new OwnerHurtByTargetGoal(this));
         this.goalSelector.addGoal(1,new MaulerMauled(this));

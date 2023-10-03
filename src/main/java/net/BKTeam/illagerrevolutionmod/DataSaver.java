@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 
 public class DataSaver extends SavedData{
-    private TheKnightOrders orders;
+    private final TheKnightOrders orders;
 
     private final ServerLevel level;
 
@@ -26,6 +26,6 @@ public class DataSaver extends SavedData{
 
     @Override
     public CompoundTag save(CompoundTag pCompoundTag) {
-        return null;
+        return this.orders.save(pCompoundTag);
     }
 }

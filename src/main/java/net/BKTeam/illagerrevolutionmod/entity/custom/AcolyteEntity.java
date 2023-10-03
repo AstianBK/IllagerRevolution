@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpellcasterKnight;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulMissile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -64,8 +65,6 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
 
     private int attackTimer;
 
-
-
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 25.0D)
@@ -73,13 +72,6 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
                 .add(Attributes.FOLLOW_RANGE, 40.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D).build();
 
-    }
-    public boolean isWieldingTwoHandedWeapon() {
-        return// Bow and crossbows
-                (this.getMainHandItem().getItem() instanceof ProjectileWeaponItem
-                        || this.getOffhandItem().getItem() instanceof ProjectileWeaponItem
-                        || this.getMainHandItem().getUseAnimation() == UseAnim.BOW
-                        || this.getOffhandItem().getUseAnimation() == UseAnim.BOW);
     }
 
     public AcolyteEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
@@ -128,6 +120,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
         this.goalSelector.addGoal(1,new SoulMissileSpellGoal());
+        this.goalSelector.addGoal(2,new SummonSoulEaterSpellGoal());
         this.goalSelector.addGoal(1,new AcolyteAttack(this,1.0D,true));
         this.goalSelector.addGoal(1, new AcolyteRangedCrossbowAttackGoal<AcolyteEntity>(this, 0.5D, 20) {
         });
@@ -266,6 +259,11 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
     }
 
     @Override
+    public void tick() {
+        super.tick();
+    }
+
+    @Override
     public void aiStep() {
         if(this.isAttacking()){
             this.attackTimer--;
@@ -274,6 +272,59 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
             }
         }
         super.aiStep();
+    }
+
+    class SummonSoulEaterSpellGoal extends SpellcasterUseSpellGoal {
+        public boolean canUse() {
+            int i = AcolyteEntity.this.level.getEntitiesOfClass(SoulEaterEntity.class,
+                AcolyteEntity.this.getBoundingBox().inflate(20.0D),e->e.getOwner()==AcolyteEntity.this).size();
+            if(!super.canUse()) {
+                return false;
+            }
+            return AcolyteEntity.this.getProfession() == ProfessionTier.MAGE && i<1 ;
+
+        }
+
+        protected int getCastingTime() {
+            return 20;
+        }
+
+        protected int getCastingInterval() {
+            return 300;
+        }
+
+        @Override
+        public void start() {
+            super.start();
+        }
+
+        @Nullable
+        @Override
+        protected SoundEvent getSpellPrepareSound() {
+            return ModSounds.TAMER_WHISTLE.get();
+        }
+
+        public void stop() {
+            super.stop();
+            AcolyteEntity.this.setIsCastingSpell(IllagerSpell.NONE);
+        }
+
+        @Override
+        protected IllagerSpell getSpell() {
+            return IllagerSpell.SUMMON_VEX;
+        }
+
+        protected void performSpellCasting() {
+            Mob owner = AcolyteEntity.this;
+            LivingEntity target = AcolyteEntity.this.getTarget();
+            
+            SoulEaterEntity soulEater = new SoulEaterEntity(ModEntityTypes.SOUL_EATER.get(),owner.level);
+            BlockPos blockpos = owner.blockPosition().offset(-2 + owner.getRandom().nextInt(5), 1, -2 + owner.getRandom().nextInt(5));
+            soulEater.setOwner(owner);
+            soulEater.moveTo(blockpos,0.0F,0.0F);
+            soulEater.setLimitedLife(3000);
+            owner.level.addFreshEntity(soulEater);
+        }
     }
 
     class SoulMissileSpellGoal extends SpellcasterUseSpellGoal {
@@ -314,14 +365,13 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
             LivingEntity owner = AcolyteEntity.this;
             LivingEntity target = AcolyteEntity.this.getTarget();
             if(target != null){
-               BlockPos posTarget1=target.getOnPos();
-               BlockPos posOwner=owner.getOnPos();
+                BlockPos posTarget1=target.getOnPos();
+                BlockPos posOwner=owner.getOnPos();
                 SoulMissile soulMissile = new SoulMissile(owner,owner.level);
                 soulMissile.shoot(posTarget1.getX()- posOwner.getX(), posTarget1.getY() - posOwner.getY(), posTarget1.getZ()- posOwner.getZ(),2.0F,0.0F);
                 soulMissile.setYRot(owner.getYRot());
                 owner.level.addFreshEntity(soulMissile);
                 owner.level.playSound(null,owner,ModSounds.SOUL_SAGE_MISSILE.get(), SoundSource.HOSTILE,1.0F,1.0F);
-
             }
 
         }

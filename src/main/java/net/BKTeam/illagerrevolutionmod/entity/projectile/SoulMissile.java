@@ -44,6 +44,12 @@ public class SoulMissile extends ProjectileMagic{
     }
 
     @Override
+    public void tick() {
+        super.tick();
+
+    }
+
+    @Override
     protected SimpleParticleType getParticle() {
         return ModParticles.RUNE_CURSED_PARTICLES.get();
     }

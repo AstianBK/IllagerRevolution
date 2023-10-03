@@ -65,8 +65,18 @@ public class ProjectileMagic extends ThrowableProjectile {
 
     @Override
     public void tick() {
-        super.tick();
+        Entity owner = this.level.getEntity(this.getOwnerID());
+        if (!this.level.isClientSide && owner == null ) {
+            this.remove(RemovalReason.DISCARDED);
+            return;
+        } else if (owner == null) {
+            return;
+        }
+        if(!owner.isAlive()){
+            this.discard();
+        }
 
+        super.tick();
         this.xOld = this.getX();
         this.yOld = this.getY();
         this.zOld = this.getZ();
@@ -74,6 +84,8 @@ public class ProjectileMagic extends ThrowableProjectile {
         if(this.level.isClientSide && !this.isDefender()){
             this.playParticles();
         }
+
+
     }
 
     public void playParticles() {

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class KnightEntity extends AbstractIllager {
@@ -59,12 +60,27 @@ public class KnightEntity extends AbstractIllager {
         if(this.level instanceof ServerLevel){
             Entity entity = pCause.getEntity();
             TheKnightOrder raid = this.getRaidOfOrder();
+
             if (raid != null) {
+                if (entity != null && entity.getType() == EntityType.PLAYER) {
+                    raid.addDefender(entity);
+                    if(entity instanceof Player player){
+                        raid.setScoreKillForUUID(player);
+                    }
+                }
                 raid.removeFromRaid(this, false);
             }
         }
 
         super.die(pCause);
+    }
+
+    @Override
+    public void heal(float pHealAmount) {
+        if (this.hasActiveRaidOfOrder() && this.isAlive()) {
+            this.getRaidOfOrder().updateBossbar();
+        }
+        super.heal(pHealAmount);
     }
 
     @Override

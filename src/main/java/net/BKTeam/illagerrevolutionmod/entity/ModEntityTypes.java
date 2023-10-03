@@ -93,6 +93,11 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.4f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "soul_sage").toString()));
 
+    public static final RegistryObject<EntityType<SoulEaterEntity>> SOUL_EATER =
+            ENTITY_TYPES.register("soul_eater",
+                    () -> EntityType.Builder.of(SoulEaterEntity::new, MobCategory.MONSTER)
+                            .sized(0.60f, 0.60F)
+                            .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "soul_eater").toString()));
 
     public static final RegistryObject<EntityType<SoulSlash>> SOUL_SLASH = ENTITY_TYPES
             .register("soul_slash", () -> EntityType.Builder.<SoulSlash>of(SoulSlash::new, MobCategory.MISC)
