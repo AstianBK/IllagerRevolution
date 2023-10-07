@@ -48,21 +48,6 @@ public abstract class SpellcasterKnight extends KnightEntity {
         }
     }
 
-    @Override
-    public boolean isAlliedTo(Entity pEntity) {
-        if(pEntity instanceof LivingEntity target){
-            if(target==this.getTarget()){
-                return false;
-            }
-            if((this.hasActiveRaid() || this.hasActiveRaidOfOrder()) && target.getMobType() == MobType.ILLAGER){
-                return true;
-            }else if(target instanceof IllagerBeastEntity beast){
-                return !beast.isTame();
-            }
-        }
-        return super.isAlliedTo(pEntity);
-    }
-
     public boolean isCastingSpell() {
         if (this.level.isClientSide) {
             return this.entityData.get(DATA_SPELL_CASTING_ID) > 0;

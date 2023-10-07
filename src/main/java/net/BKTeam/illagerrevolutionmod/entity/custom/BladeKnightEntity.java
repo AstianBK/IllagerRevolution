@@ -170,7 +170,6 @@ public class BladeKnightEntity extends SpellcasterKnight implements IAnimatable,
         if (this.hasCombo()) {
             if(this.stunnedTimer > 0){
                 this.stunnedTimer--;
-                float f = this.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
                 double d0 = this.getX() - (double)this.getBbWidth() * Math.sin((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);
                 double d1 = this.getY() + (double)this.getBbHeight() - 0.3D;
                 double d2 = this.getZ() + (double)this.getBbWidth() * Math.cos((double)(this.yBodyRot * ((float)Math.PI / 180F))) + (this.random.nextDouble() * 0.6D - 0.3D);

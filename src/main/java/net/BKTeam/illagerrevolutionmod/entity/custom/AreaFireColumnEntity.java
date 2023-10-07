@@ -38,25 +38,30 @@ public class AreaFireColumnEntity extends Entity {
     private int duration;
 
     private int maxDuration;
-
     private int prepareDuration;
     private int prepareTimer;
     private LivingEntity owner;
     private UUID idOwner;
+    private boolean applySlowness;
     public AreaFireColumnEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noPhysics = true;
         this.setRadius(5.0F);
         this.setDuration(100,25);
+        this.applySlowness=false;
     }
 
     public void setDuration(int duration,int prepareDuration) {
         int i = Mth.clamp(duration,100,1000);
-        int j = Mth.clamp(prepareDuration,25,100);
+        int j = Mth.clamp(prepareDuration,0,100);
         this.duration = i;
         this.maxDuration = i;
         this.prepareDuration = j;
         this.prepareTimer = j;
+    }
+
+    public void setApplySlowness(boolean applySlowness){
+        this.applySlowness=applySlowness;
     }
 
     @Override
@@ -71,6 +76,7 @@ public class AreaFireColumnEntity extends Entity {
         this.setRadius(pCompound.getFloat("radius"));
         this.setIsBurn(pCompound.getBoolean("isBurn"));
         this.setPowerLevel(pCompound.getInt("powerLevel"));
+        this.setApplySlowness(pCompound.getBoolean("applySlowness"));
     }
 
     @Override
@@ -78,6 +84,7 @@ public class AreaFireColumnEntity extends Entity {
         pCompound.putFloat("radius",this.getRadius());
         pCompound.putBoolean("isBurn",this.isBurn());
         pCompound.putInt("powerLevel",this.getPowerLevel());
+        pCompound.putBoolean("applySlowness",this.applySlowness);
     }
 
     protected void setIsBurn(boolean isBurn){
@@ -161,9 +168,11 @@ public class AreaFireColumnEntity extends Entity {
                 if(this.getOwner()!=null){
                     targets = this.level.getEntitiesOfClass(LivingEntity.class,this.getBoundingBox().inflate(this.getRadiusForLevel(i),3.0d,this.getRadiusForLevel(i)),e->!this.getOwner().isAlliedTo(e) && this.getOwner()!=e);
                     for (LivingEntity living : targets){
-                        living.hurt(DamageSource.mobAttack(this.getOwner()).setIsFire(),2.0F+1.0F*this.getPowerLevel());
-                        living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,2));
+                        living.hurt(DamageSource.indirectMagic(this,this.getOwner()),2.0F+1.0F*this.getPowerLevel());
                         living.setSecondsOnFire(3);
+                        if(this.applySlowness){
+                            living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,2));
+                        }
                     }
                 }
             }

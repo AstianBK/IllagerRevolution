@@ -1,15 +1,14 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrder;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -22,6 +21,7 @@ public class KnightEntity extends AbstractIllager {
     private boolean canJoinRaidOfTheOrder;
 
     private int ticksOutsideRaidTheOrder;
+
     protected KnightEntity(EntityType<? extends AbstractIllager> p_32105_, Level p_32106_) {
         super(p_32105_, p_32106_);
     }
@@ -67,12 +67,31 @@ public class KnightEntity extends AbstractIllager {
                     if(entity instanceof Player player){
                         raid.setScoreKillForUUID(player);
                     }
+                }else if(entity instanceof TamableAnimal animal && animal.isTame()) {
+                    raid.addDefender(entity);
+                    if(animal.getOwner() instanceof Player player){
+                        raid.setScoreKillForUUID(player);
+                    }
                 }
                 raid.removeFromRaid(this, false);
             }
         }
 
         super.die(pCause);
+    }
+    @Override
+    public boolean isAlliedTo(Entity pEntity) {
+        if(pEntity instanceof LivingEntity target){
+            if(target==this.getTarget()){
+                return false;
+            }
+            if((this.hasActiveRaid() || this.hasActiveRaidOfOrder()) && target.getMobType() == MobType.ILLAGER){
+                return true;
+            }else if(target instanceof IllagerBeastEntity beast){
+                return !beast.isTame();
+            }
+        }
+        return super.isAlliedTo(pEntity);
     }
 
     @Override

@@ -103,10 +103,10 @@ public class SoulEaterEntity extends Monster implements IAnimatable {
             LivingEntity target = this.getActiveAttackTarget0();
             if(this.drainDuration>0){
                 if(this.checkIsAlive(target)){
-                    if(this.tickCount%40==0){
-                        target.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,1.0F,1.0F);
-                    }
                     if(this.tickCount%20==0){
+                        if(this.tickCount%40==0){
+                            target.level.playSound(null,this, ModSounds.SOUL_SAGE_DRAIN.get(), SoundSource.HOSTILE,1.0F,1.0F);
+                        }
                         if(target.hurt(DamageSource.MAGIC,1.0F)){
                             this.heal(1.0F);
                         }
@@ -129,11 +129,13 @@ public class SoulEaterEntity extends Monster implements IAnimatable {
 
 
     }
+
+
     public boolean checkIsAlive(LivingEntity living){
         if (living!=null){
             if(living.isAlive()){
                 double dist = this.distanceTo(living);
-                if(dist<15){
+                if(dist<=9){
                     return true;
                 }else if (living instanceof Player player && !player.isCreative()){
                     return true;
@@ -144,6 +146,7 @@ public class SoulEaterEntity extends Monster implements IAnimatable {
         }
         //this.stopDrainSound(living);
         this.setActiveAttackTarget(0);
+        this.setDrainSoul(false);
         return false;
     }
 
@@ -152,18 +155,20 @@ public class SoulEaterEntity extends Monster implements IAnimatable {
     }
     private   <E extends IAnimatable> PlayState predicateMaster(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.souleater.idle",ILoopType.EDefaultLoopTypes.LOOP));
-        if (event.isMoving()) {
-            event.getController().setAnimationSpeed(2.0F);
-        } else {
-            event.getController().setAnimationSpeed(1.0F);
+        if(this.swinging && this.isDrainSoul()){
+            if (event.isMoving()) {
+                event.getController().setAnimationSpeed(2.0F);
+            } else {
+                event.getController().setAnimationSpeed(1.0F);
+            }
         }
         return PlayState.CONTINUE;
     }
 
     private   <E extends IAnimatable> PlayState predicateHead(AnimationEvent<E> event) {
-        if(this.isDrainSoul() && !this.swinging){
+        if(this.isDrainSoul() && !this.swinging && !event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.souleater.drain",ILoopType.EDefaultLoopTypes.LOOP));
-        }else if(!this.isDrainSoul() && this.swinging){
+        }else if(!this.isDrainSoul() && this.swinging && !event.isMoving()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.souleater.bite",ILoopType.EDefaultLoopTypes.LOOP));
         }else{
             event.getController().clearAnimationCache();
@@ -253,8 +258,8 @@ public class SoulEaterEntity extends Monster implements IAnimatable {
     }
     public void setDrainSoul(boolean pBoolean){
         this.entityData.set(DRAIN_SOUL,pBoolean);
-        this.drainDuration = pBoolean ? 200 : 0;
-        this.cooldownDrain = pBoolean ? 0 : 300;
+        this.drainDuration = pBoolean ? 10 : 0;
+        this.cooldownDrain = pBoolean ? 0 : 600;
     }
     public boolean isDrainSoul(){
         return this.entityData.get(DRAIN_SOUL);
@@ -425,7 +430,7 @@ public class SoulEaterEntity extends Monster implements IAnimatable {
             LivingEntity livingentity = SoulEaterEntity.this.getTarget();
             if (livingentity != null) {
                 double d0 = SoulEaterEntity.this.distanceToSqr(livingentity);
-                AttackMelee attackMelee =  d0 > 15.0D && SoulEaterEntity.this.cooldownDrain<=0 ? AttackMelee.RANGED : AttackMelee.MELEE;
+                AttackMelee attackMelee =  d0 > 9.0D && SoulEaterEntity.this.cooldownDrain<=0 ? AttackMelee.RANGED : AttackMelee.MELEE;
                 if (SoulEaterEntity.this.getBoundingBox().intersects(livingentity.getBoundingBox()) && attackMelee == AttackMelee.MELEE) {
                     SoulEaterEntity.this.swing(InteractionHand.MAIN_HAND);
                     SoulEaterEntity.this.doHurtTarget(livingentity);

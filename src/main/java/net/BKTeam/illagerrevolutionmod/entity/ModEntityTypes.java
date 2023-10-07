@@ -93,6 +93,13 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.4f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "soul_sage").toString()));
 
+    public static final RegistryObject<EntityType<BulkwarkEntity>> BULKWARK =
+            ENTITY_TYPES.register("bulkwark",
+                    () -> EntityType.Builder.of(BulkwarkEntity::new, MobCategory.MONSTER)
+                            .sized(0.60f, 2.4f)
+                            .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "bulkwark").toString()));
+
+
     public static final RegistryObject<EntityType<SoulEaterEntity>> SOUL_EATER =
             ENTITY_TYPES.register("soul_eater",
                     () -> EntityType.Builder.of(SoulEaterEntity::new, MobCategory.MONSTER)

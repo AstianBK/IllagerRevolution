@@ -6,6 +6,7 @@ import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.capability.MauledCapability;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BulkwarkEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ScroungerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
@@ -17,23 +18,22 @@ import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSmoke;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrder;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
-import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.EvokerFangs;
@@ -51,7 +51,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -61,7 +60,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
-import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class Events {
@@ -103,6 +101,17 @@ public class Events {
                     for(SoulBomb bomb : bombList){
                         bomb.expander();
                         event.setCanceled(true);
+                    }
+                    if(entity.getMobType() == MobType.ILLAGER){
+                        BulkwarkEntity bulkwark = entity.level.getNearestEntity(BulkwarkEntity.class, TargetingConditions.forNonCombat(),entity,entity.getX(),entity.getY(),entity.getZ(),entity.getBoundingBox().inflate(30.0D));
+                        if(bulkwark!=null){
+                            if (bulkwark.chargedCooldown<=0 && !bulkwark.isGuarding() && bulkwark!=entity && attacker.getMobType()!=MobType.ILLAGER){
+                                bulkwark.setGuardingMode(true);
+                                bulkwark.setChargedMode(true,false);
+                                bulkwark.vec3Charged = new Vec3(attacker.getX()-bulkwark.getX(),attacker.getY()-bulkwark.getY(),attacker.getZ()-bulkwark.getZ());
+                                bulkwark.setTarget(attacker);
+                            }
+                        }
                     }
                 }
             }
@@ -183,6 +192,29 @@ public class Events {
             }
         }
     }
+    @SubscribeEvent
+    public static void hurtEntity(LivingHurtEvent event){
+        if(event.getEntity()!=null){
+            LivingEntity entityHurt = event.getEntity();
+            Entity entityAttack = event.getSource().getEntity();
+            if(entityHurt.getMobType() == MobType.ILLAGER){
+                BulkwarkEntity bulkwark = entityHurt.level.getNearestEntity(BulkwarkEntity.class, TargetingConditions.forNonCombat(),entityHurt,entityHurt.getX(),entityHurt.getY(),entityHurt.getZ(),entityHurt.getBoundingBox().inflate(30.0D));
+                if(bulkwark != null ){
+                    if(bulkwark.isAbsorbMode()){
+                        float f = event.getAmount()*0.8F;
+                        if(f<=bulkwark.shieldHealth){
+                            bulkwark.shieldHealth -= f;
+                            event.setAmount(event.getAmount()*0.2F);
+                        }else {
+                            bulkwark.shieldHealth=0.0F;
+                            event.setAmount(event.getAmount()-bulkwark.shieldHealth);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
