@@ -307,7 +307,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         }
 
         protected int getCastingInterval() {
-            return 50;
+            return 300;
         }
 
         @Override
@@ -336,7 +336,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
             LivingEntity target = AcolyteEntity.this.getTarget();
             if(target != null){
                 BlockPos posTarget1=target.getOnPos();
-                AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(),owner.level);
+                AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(),owner.level,true);
                 areaFireColumn.setPowerLevel(0);
                 areaFireColumn.setOwner(owner);
                 areaFireColumn.setDuration(100,0);

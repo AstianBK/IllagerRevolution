@@ -68,9 +68,9 @@ public class KnightEntity extends AbstractIllager {
                         raid.setScoreKillForUUID(player);
                     }
                 }else if(entity instanceof TamableAnimal animal && animal.isTame()) {
-                    raid.addDefender(entity);
                     if(animal.getOwner() instanceof Player player){
                         raid.setScoreKillForUUID(player);
+                        raid.addDefender(player);
                     }
                 }
                 raid.removeFromRaid(this, false);

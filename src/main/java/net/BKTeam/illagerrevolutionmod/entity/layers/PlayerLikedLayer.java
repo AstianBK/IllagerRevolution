@@ -2,6 +2,8 @@ package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
+import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BulkwarkEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
@@ -43,17 +45,19 @@ public class PlayerLikedLayer <T extends LivingEntity,M extends EntityModel<T>> 
                 model.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
                 model.renderToBuffer(pMatrixStack, ivertex, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
             }
-        }
-        BulkwarkEntity bulkwark=pLivingEntity.level.getNearestEntity(BulkwarkEntity.class, TargetingConditions.DEFAULT,pLivingEntity,pLivingEntity.getX(),pLivingEntity.getY(),pLivingEntity.getZ(),pLivingEntity.getBoundingBox().inflate(30.0D));
-        if(bulkwark!=null){
-            if(bulkwark.isAbsorbMode() && bulkwark.isAlliedTo(pLivingEntity)){
-                float f = (float) pLivingEntity.tickCount + pPartialTicks;
-                EntityModel<T> model = this.getParentModel();
-                model.prepareMobModel(pLivingEntity, pLimbSwing, pLimbSwingAmount, pPartialTicks);
-                this.getParentModel().copyPropertiesTo(model);
-                VertexConsumer ivertex = pBuffer.getBuffer(RenderType.energySwirl(LINKED_ARMOR, f * 0.01f, f * 0.01f));
-                model.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-                model.renderToBuffer(pMatrixStack, ivertex, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
+        }else {
+            IAbilityKnightCapability knightCapability =
+                    CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.ABILITY_KNIGHT_CAPABILITY);
+            if (knightCapability!=null){
+                if(knightCapability.hasProtection()){
+                    float f = (float) pLivingEntity.tickCount + pPartialTicks;
+                    EntityModel<T> model = this.getParentModel();
+                    model.prepareMobModel(pLivingEntity, pLimbSwing, pLimbSwingAmount, pPartialTicks);
+                    this.getParentModel().copyPropertiesTo(model);
+                    VertexConsumer ivertex = pBuffer.getBuffer(RenderType.energySwirl(LINKED_ARMOR, f * 0.01f, f * 0.01f));
+                    model.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+                    model.renderToBuffer(pMatrixStack, ivertex, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
+                }
             }
         }
     }

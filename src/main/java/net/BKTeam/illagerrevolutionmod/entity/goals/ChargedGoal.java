@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.goals;
 
 import net.BKTeam.illagerrevolutionmod.entity.custom.BulkwarkEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -17,7 +18,7 @@ public class ChargedGoal extends Goal {
     }
 
     public boolean canUse() {
-        return this.raider.getTarget()!=null && this.raider.isCharged() && !this.raider.isAbsorbMode();
+        return this.raider.getTarget()!=null && this.raider.isCharged() && !this.raider.isAbsorbMode() && !this.raider.slamMoment;
     }
 
     public boolean canContinueToUse() {
@@ -27,12 +28,6 @@ public class ChargedGoal extends Goal {
             return this.raider.getTarget() != null;
         }
     }
-
-    public void stop() {
-        super.stop();
-    }
-
-
     public void start() {
         super.start();
         if(this.raider.getTarget()!=null){
@@ -42,10 +37,7 @@ public class ChargedGoal extends Goal {
     }
 
     public void tick() {
-        this.raider.getLookControl().setLookAt(this.raider.getViewVector(1.0F));
-        this.raider.yBodyRot=this.raider.getYHeadRot();
-        this.raider.setYBodyRot(this.raider.getYHeadRot());
-        this.targetPos=this.targetPos.scale(0.99F);
+        this.targetPos=this.targetPos.scale(0.8F);
         this.raider.setDeltaMovement(this.targetPos);
     }
 }

@@ -156,6 +156,11 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
             this.getNavigation().stop();
             List<LivingEntity> list = this.getDrainEntities();
             if(this.drainDuration > 0 ) {
+                if(this.getTarget()!=null){
+                    this.getLookControl().setLookAt(this.getTarget());
+                    this.setYBodyRot(this.getYHeadRot());
+                    this.yBodyRot = this.getYHeadRot();
+                }
                 this.drainDuration--;
                 if(this.tickCount%20==0){
                     if(!list.isEmpty()){
@@ -275,7 +280,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                     return true;
                 }else if (living instanceof Player player && !player.isCreative()){
                     return true;
-                }else if (this.hasLineOfSight(living)){
+                }else if (this.getSensing().hasLineOfSight(living)){
                     return true;
                 }
             }else if(living.getLastHurtByMob()==this){
@@ -334,7 +339,11 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                 }
             }
         } else {
-            return this.getTarget();
+            if(this.getTarget()!=null){
+                return this.getSensing().hasLineOfSight(this.getTarget()) ? this.getTarget() : null;
+            }else {
+                return null;
+            }
         }
     }
 
@@ -597,7 +606,7 @@ public class SoulSageEntity extends SpellcasterKnight implements IAnimatable, In
                 int k = 1;
 
                 for (LivingEntity living: targets){
-                    if(owner.hasLineOfSight(living)){
+                    if(owner.getSensing().hasLineOfSight(living)){
                         owner.setActiveAttackTarget(living.getId(), k);
                         k++;
                         if(k == 3){

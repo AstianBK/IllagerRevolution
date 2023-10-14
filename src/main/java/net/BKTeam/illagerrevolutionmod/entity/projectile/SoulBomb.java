@@ -114,7 +114,7 @@ public class SoulBomb extends ProjectileMagic {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if (pResult.getEntity() instanceof LivingEntity initialTarget) {
-            AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level);
+            AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level,false);
             areaFireColumn.setPos(initialTarget.getOnPos().getX(), initialTarget.getOnPos().getY() + 1, initialTarget.getOnPos().getZ());
             areaFireColumn.setOwner((LivingEntity) this.getOwner());
             areaFireColumn.setPowerLevel(this.getPowerLevel());
@@ -122,10 +122,6 @@ public class SoulBomb extends ProjectileMagic {
             areaFireColumn.setApplySlowness(true);
             this.level.addFreshEntity(areaFireColumn);
             initialTarget.hurt(DamageSource.indirectMagic(this,this.getOwner()),5.0F+1.0F*this.getPowerLevel());
-
-            if(!this.level.isClientSide){
-                initialTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,200,2));
-            }
         }
     }
 
@@ -139,7 +135,7 @@ public class SoulBomb extends ProjectileMagic {
     protected void onHitBlock(BlockHitResult p_37258_) {
         super.onHitBlock(p_37258_);
         BlockPos blockPos = p_37258_.getBlockPos();
-        AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level);
+        AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level,false);
         areaFireColumn.setPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         areaFireColumn.setOwner((LivingEntity) this.getOwner());
         areaFireColumn.setPowerLevel(this.getPowerLevel());

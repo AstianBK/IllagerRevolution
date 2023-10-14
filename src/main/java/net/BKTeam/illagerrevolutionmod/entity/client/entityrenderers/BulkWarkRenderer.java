@@ -9,6 +9,7 @@ import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.BladeKnightMod
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.BulkwarkModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BulkwarkEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BulkwarkEntity;
+import net.BKTeam.illagerrevolutionmod.entity.layers.ShieldSoulsLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -40,6 +41,7 @@ public class BulkWarkRenderer extends ExtendedGeoEntityRenderer<BulkwarkEntity> 
 
     public BulkWarkRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BulkwarkModel<BulkwarkEntity>(MODEL_RESLOC,TEXTURE,TEXTURE_LOWLIFE,"bulkwark"));
+        this.addLayer(new ShieldSoulsLayer(this,new BulkwarkModel<BulkwarkEntity>(MODEL_RESLOC,TEXTURE,TEXTURE_LOWLIFE,"bulkwark")));
         this.shadowRadius = 0.5f;
     }
 

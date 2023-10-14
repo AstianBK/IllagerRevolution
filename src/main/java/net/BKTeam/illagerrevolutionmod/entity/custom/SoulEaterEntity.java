@@ -139,7 +139,7 @@ public class SoulEaterEntity extends Monster implements IAnimatable {
                     return true;
                 }else if (living instanceof Player player && !player.isCreative()){
                     return true;
-                }else if (this.hasLineOfSight(living)){
+                }else if (this.getSensing().hasLineOfSight(living)){
                     return true;
                 }
             }

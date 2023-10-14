@@ -13,7 +13,7 @@ public class InitEffect {
     public static final RegistryObject<MobEffect> DEEP_WOUND = REGISTRY.register("deep_wound", EffectBleeding::new);
     public static final RegistryObject<MobEffect> MAULED = REGISTRY.register("mauled", MauledEffect::new);
     public static final RegistryObject<MobEffect> DEATH_MARK = REGISTRY.register("death_mark", DeathMarkEffect::new);
-    public static final RegistryObject<MobEffect> THE_ORDER_MARK = REGISTRY.register("the_order_mark", TheOrderMarkEffect::new);
+    //public static final RegistryObject<MobEffect> THE_ORDER_MARK = REGISTRY.register("the_order_mark", TheOrderMarkEffect::new);
     public static final RegistryObject<MobEffect> SOUL_BURN = REGISTRY.register("soul_burn", SoulBurnEffect::new);
 
 }

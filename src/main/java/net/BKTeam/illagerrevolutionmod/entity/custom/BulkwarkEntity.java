@@ -1,8 +1,11 @@
 package net.BKTeam.illagerrevolutionmod.entity.custom;
 
+import com.google.common.collect.ImmutableList;
 import net.BKTeam.illagerrevolutionmod.entity.goals.ChargedGoal;
 import net.BKTeam.illagerrevolutionmod.entity.goals.KnightEntity;
+import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -32,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.openjdk.nashorn.internal.ir.Symbol;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -42,16 +46,20 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class BulkwarkEntity extends KnightEntity implements IAnimatable {
 
     private static final EntityDataAccessor<Byte> ID_MODE_STATUS =
             SynchedEntityData.defineId(BulkwarkEntity.class, EntityDataSerializers.BYTE);
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
+    public boolean slamMoment;
+    public int slamTimer;
+    public float damageAbsorb;
     public int chargedCooldown;
     public int chargedTimer;
     public int guardianTimer;
@@ -60,13 +68,14 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
     public int cooldownGuardian;
     public Vec3 vec3Charged;
     public float shieldHealth;
-
     public BulkwarkEntity(EntityType<? extends AbstractIllager> p_32105_, Level p_32106_) {
         super(p_32105_, p_32106_);
         this.chargedCooldown=0;
         this.chargedTimer=0;
         this.prepareTimer=0;
         this.stunnedTimer=0;
+        this.slamTimer=0;
+        this.damageAbsorb=0;
         this.vec3Charged = Vec3.ZERO;
         this.shieldHealth = 100.0F;
     }
@@ -95,10 +104,15 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         this.goalSelector.addGoal(4, new RandomStrollGoal(this, 1){
             @Override
             public boolean canUse() {
-                return super.canUse() && this.mob instanceof BulkwarkEntity bulkwark && !bulkwark.isCharged();
+                return super.canUse() && this.mob instanceof BulkwarkEntity bulkwark && !bulkwark.isCharged() && !bulkwark.isAbsorbMode();
             }
         });
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !BulkwarkEntity.this.isAbsorbMode() && !BulkwarkEntity.this.isCharged();
+            }
+        });
         this.goalSelector.addGoal(6, new FloatGoal(this));
         this.targetSelector.addGoal(2, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
@@ -112,6 +126,8 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bulkwark.charge", ILoopType.EDefaultLoopTypes.LOOP));
         }else if(this.isAbsorbMode()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bulkwark.guard", ILoopType.EDefaultLoopTypes.LOOP));
+        }else if(this.slamMoment){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bulkwark.slam", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
         }else if(this.isStunned()){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bulkwark.stun", ILoopType.EDefaultLoopTypes.LOOP));
         }
@@ -125,44 +141,22 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
 
     @Override
     protected boolean isImmobile() {
-        return super.isImmobile() || this.isStunned() || this.isAbsorbMode();
+        return super.isImmobile() || this.isStunned() || this.isAbsorbMode() || this.slamMoment;
+    }
+
+    public ShieldHealth getShieldHealthStat(){
+        System.out.print(this.getShieldHealth()/this.getMaxShieldHealth());
+        return ShieldHealth.byFraction(this.getShieldHealth()/this.getMaxShieldHealth());
     }
 
     @Override
     public void aiStep() {
         super.aiStep();
-        if(this.isAbsorbMode()){
-            this.getNavigation().stop();
-            this.getLookControl().setLookAt(this.getViewVector(1.0F));
-            this.yBodyRot=this.getYHeadRot();
-            this.setYBodyRot(this.getYHeadRot());
-            BlockPos pos = new BlockPos(this.getX(),this.getY()+1.5d,this.getZ());
-            List<Entity> targets = this.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(10,10,10), e -> e != this && this.distanceTo(e) <= 7 + e.getBbWidth() / 2f && e.getY() <= this.getY() + 7);
-            for(Entity living : targets){
-                float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
-                float entityAttackingAngle = this.yBodyRot % 360;
-                float arc = 180.0F;
-                if (entityHitAngle < 0) {
-                    entityHitAngle += 360;
-                }
-                if (entityAttackingAngle < 0) {
-                    entityAttackingAngle += 360;
-                }
-                float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
-                float entityHitDistance = (float) Math.sqrt((living.getZ() - this.getZ()) * (living.getZ() - this.getZ()) + (living.getX() - this.getX()) * (living.getX() - this.getX())) - living.getBbWidth() / 2f;
-                if(living instanceof  LivingEntity){
-                    if (entityHitDistance <= 7 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
-                        BlockPos posTarget = living.getOnPos();
-                        BlockPos posOwner = this.getOnPos();
-                        Vec3 vec3 = living.getDeltaMovement().add(posOwner.getX()-posTarget.getX(),posOwner.getY()-posTarget.getY(),posOwner.getZ()-posTarget.getZ()).normalize().scale(0.05D);
-                        living.setDeltaMovement(vec3);
-                        if(living instanceof Player){
-                            ((Player) living).travel(vec3);
-                        }
-                    }
-                }else if(living instanceof Projectile projectile && projectile.getOwner()!=this){
-                    projectile.discard();
-                }
+        if(this.getShieldHealth()/this.getMaxShieldHealth()<1.0F){
+            if(this.tickCount%200==0){
+                float f = 10.0F;
+                float f1 =this.getMaxShieldHealth()-this.shieldHealth;
+                this.shieldHealth += Math.min(f, f1);
             }
         }
         if(this.isStunned()){
@@ -202,6 +196,9 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
                 }
             }else if(this.chargedTimer>0){
                 this.chargedTimer--;
+                this.getLookControl().setLookAt(this.getViewVector(1.0F));
+                this.setYBodyRot(this.getYHeadRot());
+                this.yBodyRot=this.getYHeadRot();
                 Random random1 = new Random();
                 float f = this.yBodyRot * ((float) Math.PI / 180F);
                 float f1 = Mth.cos(f);
@@ -226,7 +223,101 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
             this.guardianTimer--;
             if(this.guardianTimer<=0){
                 this.setGuardingMode(false);
-                this.setAbsorbMode(false);
+                if(this.isAbsorbMode()){
+                    this.setAbsorbMode(false);
+                    this.slamMoment=true;
+                    this.slamTimer=20;
+                    this.level.broadcastEntityEvent(this,(byte) 60);
+                }
+            }
+            if(this.isAbsorbMode()){
+                this.applyRadius(7.0F,0.01f);
+                this.getNavigation().stop();
+                this.getLookControl().setLookAt(this.getViewVector(1.0F));
+                this.yBodyRot=this.getYHeadRot();
+                this.setYBodyRot(this.getYHeadRot());
+                BlockPos pos = new BlockPos(this.getX(),this.getY()+1.5d,this.getZ());
+                List<Entity> targets = this.level.getEntitiesOfClass(Entity.class,new AABB(pos).inflate(10,10,10), e -> e != this && this.distanceTo(e) <= 7 + e.getBbWidth() / 2f && e.getY() <= this.getY() + 7);
+                for(Entity living : targets){
+                    float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
+                    float entityAttackingAngle = this.yBodyRot % 360;
+                    float arc = 120.0F;
+                    if (entityHitAngle < 0) {
+                        entityHitAngle += 360;
+                    }
+                    if (entityAttackingAngle < 0) {
+                        entityAttackingAngle += 360;
+                    }
+                    float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
+                    float entityHitDistance = (float) Math.sqrt((living.getZ() - this.getZ()) * (living.getZ() - this.getZ()) + (living.getX() - this.getX()) * (living.getX() - this.getX())) - living.getBbWidth() / 2f;
+                    if(living instanceof  LivingEntity){
+                        if (entityHitDistance <= 7 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) ) {
+                            if (!this.isAlliedTo(living)) {
+                                BlockPos posTarget = living.getOnPos();
+                                BlockPos posOwner = this.getOnPos();
+                                Vec3 vec3 = living.getDeltaMovement().add(posOwner.getX()-posTarget.getX(),posOwner.getY()-posTarget.getY(),posOwner.getZ()-posTarget.getZ()).normalize().scale(0.05D);
+                                living.setDeltaMovement(vec3);
+                                if(living instanceof Player){
+                                    ((Player) living).travel(vec3);
+                                }
+                            }
+
+                        }
+                    }else if(living instanceof Projectile projectile && projectile.getOwner()!=this){
+                        boolean isAllied = projectile.getOwner() != null && this.isAlliedTo(projectile.getOwner());
+                        if(!isAllied){
+                            this.level.playSound(null,projectile, ModSounds.SOUL_ABSORB.get(),SoundSource.HOSTILE,2.0F,-3.0F);
+                            projectile.discard();
+                        }
+                    }
+                }
+            }
+        }
+        if(this.slamMoment){
+            this.slamTimer--;
+            if(this.slamTimer==10){
+                double power = (this.damageAbsorb)*0.5F;
+                for (Entity entity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(5.0D))) {
+                    if (!this.isAlliedTo(entity) && entity != this) {
+                        entity.push(0.0D, 0.5D+power, 0.0D);
+                    }
+                }
+                this.damageAbsorb=0.0F;
+            }
+            if(this.slamTimer==0){
+                this.slamMoment=false;
+                this.level.broadcastEntityEvent(this,(byte) 61);
+            }
+
+        }
+    }
+
+    public void applyRadius(float radius, float speedY){
+        int i;
+        i = Mth.ceil(((float)Math.PI/2.0F) * radius * radius);
+        float radius1 = ((float)Math.PI/2.0F)/(float) i;
+        Random random1 = new Random();
+        for(int j=0;j<=i;j++){
+            float f = this.yBodyRot * ((float) Math.PI / 180F);
+            float f1 = Mth.sin(((float)Math.PI/4.0F)+f + j * radius1)*radius;
+            float f2 = Mth.cos(((float)Math.PI/4.0F)+f + j * radius1)*radius;
+            this.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK,this.getBlockStateOn()),this.getX()+f2 ,this.getY(),this.getZ()+f1,
+                    0.01F,
+                    random1.nextFloat(0.0F,speedY),
+                    0.01F);
+            if(j==0 || j==i){
+                double deltaY = this.getY() - this.yOld;
+                double dist = Math.ceil(Math.sqrt(f2 * f2 + deltaY * deltaY + f1 * f1) * 6);
+                for (double k = 0; k < dist; k++) {
+                    double coeff = k / dist;
+                    this.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK,this.getBlockStateOn()),
+                            (float) (this.xo + f2 * coeff),
+                            (float) (this.yo + deltaY * coeff) + 0.1, (float)
+                                    (this.zo + f1 * coeff),
+                            0.0125f * (this.random.nextFloat() - 0.5f),
+                            0.0125f * (this.random.nextFloat() - 0.5f),
+                            0.0125f * (this.random.nextFloat() - 0.5f));
+                }
             }
         }
     }
@@ -237,7 +328,7 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
 
     @Override
     public float getStepHeight() {
-        return this.isCharged() ? 2.0F : 1.0F;
+        return this.isCharged() ? 1.0F : 0.0F;
     }
 
     private void stunEffect() {
@@ -253,6 +344,12 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
     public void handleEntityEvent(byte pId) {
         if(pId==39){
             this.stunnedTimer=60;
+        }else if(pId==60){
+            this.slamMoment = true;
+            this.slamTimer=20;
+        }else if(pId==61){
+            this.slamMoment = false;
+            this.slamTimer=0;
         }else {
             super.handleEntityEvent(pId);
         }
@@ -260,19 +357,22 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(this.getMaxHealth()*0.30<=this.getHealth()-pAmount && !this.isGuarding()){
+        if(this.getMaxHealth()*0.30<=this.getHealth() && !this.isGuarding() && this.guardianTimer<=0){
             this.setGuardingMode(true);
         }
         if(this.isAbsorbMode()){
-            if(pAmount<=this.shieldHealth){
-                this.shieldHealth-=pAmount;
-                this.level.playSound(null,this,SoundEvents.ANVIL_HIT, SoundSource.HOSTILE,2F,1.0F);
+            float sH = this.shieldHealth;
+            if(pAmount<=sH){
+                this.setShieldHealth(sH-pAmount);
                 return false;
             }else {
                 pAmount=pAmount-this.shieldHealth;
+                this.setShieldHealth(0.0F);
                 this.setAbsorbMode(false);
                 this.setGuardingMode(false);
             }
+            this.damageAbsorb+=pAmount;
+            this.level.playSound(null,this,SoundEvents.ANVIL_HIT, SoundSource.HOSTILE,2F,1.0F);
         }
         return super.hurt(pSource, pAmount);
     }
@@ -325,6 +425,13 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         return (this.entityData.get(ID_MODE_STATUS) & 4)!=0;
     }
 
+    public float getShieldHealth(){
+        return this.shieldHealth;
+    }
+    public float getMaxShieldHealth(){
+        return 100.0F;
+    }
+
     private void strongKnockbackCharged(Entity p_33340_) {
         double d0 = p_33340_.getX() - this.getX();
         double d1 = p_33340_.getZ() - this.getZ();
@@ -332,11 +439,14 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         double d3 = 2.5D;
         p_33340_.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
     }
+
+
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("isAbsorb",this.isAbsorbMode());
         pCompound.putBoolean("isGuarding",this.isGuarding());
+        pCompound.putFloat("shieldHealth",this.shieldHealth);
         if(this.vec3Charged != Vec3.ZERO){
             pCompound.putDouble("posChargedX",this.vec3Charged.x);
             pCompound.putDouble("posChargedY",this.vec3Charged.y);
@@ -350,7 +460,14 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         this.setAbsorbMode(pCompound.getBoolean("isAbsorb"));
         this.setGuardingMode(pCompound.getBoolean("isGuarding"));
         if(pCompound.contains("posChargedX")){
-            this.vec3Charged =new Vec3(pCompound.getDouble("posChargedX"),pCompound.getDouble("posChargedY"),pCompound.getDouble("posChargedZ"));
+            this.vec3Charged =new Vec3(pCompound.getDouble("posChargedX")
+                    ,pCompound.getDouble("posChargedY")
+                    ,pCompound.getDouble("posChargedZ"));
+        }
+        if(pCompound.contains("shieldHealth")){
+            this.shieldHealth=pCompound.getFloat("shieldHealth");
+        }else {
+            this.shieldHealth=100.0F;
         }
     }
 
@@ -386,20 +503,42 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         }
 
         @Override
-        public void tick() {
-            super.tick();
-        }
-
-        @Override
         protected void checkAndPerformAttack(@NotNull LivingEntity entity, double distance) {
             double d0 = this.getAttackReachSqr(entity);
             if (distance <= d0 && !this.goalOwner.isAbsorbMode()) {
-                this.goalOwner.playSound(SoundEvents.HUSK_HURT, 1.0F, 1.0F);
+                this.goalOwner.playSound(ModSounds.SOUL_ABSORB.get(), 1.0F, 1.0F);
                 this.goalOwner.getNavigation().stop();
                 this.goalOwner.setAbsorbMode(true);
             }
         }
+    }
 
+    public static enum ShieldHealth {
+        SOUL_6(0.9F),
+        SOUL_5(0.75F),
+        SOUL_4(0.6F),
+        SOUL_3(0.45F),
+        SOUL_2(0.20F),
+        SOUL_1(0.0F),
+        NONE(0.0F);
 
+        private static final List<ShieldHealth> BY_DAMAGE = Stream.of(values()).sorted(Comparator.comparingDouble((p_28904_) -> {
+            return (double)p_28904_.fraction;
+        })).collect(ImmutableList.toImmutableList());
+        private final float fraction;
+
+        ShieldHealth(float p_28900_) {
+            this.fraction = p_28900_;
+        }
+
+        public static ShieldHealth byFraction(float p_28902_) {
+            for(ShieldHealth irongolem$crackiness : BY_DAMAGE) {
+                if (p_28902_ > irongolem$crackiness.fraction) {
+                    return irongolem$crackiness;
+                }
+            }
+
+            return NONE;
+        }
     }
 }

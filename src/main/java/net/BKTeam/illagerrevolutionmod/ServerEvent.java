@@ -27,7 +27,7 @@ public class ServerEvent {
         event.put(SOUL_SAGE.get(),SoulSageEntity.setAttributes());
         event.put(ACOLYTE.get(),AcolyteEntity.setAttributes());
         event.put(SOUL_EATER.get(),SoulEaterEntity.createAttributes().build());
-        event.put(BULKWARK.get(),BulkwarkEntity.setAttributes());
+        //event.put(BULKWARK.get(),BulkwarkEntity.setAttributes());
     }
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {

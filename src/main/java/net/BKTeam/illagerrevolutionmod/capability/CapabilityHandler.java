@@ -1,5 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.capability;
 
+import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
 import net.BKTeam.illagerrevolutionmod.api.IMauledCapability;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,15 +13,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class CapabilityHandler {
     public static final Capability<IMauledCapability> MAULED_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IAbilityKnightCapability> ABILITY_KNIGHT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event){
         event.register(IMauledCapability.class);
+        event.register(IAbilityKnightCapability.class);
     }
 
     public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject() instanceof LivingEntity){
             event.addCapability(MauledCapability.LOCATION,new MauledCapability.AplastarProvider());
+            event.addCapability(AbilityKnightCapability.LOCATION,new AbilityKnightCapability.AbilityKnightProvider());
         }
     }
 

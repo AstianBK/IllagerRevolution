@@ -1,7 +1,9 @@
 package net.BKTeam.illagerrevolutionmod;
 
+import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
 import net.BKTeam.illagerrevolutionmod.api.IMauledCapability;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
+import net.BKTeam.illagerrevolutionmod.capability.AbilityKnightCapability;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.capability.MauledCapability;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
@@ -105,10 +107,12 @@ public class Events {
                     if(entity.getMobType() == MobType.ILLAGER){
                         BulkwarkEntity bulkwark = entity.level.getNearestEntity(BulkwarkEntity.class, TargetingConditions.forNonCombat(),entity,entity.getX(),entity.getY(),entity.getZ(),entity.getBoundingBox().inflate(30.0D));
                         if(bulkwark!=null){
-                            if (bulkwark.chargedCooldown<=0 && !bulkwark.isGuarding() && bulkwark!=entity && attacker.getMobType()!=MobType.ILLAGER){
-                                bulkwark.setGuardingMode(true);
+                            if (!bulkwark.isAbsorbMode() && bulkwark.chargedCooldown<=0 && bulkwark!=entity && attacker.getMobType()!=MobType.ILLAGER){
+                                if(!bulkwark.isGuarding()){
+                                    bulkwark.setGuardingMode(true);
+                                }
                                 bulkwark.setChargedMode(true,false);
-                                bulkwark.vec3Charged = new Vec3(attacker.getX()-bulkwark.getX(),attacker.getY()-bulkwark.getY(),attacker.getZ()-bulkwark.getZ());
+                                bulkwark.vec3Charged = new Vec3(attacker.getX()-bulkwark.getX(),0,attacker.getZ()-bulkwark.getZ());
                                 bulkwark.setTarget(attacker);
                             }
                         }
@@ -194,22 +198,29 @@ public class Events {
     }
     @SubscribeEvent
     public static void hurtEntity(LivingHurtEvent event){
+        if(event.getEntity().level.isClientSide){
+            return;
+        }
         if(event.getEntity()!=null){
             LivingEntity entityHurt = event.getEntity();
             Entity entityAttack = event.getSource().getEntity();
-            if(entityHurt.getMobType() == MobType.ILLAGER){
-                BulkwarkEntity bulkwark = entityHurt.level.getNearestEntity(BulkwarkEntity.class, TargetingConditions.forNonCombat(),entityHurt,entityHurt.getX(),entityHurt.getY(),entityHurt.getZ(),entityHurt.getBoundingBox().inflate(30.0D));
-                if(bulkwark != null ){
-                    if(bulkwark.isAbsorbMode()){
-                        float f = event.getAmount()*0.8F;
-                        if(f<=bulkwark.shieldHealth){
-                            bulkwark.shieldHealth -= f;
-                            event.setAmount(event.getAmount()*0.2F);
-                        }else {
-                            bulkwark.shieldHealth=0.0F;
-                            event.setAmount(event.getAmount()-bulkwark.shieldHealth);
+            IAbilityKnightCapability capability = CapabilityHandler.getEntityCapability(entityHurt,CapabilityHandler.ABILITY_KNIGHT_CAPABILITY);
+            if(capability!=null){
+                if(capability.hasProtection()){
+                    Entity entity = entityHurt.level.getEntity(capability.getSourceMagic());
+                    if(entity instanceof BulkwarkEntity bulkwark){
+                        if(bulkwark.isAbsorbMode()){
+                            float f = event.getAmount()*0.8F;
+                            if(f<=bulkwark.shieldHealth){
+                                bulkwark.shieldHealth -= f;
+                                event.setAmount(event.getAmount()*0.2F);
+                            }else {
+                                bulkwark.shieldHealth=0.0F;
+                                event.setAmount(event.getAmount()-bulkwark.shieldHealth);
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -312,12 +323,13 @@ public class Events {
     public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject() instanceof LivingEntity){
             event.addCapability(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"mauled"),new MauledCapability.AplastarProvider());
+            event.addCapability(new ResourceLocation(IllagerRevolutionMod.MOD_ID,"knight"),new AbilityKnightCapability.AbilityKnightProvider());
         }
     }
 
     @SubscribeEvent
     public static void onExpirePotionEffect(MobEffectEvent.Expired event){
-        if(event.getEffectInstance()==null)return;
+        /*if(event.getEffectInstance()==null)return;
         if(event.getEffectInstance().getEffect()==InitEffect.THE_ORDER_MARK.get()){
             if(event.getEntity() instanceof ServerPlayer){
                 ServerPlayer player= (ServerPlayer) event.getEntity();
@@ -327,7 +339,7 @@ public class Events {
                     raids.setDirty();
                 }
             }
-        }
+        }*/
     }
     private static void hurtHelmet(ItemStack itemStack, Player player){
         float i=0;

@@ -43,8 +43,17 @@ public class AreaFireColumnEntity extends Entity {
     private LivingEntity owner;
     private UUID idOwner;
     private boolean applySlowness;
-    public AreaFireColumnEntity(EntityType<?> pEntityType, Level pLevel) {
+    public AreaFireColumnEntity(EntityType<?> pEntityType, Level pLevel,boolean pIsBurn) {
         super(pEntityType, pLevel);
+        this.setIsBurn(pIsBurn);
+        this.noPhysics = true;
+        this.setRadius(5.0F);
+        this.setDuration(100,25);
+        this.applySlowness=false;
+    }
+
+    public AreaFireColumnEntity(EntityType<AreaFireColumnEntity> areaFireColumnEntityEntityType, Level level) {
+        super(areaFireColumnEntityEntityType,level);
         this.noPhysics = true;
         this.setRadius(5.0F);
         this.setDuration(100,25);
