@@ -356,7 +356,7 @@ public class TheKnightOrder {
     }
 
     public void absorbTheOrderMark(Player pTarget){
-        //pTarget.removeEffect(InitEffect.THE_ORDER_MARK.get());
+        pTarget.removeEffect(InitEffect.THE_ORDER_MARK.get());
         this.targetPlayers.add(pTarget.getUUID());
     }
 

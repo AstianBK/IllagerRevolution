@@ -14,11 +14,9 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -32,9 +30,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.openjdk.nashorn.internal.ir.Symbol;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -56,6 +56,8 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
 
     private static final EntityDataAccessor<Byte> ID_MODE_STATUS =
             SynchedEntityData.defineId(BulkwarkEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Float> SHIELD_HEALTH =
+            SynchedEntityData.defineId(BulkwarkEntity.class, EntityDataSerializers.FLOAT);
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     public boolean slamMoment;
     public int slamTimer;
@@ -67,7 +69,6 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
     public int stunnedTimer;
     public int cooldownGuardian;
     public Vec3 vec3Charged;
-    public float shieldHealth;
     public BulkwarkEntity(EntityType<? extends AbstractIllager> p_32105_, Level p_32106_) {
         super(p_32105_, p_32106_);
         this.chargedCooldown=0;
@@ -77,7 +78,7 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         this.slamTimer=0;
         this.damageAbsorb=0;
         this.vec3Charged = Vec3.ZERO;
-        this.shieldHealth = 100.0F;
+        this.setShieldHealth(100.0F);
     }
 
     public static AttributeSupplier setAttributes() {
@@ -118,6 +119,13 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         this.goalSelector.addGoal(7, new BreakDoorGoal(this, e -> true));
     }
 
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        this.setShieldHealth(100.0F);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         String s1 = !this.isGuarding() ? "down" : "";
         if (event.isMoving() && !this.isCharged() && !this.isStunned()) {
@@ -155,8 +163,8 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         if(this.getShieldHealth()/this.getMaxShieldHealth()<1.0F){
             if(this.tickCount%200==0){
                 float f = 10.0F;
-                float f1 =this.getMaxShieldHealth()-this.shieldHealth;
-                this.shieldHealth += Math.min(f, f1);
+                float f1 =this.getMaxShieldHealth()-this.getShieldHealth();
+                this.setShieldHealth(this.getShieldHealth()+Math.min(f, f1));
             }
         }
         if(this.isStunned()){
@@ -323,7 +331,7 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
     }
 
     public void setShieldHealth(float pHealth){
-        this.shieldHealth=pHealth;
+        this.entityData.set(SHIELD_HEALTH,pHealth);
     }
 
     @Override
@@ -361,12 +369,12 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
             this.setGuardingMode(true);
         }
         if(this.isAbsorbMode()){
-            float sH = this.shieldHealth;
+            float sH = this.getShieldHealth();
             if(pAmount<=sH){
                 this.setShieldHealth(sH-pAmount);
                 return false;
             }else {
-                pAmount=pAmount-this.shieldHealth;
+                pAmount=pAmount-this.getShieldHealth();
                 this.setShieldHealth(0.0F);
                 this.setAbsorbMode(false);
                 this.setGuardingMode(false);
@@ -426,7 +434,7 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
     }
 
     public float getShieldHealth(){
-        return this.shieldHealth;
+        return this.entityData.get(SHIELD_HEALTH);
     }
     public float getMaxShieldHealth(){
         return 100.0F;
@@ -446,7 +454,7 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("isAbsorb",this.isAbsorbMode());
         pCompound.putBoolean("isGuarding",this.isGuarding());
-        pCompound.putFloat("shieldHealth",this.shieldHealth);
+        pCompound.putFloat("ShieldHealth",this.getShieldHealth());
         if(this.vec3Charged != Vec3.ZERO){
             pCompound.putDouble("posChargedX",this.vec3Charged.x);
             pCompound.putDouble("posChargedY",this.vec3Charged.y);
@@ -459,15 +467,11 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         super.readAdditionalSaveData(pCompound);
         this.setAbsorbMode(pCompound.getBoolean("isAbsorb"));
         this.setGuardingMode(pCompound.getBoolean("isGuarding"));
+        this.setShieldHealth(pCompound.getFloat("ShieldHealth"));
         if(pCompound.contains("posChargedX")){
             this.vec3Charged =new Vec3(pCompound.getDouble("posChargedX")
                     ,pCompound.getDouble("posChargedY")
                     ,pCompound.getDouble("posChargedZ"));
-        }
-        if(pCompound.contains("shieldHealth")){
-            this.shieldHealth=pCompound.getFloat("shieldHealth");
-        }else {
-            this.shieldHealth=100.0F;
         }
     }
 
@@ -475,6 +479,7 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ID_MODE_STATUS,(byte)0);
+        this.entityData.define(SHIELD_HEALTH,100.0F);
     }
 
     @Override
@@ -532,13 +537,14 @@ public class BulkwarkEntity extends KnightEntity implements IAnimatable {
         }
 
         public static ShieldHealth byFraction(float p_28902_) {
+            ShieldHealth shieldHealth=NONE;
             for(ShieldHealth irongolem$crackiness : BY_DAMAGE) {
-                if (p_28902_ > irongolem$crackiness.fraction) {
-                    return irongolem$crackiness;
+                if (p_28902_ > irongolem$crackiness.fraction && NONE!=irongolem$crackiness) {
+                    shieldHealth=irongolem$crackiness;
                 }
             }
 
-            return NONE;
+            return shieldHealth;
         }
     }
 }
