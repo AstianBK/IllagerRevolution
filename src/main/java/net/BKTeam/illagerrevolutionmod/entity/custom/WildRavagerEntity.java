@@ -246,11 +246,6 @@ public class WildRavagerEntity extends MountEntity {
         this.entityData.set(HAS_DRUM,pBoolean);
     }
 
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_146754_) {
-        super.onSyncedDataUpdated(p_146754_);
-    }
-
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("ChargedState",this.getChargedId());

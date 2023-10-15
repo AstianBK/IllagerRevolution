@@ -60,11 +60,6 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW =
             SynchedEntityData.defineId(AcolyteEntity.class, EntityDataSerializers.BOOLEAN);
 
-    private static final EntityDataAccessor<Boolean> IS_ATTACKING =
-            SynchedEntityData.defineId(AcolyteEntity.class, EntityDataSerializers.BOOLEAN);
-
-    private int attackTimer;
-
     public static AttributeSupplier setAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 25.0D)
@@ -76,8 +71,6 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
 
     public AcolyteEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
         super(entityType, level);
-        this.attackTimer=0;
-
     }
 
     private   <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -203,14 +196,12 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         super.defineSynchedData();
         this.entityData.define(ID_PROFESSION,0);
         this.entityData.define(IS_CHARGING_CROSSBOW,false);
-        this.entityData.define(IS_ATTACKING,false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         pCompound.putInt("idProfession",this.getIdProfession());
         pCompound.putBoolean("isChargingCrossbow",this.isChargingCrossbow());
-        pCompound.putBoolean("isAttacking",this.isAttacking());
         super.addAdditionalSaveData(pCompound);
     }
 
@@ -218,23 +209,8 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
     public void readAdditionalSaveData(CompoundTag pCompound) {
         this.setChargingCrossbow(pCompound.getBoolean("isChargingCrossbow"));
         this.setIdProfession(pCompound.getInt("idProfession"));
-        this.setAttacking(pCompound.getBoolean("isAttacking"));
         super.readAdditionalSaveData(pCompound);
     }
-
-    public void setAttacking(boolean pIsAttacking){
-        this.entityData.set(IS_ATTACKING,pIsAttacking);
-        this.attackTimer = pIsAttacking ? 20 : 0;
-    }
-
-    public boolean isAttacking(){
-        return this.entityData.get(IS_ATTACKING);
-    }
-
-    public int getAttackTimer(){
-        return this.attackTimer;
-    }
-
     @Override
     public void setChargingCrossbow(boolean pIsCharging) {
         this.entityData.set(IS_CHARGING_CROSSBOW,pIsCharging);
@@ -265,12 +241,6 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
 
     @Override
     public void aiStep() {
-        if(this.isAttacking()){
-            this.attackTimer--;
-            if(this.attackTimer==0){
-                this.setAttacking(false);
-            }
-        }
         super.aiStep();
     }
 
@@ -301,7 +271,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         @Nullable
         @Override
         protected SoundEvent getSpellPrepareSound() {
-            return ModSounds.TAMER_WHISTLE.get();
+            return SoundEvents.ILLUSIONER_CAST_SPELL;
         }
 
         public void stop() {
@@ -322,7 +292,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
             BlockPos blockpos = owner.blockPosition().offset(-2 + owner.getRandom().nextInt(5), 1, -2 + owner.getRandom().nextInt(5));
             soulEater.setOwner(owner);
             soulEater.moveTo(blockpos,0.0F,0.0F);
-            soulEater.setLimitedLife(3000);
+            soulEater.setLimitedLife(100);
             owner.level.addFreshEntity(soulEater);
         }
     }
@@ -337,7 +307,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         }
 
         protected int getCastingInterval() {
-            return 50;
+            return 300;
         }
 
         @Override
@@ -348,7 +318,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         @Nullable
         @Override
         protected SoundEvent getSpellPrepareSound() {
-            return ModSounds.TAMER_WHISTLE.get();
+            return SoundEvents.ILLUSIONER_CAST_SPELL;
         }
 
         public void stop() {
@@ -358,7 +328,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
 
         @Override
         protected IllagerSpell getSpell() {
-            return IllagerSpell.SUMMON_VEX;
+            return IllagerSpell.FANGS;
         }
 
         protected void performSpellCasting() {
@@ -366,12 +336,14 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
             LivingEntity target = AcolyteEntity.this.getTarget();
             if(target != null){
                 BlockPos posTarget1=target.getOnPos();
-                BlockPos posOwner=owner.getOnPos();
-                SoulMissile soulMissile = new SoulMissile(owner,owner.level);
-                soulMissile.shoot(posTarget1.getX()- posOwner.getX(), posTarget1.getY() - posOwner.getY(), posTarget1.getZ()- posOwner.getZ(),2.0F,0.0F);
-                soulMissile.setYRot(owner.getYRot());
-                owner.level.addFreshEntity(soulMissile);
-                owner.level.playSound(null,owner,ModSounds.SOUL_SAGE_MISSILE.get(), SoundSource.HOSTILE,1.0F,1.0F);
+                AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(),owner.level,true);
+                areaFireColumn.setPowerLevel(0);
+                areaFireColumn.setOwner(owner);
+                areaFireColumn.setDuration(100,0);
+                areaFireColumn.setRadius(5.0F);
+                areaFireColumn.moveTo(posTarget1,0.0F,0.0F);
+                owner.level.addFreshEntity(areaFireColumn);
+                target.level.playSound(null,owner,SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE,1.0F,1.0F);
             }
 
         }
@@ -527,7 +499,7 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         @Override
         protected void checkAndPerformAttack(@NotNull LivingEntity entity, double distance) {
             double d0 = this.getAttackReachSqr(entity)+2.0D;
-            if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
+            if (distance <= d0 && this.getTicksUntilNextAttack() <= 0) {
                 this.resetAttackCooldown();
                 this.goalOwner.playSound(SoundEvents.STRAY_HURT, 1.0F, -1.0F);
                 this.goalOwner.swing(InteractionHand.MAIN_HAND);
@@ -538,12 +510,6 @@ public class AcolyteEntity extends SpellcasterKnight implements IAnimatable, Inv
         @Override
         public boolean canUse() {
             return super.canUse() && this.goalOwner.getProfession() == ProfessionTier.FIGHTER;
-        }
-
-        @Override
-        protected void resetAttackCooldown() {
-            super.resetAttackCooldown();
-            this.goalOwner.setAttacking(true);
         }
 
     }

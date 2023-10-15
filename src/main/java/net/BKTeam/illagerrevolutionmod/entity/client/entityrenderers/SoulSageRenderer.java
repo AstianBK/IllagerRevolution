@@ -138,7 +138,7 @@ public class SoulSageRenderer extends ExtendedGeoEntityRenderer<SoulSageEntity> 
         for (LivingEntity living : livings){
             if(living!=null){
                 float f = 1.0F;
-                float f1 = (float)pEntity.level.getGameTime() + pPartialTicks;
+                float f1 = (float)pEntity.level.getDayTime() + pPartialTicks;
                 float f2 = f1 * 0.5F % 1.0F;
                 float f3 = pEntity.getEyeHeight();
                 pMatrixStack.pushPose();

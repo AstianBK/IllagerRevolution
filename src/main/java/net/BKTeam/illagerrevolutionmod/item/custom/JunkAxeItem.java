@@ -102,7 +102,7 @@ public class JunkAxeItem extends AxeItem {
                 itemStack.shrink(1);
             }
 
-            return InteractionResultHolder.sidedSuccess(itemStack,pLevel.isClientSide());
+            return InteractionResultHolder.sidedSuccess(pPlayer.getMainHandItem(),pLevel.isClientSide());
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

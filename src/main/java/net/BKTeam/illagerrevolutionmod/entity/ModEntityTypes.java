@@ -93,6 +93,13 @@ public class ModEntityTypes {
                             .sized(0.60f, 2.4f)
                             .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "soul_sage").toString()));
 
+    public static final RegistryObject<EntityType<BulkwarkEntity>> BULKWARK =
+            ENTITY_TYPES.register("bulkwark",
+                    () -> EntityType.Builder.of(BulkwarkEntity::new, MobCategory.MONSTER)
+                            .sized(0.60f, 2.4f)
+                            .build(new ResourceLocation(IllagerRevolutionMod.MOD_ID, "bulkwark").toString()));
+
+
     public static final RegistryObject<EntityType<SoulEaterEntity>> SOUL_EATER =
             ENTITY_TYPES.register("soul_eater",
                     () -> EntityType.Builder.of(SoulEaterEntity::new, MobCategory.MONSTER)
@@ -146,6 +153,7 @@ public class ModEntityTypes {
     }
 
     public static void registerWaveMembers() {
+        //Raid.RaiderType.create("bulkwark", BULKWARK.get(), new int[]{0, 1, 0, 0, 1, 0, 0, 1});
         Raid.RaiderType.create("blade_knight", BLADE_KNIGHT.get(), new int[]{0, 0, 0, 0, 1, 0, 0, 1});
         Raid.RaiderType.create("soul_sage", SOUL_SAGE.get(), new int[]{0, 0, 0, 0, 1, 0, 0, 1});
         Raid.RaiderType.create("illager_beast_tamer", ILLAGER_BEAST_TAMER.get(), new int[]{0, 0, 1, 0, 2, 0, 2, 3});

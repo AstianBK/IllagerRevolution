@@ -2,6 +2,9 @@ package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
+import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BulkwarkEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
@@ -13,6 +16,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -40,6 +44,20 @@ public class PlayerLikedLayer <T extends LivingEntity,M extends EntityModel<T>> 
                 VertexConsumer ivertex = pBuffer.getBuffer(RenderType.energySwirl(LINKED_ARMOR, f * 0.01f, f * 0.01f));
                 model.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
                 model.renderToBuffer(pMatrixStack, ivertex, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
+            }
+        }else {
+            IAbilityKnightCapability knightCapability =
+                    CapabilityHandler.getEntityCapability(pLivingEntity,CapabilityHandler.ABILITY_KNIGHT_CAPABILITY);
+            if (knightCapability!=null){
+                if(knightCapability.hasProtection()){
+                    float f = (float) pLivingEntity.tickCount + pPartialTicks;
+                    EntityModel<T> model = this.getParentModel();
+                    model.prepareMobModel(pLivingEntity, pLimbSwing, pLimbSwingAmount, pPartialTicks);
+                    this.getParentModel().copyPropertiesTo(model);
+                    VertexConsumer ivertex = pBuffer.getBuffer(RenderType.energySwirl(LINKED_ARMOR, f * 0.01f, f * 0.01f));
+                    model.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+                    model.renderToBuffer(pMatrixStack, ivertex, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
+                }
             }
         }
     }

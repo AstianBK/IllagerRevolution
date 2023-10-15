@@ -71,11 +71,7 @@ public class SoulBomb extends ProjectileMagic {
                     double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
                     double d3 = 1.5D + (0.5D * this.getPowerLevel());
                     living.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
-                    if(owner instanceof LivingEntity){
-                        living.hurt(DamageSource.mobAttack((LivingEntity) owner),5.0F+1.0F*this.getPowerLevel());
-                    }else {
-                        living.hurt(DamageSource.GENERIC,5.0F+1.0F*this.getPowerLevel());
-                    }
+                    living.hurt(DamageSource.indirectMagic(this, owner),5.0F+1.0F*this.getPowerLevel());
                     if(!this.level.isClientSide){
                         living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,100,0));
                     }
@@ -118,21 +114,14 @@ public class SoulBomb extends ProjectileMagic {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if (pResult.getEntity() instanceof LivingEntity initialTarget) {
-            AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level);
+            AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level,false);
             areaFireColumn.setPos(initialTarget.getOnPos().getX(), initialTarget.getOnPos().getY() + 1, initialTarget.getOnPos().getZ());
             areaFireColumn.setOwner((LivingEntity) this.getOwner());
             areaFireColumn.setPowerLevel(this.getPowerLevel());
             areaFireColumn.setDuration(100,25);
+            areaFireColumn.setApplySlowness(true);
             this.level.addFreshEntity(areaFireColumn);
-            if (this.getOwner() instanceof LivingEntity) {
-                initialTarget.hurt(DamageSource.mobAttack((LivingEntity) this.getOwner()).setMagic(), 3);
-            } else {
-                initialTarget.hurt(DamageSource.MAGIC, 3);
-            }
-
-            if(!this.level.isClientSide){
-                initialTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,200,2));
-            }
+            initialTarget.hurt(DamageSource.indirectMagic(this,this.getOwner()),5.0F+1.0F*this.getPowerLevel());
         }
     }
 
@@ -146,27 +135,13 @@ public class SoulBomb extends ProjectileMagic {
     protected void onHitBlock(BlockHitResult p_37258_) {
         super.onHitBlock(p_37258_);
         BlockPos blockPos = p_37258_.getBlockPos();
-        AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level);
+        AreaFireColumnEntity areaFireColumn = new AreaFireColumnEntity(ModEntityTypes.AREA_FIRE_COLUMN.get(), this.level,false);
         areaFireColumn.setPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         areaFireColumn.setOwner((LivingEntity) this.getOwner());
         areaFireColumn.setPowerLevel(this.getPowerLevel());
         areaFireColumn.setDuration(100,25);
+        areaFireColumn.setApplySlowness(true);
         this.level.addFreshEntity(areaFireColumn);
-    }
-
-    @Override
-    protected void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-    }
-
-    @Override
-    protected void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
     }
 
     @Override

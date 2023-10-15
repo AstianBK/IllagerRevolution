@@ -356,7 +356,7 @@ public class TheKnightOrder {
     }
 
     public void absorbTheOrderMark(Player pTarget){
-        pTarget.removeEffect(InitEffect.THE_ORDER_MARK.get());
+        //pTarget.removeEffect(InitEffect.THE_ORDER_MARK.get());
         this.targetPlayers.add(pTarget.getUUID());
     }
 
@@ -725,17 +725,18 @@ public class TheKnightOrder {
     public static enum KnightType implements net.minecraftforge.common.IExtensibleEnum {
         BLADE_KNIGHT(ModEntityTypes.BLADE_KNIGHT.get(), new int[]{1, 0, 1, 2, 0, 2, 2, 2}),
         SOUL_SAGE(ModEntityTypes.SOUL_SAGE.get(), new int[]{0,1, 1, 0, 2, 2, 2, 2}),
+        //BULKWARK(ModEntityTypes.BULKWARK.get(),new int[]{1,1, 1, 0, 2, 2, 2, 2}),
         ACOLYTE(ModEntityTypes.ACOLYTE.get(), new int[]{5, 5, 6, 6, 7, 8, 9, 9});
         static KnightType[] VALUES = values();
-        final EntityType<? extends SpellcasterKnight> entityType;
+        final EntityType<? extends KnightEntity> entityType;
         final int[] spawnsPerWaveBeforeBonus;
 
-        private KnightType(EntityType<? extends SpellcasterKnight> p_37821_, int[] p_37822_) {
+        KnightType(EntityType<? extends KnightEntity> p_37821_, int[] p_37822_) {
             this.entityType = p_37821_;
             this.spawnsPerWaveBeforeBonus = p_37822_;
         }
 
-        public static KnightType create(String name, EntityType<? extends SpellcasterKnight> typeIn, int[] waveCountsIn) {
+        public static KnightType create(String name, EntityType<? extends KnightEntity> typeIn, int[] waveCountsIn) {
             throw new IllegalStateException("Enum not extended");
         }
 
