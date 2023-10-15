@@ -26,10 +26,14 @@ public class ModCreativeModeTab {
     };
 
     public static void PreOrdenInit(){
-        List<Item> itemList= Arrays.asList(ModItems.BLADE_KNIGHT_SPAWN_EGG.get(),ModItems.SOUL_SAGE_SPAWN_EGG.get(),ModItems.ACOLYTE_SPAWN_EGG.get(),ModItems.ILLAGERBEASTTAMER_SPAWN_EGG.get(),ModItems.ILLAGERMINERBADLANDS_SPAWN_EGG.get(),ModItems.ILLAGERMINER_SPAWN_EGG.get(),ModItems.WILD_RAVAGER_SPAWN_EGG.get(),ModItems.MAULER_SPAWN_EGG.get(),ModItems.SCROUNGER_SPAWN_EGG.get(),
-                ModItems.RAKER_SPAWN_EGG.get(),ModItems.ILLAGIUM.get(),ModItems.RAKER_CLAW.get(),ModItems.BEAST_STAFF.get(),ModItems.MAULER_PELT.get(), ModItems.SCROUNGER_FEATHER.get(),ModItems.ILLAGIUM_CROSSBOW.get(),
+        List<Item> itemList= Arrays.asList(ModItems.BLADE_KNIGHT_SPAWN_EGG.get(),ModItems.SOUL_SAGE_SPAWN_EGG.get(),ModItems.ACOLYTE_SPAWN_EGG.get(),ModItems.ILLAGERBEASTTAMER_SPAWN_EGG.get(),
+                ModItems.ILLAGERMINERBADLANDS_SPAWN_EGG.get(),ModItems.ILLAGERMINER_SPAWN_EGG.get(),
+                ModItems.WILD_RAVAGER_SPAWN_EGG.get(),ModItems.MAULER_SPAWN_EGG.get(),ModItems.SCROUNGER_SPAWN_EGG.get(),
+                ModItems.RAKER_SPAWN_EGG.get(),ModItems.ILLAGIUM.get(),ModItems.ILLAGIUM_APPLE.get(),ModItems.RAKER_CLAW.get(),ModItems.BEAST_STAFF.get(),
+                ModItems.MAULER_PELT.get(), ModItems.SCROUNGER_FEATHER.get(),ModItems.ILLAGIUM_CROSSBOW.get(),
                 ModItems.ILLAGIUM_SWORD.get(),ModItems.ILLAGIUM_PICKAXE.get(),ModItems.ILLAGIUM_AXE.get(),ModItems.ILLAGIUM_SHOVEL.get(),ModItems.ILLAGIUM_HOE.get(),ModItems.ILLAGIUM_RUNED_BLADE.get(),
-                ModItems.ILLAGIUM_ALT_RUNED_BLADE.get(),ModItems.OMINOUS_GRIMOIRE.get(),ModItems.SCROUNGER_POUCH.get(),ModItems.RAKER_ARMOR_IRON.get(),ModItems.RAKER_ARMOR_GOLD.get(),ModItems.RAKER_ARMOR_DIAMOND.get(),ModItems.RAKER_ARMOR_NETHERITE.get(),ModItems.RAKER_ARMOR_ILLAGIUM.get(),
+                ModItems.ILLAGIUM_ALT_RUNED_BLADE.get(),ModItems.OMINOUS_GRIMOIRE.get(),ModItems.SCROUNGER_POUCH.get(),ModItems.RAKER_ARMOR_IRON.get(),ModItems.RAKER_ARMOR_GOLD.get(),
+                ModItems.RAKER_ARMOR_DIAMOND.get(),ModItems.RAKER_ARMOR_NETHERITE.get(),ModItems.RAKER_ARMOR_ILLAGIUM.get(),
                 ModItems.CLAWS_ARMOR_IRON.get(),ModItems.CLAWS_ARMOR_GOLD.get(),ModItems.CLAWS_ARMOR_DIAMOND.get(),ModItems.CLAWS_ARMOR_NETHERITE.get(),ModItems.CLAWS_ARMOR_ILLAGIUM.get(),
                 ModItems.MAULER_ARMOR_DIAMOND.get(),ModItems.MAULER_ARMOR_NETHERITE.get(),ModItems.MAULER_ARMOR_ILLAGIUM.get(),ModItems.MAULER_ARMOR_IRON.get(),ModItems.MAULER_ARMOR_GOLD.get(),ModItems.WILD_RAVAGER_ARMOR_DIAMOND.get(),
                 ModItems.WILD_RAVAGER_ARMOR_NETHERITE.get(),ModItems.WILD_RAVAGER_ARMOR_ILLAGIUM.get(),ModItems.WILD_RAVAGER_ARMOR_GOLD.get(),ModItems.WILD_RAVAGER_ARMOR_IRON.get(),

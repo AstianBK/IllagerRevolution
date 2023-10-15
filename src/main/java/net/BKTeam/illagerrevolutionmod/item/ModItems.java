@@ -124,6 +124,20 @@ public class ModItems {
     //
     // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
     //                                                                                           //
+    //FOODS                                                                                      //
+    //
+    //
+
+    public static final RegistryObject<Item> ILLAGIUM_APPLE = ITEMS.register("illagium_apple",
+            ()->new ArrowBeastItem(new Item.Properties().tab(ModCreativeModeTab.ILLAGERREVOLUTION_TAB).food(ModFoods.ILLAGIUM_APPLE)));
+
+
+
+
+    //
+    //
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+    //                                                                                           //
     //ARMOR                                                                                      //
     //
     //
