@@ -24,7 +24,7 @@
     }
 
 
-    version = '1.8 - 1.19.2'
+    version = '1.7.1 - 1.19.2'
     group = 'net.sangrebk.illagerrevolution'
     archivesBaseName = 'illagerrevolution'
 
