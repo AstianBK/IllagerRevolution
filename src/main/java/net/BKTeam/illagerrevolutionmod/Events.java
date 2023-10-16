@@ -211,12 +211,12 @@ public class Events {
                     if(entity instanceof BulkwarkEntity bulkwark){
                         if(bulkwark.isAbsorbMode()){
                             float f = event.getAmount()*0.8F;
-                            if(f<=bulkwark.shieldHealth){
-                                bulkwark.shieldHealth -= f;
+                            if(f<=bulkwark.getShieldHealth()){
+                                bulkwark.setShieldHealth(bulkwark.getShieldHealth()-f);
                                 event.setAmount(event.getAmount()*0.2F);
                             }else {
-                                bulkwark.shieldHealth=0.0F;
-                                event.setAmount(event.getAmount()-bulkwark.shieldHealth);
+                                event.setAmount(event.getAmount()-bulkwark.getShieldHealth());
+                                bulkwark.setShieldHealth(0.0F);
                             }
                         }
                     }

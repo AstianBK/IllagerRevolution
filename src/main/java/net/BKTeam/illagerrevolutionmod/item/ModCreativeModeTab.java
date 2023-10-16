@@ -26,7 +26,7 @@ public class ModCreativeModeTab {
     };
 
     public static void PreOrdenInit(){
-        List<Item> itemList= Arrays.asList(ModItems.BLADE_KNIGHT_SPAWN_EGG.get(),ModItems.SOUL_SAGE_SPAWN_EGG.get(),ModItems.ACOLYTE_SPAWN_EGG.get(),ModItems.ILLAGERBEASTTAMER_SPAWN_EGG.get(),
+        List<Item> itemList= Arrays.asList(ModItems.BLADE_KNIGHT_SPAWN_EGG.get(),ModItems.SOUL_SAGE_SPAWN_EGG.get(),ModItems.ILLAGERBEASTTAMER_SPAWN_EGG.get(),
                 ModItems.ILLAGERMINERBADLANDS_SPAWN_EGG.get(),ModItems.ILLAGERMINER_SPAWN_EGG.get(),
                 ModItems.WILD_RAVAGER_SPAWN_EGG.get(),ModItems.MAULER_SPAWN_EGG.get(),ModItems.SCROUNGER_SPAWN_EGG.get(),
                 ModItems.RAKER_SPAWN_EGG.get(),ModItems.ILLAGIUM.get(),ModItems.ILLAGIUM_APPLE.get(),ModItems.RAKER_CLAW.get(),ModItems.BEAST_STAFF.get(),

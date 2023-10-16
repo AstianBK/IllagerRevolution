@@ -16,7 +16,9 @@ import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
 @Mod.EventBusSubscriber(modid = "illagerrevolutionmod", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SoulTick {
-    public static final Attribute SOUL= new RangedAttribute("soul",0.0d,-Double.MAX_VALUE, Double.MAX_VALUE);
+    public static final Attribute SOUL = new RangedAttribute("soul",0.0d,-Double.MAX_VALUE, Double.MAX_VALUE);
+
+    public static final Attribute SHIELD = new RangedAttribute("soul",0.0d,-Double.MAX_VALUE, Double.MAX_VALUE);
 
     @SubscribeEvent
     public static void soulDeathEvent(LivingDeathEvent event){
