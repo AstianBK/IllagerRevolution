@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "illagerrevolutionmod:block/drum_damage" },
+    "facing=east": { "model": "illagerrevolutionmod:block/drum_damage", "y": 90 },
+    "facing=south": { "model": "illagerrevolutionmod:block/drum_damage", "y": 180 },
+    "facing=west": { "model": "illagerrevolutionmod:block/drum_damage", "y": 270 }
+  }
+}

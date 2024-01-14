@@ -1,5 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
+import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulEntity;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulProjectile;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -8,10 +11,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.*;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.LevelAccessor;
@@ -23,17 +24,12 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.BKTeam.illagerrevolutionmod.ModConstants;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
-import net.BKTeam.illagerrevolutionmod.effect.init_effect;
 import net.BKTeam.illagerrevolutionmod.entity.custom.*;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketEffectSwordRuned;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 
 @Mod.EventBusSubscriber
@@ -61,12 +57,12 @@ public class Event_Death {
     }
 
     private static void upSouls(@Nullable Event event, LevelAccessor world, Entity entity,Entity assasin) {
-        LivingEntity souce=(LivingEntity) Util.Entity(entity,Blade_KnightEntity.class);
+        LivingEntity souce=(LivingEntity) Util.Entity(entity,BladeKnightEntity.class);
 
         if (entity == null)
             return;
-        if ((entity instanceof LivingEntity _livEnt && _livEnt.hasEffect(init_effect.DEATH_MARK.get())) && !world
-                .getEntitiesOfClass(Blade_KnightEntity.class, AABB.ofSize(new Vec3((entity.getX()), (entity.getY()), (entity.getZ())), 100, 100, 100), e -> true)
+        if ((entity instanceof LivingEntity _livEnt && _livEnt.hasEffect(InitEffect.DEATH_MARK.get())) && !world
+                .getEntitiesOfClass(BladeKnightEntity.class, AABB.ofSize(new Vec3((entity.getX()), (entity.getY()), (entity.getZ())), 100, 100, 100), e -> true)
                 .isEmpty() && !(assasin instanceof Zombie)) {
             boolean flag=true;
             String name=entity.getType().getRegistryName().getPath();
@@ -75,8 +71,8 @@ public class Event_Death {
                 flag=!(zombified_evokerEntity.getOwner() instanceof Player);
             }
             if(flag){
-                Soul_Projectile soul_projectile= new Soul_Projectile((LivingEntity) entity,entity.level,souce);
-                Soul_Entity soul_entity = new Soul_Entity(_livEnt,entity.level,name,souce,_livEnt.getY()+1.0D);
+                SoulProjectile soul_projectile= new SoulProjectile((LivingEntity) entity,entity.level,souce);
+                SoulEntity soul_entity = new SoulEntity(_livEnt,entity.level,name,souce,_livEnt.getY()+1.0D);
                 entity.level.addFreshEntity(soul_projectile);
                 entity.level.addFreshEntity(soul_entity);
                 if(entity instanceof Player){

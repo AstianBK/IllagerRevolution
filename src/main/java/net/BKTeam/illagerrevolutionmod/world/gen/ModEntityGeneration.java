@@ -13,13 +13,13 @@ import java.util.List;
 
 public class ModEntityGeneration {
     public static void onEntitySpawn(final BiomeLoadingEvent event) {
-        addEntityToSpecificBiomes(event, ModEntityTypes.ILLAGERBEASTTAMER.get(),
+        addEntityToSpecificBiomes(event, ModEntityTypes.ILLAGER_BEAST_TAMER.get(),
                 80, 1, 2, Biomes.JUNGLE,Biomes.BAMBOO_JUNGLE);
 
-        addEntityToSpecificBiomes(event, ModEntityTypes.ILLAGERMINER.get(),
+        addEntityToSpecificBiomes(event, ModEntityTypes.ILLAGER_MINER.get(),
                 45, 1, 2, Biomes.DRIPSTONE_CAVES, Biomes.LUSH_CAVES);
 
-        addEntityToSpecificBiomes(event, ModEntityTypes.ILLAGERMINERBADLANDS.get(),
+        addEntityToSpecificBiomes(event, ModEntityTypes.ILLAGER_SCAVENGER.get(),
                 45, 1, 2, Biomes.BADLANDS, Biomes.WOODED_BADLANDS, Biomes.ERODED_BADLANDS);
     }
     private static void addEntityToAllBiomesExceptThese(BiomeLoadingEvent event, EntityType<?> type,

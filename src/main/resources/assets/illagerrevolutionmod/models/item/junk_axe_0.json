@@ -1,0 +1,19 @@
+{
+  "parent": "item/handheld",
+  "loader": "forge:separate-perspective",
+
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/junk_axe_0_gui"
+  },
+  "base": {
+    "parent": "illagerrevolutionmod:item/junk_axe_0_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "illagerrevolutionmod:item/junk_axe_0_gui"
+    },
+    "fixed": {
+      "parent": "illagerrevolutionmod:item/junk_axe_0_gui"
+    }
+  }
+}

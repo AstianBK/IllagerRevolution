@@ -9,7 +9,7 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class IllagerMinerModel<I extends AbstractIllager> extends AnimatedGeoModel<IllagerMinerEntity> {
+public class IllagerMinerModel extends AnimatedGeoModel<IllagerMinerEntity> {
 
     protected final ResourceLocation MODEL_RESLOC;
     protected final ResourceLocation TEXTURE_DEFAULT;

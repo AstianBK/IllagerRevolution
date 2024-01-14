@@ -1,6 +1,6 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
-import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -14,11 +14,11 @@ public class RandomLookAroundFallenKnightGoal extends Goal {
 
     public RandomLookAroundFallenKnightGoal(Mob pMob) {
         this.mob = pMob;
-        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     public boolean canUse() {
-        if(this.mob instanceof FallenKnight fallenKnight){
+        if(this.mob instanceof FallenKnightEntity fallenKnight){
             return fallenKnight.isArmed() && this.mob.getRandom().nextFloat()<0.2F;
         }
         return false;

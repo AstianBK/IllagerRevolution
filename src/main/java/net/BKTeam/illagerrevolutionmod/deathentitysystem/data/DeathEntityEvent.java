@@ -7,6 +7,4 @@ public class DeathEntityEvent {
         DeathManager.tick(event.world);
     }
 
-
-
 }

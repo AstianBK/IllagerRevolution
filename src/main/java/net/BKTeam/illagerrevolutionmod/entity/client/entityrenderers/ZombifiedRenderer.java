@@ -41,7 +41,7 @@ public class ZombifiedRenderer extends ExtendedGeoEntityRenderer<ZombifiedEntity
     protected ItemStack getHeldItemForBone(String boneName, ZombifiedEntity currentEntity) {
         switch (boneName) {
             case RIGHT_HAND_BONE_IDENT:
-                return mainHand;
+                return currentEntity.getMainHandItem();
             case POTION_BONE_IDENT:
                 break;
         }
@@ -62,12 +62,12 @@ public class ZombifiedRenderer extends ExtendedGeoEntityRenderer<ZombifiedEntity
 
     @Override
     protected void preRenderItem(PoseStack stack, ItemStack item, String boneName, ZombifiedEntity currentEntity, IBone bone) {
-        if (item == this.mainHand || item == this.offHand) {
+        if (item == currentEntity.getMainHandItem() || item == currentEntity.getOffhandItem()) {
 
             stack.mulPose(Vector3f.XP.rotationDegrees(270F));
             boolean shieldFlag = item.getItem() instanceof ShieldItem;
 
-            if (item == this.mainHand) {
+            if (item == currentEntity.getMainHandItem()) {
                 if (shieldFlag) {
                     stack.translate(0, 0.125, -15);
                 }else {

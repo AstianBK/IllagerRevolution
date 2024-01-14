@@ -15,6 +15,12 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> RUNE_TABLE_USE =
                 registerSoundEvent("rune_table_use");
 
+        public static final RegistryObject<SoundEvent> DRUM_SOUND =
+                registerSoundEvent("drum_sound");
+
+        public static final RegistryObject<SoundEvent> DRUM_SOUND_ONCE =
+                registerSoundEvent("drum_sound_once");
+
         public static final RegistryObject<SoundEvent> TAMER_WHISTLE =
                 registerSoundEvent("tamer_whistle");
 
@@ -24,6 +30,38 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> RAKER_MEOW =
             registerSoundEvent("raker_meow");
 
+        public static final RegistryObject<SoundEvent> MAULER_HURT =
+                registerSoundEvent("mauler_hurt");
+
+        public static final RegistryObject<SoundEvent> MAULER_RAGE =
+                registerSoundEvent("mauler_rage");
+
+        public static final RegistryObject<SoundEvent> MAULER_AMBIENT1 =
+                registerSoundEvent("mauler_ambient1");
+
+        public static final RegistryObject<SoundEvent> MAULER_AMBIENT2 =
+                registerSoundEvent("mauler_ambient2");
+
+        public static final RegistryObject<SoundEvent> MAULER_STUN =
+                registerSoundEvent("mauler_stun");
+
+        public static final RegistryObject<SoundEvent> MAULER_BARK =
+                registerSoundEvent("mauler_bark");
+
+        public static final RegistryObject<SoundEvent> MAULER_SNARL =
+                registerSoundEvent("mauler_snarl");
+
+        public static final RegistryObject<SoundEvent> MAULER_BITE =
+                registerSoundEvent("mauler_bite");
+
+        public static final RegistryObject<SoundEvent> SCROUNGER_AMBIENT1 =
+                registerSoundEvent("scrounger_ambient1");
+
+        public static final RegistryObject<SoundEvent> SCROUNGER_AMBIENT2 =
+                registerSoundEvent("scrounger_ambient2");
+
+        public static final RegistryObject<SoundEvent> SCROUNGER_HURT =
+                registerSoundEvent("scrounger_hurt");
         public static final RegistryObject<SoundEvent> SOUL_ABSORB =
             registerSoundEvent("soul_absorb");
 
@@ -36,11 +74,41 @@ public class ModSounds {
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_HURT =
             registerSoundEvent("blade_knight_hurt");
 
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_FIRE =
+                registerSoundEvent("soul_sage_fire");
+
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_DRAIN =
+                registerSoundEvent("soul_sage_drain");
+
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_SHIELD =
+                registerSoundEvent("soul_sage_shield");
+
+        public static final RegistryObject<SoundEvent> SOUL_SAGE_MISSILE =
+                registerSoundEvent("soul_sage_missile");
+
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_SWORDHIT1 =
             registerSoundEvent("blade_knight_swordhit1");
 
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_SWORDHIT2 =
             registerSoundEvent("blade_knight_swordhit2");
+
+        public static final RegistryObject<SoundEvent> BLADE_KNIGHT_BLUNT =
+                registerSoundEvent("blade_knight_blunt");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_1 =
+                registerSoundEvent("blade_slash_1");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_2 =
+                registerSoundEvent("blade_slash_2");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_HIT1 =
+                registerSoundEvent("blade_slash_hit1");
+
+        public static final RegistryObject<SoundEvent> BLADE_SLASH_HIT2 =
+                registerSoundEvent("blade_slash_hit2");
+
+        public static final RegistryObject<SoundEvent> SOUL_SLASH =
+            registerSoundEvent("soul_slash");
 
         public static final RegistryObject<SoundEvent> BLADE_KNIGHT_LAUGH =
             registerSoundEvent("blade_knight_laugh");
@@ -58,6 +126,7 @@ public class ModSounds {
         public static RegistryObject<SoundEvent> registerSoundEvent(String name){
             return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(IllagerRevolutionMod.MOD_ID, name)));
         }
+
         public static void register(IEventBus eventBus){
             SOUND_EVENTS.register(eventBus);
         }

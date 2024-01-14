@@ -82,9 +82,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        if(!(this instanceof  IllagerMinerEntity)){
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
-        }
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
@@ -100,7 +98,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
 
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        if(this.level.getRandom().nextFloat() < 0.2 && !(this instanceof IllagerMinerEntity)){
+        if(this.level.getRandom().nextFloat() < 0.2){
             this.spawnAtLocation(ModItems.GOGGLES_MINER.get());
         }
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
@@ -272,12 +270,7 @@ public class IllagerMinerBadlandsEntity extends AbstractIllager implements IAnim
         if(this.isAttacking()){
             --this.attackTimer;
             if(this.attackTimer!=0){
-                if(this instanceof IllagerMinerEntity){
-                    if(this.attackTimer==4 && this.getTarget()!=null){
-                        this.doHurtTarget(this.getTarget());
-                        this.setAttacklantern(false);
-                    }
-                }else if(this.attackTimer==4 && this.getTarget()!=null){
+                if(this.attackTimer==4 && this.getTarget()!=null){
                     if(!this.isHasItems() && !this.isAttackLantern()){
                         this.doHurtTarget(this.getTarget());
                     }else{

@@ -2,7 +2,9 @@ package net.BKTeam.illagerrevolutionmod.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.Patreon;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -21,19 +23,19 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.Summoned_Soul;
-import net.BKTeam.illagerrevolutionmod.procedures.Events;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulEntity;
+import net.BKTeam.illagerrevolutionmod.entity.projectile.SummonedSoul;
+import net.BKTeam.illagerrevolutionmod.Events;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SwordRuneBladeItem extends RunedSword {
@@ -52,15 +54,18 @@ public class SwordRuneBladeItem extends RunedSword {
     }
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         CompoundTag nbt = null;
-        if(entity instanceof Player){
-            int cc = (int) ((Player)entity).getAttribute(SoulTick.SOUL).getValue();
+        if(entity instanceof Player player){
+            int cc = (int) player.getAttribute(SoulTick.SOUL).getValue();
+            int cc1 = this.isFrostRune(player,itemStack) ? 7 : 0;
             if (cc <= 6) {
                 nbt = itemStack.getOrCreateTag();
                 this.souls = cc;
             }
             if(nbt!=null){
-                nbt.putInt("CustomModelData", this.souls);
+                nbt.putInt("CustomModelData", this.souls + cc1);
             }
+        } else if (entity instanceof BladeKnightEntity) {
+            this.souls=0;
         }
         super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
     }
@@ -82,7 +87,7 @@ public class SwordRuneBladeItem extends RunedSword {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         int cc = (int) pPlayer.getAttribute(SoulTick.SOUL).getValue();
         if(pUsedHand==InteractionHand.MAIN_HAND){
-            List<Soul_Entity> listSoul=pPlayer.level.getEntitiesOfClass(Soul_Entity.class,pPlayer.getBoundingBox().inflate(50.0d));
+            List<SoulEntity> listSoul=pPlayer.level.getEntitiesOfClass(SoulEntity.class,pPlayer.getBoundingBox().inflate(50.0d));
             List<ZombifiedEntity> listZombi=pPlayer.level.getEntitiesOfClass(ZombifiedEntity.class,pPlayer.getBoundingBox().inflate(50.0d),e->e.getOwner()==pPlayer);
             int k = Util.getNumberOfInvocations(listZombi);
             boolean flag1= pPlayer.isShiftKeyDown();
@@ -90,7 +95,7 @@ public class SwordRuneBladeItem extends RunedSword {
             boolean canSummon= Events.checkOwnerSoul(listSoul,pPlayer);
             if(!flag1 ){
                 if(!pLevel.isClientSide && flag2 && cc>0){
-                    Summoned_Soul soul_wither= new Summoned_Soul(pPlayer,pLevel);
+                    SummonedSoul soul_wither= new SummonedSoul(pPlayer,pLevel);
                     pPlayer.level.playSound(null,pPlayer.blockPosition(),ModSounds.SOUL_RELEASE.get(),SoundSource.AMBIENT,3.0f,1.0f);
                     soul_wither.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 1.5F, 1.0F);
                     pLevel.addFreshEntity(soul_wither);
@@ -107,8 +112,8 @@ public class SwordRuneBladeItem extends RunedSword {
                         if (canSummon) {
                             while (i < listSoul.size() && j < 6 ) {
                                 entity = listSoul.get(i);
-                                if (entity instanceof Soul_Entity entity1 && entity1.getOwner() == pPlayer) {
-                                    entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity);
+                                if (entity instanceof SoulEntity entity1 && entity1.getOwner() == pPlayer) {
+                                    entity1.spawUndead((ServerLevel) pPlayer.level, pPlayer, entity,this.isFrostRune(pPlayer,itemStack));
                                     j++;
                                     k++;
                                     if(k==12){
@@ -147,7 +152,7 @@ public class SwordRuneBladeItem extends RunedSword {
         }
         return super.use(pLevel,pPlayer,pUsedHand);
     }
-    
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         if(Screen.hasShiftDown()) {

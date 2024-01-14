@@ -1,80 +1,76 @@
 package net.BKTeam.illagerrevolutionmod.event;
 
 
+import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
+import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.SoulBombModel;
+import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
+import net.BKTeam.illagerrevolutionmod.entity.layers.DrumModel;
+import net.BKTeam.illagerrevolutionmod.entity.layers.GeckoLivingProtectionLayer;
+import net.BKTeam.illagerrevolutionmod.entity.layers.LivingProtectionLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
-import net.BKTeam.illagerrevolutionmod.event.loot.*;
+import net.BKTeam.illagerrevolutionmod.gui.BKGui;
+import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
+import net.BKTeam.illagerrevolutionmod.particle.custom.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.ParticleEngine;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
-import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
-import net.BKTeam.illagerrevolutionmod.entity.custom.*;
-import net.BKTeam.illagerrevolutionmod.particle.custom.*;
-import software.bernie.example.GeckoLibMod;
-import software.bernie.geckolib3.GeckoLib;
-import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-import software.bernie.geckolib3.resource.GeckoLibCache;
-import software.bernie.geckolib3.util.GeckoLibUtil;
-import software.bernie.geckolib3.world.storage.GeckoLibIdTracker;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
-import javax.annotation.Nonnull;
-
+import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 import static net.BKTeam.illagerrevolutionmod.particle.ModParticles.*;
 
 
-@Mod.EventBusSubscriber(modid = IllagerRevolutionMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = IllagerRevolutionMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ModEventBusEvents {
+    public static ModelLayerLocation DRUM = new ModelLayerLocation(
+            new ResourceLocation(IllagerRevolutionMod.MOD_ID, "drum"), "drum");
+    public static ModelLayerLocation ORB = new ModelLayerLocation(
+            new ResourceLocation(IllagerRevolutionMod.MOD_ID, "orb"), "orb");
 
-    @SubscribeEvent
-    public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
-        event.put(ModEntityTypes.ILLAGERMINERBADLANDS.get(), IllagerMinerBadlandsEntity.setAttributes());
-        event.put(ModEntityTypes.RAKER.get(), RakerEntity.setAttributes());
-        event.put(ModEntityTypes.ILLAGERMINER.get(), IllagerMinerEntity.setAttributes());
-        event.put(ModEntityTypes.ILLAGERBEASTTAMER.get(), IllagerBeastTamerEntity.setAttributes());
-        event.put(ModEntityTypes.ZOMBIFIED.get(), ZombifiedEntity.setAttributes());
-        event.put(ModEntityTypes.BLADE_KNIGHT.get(), Blade_KnightEntity.setAttributes());
-        event.put(ModEntityTypes.FALLEN_KNIGHT.get(),FallenKnight.setAttributes());
 
-    }
     @SubscribeEvent(priority = EventPriority.LOWEST)
+    @OnlyIn(Dist.CLIENT)
     public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
         ParticleEngine manager = Minecraft.getInstance().particleEngine;
         if(SMOKE_BK_PARTICLES.isPresent()){
-            manager.register(SMOKE_BK_PARTICLES.get(), Bk_SmokeParticles.Factory::new);
+            manager.register(SMOKE_BK_PARTICLES.get(), BkSmokeParticles.Factory::new);
+        }
+        if(HEART_BK_PARTICLES.isPresent()){
+            manager.register(HEART_BK_PARTICLES.get(), BkHeartParticles.Factory::new);
         }
         if (BKSOULS_PARTICLES.isPresent()){
             manager.register(BKSOULS_PARTICLES.get(), BKSoulsParticles.Factory::new);
         }
         if(SOUL_PROJECTILE_PARTICLES.isPresent()){
-            manager.register(SOUL_PROJECTILE_PARTICLES.get(), Soul_ProjectilePParticles.Factory::new);
+            manager.register(SOUL_PROJECTILE_PARTICLES.get(), SoulProjectilePParticles.Factory::new);
+        }
+        if(SOUL_FLAME.isPresent()){
+            manager.register(SOUL_FLAME.get(), BKFireSoulParticles.Factory::new);
         }
         if (RUNE_CURSED_PARTICLES.isPresent()){
-            manager.register(RUNE_CURSED_PARTICLES.get(), Rune_CursedParticles.Factory::new);
+            manager.register(RUNE_CURSED_PARTICLES.get(), RuneCursedParticles.Factory::new);
         }
         if(RUNE_SOUL_PARTICLES.isPresent()){
-            manager.register(RUNE_SOUL_PARTICLES.get(), Rune_SoulParticles.Factory::new);
+            manager.register(RUNE_SOUL_PARTICLES.get(), RuneSoulParticles.Factory::new);
         }
         if(BLOOD_PARTICLES.isPresent()){
-            manager.register(BLOOD_PARTICLES.get(), BloodBK_Particles.Factory::new);
+            manager.register(BLOOD_PARTICLES.get(), BloodBKParticles.Factory::new);
         }
     }
 
@@ -84,44 +80,33 @@ public class ModEventBusEvents {
     public static void registerArmorRenderers(EntityRenderersEvent.AddLayers event){
         event.getSkins().forEach(s -> {
             event.getSkin(s).addLayer(new PlayerLikedLayer(event.getSkin(s)));
+            event.getSkin(s).addLayer(new LivingProtectionLayer(event.getSkin(s)));
         });
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(s->{
-            if(s instanceof LivingEntityRenderer l){
+            if(s instanceof LivingEntityRenderer<?,?> l){
                 l.addLayer(new PlayerLikedLayer(l));
+                l.addLayer(new LivingProtectionLayer(l));
+            }
+            if(s instanceof GeoEntityRenderer<?> l){
+                l.addLayer(new GeckoLivingProtectionLayer(l));
             }
         });
-        GeoArmorRenderer.registerArmorRenderer(IllagiumArmorItem.class, Helmet_Miner_ReinforcedRenderer::new);
-        GeoArmorRenderer.registerArmorRenderer(ArmorGogglesItem.class, Goggles_Miner_ReinforcedRenderer::new);
+        GeoArmorRenderer.registerArmorRenderer(IllagiumArmorItem.class, HelmetMinerReinforcedRenderer::new);
+        GeoArmorRenderer.registerArmorRenderer(ArmorGogglesItem.class, GogglesMinerReinforcedRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorEvokerRobeItem.class, EvokerPlayerArmorRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorIllusionerRobeItem.class, IllusionerPlayerArmorRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorPillagerVestItem.class, PillagerPlayerArmorRenderer::new);
         GeoArmorRenderer.registerArmorRenderer(ArmorVindicatorJacketItem.class, VindicatorPlayerArmorRenderer::new);
     }
-    
+
     @SubscribeEvent
-    public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>>
-                                                           event) {
-        event.getRegistry().registerAll(
-                new RuneBoneFragmentLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_bone_fragment_loot")),
-                new RuneFleshFragmentLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_flesh_fragment_loot")),
-                new RuneUndyingFragmentLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"rune_undying_fragment_loot")),
-                new IllusionerRobeLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"illusioner_robe_loot")),
-                new EvokerRobeLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"evoker_robe_loot")),
-                new PillagerVestLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_vest_loot")),
-                new PillagerPantsLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_pants_loot")),
-                new PillagerBootsLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"pillager_boots_loot")),
-                new VindicatorJacketLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_jacket_loot")),
-                new VindicatorPantsLootDrop.Serializer().setRegistryName
-                        (new ResourceLocation(IllagerRevolutionMod.MOD_ID,"vindicator_pants_loot"))
-        );
+    public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ARROWBEAST.get(), ArrowBeastRender::new);
+    }
+
+    @SubscribeEvent
+    public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(DRUM, DrumModel::createBodyLayer);
+        event.registerLayerDefinition(ORB, SoulBombModel::createBodyLayer);
     }
 }

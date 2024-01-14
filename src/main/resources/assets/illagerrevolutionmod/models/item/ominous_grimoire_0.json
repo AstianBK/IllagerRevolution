@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate-perspective",
+  "base": {
+    "parent": "illagerrevolutionmod:item/ominous_grimoire_3d"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "illagerrevolutionmod:item/ominous_grimoire_0_2d"
+    },
+    "ground": {
+      "parent": "illagerrevolutionmod:item/ominous_grimoire_0_2d"
+    },
+    "fixed": {
+      "parent": "illagerrevolutionmod:item/ominous_grimoire_0_2d"
+    }
+  }
+}

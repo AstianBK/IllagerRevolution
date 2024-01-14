@@ -1,33 +1,30 @@
 package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.FallenKnightModel;
-import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.system.CallbackI;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 @OnlyIn(Dist.CLIENT)
-public class LinkedLayer extends GeoLayerRenderer<FallenKnight> {
+public class LinkedLayer extends GeoLayerRenderer<FallenKnightEntity> {
     private final ResourceLocation LINKED_ARMOR=new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    private final FallenKnightModel<FallenKnight> model;
+    private final FallenKnightModel<FallenKnightEntity> model;
     private float tick;
 
-    public LinkedLayer(IGeoRenderer<FallenKnight> entityRendererIn,FallenKnightModel<FallenKnight> model) {
+    public LinkedLayer(IGeoRenderer<FallenKnightEntity> entityRendererIn, FallenKnightModel<FallenKnightEntity> model) {
         super(entityRendererIn);
         this.model=model;
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, FallenKnight entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, FallenKnightEntity entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(entityLivingBaseIn.getOwner()!=null){
             if(entityLivingBaseIn.getOwner().getMainHandItem().is(ModItems.ILLAGIUM_ALT_RUNED_BLADE.get())){
                 if(entityLivingBaseIn.itIsLinked() && entityLivingBaseIn.isArmed()){
@@ -36,9 +33,6 @@ public class LinkedLayer extends GeoLayerRenderer<FallenKnight> {
                     float f2=!entityLivingBaseIn.getDamageLink() ? 0.4f : 0.0f;
 
                     tick=(float) entityLivingBaseIn.tickCount+partialTicks;
-                    model.getModelLocation(entityLivingBaseIn);
-                    model.getAnimationFileLocation(entityLivingBaseIn);
-                    model.getTextureLocation(entityLivingBaseIn);
                     renderCopyModel(this.model,LINKED_ARMOR,matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,f,f1,f2);
                 }
             }

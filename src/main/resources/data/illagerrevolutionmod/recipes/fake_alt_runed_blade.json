@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "illagerrevolutionmod:fake_alt_runed_blade"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:illagium_alt_runed_blade",
+    "count": 1
+  }
+}

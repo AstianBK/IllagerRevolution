@@ -28,7 +28,6 @@ public class PacketSyncSoulBkToClient {
         NetworkEvent.Context ctx = supplier.get();
         ctx.enqueueWork(() -> {
             Minecraft.getInstance().player.getAttribute(SoulTick.SOUL).setBaseValue(playerSoul);
-
             ClientSoulData.set(playerSoul);
         });
         return true;

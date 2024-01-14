@@ -1,15 +1,12 @@
 package net.BKTeam.illagerrevolutionmod.screen;
 
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
-import net.BKTeam.illagerrevolutionmod.block.entity.custom.RuneTableEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.RunedSword;
 import net.BKTeam.illagerrevolutionmod.item.custom.SwordRuneBladeItem;
 import net.BKTeam.illagerrevolutionmod.item.custom.VariantRuneBladeItem;
 import net.BKTeam.illagerrevolutionmod.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,9 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class RuneTableMenu extends AbstractContainerMenu {

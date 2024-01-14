@@ -2,21 +2,12 @@ package net.BKTeam.illagerrevolutionmod.entity.custom;
 
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.entity.goals.FollowOwnerGoalReanimate;
-import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Attacking;
-import net.BKTeam.illagerrevolutionmod.entity.goals.Owner_Defend;
+import net.BKTeam.illagerrevolutionmod.entity.goals.OwnerAttacking;
+import net.BKTeam.illagerrevolutionmod.entity.goals.OwnerDefend;
 import net.BKTeam.illagerrevolutionmod.entity.goals.SpawnReanimatedGoal;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Entity;
-import net.BKTeam.illagerrevolutionmod.entity.projectile.Soul_Projectile;
-import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketSpawnedZombified;
-import net.BKTeam.illagerrevolutionmod.procedures.Util;
-import net.BKTeam.illagerrevolutionmod.setup.Messages;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -42,7 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.BKTeam.illagerrevolutionmod.procedures.Event_Death;
+import net.BKTeam.illagerrevolutionmod.EventDeath;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -91,7 +82,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.FOLLOW_RANGE, 35.D)
-                .add(Attributes.MOVEMENT_SPEED, 0.22f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.21f).build();
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -137,6 +128,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         this.entityData.set(ATTACKING, attacking);
         this.attackTimer = isAttacking() ? 10 : 0;
     }
+
 
     public String getnameSoul() {
         return this.getIdSoul();
@@ -210,13 +202,13 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0,new SpawnReanimatedGoal(this));
-        this.targetSelector.addGoal(1,new Owner_Defend(this,false){
+        this.targetSelector.addGoal(1,new OwnerDefend(this,false){
             @Override
             public boolean canUse() {
                 return super.canUse() && !((ZombifiedEntity)this.mob).getIsSpawned();
             }
         });
-        this.targetSelector.addGoal(2,new Owner_Attacking(this){
+        this.targetSelector.addGoal(2,new OwnerAttacking(this){
             @Override
             public boolean canUse() {
                 return super.canUse() && !((ZombifiedEntity)this.mob).getIsSpawned();
@@ -247,7 +239,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
             double d0 = this.getAttackReachSqr(entity);
             if (distance <= d0 && this.goalOwner.attackTimer <= 0 && this.getTicksUntilNextAttack() <= 0) {
                 this.resetAttackCooldown();
-                this.goalOwner.playSound(SoundEvents.ZOMBIE_HURT, 1.0F, 4.0F);
+                this.goalOwner.playSound(SoundEvents.HUSK_HURT, 1.0F, 1.0F);
                 this.goalOwner.doHurtTarget(entity);
                 this.goalOwner.getNavigation().stop();
             }
@@ -285,7 +277,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
                 }
             }
         }
-        if(Event_Death.hasNameSoul(this.getnameSoul())){
+        if(EventDeath.hasNameSoul(this.getnameSoul())){
             this.setHasSoul(true);
         }
         if (this.isAttacking()) {
@@ -296,7 +288,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
         }
         if(this.getIsSpawned()){
             if(!this.level.isClientSide){
-                Messages.sendToAllTracking(new PacketSpawnedZombified(this),this);
+                PacketHandler.sendToAllTracking(new PacketSpawnedZombified(this),this);
             }
             this.animSpawnTimer--;
         }
@@ -330,7 +322,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
 
    
     protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState blockIn) {
-        this.playSound(SoundEvents.ZOMBIE_VILLAGER_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.HUSK_STEP, 0.15F, 1.0F);
     }
 
     protected SoundEvent getAmbientSound() {
@@ -338,7 +330,7 @@ public class ZombifiedEntity extends ReanimatedEntity implements IAnimatable {
     }
 
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return SoundEvents.ZOMBIE_HURT;
+        return SoundEvents.HUSK_HURT;
     }
 
     protected SoundEvent getDeathSound() {

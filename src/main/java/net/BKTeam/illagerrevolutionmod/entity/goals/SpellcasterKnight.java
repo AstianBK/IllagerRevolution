@@ -1,23 +1,26 @@
 package net.BKTeam.illagerrevolutionmod.entity.goals;
 
+import net.BKTeam.illagerrevolutionmod.enchantment.BKMobType;
+import net.BKTeam.illagerrevolutionmod.entity.custom.IllagerBeastEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public abstract class SpellcasterKnight extends AbstractIllager {
+public abstract class SpellcasterKnight extends KnightEntity {
     private static final EntityDataAccessor<Byte> DATA_SPELL_CASTING_ID = SynchedEntityData.defineId(SpellcasterKnight.class, EntityDataSerializers.BYTE);
     protected int spellCastingTickCount;
-    private SpellcasterKnight.IllagerSpell currentSpell = SpellcasterKnight.IllagerSpell.NONE;
+    private IllagerSpell currentSpell = IllagerSpell.NONE;
 
     protected SpellcasterKnight(EntityType<? extends SpellcasterKnight> p_33724_, Level p_33725_) {
         super(p_33724_, p_33725_);
@@ -37,11 +40,11 @@ public abstract class SpellcasterKnight extends AbstractIllager {
         pCompound.putInt("SpellTicks", this.spellCastingTickCount);
     }
 
-    public AbstractIllager.IllagerArmPose getArmPose() {
+    public IllagerArmPose getArmPose() {
         if (this.isCastingSpell()) {
-            return AbstractIllager.IllagerArmPose.SPELLCASTING;
+            return IllagerArmPose.SPELLCASTING;
         } else {
-            return this.isCelebrating() ? AbstractIllager.IllagerArmPose.CELEBRATING : AbstractIllager.IllagerArmPose.CROSSED;
+            return this.isCelebrating() ? IllagerArmPose.CELEBRATING : IllagerArmPose.CROSSED;
         }
     }
 
@@ -53,13 +56,18 @@ public abstract class SpellcasterKnight extends AbstractIllager {
         }
     }
 
-    public void setIsCastingSpell(SpellcasterKnight.IllagerSpell pSpellType) {
+    @Override
+    public boolean canBeLeader() {
+        return false;
+    }
+
+    public void setIsCastingSpell(IllagerSpell pSpellType) {
         this.currentSpell = pSpellType;
         this.entityData.set(DATA_SPELL_CASTING_ID, (byte)pSpellType.id);
     }
 
-    protected SpellcasterKnight.IllagerSpell getCurrentSpell() {
-        return !this.level.isClientSide ? this.currentSpell : SpellcasterKnight.IllagerSpell.byId(this.entityData.get(DATA_SPELL_CASTING_ID));
+    protected IllagerSpell getCurrentSpell() {
+        return !this.level.isClientSide ? this.currentSpell : IllagerSpell.byId(this.entityData.get(DATA_SPELL_CASTING_ID));
     }
 
     protected void customServerAiStep() {
@@ -95,8 +103,8 @@ public abstract class SpellcasterKnight extends AbstractIllager {
             this.spellColor = new double[]{p_33755_, p_33756_, p_33757_};
         }
 
-        public static SpellcasterKnight.IllagerSpell byId(int pId) {
-            for(SpellcasterKnight.IllagerSpell spellcasterillager$illagerspell : values()) {
+        public static IllagerSpell byId(int pId) {
+            for(IllagerSpell spellcasterillager$illagerspell : values()) {
                 if (pId == spellcasterillager$illagerspell.id) {
                     return spellcasterillager$illagerspell;
                 }
@@ -108,7 +116,7 @@ public abstract class SpellcasterKnight extends AbstractIllager {
 
     protected class SpellcasterCastingSpellGoal extends Goal {
         public SpellcasterCastingSpellGoal() {
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
 
 
@@ -123,7 +131,7 @@ public abstract class SpellcasterKnight extends AbstractIllager {
 
         public void stop() {
             super.stop();
-            SpellcasterKnight.this.setIsCastingSpell(SpellcasterKnight.IllagerSpell.NONE);
+            SpellcasterKnight.this.setIsCastingSpell(IllagerSpell.NONE);
         }
 
         public void tick() {
@@ -190,7 +198,7 @@ public abstract class SpellcasterKnight extends AbstractIllager {
         @Nullable
         protected abstract SoundEvent getSpellPrepareSound();
 
-        protected abstract SpellcasterKnight.IllagerSpell getSpell();
+        protected abstract IllagerSpell getSpell();
     }
 }
 

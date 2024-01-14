@@ -5,7 +5,8 @@ import com.google.common.collect.Multimap;
 import net.BKTeam.illagerrevolutionmod.api.INecromancerEntity;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
-import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
+import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,6 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -32,6 +35,8 @@ import java.util.UUID;
 
 public class VariantRuneBladeItem extends RunedSword{
     private double defense;
+
+    private double knockbackres;
     private final float attackDamage;
     private final float attackSpeed;
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
@@ -39,6 +44,7 @@ public class VariantRuneBladeItem extends RunedSword{
     public VariantRuneBladeItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
         this.defense=0;
+        this.knockbackres=0;
         this.attackDamage=pAttackDamageModifier+pTier.getAttackDamageBonus();
         this.attackSpeed=pAttackSpeedModifier;
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -49,21 +55,19 @@ public class VariantRuneBladeItem extends RunedSword{
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         super.inventoryTick(itemStack,level,entity,p_41407_,p_41408_);
         CompoundTag nbt = null;
-        if(entity instanceof Player){
-            this.defense=(double)this.souls*1.5d;
-
+        if(entity instanceof Player player){
+            this.defense=(double)this.souls*2.5d;
+            this.knockbackres=(double)this.souls*0.025d;
+            int cc1 = this.isFrostRune(player,itemStack) ? 7 : 0;
             if (this.souls <= 6) {
                 nbt = itemStack.getOrCreateTag();
             }
             if(nbt!=null){
-                nbt.putInt("CustomModelData", this.souls);
+                nbt.putInt("CustomModelData", this.souls+cc1);
             }
+        } else if (entity instanceof BladeKnightEntity) {
+            this.souls=0;
         }
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     @Override
@@ -72,6 +76,7 @@ public class VariantRuneBladeItem extends RunedSword{
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier",this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.attackSpeed , AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ARMOR, new AttributeModifier(ARMOR_RUNE_BLADE_ITEM, "armor modifier", this.defense, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(ARMOR_RUNE_BLADE_ITEM, "knockres modifier", this.knockbackres, AttributeModifier.Operation.ADDITION));
         if(slot == EquipmentSlot.MAINHAND) {
             return builder.build();
         }
@@ -89,11 +94,13 @@ public class VariantRuneBladeItem extends RunedSword{
             if(!flag1 ){
                 if(!pLevel.isClientSide && flag2 && cc>2 ){
                     BlockPos pos=pPlayer.getOnPos();
-                    BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextDouble(-1.0d,1.0d),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextDouble(-1.0d,1.0d));
-                    FallenKnight fallenKnight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
+                    BlockPos pos1=new BlockPos(pos.getX()+pLevel.getRandom().nextInt(-1,1),pos.getY()+2.0d,pos.getZ()+pLevel.getRandom().nextInt(-1,1));
+                    FallenKnightEntity fallenKnight=new FallenKnightEntity(ModEntityTypes.FALLEN_KNIGHT.get(),pLevel);
+                    pPlayer.level.playSound(null,pPlayer.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.AMBIENT,25.0f,1.0f);
                     fallenKnight.setIdOwner(pPlayer.getUUID());
+                    fallenKnight.setIsFrozen(this.isFrostRune(pPlayer,itemStack));
                     fallenKnight.finalizeSpawn((ServerLevelAccessor) pLevel,pLevel.getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED,null,null);
-                    fallenKnight.setDispawnTimer(1200,pPlayer,false);
+                    fallenKnight.setDispawnTimer(2500,pPlayer,false);
                     fallenKnight.moveTo(pos1,0.0f,0.0f);
                     pLevel.addFreshEntity(fallenKnight);
                     fallenKnight.addEntityOfList();
@@ -104,7 +111,7 @@ public class VariantRuneBladeItem extends RunedSword{
                 }
             }else {
                 if (!pLevel.isClientSide && flag2) {
-                    List<FallenKnight> knights=((INecromancerEntity)pPlayer).getBondedMinions();
+                    List<FallenKnightEntity> knights=((INecromancerEntity)pPlayer).getBondedMinions();
                     boolean flag= Util.checkCanLink(knights);
                     if(!knights.isEmpty()) {
                         knights.forEach(knight ->{

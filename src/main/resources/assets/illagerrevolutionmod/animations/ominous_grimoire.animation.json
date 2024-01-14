@@ -1,0 +1,79 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.grimoire.use_spell": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"flip_right_rotation": {
+					"rotation": {
+						"vector": [0, 7.5, 0]
+					}
+				},
+				"flip_left_rotation": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -7.5, 0]
+						},
+						"0.75": {
+							"vector": [0, 70, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.grimoire.idle": {
+			"loop": true,
+			"bones": {
+				"main": {
+					"rotation": {
+						"vector": [0, 0, 2.5]
+					}
+				},
+				"flip_left_rotation": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"cover_right_rotation": {
+					"rotation": {
+						"vector": [0, 0, -2.5]
+					},
+					"position": {
+						"vector": [-0.25, 0, 0]
+					}
+				},
+				"spine_rotation": {
+					"rotation": {
+						"vector": [-2.5, -32.5, 0]
+					},
+					"position": {
+						"vector": [0, 0, -0.5]
+					}
+				},
+				"cover_left": {
+					"rotation": {
+						"vector": [0, -67.5, 0]
+					},
+					"position": {
+						"vector": [0.25, 0, -1.5]
+					}
+				},
+				"cover_left_rotation": {
+					"rotation": {
+						"vector": [0, 0, 2.5]
+					},
+					"position": {
+						"vector": [0.25, 0, 0]
+					}
+				},
+				"flip_right_rotation": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

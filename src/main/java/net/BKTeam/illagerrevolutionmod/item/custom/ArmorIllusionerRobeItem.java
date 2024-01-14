@@ -9,6 +9,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -22,10 +26,6 @@ import java.util.Map;
 
 public class ArmorIllusionerRobeItem extends GeoArmorItem implements IAnimatable {
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
-    private static final Map<ArmorMaterial, MobEffectInstance> MATERIAL_TO_EFFECT_MAP =
-            (new ImmutableMap.Builder<ArmorMaterial, MobEffectInstance>())
-                    .put(ModArmorMaterials.ILLAGERARMOR, new MobEffectInstance(MobEffects.UNLUCK, 0, 0)).build();
 
     public ArmorIllusionerRobeItem(ModArmorMaterials material, EquipmentSlot slot, Properties settings) {
         super(material, slot, settings);
@@ -46,15 +46,6 @@ public class ArmorIllusionerRobeItem extends GeoArmorItem implements IAnimatable
         return PlayState.CONTINUE;
     }
 
-    @Override
-    public void onArmorTick(ItemStack stack, Level level, Player player) {
-        if(player.getHealth() < player.getMaxHealth()*20/100 ){
-            if(player.hasEffect(MobEffects.INVISIBILITY)){
-                player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,99999999));
-            }
-        }else if (player.hasEffect( MobEffects.INVISIBILITY)){
-            player.removeEffect(MobEffects.INVISIBILITY);
-        }
-        super.onArmorTick(stack, level, player);
-    }
 }
+
+

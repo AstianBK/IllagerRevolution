@@ -1,0 +1,122 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.grimoire",
+				"texture_width": 64,
+				"texture_height": 32,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "main",
+					"pivot": [0, 2, 4],
+					"rotation": [-67.5, 0, 0]
+				},
+				{
+					"name": "flipping_page_right",
+					"parent": "main",
+					"pivot": [0, 2.53912, 2.19203]
+				},
+				{
+					"name": "flip_right_rotation",
+					"parent": "flipping_page_right",
+					"pivot": [-0.25, 2.53912, 2.71703],
+					"rotation": [-180, -55.5, 0],
+					"cubes": [
+						{"origin": [-5.25, -1.46088, 2.71703], "size": [5, 8, 0], "uv": [24, 19]}
+					]
+				},
+				{
+					"name": "flipping_page_left",
+					"parent": "main",
+					"pivot": [-5, 2.53912, 2.24203]
+				},
+				{
+					"name": "flip_left_rotation",
+					"parent": "flipping_page_left",
+					"pivot": [-0.25, 2.53912, 2.71703],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [-0.25, -1.46088, 2.71703], "size": [5, 8, 0], "pivot": [-0.25, 2.53912, 2.71703], "rotation": [0, 55, 0], "uv": [24, 10]}
+					]
+				},
+				{
+					"name": "cover_right",
+					"parent": "main",
+					"pivot": [4, 2.53912, -1.68297],
+					"rotation": [0, 56, 0]
+				},
+				{
+					"name": "cover_right_rotation",
+					"parent": "cover_right",
+					"pivot": [1, 2.53912, -1.68297],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [-2, -2.46088, -1.68297], "size": [6, 10, 0], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "pages_right",
+					"parent": "cover_right",
+					"pivot": [-3, 2.53912, -1.80797]
+				},
+				{
+					"name": "page_right_rotation",
+					"parent": "pages_right",
+					"pivot": [-0.5, 2.53912, -2.28297],
+					"rotation": [0, 180, -180],
+					"cubes": [
+						{"origin": [-2, -1.46088, -2.78297], "size": [5, 8, 1], "uv": [0, 10]}
+					]
+				},
+				{
+					"name": "book_spine",
+					"parent": "main",
+					"pivot": [0, 2.53912, 4.31703]
+				},
+				{
+					"name": "spine_rotation",
+					"parent": "book_spine",
+					"pivot": [0, -2.46088, 3.31703],
+					"rotation": [180, 0, 0],
+					"cubes": [
+						{"origin": [-1.25, -12.46088, 3.31703], "size": [2, 10, 0], "uv": [12, 0]}
+					]
+				},
+				{
+					"name": "cover_left",
+					"parent": "main",
+					"pivot": [-1.5, 2.53912, 3.31703],
+					"rotation": [0, -56, 0]
+				},
+				{
+					"name": "cover_left_rotation",
+					"parent": "cover_left",
+					"pivot": [-4.32277, 2.53912, 3.00817],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [-7.32277, -2.46088, 3.00817], "size": [6, 10, 0], "uv": [16, 0]}
+					]
+				},
+				{
+					"name": "pages_left",
+					"parent": "cover_left",
+					"pivot": [-5.32277, 2.53912, 1.93317]
+				},
+				{
+					"name": "page_left_rotation",
+					"parent": "pages_left",
+					"pivot": [-2.82277, 2.53912, 2.40817],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [-4.32277, -1.46088, 1.90817], "size": [5, 8, 1], "uv": [12, 10]}
+					]
+				}
+			]
+		}
+	]
+}

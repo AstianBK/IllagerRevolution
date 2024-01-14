@@ -1,10 +1,10 @@
 {
+  "type": "illagerrevolutionmod:add_item",
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:chests/pillager_outpost"
+      "loot_table_id": "minecraft:chests/woodland_mansion"
     }
   ],
-  "addition": "illagerrevolutionmod:pillager_leggins_armor",
-  "type": "illagerrevolutionmod:pillager_pants_loot"
+  "addition": "illagerrevolutionmod:pillager_leggins_armor"
 }

@@ -2,13 +2,12 @@ package net.BKTeam.illagerrevolutionmod.procedures;
 
 import net.BKTeam.illagerrevolutionmod.ModConstants;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
-import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnight;
+import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
@@ -18,16 +17,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.common.Mod;
 
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity;
-import net.BKTeam.illagerrevolutionmod.effect.init_effect;
-import net.BKTeam.illagerrevolutionmod.entity.custom.Blade_KnightEntity;
+import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
+import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ public class Util {
             return entity;
         }
         if(entity instanceof  AbstractIllager){
-            if(entity instanceof Blade_KnightEntity){
+            if(entity instanceof BladeKnightEntity){
                 return null;
             }else{
                 return entity;
@@ -98,7 +95,7 @@ public class Util {
                         return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
                     }
                 }.compareDistOf(x, y, z)).findFirst().orElse(null);
-        if (maquina!=null &&!((LivingEntity)maquina).hasEffect(init_effect.DEATH_MARK.get())){
+        if (maquina!=null &&!((LivingEntity)maquina).hasEffect(InitEffect.DEATH_MARK.get())){
             return maquina;
         }
         return null;
@@ -130,7 +127,7 @@ public class Util {
         return entity;
 
     }
-    public static boolean checkCanLink(List<FallenKnight> knights){
+    public static boolean checkCanLink(List<FallenKnightEntity> knights){
         int i=0;
         int j=0;
         while (i<knights.size()){
@@ -141,7 +138,7 @@ public class Util {
         }
         return j==knights.size() ;
     }
-    public static boolean checkIsOneLinked(List<FallenKnight> knights){
+    public static boolean checkIsOneLinked(List<FallenKnightEntity> knights){
         int i=0;
         int j=0;
         if(knights!=null){
@@ -154,7 +151,7 @@ public class Util {
         }
         return j>0 ;
     }
-    public static int getNumberOfLinked(List<FallenKnight> knights){
+    public static int getNumberOfLinked(List<FallenKnightEntity> knights){
         int i=0;
         int j=0;
         while (i<knights.size()){
@@ -180,13 +177,13 @@ public class Util {
     public static void spawFallenKnightBack(Level level, LivingEntity livingEntity,int number){
         List<BlockPos> pos=blockPosList(livingEntity,number);
         for(int i=0;i<number;i++){
-            FallenKnight knight=new FallenKnight(ModEntityTypes.FALLEN_KNIGHT.get(),level);
+            FallenKnightEntity knight=new FallenKnightEntity(ModEntityTypes.FALLEN_KNIGHT.get(),level);
             knight.spawnAnim();
-            knight.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(level.random.nextFloat() < 0.5 ? Items.STONE_SWORD : Items.STONE_AXE));
+            knight.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(level.random.nextFloat() < 0.5 ? ModItems.ILLAGIUM_AXE.get() : ModItems.ILLAGIUM_SWORD.get()));
             knight.setIdNecromancer(livingEntity.getUUID());
             knight.moveTo(pos.get(i),0.0f,0.0f);
             level.addFreshEntity(knight);
-            ((Blade_KnightEntity)livingEntity).getKnights().add(knight);
+            ((BladeKnightEntity)livingEntity).getKnights().add(knight);
         }
     }
     public static void spawZombifiedBack(Level level, LivingEntity livingEntity,int number){
@@ -195,7 +192,7 @@ public class Util {
             ZombifiedEntity zombie=new ZombifiedEntity(ModEntityTypes.ZOMBIFIED.get(),level);
             zombie.setIdSoul(ModConstants.LIST_NAME_ZOMBIFIED.get(zombie.level.random.nextInt(0,4)));
             zombie.spawnAnim();
-            zombie.addEffect(new MobEffectInstance(init_effect.DEATH_MARK.get(),999999,0));
+            zombie.addEffect(new MobEffectInstance(InitEffect.DEATH_MARK.get(),999999,0));
             zombie.moveTo(pos.get(i),0.0f,0.0f);
             level.addFreshEntity(zombie);
         }

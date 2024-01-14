@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "item": "illagerrevolutionmod:scrounger_feather"
+    },
+    "title": "Alchemy Bird",
+    "description": "You tamed a Scrounger, better start brewing some potions!",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "illagerrevolutionmod:illagerrevolutionmod",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "illagerrevolutionmod:scrounger"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  }
+}

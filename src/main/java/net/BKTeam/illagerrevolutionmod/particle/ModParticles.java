@@ -1,5 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.particle;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,6 +23,9 @@ public class ModParticles {
 
     public static final RegistryObject<SimpleParticleType> SMOKE_BK_PARTICLES =
             PARTICLE_TYPES.register("smokebk", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<SimpleParticleType> HEART_BK_PARTICLES =
+            PARTICLE_TYPES.register("heartbk", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> BLOOD_PARTICLES =
             PARTICLE_TYPES.register("bloodbk", () -> new SimpleParticleType(false));
 
@@ -28,6 +34,9 @@ public class ModParticles {
 
     public static final RegistryObject<SimpleParticleType> RUNE_CURSED_PARTICLES =
             PARTICLE_TYPES.register("rune_cursed", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<SimpleParticleType> SOUL_FLAME =
+            PARTICLE_TYPES.register("soulflame", () -> new SimpleParticleType(true));
 
     public static void register(IEventBus eventBus) {
         PARTICLE_TYPES.register(eventBus);
