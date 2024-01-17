@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g g",
+    "CSC",
+    "g g"
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:chain"
+    },
+    "S": {
+      "item": "minecraft:saddle"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:wild_ravager_armor_gold",
+    "count": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "FL ",
+    " B "
+  ],
+  "key": {
+    "#": {
+      "item": "illagerrevolutionmod:raker_claw"
+    },
+    "F": {
+      "item": "illagerrevolutionmod:scrounger_feather"
+    },
+    "L": {
+      "item": "illagerrevolutionmod:mauler_pelt"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:beast_staff",
+    "count": 1
+  }
+}

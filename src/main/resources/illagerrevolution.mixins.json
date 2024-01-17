@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.BKTeam.illagerrevolutionmod.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "refmap": "illagerrevolution.refmap.json",
+  "mixins": [
+    "ServerPlayerMixins"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "item/handheld",
+
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/junk_axe_2_gui"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  #",
+    "ii ",
+    "I  "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:iron_helmet"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "I": {
+      "item": "minecraft:iron_boots"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:scrapper_armor_iron",
+    "count": 1
+  }
+}

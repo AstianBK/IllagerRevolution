@@ -1,0 +1,6 @@
+{
+  "parent":"item/handheld",
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/illagium_helberd"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#Ei",
+    "EEi",
+    "ii "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:illagium",
+    "count": 1
+  }
+}

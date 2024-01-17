@@ -1,0 +1,260 @@
+{
+  "tamer_whistle": {
+    "subtitle": "sounds.illagerrevolutionmod.tamer_whistle",
+    "sounds": [
+      "illagerrevolutionmod:tamer_whistle"
+    ]
+  },
+
+  "raker_hiss": {
+    "subtitle": "sounds.illagerrevolutionmod.raker_hiss",
+    "sounds": [
+      "illagerrevolutionmod:raker_hiss"
+    ]
+  },
+
+  "raker_meow": {
+    "subtitle": "sounds.illagerrevolutionmod.raker_meow",
+    "sounds": [
+      "illagerrevolutionmod:raker_meow"
+    ]
+  },
+
+  "mauler_hurt": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_hurt",
+    "sounds": [
+      "illagerrevolutionmod:mauler_hurt"
+    ]
+  },
+
+  "mauler_rage": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_rage",
+    "sounds": [
+      "illagerrevolutionmod:mauler_rage"
+    ]
+  },
+
+  "mauler_ambient1": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_ambient1",
+    "sounds": [
+      "illagerrevolutionmod:mauler_ambient1"
+    ]
+  },
+
+  "mauler_ambient2": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_ambient2",
+    "sounds": [
+      "illagerrevolutionmod:mauler_ambient2"
+    ]
+  },
+
+  "mauler_stun": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_stun",
+    "sounds": [
+      "illagerrevolutionmod:mauler_stun"
+    ]
+  },
+
+  "mauler_bark": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_bark",
+    "sounds": [
+      "illagerrevolutionmod:mauler_bark"
+    ]
+  },
+
+  "mauler_snarl": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_snarl",
+    "sounds": [
+      "illagerrevolutionmod:mauler_snarl"
+    ]
+  },
+
+  "scrounger_ambient1": {
+    "subtitle": "sounds.illagerrevolutionmod.scrounger_ambient1",
+    "sounds": [
+      "illagerrevolutionmod:scrounger_ambient1"
+    ]
+  },
+
+  "scrounger_ambient2": {
+    "subtitle": "sounds.illagerrevolutionmod.scrounger_ambient2",
+    "sounds": [
+      "illagerrevolutionmod:scrounger_ambient2"
+    ]
+  },
+
+  "scrounger_hurt": {
+    "subtitle": "sounds.illagerrevolutionmod.scrounger_hurt",
+    "sounds": [
+      "illagerrevolutionmod:scrounger_hurt"
+    ]
+  },
+
+  "mauler_bite": {
+    "subtitle": "sounds.illagerrevolutionmod.mauler_bite",
+    "sounds": [
+      "illagerrevolutionmod:mauler_bite"
+    ]
+  },
+
+  "soul_absorb": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_absorb",
+    "sounds": [
+      "illagerrevolutionmod:soul_absorb"
+    ]
+  },
+
+  "soul_limit": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_limit",
+    "sounds": [
+      "illagerrevolutionmod:soul_limit"
+    ]
+  },
+
+  "soul_release": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_release",
+    "sounds": [
+      "illagerrevolutionmod:soul_release"
+    ]
+  },
+  
+"rune_table_use": {
+    "subtitle": "sounds.illagerrevolutionmod.rune_table_use",
+    "sounds": [
+      "illagerrevolutionmod:rune_table_use"
+    ]
+  },
+
+  "drum_sound": {
+    "subtitle": "sounds.illagerrevolutionmod.drum_sound",
+    "sounds": [
+      "illagerrevolutionmod:drum_sound"
+    ]
+  },
+
+  "drum_sound_once": {
+    "subtitle": "sounds.illagerrevolutionmod.drum_sound_once",
+    "sounds": [
+      "illagerrevolutionmod:drum_sound_once"
+    ]
+  },
+
+  "blade_knight_swordhit1": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_knight_swordhit1",
+    "sounds": [
+      "illagerrevolutionmod:blade_knight_swordhit1"
+    ]
+  },
+
+  "blade_knight_swordhit2": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_knight_swordhit2",
+    "sounds": [
+      "illagerrevolutionmod:blade_knight_swordhit2"
+    ]
+  },
+
+  "blade_knight_laugh": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_knight_laugh",
+    "sounds": [
+      "illagerrevolutionmod:blade_knight_laugh"
+    ]
+  },
+
+  "blade_knight_hurt": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_knight_hurt",
+    "sounds": [
+      "illagerrevolutionmod:blade_knight_hurt"
+    ]
+  },
+
+  "blade_knight_blunt": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_knight_blunt",
+    "sounds": [
+      "illagerrevolutionmod:blade_knight_blunt"
+    ]
+  },
+
+  "blade_slash_1": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_1",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_1"
+    ]
+  },
+
+  "blade_slash_2": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_2",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_2"
+    ]
+  },
+
+  "blade_slash_hit1": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_hit1",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_hit1"
+    ]
+  },
+
+  "blade_slash_hit2": {
+    "subtitle": "sounds.illagerrevolutionmod.blade_slash_hit2",
+    "sounds": [
+      "illagerrevolutionmod:blade_slash_hit2"
+    ]
+  },
+
+  "soul_slash": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_slash",
+    "sounds": [
+      "illagerrevolutionmod:soul_slash"
+    ]
+  },
+
+  "soul_sage_fire": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_fire",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_fire"
+    ]
+  },
+
+  "soul_sage_drain": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_drain",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_drain"
+    ]
+  },
+
+  "soul_sage_shield": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_shield",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_shield"
+    ]
+  },
+
+  "soul_sage_missile": {
+    "subtitle": "sounds.illagerrevolutionmod.soul_sage_missile",
+    "sounds": [
+      "illagerrevolutionmod:soul_sage_missile"
+    ]
+  },
+
+  "fallen_knight_revive": {
+    "subtitle": "sounds.illagerrevolutionmod.fallen_knight_revive",
+    "sounds": [
+      "illagerrevolutionmod:fallen_knight_revive"
+    ]
+  },
+
+  "bleeding_proc": {
+    "subtitle": "sounds.illagerrevolutionmod.bleeding_proc",
+    "sounds": [
+      "illagerrevolutionmod:bleeding_proc"
+    ]
+  },
+
+  "death_mark_sound": {
+    "subtitle": "sounds.illagerrevolutionmod.death_mark_sound",
+    "sounds": [
+      "illagerrevolutionmod:death_mark_sound"
+    ]
+  }
+}

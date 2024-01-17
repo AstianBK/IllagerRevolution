@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/item_ominous_grimoire_5"
+  }
+}

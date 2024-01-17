@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "cEc",
+    "OOO"
+  ],
+  "key": {
+    "#": {
+      "item": "illagerrevolutionmod:mauler_pelt"
+    },
+    "c": {
+      "item": "minecraft:copper_ingot"
+    },
+    "E": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "O": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:drum_speed",
+    "count": 1
+  }
+}

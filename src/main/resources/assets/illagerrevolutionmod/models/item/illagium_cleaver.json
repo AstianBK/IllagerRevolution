@@ -1,0 +1,20 @@
+{
+  "parent": "item/handheld",
+
+  "loader": "forge:separate-perspective",
+
+  "textures": {
+    "layer0": "illagerrevolutionmod:item/illagium_cleaver_gui"
+  },
+  "base": {
+    "parent": "illagerrevolutionmod:item/illagium_cleaver_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "illagerrevolutionmod:item/illagium_cleaver_gui"
+    },
+    "fixed": {
+      "parent": "illagerrevolutionmod:item/illagium_cleaver_gui"
+    }
+  }
+}

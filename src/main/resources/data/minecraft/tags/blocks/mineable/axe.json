@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "illagerrevolutionmod:drum_heal",
+    "illagerrevolutionmod:drum_damage",
+    "illagerrevolutionmod:drum_speed"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "iCi",
+    "DDD"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:red_carpet"
+    },
+    "i": {
+      "item": "illagerrevolutionmod:illagium"
+    },
+    "C": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "D": {
+      "item": "minecraft:deepslate_bricks"
+    }
+  },
+  "result": {
+    "item": "illagerrevolutionmod:rune_table_block",
+    "count": 1
+  }
+}
