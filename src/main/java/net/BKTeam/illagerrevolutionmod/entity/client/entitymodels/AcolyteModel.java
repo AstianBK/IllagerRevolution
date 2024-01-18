@@ -37,7 +37,8 @@ public class AcolyteModel<I extends AbstractIllager> extends GeoModel<AcolyteEnt
         return LOCATION_BY_VARIANT.get(object.getProfession());
     }
 
-    public void setCustomAnimations(AcolyteEntity animatable, int instanceId, AnimationState animationEvent) {
+    @Override
+    public void setCustomAnimations(AcolyteEntity animatable, long instanceId, AnimationState<AcolyteEntity> animationEvent) {
         super.setCustomAnimations(animatable, instanceId, animationEvent);
         EntityModelData extraData = (EntityModelData) animationEvent.getData(DataTickets.ENTITY_MODEL_DATA);
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
@@ -108,7 +109,6 @@ public class AcolyteModel<I extends AbstractIllager> extends GeoModel<AcolyteEnt
             leftArm.setRotY(-2.3561945F);
             leftArm.setRotZ(0.0F);
         }
-
     }
 
     @Override

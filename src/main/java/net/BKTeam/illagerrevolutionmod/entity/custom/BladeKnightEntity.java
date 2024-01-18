@@ -304,6 +304,8 @@ public class BladeKnightEntity extends SpellcasterKnight implements GeoEntity, I
     public void die(DamageSource pCause) {
         this.knights.forEach(knight->{
             knight.setIdNecromancer(null);
+            knight.removeAllEffects();
+            knight.setInvulnerable(false);
             knight.hurt(this.damageSources().fall(),knight.getMaxHealth());
         });
         super.die(pCause);

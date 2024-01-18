@@ -4,9 +4,6 @@ import com.mojang.logging.LogUtils;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
-import net.BKTeam.illagerrevolutionmod.data.server.tags.BKEntityTypeTagsProvider;
-import net.BKTeam.illagerrevolutionmod.data.server.tags.BkBlockTagsProvider;
-import net.BKTeam.illagerrevolutionmod.data.server.tags.BkItemTagsProvider;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.data.DeathEntityEvent;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
@@ -14,6 +11,7 @@ import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.*;
 import net.BKTeam.illagerrevolutionmod.event.loot.LootModifiers;
+import net.BKTeam.illagerrevolutionmod.item.ModCreativeModeTab;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.orderoftheknight.TheKnightOrders;
@@ -21,7 +19,6 @@ import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.screen.ModMenuTypes;
 import net.BKTeam.illagerrevolutionmod.screen.RuneTableScreen;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.NoopRenderer;
@@ -41,14 +38,12 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
-import software.bernie.example.GeckoLibMod;
 import software.bernie.geckolib.GeckoLib;
 
 import javax.annotation.Nullable;
@@ -86,8 +81,7 @@ public class IllagerRevolutionMod {
         ModMenuTypes.register(eventBus);
         LootModifiers.register(eventBus);
 
-
-        
+        ModCreativeModeTab.TABS.register(eventBus);
         InitEffect.REGISTRY.register(eventBus);
         InitEnchantment.REGISTRY.register(eventBus);
         eventBus.addListener(this::clientSetup);

@@ -2,6 +2,7 @@ package net.BKTeam.illagerrevolutionmod.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -31,18 +32,31 @@ public class DrumModel extends EntityModel<WildRavagerEntity> {
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
-    public void renderOnShoulder(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
-        root.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
-    }
-
-    @Override
-    public void setupAnim(WildRavagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-
-    }
-
     @Override
     public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+        matrixStack.pushPose();
+        translateAndRotate(matrixStack);
         root.render(matrixStack, buffer, packedLight, packedOverlay);
+        matrixStack.popPose();
+    }
+    public void translateAndRotate(PoseStack pPoseStack) {
+        pPoseStack.translate((double)(root.x / 16.0F), (double)(root.y / 16.0F), (double)(root.z / 16.0F));
+        if (root.zRot != 0.0F) {
+            pPoseStack.mulPose(Axis.ZP.rotation(root.zRot));
+        }
+
+        if (root.yRot != 0.0F) {
+            pPoseStack.mulPose(Axis.YP.rotation(root.yRot));
+        }
+
+        if (root.xRot != 0.0F) {
+            pPoseStack.mulPose(Axis.XP.rotation(root.xRot));
+        }
+
+    }
+    @Override
+    public void setupAnim(WildRavagerEntity p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {
+
     }
 }
 

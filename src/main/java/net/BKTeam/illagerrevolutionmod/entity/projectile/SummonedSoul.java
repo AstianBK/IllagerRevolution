@@ -13,6 +13,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -65,7 +66,7 @@ public class SummonedSoul extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return null;
+        return Items.AIR;
     }
 
     public ItemStack getItem() {

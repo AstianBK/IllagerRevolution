@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulSlash;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -32,14 +33,10 @@ public class SlashRender<T extends SoulSlash> extends EntityRenderer<T> {
         pMatrixStack.pushPose();
         pMatrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot()) - 180.0F));
         pMatrixStack.mulPose(Axis.XP.rotationDegrees(pEntity.getXRot()-90.0F));
-        this.itemRenderer.renderStatic(pEntity.getItem(), ItemDisplayContext.GROUND,pPackedLight, OverlayTexture.NO_OVERLAY,pMatrixStack,pBuffer,pEntity.level(),pEntity.getId());
+        this.itemRenderer.renderStatic(pEntity.getItem(), ItemDisplayContext.GROUND,pPackedLight, OverlayTexture.NO_OVERLAY,pMatrixStack,pBuffer, Minecraft.getInstance().level,pEntity.getId());
 
         pMatrixStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
-    }
-
-    public void vertex(Matrix4f pMatrix, Matrix3f pNormals, VertexConsumer pVertexBuilder, int pOffsetX, int pOffsetY, int pOffsetZ, float pTextureX, float pTextureY, int pNormalX, int p_113835_, int p_113836_, int pPackedLight) {
-        pVertexBuilder.vertex(pMatrix, (float)pOffsetX, (float)pOffsetY, (float)pOffsetZ).color(255, 255, 255, 255).uv(pTextureX, pTextureY).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pPackedLight).normal(pNormals, (float)pNormalX, (float)p_113836_, (float)p_113835_).endVertex();
     }
 
     @Override

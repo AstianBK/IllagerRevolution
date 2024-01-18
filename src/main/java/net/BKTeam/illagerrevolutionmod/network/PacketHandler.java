@@ -13,16 +13,13 @@ public class PacketHandler {
     private static final String PROTOCOL_VERSION = "1.0";
 
     public static SimpleChannel MOD_CHANNEL=NetworkRegistry.ChannelBuilder.named(
-                    new ResourceLocation(IllagerRevolutionMod.MOD_ID, "messages"))
+                    new ResourceLocation(IllagerRevolutionMod.MOD_ID, "packets"))
             .networkProtocolVersion(()-> PROTOCOL_VERSION)
             .clientAcceptedVersions(s -> true)
             .serverAcceptedVersions(s -> true)
             .simpleChannel();;
 
     public static void registerMessages() {
-
-
-
         int index = 0;
 
         MOD_CHANNEL.registerMessage(index++,PacketSyncSoulBkToClient.class,

@@ -14,20 +14,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
+import software.bernie.geckolib.util.RenderUtils;
 
 @OnlyIn(Dist.CLIENT)
-public class WildRavagerDrumLayer extends GeoRenderLayer<WildRavagerEntity> {
+public class WildRavagerDrumLayer<T extends WildRavagerEntity> extends GeoRenderLayer<T> {
     private DrumModel model = null;
 
-    public WildRavagerDrumLayer(GeoRenderer<WildRavagerEntity> entityRendererIn) {
+    public WildRavagerDrumLayer(GeoRenderer<T> entityRendererIn) {
         super(entityRendererIn);
     }
 
 
-    private void renderDrum(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, WildRavagerEntity entitylivingbaseIn, boolean leftShoulderIn) {
+    private void renderDrum(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, boolean leftShoulderIn, float partialTick) {
         if(entitylivingbaseIn.hasDrum()){
             if (model == null) {
                 model = new DrumModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEventBusEvents.DRUM));
@@ -37,23 +40,22 @@ public class WildRavagerDrumLayer extends GeoRenderLayer<WildRavagerEntity> {
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(0.7f,0.7f,0.7f);
                 float f4 = 0.0F;
-                if(entitylivingbaseIn.prepareTimer>0){
-                    float f5=(20.0F-(float) entitylivingbaseIn.prepareTimer)/20.0F;
-                    f4 = Mth.lerp(f5,0.0F+(0.5F*f5),0.5F-(0.5F*f5));
+                if(entitylivingbaseIn.prepareTimer>0) {
+                    float f5 = (20.0F - (float) entitylivingbaseIn.prepareTimer) / 20.0F;
+                    f4 = Mth.lerp(f5, 0.0F + (0.5F * f5), 0.5F - (0.5F * f5));
                 }
-                matrixStackIn.translate(leftShoulderIn ? -0.9f : 1.2f , entitylivingbaseIn.isSitting() ? 2.8F : 4.5F+f4 , entitylivingbaseIn.isSitting() ? 0.7D : 0.3D);
+                matrixStackIn.translate(leftShoulderIn ? -0.9f: 1.2f , entitylivingbaseIn.isSitting() ? 2.8F : 4.5F+f4 , entitylivingbaseIn.isSitting() ? 0.7D : 0.3D);
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(model.renderType(drumBlock.getLocation()));
-                model.renderOnShoulder(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY);
+                model.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY,1.0f,1.0f,1.0f,1.0f);
                 matrixStackIn.popPose();
             }
-
         }
     }
 
     @Override
-    public void render(PoseStack poseStack, WildRavagerEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        this.renderDrum(poseStack, bufferSource, packedLight, animatable, true);
-        this.renderDrum(poseStack, bufferSource, packedLight, animatable, false);
+    public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        this.renderDrum(poseStack, bufferSource, packedLight, animatable, true,partialTick);
+        this.renderDrum(poseStack, bufferSource, packedLight, animatable, false,partialTick);
     }
 }
 

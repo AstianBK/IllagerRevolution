@@ -28,36 +28,34 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> RUNE_TABLE_BLOCK = registerBlock("rune_table_block",
             () -> new RuneTableBlock(BlockBehaviour.Properties.of()
-                    .strength(8f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.DEEPSLATE_BRICKS)),
-            ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+                    .strength(8f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.DEEPSLATE_BRICKS))
+            );
 
     public static final RegistryObject<Block> DRUM_SPEED = registerBlock("drum_speed",
             () -> new DrumBlock(BlockBehaviour.Properties.of()
-                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.SPEED_DRUM),
-            ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.SPEED_DRUM)
+            );
 
     public static final RegistryObject<Block> DRUM_DAMAGE = registerBlock("drum_damage",
             () -> new DrumBlock(BlockBehaviour.Properties.of()
-                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.DAMAGE_DRUM),
-            ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.DAMAGE_DRUM)
+            );
 
 
     public static final RegistryObject<Block> DRUM_HEAL = registerBlock("drum_heal",
             () -> new DrumBlock(BlockBehaviour.Properties.of()
-                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.HEAL_DRUM),
-            ModCreativeModeTab.ILLAGERREVOLUTION_TAB);
+                    .strength(3f).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.WOOD), DrumBlock.Drum.HEAL_DRUM));
 
 
 
 
-    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab){
+    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
-        registerBlockItem(name, toReturn, tab);
+        registerBlockItem(name, toReturn);
         return toReturn;
     }
 
-    private static <T extends  Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block,
-                                                                            CreativeModeTab tab) {
+    private static <T extends  Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
         return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().stacksTo(1)));
     }
 

@@ -19,17 +19,17 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 @OnlyIn(Dist.CLIENT)
-public class WildRavagerArmorLayer extends GeoRenderLayer<WildRavagerEntity> {
+public class WildRavagerArmorLayer<T extends  WildRavagerEntity> extends GeoRenderLayer<T> {
 
 
     private final ResourceLocation TEXTURE_SADDLE = new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/entity/wild_ravager/armor/wild_ravager_armor_saddle.png");
 
-    public WildRavagerArmorLayer(GeoRenderer<WildRavagerEntity> entityRendererIn, WildRavagerGModel model) {
+    public WildRavagerArmorLayer(GeoRenderer<T> entityRendererIn, WildRavagerGModel<T> model) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, WildRavagerEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         ItemStack itemstack = animatable.getContainer().getItem(0);
         if (itemstack.getItem() instanceof BeastArmorItem armor) {
             renderType=RenderType.entityCutoutNoCull(armor.getArmorTexture(itemstack));

@@ -50,6 +50,7 @@ public abstract class ServerPlayerMixins extends Player implements IOpenBeatsCon
         if(p_9059_.getOwner()!=null){
             ServerPlayer serverPlayer = (ServerPlayer) p_9059_.getOwner();
             this.nextContainerCounter();
+            System.out.print("\n--Entro--\n");
             ClientBeastScreenOpenPacket message = new ClientBeastScreenOpenPacket(this.containerCounter, p_9059_.getId());
             PacketHandler.MOD_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), message);
             this.containerMenu = new BeastInventoryMenu(this.containerCounter, this.getInventory(), p_9060_, p_9059_);

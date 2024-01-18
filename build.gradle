@@ -45,6 +45,7 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
+
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -54,10 +55,18 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            property "mixin.env.remapRefMap", "true"
+
+            arg "-mixin.config=illagerrevolution.mixins.json"
+
         }
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
+            property "mixin.env.remapRefMap", "true"
+
+            arg "-mixin.config=illagerrevolution.mixins.json"
+
             args '--nogui'
         }
 
@@ -94,11 +103,11 @@ tasks.named('processResources', ProcessResources).configure {
             forge_version: forge_version, forge_version_range: forge_version_range,
             loader_version_range: loader_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
+            mod_authors: mod_authors, mod_description: mod_description
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta','*.mixins.json']) {
         expand replaceProperties + [project: project]
     }
 }

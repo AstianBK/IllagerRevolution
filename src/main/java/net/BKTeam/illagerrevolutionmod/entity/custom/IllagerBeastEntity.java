@@ -327,6 +327,7 @@ public class IllagerBeastEntity extends TamableAnimal implements GeoEntity,Conta
     public void openInventory(Player player) {
         IllagerBeastEntity beast = (IllagerBeastEntity) ((Object) this);
         if (!this.level().isClientSide && player instanceof IOpenBeatsContainer) {
+            System.out.print("\n--Entro en El codigo de la entidad--\n");
             ((IOpenBeatsContainer)player).openRakerInventory(beast, this.inventory);
         }
     }

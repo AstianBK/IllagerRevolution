@@ -16,8 +16,7 @@ import software.bernie.geckolib.model.data.EntityModelData;
 
 import java.util.Map;
 
-public class WildRavagerGModel extends GeoModel<WildRavagerEntity> {
-
+public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T> {
     private static final Map<IllagerBeastEntity.Variant, ResourceLocation> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(IllagerBeastEntity.Variant.class), (p_114874_) -> {
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT1, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager1.png"));
         p_114874_.put(IllagerBeastEntity.Variant.VARIANT2, new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/wild_ravager2.png"));
@@ -29,12 +28,12 @@ public class WildRavagerGModel extends GeoModel<WildRavagerEntity> {
     private static final ResourceLocation TEXTURE_UNDEAD = new ResourceLocation(IllagerRevolutionMod.MOD_ID, "textures/entity/wild_ravager/zombie_wild_ravager.png");
 
     @Override
-    public ResourceLocation getModelResource(WildRavagerEntity object) {
+    public ResourceLocation getModelResource(T object) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "geo/wild_ravager.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(WildRavagerEntity object) {
+    public ResourceLocation getTextureResource(T object) {
         if(object.isUndead()){
             return TEXTURE_UNDEAD;
         }else {
@@ -43,12 +42,13 @@ public class WildRavagerGModel extends GeoModel<WildRavagerEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationResource(WildRavagerEntity animatable) {
+    public ResourceLocation getAnimationResource(T animatable) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID, "animations/wild_ravager.animation.json");
     }
 
-    public void setCustomAnimations(WildRavagerEntity pEntity, int instanceId, AnimationState customPredicate) {
-        super.setCustomAnimations(pEntity, instanceId,customPredicate);
+    @Override
+    public void setCustomAnimations(T pEntity, long instanceId, AnimationState<T> customPredicate) {
+        super.setCustomAnimations(pEntity, instanceId, customPredicate);
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
         CoreGeoBone neck = this.getAnimationProcessor().getBone("neck");
         CoreGeoBone mouth = this.getBone("mouth").get();
@@ -109,8 +109,8 @@ public class WildRavagerGModel extends GeoModel<WildRavagerEntity> {
             }
 
             if (head != null && !pEntity.isSitting()) {
-                head.setRotX(extraData.headPitch() * ((float) Math.PI / 180F));
-                head.setRotY(extraData.netHeadYaw() * ((float) Math.PI / 180F));
+                head.setRotX(extraData.headPitch() * Mth.DEG_TO_RAD);
+                head.setRotY(extraData.netHeadYaw() * Mth.DEG_TO_RAD);
             }
 
             float f = 0.4F * customPredicate.getLimbSwingAmount();

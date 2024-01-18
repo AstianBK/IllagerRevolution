@@ -33,8 +33,8 @@ public class ScavengerJunkArmorLayer extends GeoRenderLayer<IllagerScavengerEnti
 
     @Override
     public void render(PoseStack poseStack, IllagerScavengerEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        renderType = RenderType.entityCutoutNoCull(LOCATION_BY_TIER_ARMOR.get(animatable.getArmorTier()));
-        if(animatable.getArmorTier() != IllagerScavengerEntity.ArmorTier.NONE){
+        if(animatable.getArmorTier() != IllagerScavengerEntity.ArmorTier.NONE) {
+            renderType = RenderType.entityCutoutNoCull(LOCATION_BY_TIER_ARMOR.get(animatable.getArmorTier()));
             renderer.reRender(getDefaultBakedModel(animatable),poseStack,
                     bufferSource,animatable,renderType,bufferSource.getBuffer(renderType),
                     partialTick,packedLight, OverlayTexture.NO_OVERLAY,1.0F,1.0F,1.0F,1.0F);
