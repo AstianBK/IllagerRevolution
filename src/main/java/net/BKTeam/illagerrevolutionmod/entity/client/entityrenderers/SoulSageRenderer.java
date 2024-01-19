@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.SoulSageModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.SoulSageEntity;
+import net.BKTeam.illagerrevolutionmod.entity.layers.BKEyesLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -39,6 +40,7 @@ public class SoulSageRenderer extends GeoEntityRenderer<SoulSageEntity> {
 
     public SoulSageRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SoulSageModel<SoulSageEntity>(MODEL_RESLOC,TEXTURE,TEXTURE_LOWLIFE,"soul_sage"));
+        this.addRenderLayer(new BKEyesLayer<>(this));
         this.shadowRadius = 0.5f;
     }
 

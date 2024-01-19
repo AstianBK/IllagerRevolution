@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.BladeKnightModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.BladeKnightEntity;
+import net.BKTeam.illagerrevolutionmod.entity.layers.BKEyesLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +30,7 @@ public class BladeKnightRenderer extends GeoEntityRenderer<BladeKnightEntity> {
 
     public BladeKnightRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BladeKnightModel<BladeKnightEntity>(MODEL_RESLOC,TEXTURE,TEXTURE_LOWLIFE,"blade_knight"));
+        this.addRenderLayer(new BKEyesLayer<>(this));
         this.addRenderLayer(new BlockAndItemGeoLayer<>(this){
             @Nullable
             @Override

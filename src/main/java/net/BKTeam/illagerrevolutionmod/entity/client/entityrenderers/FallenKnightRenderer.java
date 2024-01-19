@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.FallenKnightModel;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
+import net.BKTeam.illagerrevolutionmod.entity.layers.BKEyesLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.LinkedLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -25,6 +26,7 @@ public class FallenKnightRenderer extends GeoEntityRenderer<FallenKnightEntity> 
     public FallenKnightRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new FallenKnightModel<>());
         this.addRenderLayer(new LinkedLayer(this,new FallenKnightModel<>()));
+        this.addRenderLayer(new BKEyesLayer<>(this));
         this.addRenderLayer(new BlockAndItemGeoLayer<>(this){
             @Nullable
             @Override

@@ -57,11 +57,7 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
         CoreGeoBone leftHindLeg = this.getAnimationProcessor().getBone("leg1");
         CoreGeoBone rightFrontLeg = this.getAnimationProcessor().getBone("leg2");
         CoreGeoBone leftFrontLeg = this.getAnimationProcessor().getBone("leg3");
-        neck.setRotX(neck.getInitialSnapshot().getRotX());
-        neck.setRotY(neck.getInitialSnapshot().getRotY());
-        neck.setRotZ(neck.getInitialSnapshot().getRotZ());
         super.setCustomAnimations(pEntity, instanceId, customPredicate);
-
         int i = pEntity.getStunnedTick();
         int j = pEntity.getRoarTick();
         int l = pEntity.getAttackTick();
@@ -74,6 +70,11 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
             body.setScaleX(1.0f);
             body.setScaleY(1.0f);
             body.setScaleZ(1.0f);
+
+            neck.setRotX(neck.getInitialSnapshot().getRotX());
+            neck.setRotY(neck.getInitialSnapshot().getRotY());
+            neck.setRotZ(neck.getInitialSnapshot().getRotZ());
+
             AnimationVanillaG.setPositionBone(leftFrontLeg,0.0F,0.0F,0.0F);
             AnimationVanillaG.setRotBone(leftFrontLeg,0.0F,0.0F,0.0F);
 

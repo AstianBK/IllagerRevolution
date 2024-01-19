@@ -41,8 +41,8 @@ public class WildRavagerDrumLayer<T extends WildRavagerEntity> extends GeoRender
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(-0.7F, -0.7F, 0.7F);
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(drumBlock.getLocation()));
-                matrixStackIn.translate(leftShoulderIn ? 0.4D : -0.8D,-0.6D,0.8D);
-                bone.setRotX(0.75F);
+                matrixStackIn.translate(leftShoulderIn ? 0.4D : -0.8D,-1.2D,0.7D);
+                bone.setRotX(0.785398F);
                 prepModelPartForRender(matrixStackIn,bone,model.getRoot());
                 model.renderDrum(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY,bone);
                 matrixStackIn.popPose();

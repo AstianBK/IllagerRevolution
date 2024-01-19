@@ -21,7 +21,7 @@
 					]
 				},
 				{
-					"name": "drumslot1",
+					"name": "drum_left",
 					"parent": "body",
 					"pivot": [8, 14, 15],
 					"cubes": [
@@ -29,7 +29,7 @@
 					]
 				},
 				{
-					"name": "drumslot2",
+					"name": "drum_right",
 					"parent": "body",
 					"pivot": [-8, 14, 15],
 					"cubes": [
