@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
+import software.bernie.geckolib.renderer.layer.ItemArmorGeoLayer;
 
 import static net.BKTeam.illagerrevolutionmod.ModConstants.POTION_BONE_IDENT;
 import static net.BKTeam.illagerrevolutionmod.ModConstants.RIGHT_HAND_BONE_IDENT;

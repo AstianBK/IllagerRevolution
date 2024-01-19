@@ -23,14 +23,12 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 @OnlyIn(Dist.CLIENT)
 public class WildRavagerRenderer<T extends  WildRavagerEntity> extends GeoEntityRenderer<T> {
-
-    private DrumModel model;
     public WildRavagerRenderer(EntityRendererProvider.Context p_174362_) {
         super(p_174362_, new WildRavagerGModel<>());
+        this.addRenderLayer(new WildRavagerDrumLayer<>(this));
         this.addRenderLayer(new CuteLayer<>(this,new WildRavagerGModel<>()));
         this.addRenderLayer(new WarPaintBeastGeckoLayer<>(this,new WildRavagerGModel<>()));
         this.addRenderLayer(new WildRavagerArmorLayer<>(this,new WildRavagerGModel<>()));
-        this.addRenderLayer(new WildRavagerDrumLayer<>(this));
     }
 
     @Override
@@ -40,6 +38,6 @@ public class WildRavagerRenderer<T extends  WildRavagerEntity> extends GeoEntity
 
     @Override
     public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(this.getTextureLocation(animatable));
+        return RenderType.entityTranslucent(texture);
     }
 }

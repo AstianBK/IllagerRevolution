@@ -7,8 +7,8 @@
 				"texture_width": 128,
 				"texture_height": 128,
 				"visible_bounds_width": 5,
-				"visible_bounds_height": 3.5,
-				"visible_bounds_offset": [0, 1.25, 0]
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
 			},
 			"bones": [
 				{
@@ -18,6 +18,22 @@
 					"cubes": [
 						{"origin": [-7, 10, -2], "size": [14, 16, 20], "uv": [0, 55]},
 						{"origin": [-6, -3, -2], "size": [12, 13, 18], "uv": [0, 91]}
+					]
+				},
+				{
+					"name": "drum_left",
+					"parent": "body",
+					"pivot": [8, 14, 15],
+					"cubes": [
+						{"origin": [8, 14, 15], "size": [0, 0, 0], "uv": [82, 39]}
+					]
+				},
+				{
+					"name": "drum_right",
+					"parent": "body",
+					"pivot": [-8, 14, 15],
+					"cubes": [
+						{"origin": [-8, 14, 15], "size": [0, 0, 0], "uv": [82, 39]}
 					]
 				},
 				{
@@ -65,7 +81,7 @@
 					"name": "leg1",
 					"pivot": [4, 30, 22],
 					"cubes": [
-						{"origin": [4, 0, 17], "size": [8, 37, 8], "uv": [96, 0]}
+						{"origin": [4, 0, 17], "size": [8, 37, 8], "pivot": [8, 18.5, 21], "rotation": [0, 180, 0], "uv": [96, 0]}
 					]
 				},
 				{

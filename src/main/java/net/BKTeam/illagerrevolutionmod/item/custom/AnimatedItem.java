@@ -100,6 +100,7 @@ public class AnimatedItem extends Item implements GeoItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         boolean flag = pPlayer.isShiftKeyDown();
         CompoundTag nbt = pPlayer.getItemInHand(pUsedHand).getOrCreateTag();
+        ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         int cooldown = nbt.getInt("casterTimer");
         int cc = (int) pPlayer.getAttributeValue(SoulTick.SOUL);
         if (flag && cc > 0) {
@@ -127,6 +128,7 @@ public class AnimatedItem extends Item implements GeoItem {
             if (!pPlayer.getAbilities().instabuild && size < 4) {
                 pPlayer.getAttribute(SoulTick.SOUL).setBaseValue(cc - 1);
             }
+            return InteractionResultHolder.sidedSuccess(itemStack,pLevel.isClientSide());
         } else {
             if (!pLevel.isClientSide) {
                 List<SoulBomb> souls = pPlayer.level().getEntitiesOfClass(SoulBomb.class, pPlayer.getBoundingBox().inflate(3.0F),
@@ -159,8 +161,8 @@ public class AnimatedItem extends Item implements GeoItem {
             if (!pPlayer.getAbilities().instabuild) {
 
             }
+            return InteractionResultHolder.sidedSuccess(itemStack,pLevel.isClientSide());
         }
-        return InteractionResultHolder.consume(pPlayer.getItemInHand(pUsedHand));
     }
 
     @Override

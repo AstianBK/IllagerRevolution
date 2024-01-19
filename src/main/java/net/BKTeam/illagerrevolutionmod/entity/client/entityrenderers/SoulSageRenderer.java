@@ -16,6 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -39,6 +40,11 @@ public class SoulSageRenderer extends GeoEntityRenderer<SoulSageEntity> {
     public SoulSageRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SoulSageModel<SoulSageEntity>(MODEL_RESLOC,TEXTURE,TEXTURE_LOWLIFE,"soul_sage"));
         this.shadowRadius = 0.5f;
+    }
+
+    @Override
+    public RenderType getRenderType(SoulSageEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(texture);
     }
 
     public boolean shouldRender(SoulSageEntity pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {

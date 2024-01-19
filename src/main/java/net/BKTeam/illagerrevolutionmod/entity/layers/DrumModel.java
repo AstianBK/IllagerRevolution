@@ -13,6 +13,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.cache.object.GeoCube;
 
 @OnlyIn(Dist.CLIENT)
 public class DrumModel extends EntityModel<WildRavagerEntity> {
@@ -32,27 +34,16 @@ public class DrumModel extends EntityModel<WildRavagerEntity> {
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
+    public void renderDrum(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, GeoBone bone){
+        root.render(poseStack, buffer, packedLight, packedOverlay);
+    }
+
+    public ModelPart getRoot() {
+        return root;
+    }
+
     @Override
     public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
-        matrixStack.pushPose();
-        translateAndRotate(matrixStack);
-        root.render(matrixStack, buffer, packedLight, packedOverlay);
-        matrixStack.popPose();
-    }
-    public void translateAndRotate(PoseStack pPoseStack) {
-        pPoseStack.translate((double)(root.x / 16.0F), (double)(root.y / 16.0F), (double)(root.z / 16.0F));
-        if (root.zRot != 0.0F) {
-            pPoseStack.mulPose(Axis.ZP.rotation(root.zRot));
-        }
-
-        if (root.yRot != 0.0F) {
-            pPoseStack.mulPose(Axis.YP.rotation(root.yRot));
-        }
-
-        if (root.xRot != 0.0F) {
-            pPoseStack.mulPose(Axis.XP.rotation(root.xRot));
-        }
-
     }
     @Override
     public void setupAnim(WildRavagerEntity p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {

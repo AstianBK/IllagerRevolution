@@ -8,6 +8,7 @@ import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -48,15 +49,19 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
 
     @Override
     public void setCustomAnimations(T pEntity, long instanceId, AnimationState<T> customPredicate) {
-        super.setCustomAnimations(pEntity, instanceId, customPredicate);
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
-        CoreGeoBone neck = this.getAnimationProcessor().getBone("neck");
+        GeoBone neck = (GeoBone) this.getAnimationProcessor().getBone("neck");
         CoreGeoBone mouth = this.getBone("mouth").get();
         CoreGeoBone body = this.getBone("body").get();
         CoreGeoBone rightHindLeg = this.getAnimationProcessor().getBone("leg0");
         CoreGeoBone leftHindLeg = this.getAnimationProcessor().getBone("leg1");
         CoreGeoBone rightFrontLeg = this.getAnimationProcessor().getBone("leg2");
         CoreGeoBone leftFrontLeg = this.getAnimationProcessor().getBone("leg3");
+        neck.setRotX(neck.getInitialSnapshot().getRotX());
+        neck.setRotY(neck.getInitialSnapshot().getRotY());
+        neck.setRotZ(neck.getInitialSnapshot().getRotZ());
+        super.setCustomAnimations(pEntity, instanceId, customPredicate);
+
         int i = pEntity.getStunnedTick();
         int j = pEntity.getRoarTick();
         int l = pEntity.getAttackTick();
