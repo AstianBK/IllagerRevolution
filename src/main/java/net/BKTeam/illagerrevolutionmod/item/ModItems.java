@@ -47,11 +47,14 @@ public class ModItems {
     //ITEMS                                                                                     //
     //
     //
-  
+
 
 
 
     public static final RegistryObject<Item> ILLAGIUM = ITEMS.register("illagium",
+            ()-> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> ILLAGIUM_SMITHING_TEMPLATE = ITEMS.register("illagium_smithing_template",
             ()-> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> BEAST_STAFF = ITEMS.register("beast_staff",

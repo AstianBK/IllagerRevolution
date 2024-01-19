@@ -1,7 +1,10 @@
 {
-  "type": "minecraft:smithing",
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "illagerrevolutionmod:illagium_smithing_template"
+  },
   "base": {
-    "item": "illagerrevolutionmod:claws_armor_diamond"
+    "item": "illagerrevolutionmod:claws_armor_iron"
   },
   "addition": {
     "item": "illagerrevolutionmod:illagium"

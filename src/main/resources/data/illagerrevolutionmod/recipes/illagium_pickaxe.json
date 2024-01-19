@@ -1,5 +1,8 @@
 {
-  "type": "minecraft:smithing",
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "illagerrevolutionmod:illagium_smithing_template"
+  },
   "base": {
     "item": "minecraft:iron_pickaxe"
   },
@@ -7,7 +10,6 @@
     "item": "illagerrevolutionmod:illagium"
   },
   "result": {
-    "item": "illagerrevolutionmod:illagium_pickaxe",
-    "count": 1
+    "item": "illagerrevolutionmod:illagium_pickaxe"
   }
 }

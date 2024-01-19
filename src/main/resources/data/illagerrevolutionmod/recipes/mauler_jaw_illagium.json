@@ -1,5 +1,8 @@
 {
-  "type": "minecraft:smithing",
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "illagerrevolutionmod:illagium_smithing_template"
+  },
   "base": {
     "item": "illagerrevolutionmod:mauler_armor_iron"
   },

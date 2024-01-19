@@ -1,6 +1,7 @@
 {
   "replace": false,
   "entries": [
+    "illagerrevolutionmod:illagium_smithing_template_loot",
     "illagerrevolutionmod:evoker_robe_loot",
     "illagerrevolutionmod:illusioner_robe_loot",
     "illagerrevolutionmod:pillager_boots_loot",
