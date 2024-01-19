@@ -47,7 +47,7 @@ public class BKEyesLayer<T extends GeoAnimatable> extends GeoRenderLayer<T> {
             name=entity.getEncodeId().split(":")[1];
         }
         if(entity instanceof FallenKnightEntity fallen){
-            name=fallen.getIsFrozen()? "frozen_"+name : name;
+            name=fallen.getIsFrozen()? "frozen_fallen_knight" : name;
         }
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/entity/"+name+"/"+name+"_"+part+".png");
     }

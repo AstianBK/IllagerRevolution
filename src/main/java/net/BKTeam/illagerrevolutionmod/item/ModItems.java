@@ -3,6 +3,7 @@ package net.BKTeam.illagerrevolutionmod.item;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -55,7 +56,7 @@ public class ModItems {
             ()-> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> ILLAGIUM_SMITHING_TEMPLATE = ITEMS.register("illagium_smithing_template",
-            ()-> new Item(new Item.Properties()));
+            SmithingTemplateItem::createNetheriteUpgradeTemplate);
 
     public static final RegistryObject<Item> BEAST_STAFF = ITEMS.register("beast_staff",
             ()-> new BeastStaffItem(new Item.Properties().stacksTo(1)));
