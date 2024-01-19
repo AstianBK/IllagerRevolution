@@ -33,6 +33,7 @@ public class ModCreativeModeTab {
                 a.accept(ModItems.SCROUNGER_SPAWN_EGG.get());
                 a.accept(ModItems.RAKER_SPAWN_EGG.get());
                 a.accept(ModItems.ILLAGIUM.get());
+                a.accept(ModItems.ILLAGIUM_SMITHING_TEMPLATE.get());
                 a.accept(ModItems.ILLAGIUM_APPLE.get());
                 a.accept(ModItems.RAKER_CLAW.get());
                 a.accept(ModItems.BEAST_STAFF.get());

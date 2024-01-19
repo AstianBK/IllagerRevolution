@@ -169,5 +169,11 @@
   "key.illagerrevolutionmod.attack_key2":"Primary Attack",
   "key.illagerrevolutionmod.attack_key1":"Secondary Attack",
   "key.illagerrevolutionmod.attack_key3":"Special Attack",
-  "event.illagerrevolutionmod.raid_score_kill": "Kills"
+  "event.illagerrevolutionmod.raid_score_kill": "Kills",
+
+  "upgrade.minecraft.illagium_upgrade": "Illagium Upgrade",
+  "item.minecraft.smithing_template.illagium_upgrade.additions_slot_description": "Add Illagium Ingot",
+  "item.minecraft.smithing_template.illagium_upgrade.applies_to": "Iron Equipment",
+  "item.minecraft.smithing_template.illagium_upgrade.base_slot_description": "Add Iron armor, weapon, or tool",
+  "item.minecraft.smithing_template.illagium_upgrade.ingredients": "Illagium Ingot"
 }

@@ -1,9 +1,11 @@
 package net.BKTeam.illagerrevolutionmod.item;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.ModConstants;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -11,6 +13,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.List;
+
+import static net.BKTeam.illagerrevolutionmod.ModConstants.*;
 
 public class ModItems {
 
@@ -56,7 +62,7 @@ public class ModItems {
             ()-> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> ILLAGIUM_SMITHING_TEMPLATE = ITEMS.register("illagium_smithing_template",
-            SmithingTemplateItem::createNetheriteUpgradeTemplate);
+            ModItems::createIllagiumUpgradeTemplate);
 
     public static final RegistryObject<Item> BEAST_STAFF = ITEMS.register("beast_staff",
             ()-> new BeastStaffItem(new Item.Properties().stacksTo(1)));
@@ -309,6 +315,17 @@ public class ModItems {
     }
 
 
+    public static SmithingTemplateItem createIllagiumUpgradeTemplate() {
+        return new SmithingTemplateItem(ILLAGIUM_UPGRADE_APPLIES_TO, ILLAGIUM_UPGRADE_INGREDIENTS, ILLAGIUM_UPGRADE, ILLAGIUM_UPGRADE_BASE_SLOT_DESCRIPTION, ILLAGIUM_UPGRADE_ADDITIONS_SLOT_DESCRIPTION, createIllagiumUpgradeIconList(), createIllagiumUpgradeMaterialList());
+    }
+
+    private static List<ResourceLocation> createIllagiumUpgradeIconList() {
+        return List.of(EMPTY_SLOT_HELMET, EMPTY_SLOT_SWORD, EMPTY_SLOT_PICKAXE, EMPTY_SLOT_AXE, EMPTY_SLOT_HOE, EMPTY_SLOT_SHOVEL);
+    }
+
+    private static List<ResourceLocation> createIllagiumUpgradeMaterialList() {
+        return List.of(EMPTY_SLOT_INGOT);
+    }
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

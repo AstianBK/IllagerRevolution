@@ -140,6 +140,10 @@
   "key.category.illagerrevolutionmod":"Illager Revolution",
   "key.illagerrevolutionmod.attack_key2":"Ataque Primario",
   "key.illagerrevolutionmod.attack_key1":"Ataque Secundario",
-  "key.illagerrevolutionmod.attack_key3":"Ataque Especial"
+  "key.illagerrevolutionmod.attack_key3":"Ataque Especial",
 
+  "item.minecraft.smithing_template.netherite_upgrade.additions_slot_description": "Add Netherite Ingot",
+  "item.minecraft.smithing_template.netherite_upgrade.applies_to": "Diamond Equipment",
+  "item.minecraft.smithing_template.netherite_upgrade.base_slot_description": "Add diamond armor, weapon, or tool",
+  "item.minecraft.smithing_template.netherite_upgrade.ingredients": "Netherite Ingot"
 }
