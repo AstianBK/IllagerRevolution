@@ -24,10 +24,10 @@ public class PacketHandler {
 
         MOD_CHANNEL=channel;
 
-        channel.registerMessage(index++,PacketSyncSoulBkToClient.class,
-                PacketSyncSoulBkToClient::toBytes,
-                PacketSyncSoulBkToClient::new,
-                PacketSyncSoulBkToClient::handle);
+        channel.messageBuilder(PacketSyncSoulBkToClient.class,index++)
+                .decoder(PacketSyncSoulBkToClient::new).
+                encoder(PacketSyncSoulBkToClient::toBytes)
+                .consumerNetworkThread(PacketSyncSoulBkToClient::handle).add();
 
         channel.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode,
                 PacketEffectSwordRuned::new, PacketEffectSwordRuned::handle);

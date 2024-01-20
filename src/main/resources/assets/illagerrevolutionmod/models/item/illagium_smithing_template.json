@@ -1,5 +1,5 @@
 {
-  "parent": "item/handheld",
+  "parent": "item/generated",
   "textures": {
     "layer0": "illagerrevolutionmod:item/illagium_smithing_template"
   }
