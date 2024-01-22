@@ -64,32 +64,8 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
         int l = pEntity.getAttackTick();
         float pPartialTick = customPredicate.getPartialTick();
         EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
-        AnimationVanillaG.resetMain(main);
         if(!pEntity.isCharged() && !pEntity.isSitting()) {
-            body.setPosY(0.0F);
-            body.setRotX(-(float)Math.PI/2.0F);
-            body.setRotZ(body.getInitialSnapshot().getRotZ());
-            body.setScaleX(1.0f);
-            body.setScaleY(1.0f);
-            body.setScaleZ(1.0f);
-
-            neck.setRotX(neck.getInitialSnapshot().getRotX());
-            neck.setRotY(neck.getInitialSnapshot().getRotY());
-            neck.setRotZ(neck.getInitialSnapshot().getRotZ());
-
-            AnimationVanillaG.setRotBone(head,head.getInitialSnapshot().getRotX(),head.getInitialSnapshot().getRotY(),head.getInitialSnapshot().getRotZ());
-
-            AnimationVanillaG.setPositionBone(leftFrontLeg,0.0F,0.0F,0.0F);
-            AnimationVanillaG.setRotBone(leftFrontLeg,0.0F,0.0F,0.0F);
-
-            AnimationVanillaG.setPositionBone(rightFrontLeg,0.0F,0.0F,0.0F);
-            AnimationVanillaG.setRotBone(rightFrontLeg,0.0F,0.0F,0.0F);
-
-            AnimationVanillaG.setPositionBone(leftHindLeg,0.0F,0.0F,0.0F);
-            AnimationVanillaG.setRotBone(leftHindLeg,0.0F,0.0F,0.0F);
-
-            AnimationVanillaG.setPositionBone(rightHindLeg,0.0F,0.0F,0.0F);
-            AnimationVanillaG.setRotBone(rightHindLeg,0.0F,0.0F,0.0F);
+            AnimationVanillaG.resetMain(main);
 
             if (l > 0) {
                 float f = Mth.triangleWave((float)l - pPartialTick, 10.0F);
@@ -131,4 +107,5 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
             leftFrontLeg.setRotX( Mth.cos(pLimbSwing * 0.6662F) * f);
         }
     }
+
 }
