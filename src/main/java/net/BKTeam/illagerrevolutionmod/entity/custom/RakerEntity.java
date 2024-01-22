@@ -31,6 +31,8 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -187,6 +189,7 @@ public class RakerEntity extends IllagerBeastEntity implements GeoEntity {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true, true));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true, true));
         this.goalSelector.addGoal(5, new FloatGoal(this));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, IronGolem.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new RakerFollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
