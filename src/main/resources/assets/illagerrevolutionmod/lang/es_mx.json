@@ -46,7 +46,7 @@
 
 
   "item.illagerrevolutionmod.illagium": "Lingote de illanio",
-  "item.illagerrevolutionmod.illagium_smithing_template": "Illagium Upgrade Smithing Template",
+  "item.illagerrevolutionmod.illagium_smithing_template": "Smithing Template",
   "item.illagerrevolutionmod.raker_claw": "Garra de rasgador",
   "item.illagerrevolutionmod.mauler_pelt": "Piel de mutilador",
   "item.illagerrevolutionmod.scrounger_feather": "Pluma de plagador",
@@ -138,8 +138,9 @@
   "key.illagerrevolutionmod.attack_key1":"Ataque Secundario",
   "key.illagerrevolutionmod.attack_key3":"Ataque Especial",
 
-  "item.minecraft.smithing_template.netherite_upgrade.additions_slot_description": "Add Netherite Ingot",
-  "item.minecraft.smithing_template.netherite_upgrade.applies_to": "Diamond Equipment",
-  "item.minecraft.smithing_template.netherite_upgrade.base_slot_description": "Add diamond armor, weapon, or tool",
-  "item.minecraft.smithing_template.netherite_upgrade.ingredients": "Netherite Ingot"
+  "upgrade.minecraft.illagium_upgrade": "Illagium Upgrade",
+  "item.minecraft.smithing_template.illagium_upgrade.additions_slot_description": "Add Illagium Ingot",
+  "item.minecraft.smithing_template.illagium_upgrade.applies_to": "Iron Equipment",
+  "item.minecraft.smithing_template.illagium_upgrade.base_slot_description": "Add Iron armor, weapon, or tool",
+  "item.minecraft.smithing_template.illagium_upgrade.ingredients": "Illagium Ingot"
 }
