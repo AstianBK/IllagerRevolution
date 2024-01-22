@@ -49,6 +49,7 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
 
     @Override
     public void setCustomAnimations(T pEntity, long instanceId, AnimationState<T> customPredicate) {
+        GeoBone main = (GeoBone) this.getAnimationProcessor().getBone("main");
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
         GeoBone neck = (GeoBone) this.getAnimationProcessor().getBone("neck");
         CoreGeoBone mouth = this.getBone("mouth").get();
@@ -63,7 +64,7 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
         int l = pEntity.getAttackTick();
         float pPartialTick = customPredicate.getPartialTick();
         EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
-
+        AnimationVanillaG.resetMain(main);
         if(!pEntity.isCharged() && !pEntity.isSitting()) {
             body.setPosY(0.0F);
             body.setRotX(-(float)Math.PI/2.0F);

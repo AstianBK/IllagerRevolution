@@ -5,9 +5,22 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CrossbowItem;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.state.BoneSnapshot;
 
 public class AnimationVanillaG {
+
+    public static void resetMain(GeoBone main){
+        for(GeoBone child:main.getChildBones()){
+            BoneSnapshot initial=child.getInitialSnapshot();
+            setRotBone(child,initial.getRotX(), initial.getRotY(), initial.getRotZ());
+            setPositionBone(child, initial.getOffsetX(), initial.getOffsetY(), initial.getOffsetZ());
+            if(!child.getChildBones().isEmpty()){
+                resetMain(child);
+            }
+        }
+    }
     public static void setPositionBone(CoreGeoBone bone, float x, float y, float z){
         bone.setPosX(x);
         bone.setPosY(y);
