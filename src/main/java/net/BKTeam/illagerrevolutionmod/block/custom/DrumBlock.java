@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -91,8 +90,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        pLevel.blockEvent(pPos, this, 0, 0);
-        pLevel.gameEvent(pPlayer, GameEvent.NOTE_BLOCK_PLAY, pPos);
+        pLevel.addParticle(ParticleTypes.NOTE,pPos.getX()+0.5D,pPos.getY()+1.0D,pPos.getZ()+0.5D,0.0f,0.5f,0.0f);
         pLevel.playSound(null,pPos, ModSounds.DRUM_SOUND_ONCE.get(), SoundSource.BLOCKS,1.0f,-1.0f/pLevel.random.nextInt(-3,3));
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
