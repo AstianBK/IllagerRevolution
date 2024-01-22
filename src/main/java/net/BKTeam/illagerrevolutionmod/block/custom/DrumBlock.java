@@ -2,6 +2,8 @@ package net.BKTeam.illagerrevolutionmod.block.custom;
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
 import net.BKTeam.illagerrevolutionmod.block.entity.custom.DrumBlockSpeedEntity;
+import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
+import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -87,6 +89,9 @@ public class DrumBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if(!pLevel.isClientSide){
+            PacketHandler.sendToAllTracking(new PacketWhistle(pPos.getX(),pPos.getY()+1.0D,pPos.getZ()),pPlayer);
+        }
         pLevel.playSound(null,pPos, ModSounds.DRUM_SOUND_ONCE.get(), SoundSource.BLOCKS,1.0f,-1.0f/pLevel.random.nextInt(-3,3));
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }

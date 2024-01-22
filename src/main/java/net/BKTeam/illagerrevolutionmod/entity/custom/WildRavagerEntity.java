@@ -7,6 +7,7 @@ import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.network.PacketHandler;
 import net.BKTeam.illagerrevolutionmod.network.PacketStopSound;
+import net.BKTeam.illagerrevolutionmod.network.PacketWhistle;
 import net.BKTeam.illagerrevolutionmod.particle.ModParticles;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -716,6 +717,7 @@ public class WildRavagerEntity extends MountEntity {
     @Override
     public void tick() {
         super.tick();
+
         this.refreshDimensions();
     }
 
@@ -753,6 +755,9 @@ public class WildRavagerEntity extends MountEntity {
             if(this.hasDrum()){
                 if(this.drumTick>0){
                     this.drumTick--;
+                    if(this.drumTick%25==0){
+                        this.playNote();
+                    }
                     if(this.drumTick==0){
                         this.stopDrumSound();
                         this.level().playSound(null,this, ModSounds.DRUM_SOUND.get(),SoundSource.HOSTILE,1.5f,1.0f);
@@ -833,6 +838,16 @@ public class WildRavagerEntity extends MountEntity {
                     }
                 }
             }
+        }
+    }
+
+    private void playNote() {
+        float f = this.getControllingPassenger()==null ? this.yBodyRot* ((float) Math.PI / 180F) : this.getControllingPassenger().getYRot() * ((float) Math.PI / 180F);
+        float f1 = Mth.cos(f);
+        float f2 = Mth.sin(f);
+        if(!this.level().isClientSide){
+            PacketHandler.sendToAllTracking(new PacketWhistle(this.getX() + f1*1D, this.getY()+this.getBbHeight()+1.0F, this.getZ() + f2 ),this);
+            PacketHandler.sendToAllTracking(new PacketWhistle( this.getX() - f1 *1D, this.getY()+this.getBbHeight()+1.0F, this.getZ() - f2),this);
         }
     }
 

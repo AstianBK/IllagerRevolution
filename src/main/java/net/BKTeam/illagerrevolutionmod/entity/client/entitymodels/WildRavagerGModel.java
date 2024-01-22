@@ -53,7 +53,8 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
         CoreGeoBone head = this.getAnimationProcessor().getBone("head");
         GeoBone neck = (GeoBone) this.getAnimationProcessor().getBone("neck");
         CoreGeoBone mouth = this.getBone("mouth").get();
-        CoreGeoBone body = this.getBone("body").get();
+        CoreGeoBone drumRight = this.getBone("drum_right").get();
+        CoreGeoBone drumLeft = this.getBone("drum_left").get();
         CoreGeoBone rightHindLeg = this.getAnimationProcessor().getBone("leg0");
         CoreGeoBone leftHindLeg = this.getAnimationProcessor().getBone("leg1");
         CoreGeoBone rightFrontLeg = this.getAnimationProcessor().getBone("leg2");
@@ -66,7 +67,8 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
         EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
         if(!pEntity.isCharged() && !pEntity.isSitting()) {
             AnimationVanillaG.resetMain(main);
-            body.setRotX(-(float)Math.PI/2.0F);
+            drumRight.setRotX(0.785398F);
+            drumLeft.setRotX(0.785398F);
             if (l > 0) {
                 float f = Mth.triangleWave((float)l - pPartialTick, 10.0F);
                 float f1 = (1.0F + f) * 0.5F;
