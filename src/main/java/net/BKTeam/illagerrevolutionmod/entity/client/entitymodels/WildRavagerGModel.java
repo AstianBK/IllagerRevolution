@@ -66,7 +66,6 @@ public class WildRavagerGModel<T extends  WildRavagerEntity> extends GeoModel<T>
         EntityModelData extraData = (EntityModelData) customPredicate.getData(DataTickets.ENTITY_MODEL_DATA);
         if(!pEntity.isCharged() && !pEntity.isSitting()) {
             AnimationVanillaG.resetMain(main);
-
             if (l > 0) {
                 float f = Mth.triangleWave((float)l - pPartialTick, 10.0F);
                 float f1 = (1.0F + f) * 0.5F;
