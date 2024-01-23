@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -86,7 +87,7 @@ public class ModEventBusEvents {
                 l.addLayer(new PlayerLikedLayer(l));
                 l.addLayer(new LivingProtectionLayer(l));
             }
-            if(s instanceof GeoEntityRenderer<?> l){
+            if(s instanceof GeoEntityRenderer<?> l && l.getAnimatable() instanceof LivingEntity){
                 l.addRenderLayer(new GeckoLivingProtectionLayer(l));
             }
         });
