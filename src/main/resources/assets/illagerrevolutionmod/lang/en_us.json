@@ -91,10 +91,19 @@
 
 
   "enchantment.illagerrevolutionmod.serrated_edge": "Serrated Edge",
+  "enchantment.illagerrevolutionmod.serrated_edge.desc": "Enemies hit receive Deep Wound II. incompatible with Sharpness",
+
   "enchantment.illagerrevolutionmod.wary_lenses": "Wary Lenses",
+  "enchantment.illagerrevolutionmod.wary_lenses.desc": "Increases Scavenger Goggles enemy detection range by 5 each level",
+
   "enchantment.illagerrevolutionmod.beast_slayer": "Beast Slayer",
+  "enchantment.illagerrevolutionmod.beast_slayer.desc": "Deals additional damage to Illager Beasts and Slowness II",
+
   "enchantment.illagerrevolutionmod.soul_slash": "Soul Slash",
+  "enchantment.illagerrevolutionmod.soul_slash.desc": "When fully charged, your Runed Blade will have a chance to consume a soul and soul slash enemies",
+
   "enchantment.illagerrevolutionmod.insight": "Insight",
+  "enchantment.illagerrevolutionmod.insight.desc":"Increases Grimoire rune missile damage and number of soul rings created when throwing a soul bomb for each level",
 
 
   "entity.illagerrevolutionmod.raker": "Raker",
