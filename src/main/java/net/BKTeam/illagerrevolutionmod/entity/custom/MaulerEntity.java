@@ -275,16 +275,11 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
                 boolean flag=false;
                 this.setAttacking(true);
                 this.level().playSound(null,this.getOnPos(),ModSounds.MAULER_BARK.get(), SoundSource.HOSTILE,1.0f,1.0f);
-                float f = this.yBodyRot * ((float)Math.PI / 180F);
-                float f1 = Mth.sin(f);
-                float f2 = Mth.cos(f);
-                float f3 = 0.5f;
-                BlockPos pos = new BlockPos((int) (this.getX()-(f3*f1)), (int) (this.getY()+1.5d), (int) (this.getZ()+(f3*f2)));
-                List<LivingEntity> targets = this.level().getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(3,3,3), e -> e != this && e!=this.getOwner() && distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= getY() + 3);
+                List<LivingEntity> targets = this.level().getEntitiesOfClass(LivingEntity.class,new AABB(this.getOnPos()).inflate(3,3,3), e -> e != this && e!=this.getOwner() && distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= getY() + 3);
                 for(LivingEntity living : targets){
                     float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
-                    float entityAttackingAngle = this.getControllingPassenger().yBodyRot % 360;
-                    float arc = 180.0F;
+                    float entityAttackingAngle = this.getControllingPassenger().getYRot() % 360;
+                    float arc = 100.0F;
                     if (entityHitAngle < 0) {
                         entityHitAngle += 360;
                     }
@@ -788,16 +783,12 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
             float f1 = 0.1F;
             float f2 = 0.15F;
             pPassenger.setPos(this.getX() + (double)(f1 * f3), this.getY()+ this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset() - (double)f2, this.getZ() - (double)(f1 * f));
-            ((LivingEntity)pPassenger).yBodyRot = this.yBodyRot;
 
         }else {
             float f3 = Mth.sin(this.yBodyRot * ((float)Math.PI / 180F));
             float f = Mth.cos(this.yBodyRot * ((float)Math.PI / 180F));
             float f1 = 1.7F;
             pPassenger.setPos(this.getX() - (f3*f1), this.getY()+ this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset()-1.0d, this.getZ() + (f*f1));
-            if (pPassenger instanceof LivingEntity) {
-                ((LivingEntity)pPassenger).yBodyRot = this.yBodyRot;
-            }
         }
     }
 

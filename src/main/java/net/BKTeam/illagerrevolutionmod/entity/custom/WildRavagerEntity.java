@@ -362,7 +362,6 @@ public class WildRavagerEntity extends MountEntity {
             f4 = Mth.lerp(f5,0.0F+(0.5F*f5),0.5F-(0.5F*f5));
         }
         pPassenger.setPos(this.getX() + (double)(f1 * f3), this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset() - f2 + Mth.clamp(f4,0.0F,1.0F), this.getZ() - (double)(f1 * f));
-        ((LivingEntity)pPassenger).yBodyRot = this.yBodyRot;
     }
 
     @Override
@@ -612,38 +611,34 @@ public class WildRavagerEntity extends MountEntity {
 
     @Override
     public void attackG() {
-        if(!this.level().isClientSide){
-            if(!this.isImmobile() && !this.isCharged() && this.getControllingPassenger()!=null){
-                boolean flag=false;
-                this.attackTick=10;
+        if(!this.isImmobile() && !this.isCharged() && this.getControllingPassenger()!=null){
+            boolean flag=false;
+            this.attackTick=10;
+            if(!this.level().isClientSide){
                 this.level().broadcastEntityEvent(this, (byte)4);
-                float f = this.yBodyRot * ((float)Math.PI / 180F);
-                float f1 = Mth.sin(f);
-                float f2 = Mth.cos(f);
-                float f3 = 0.5f;
-                BlockPos pos = new BlockPos((int) (this.getX()-(f3*f1)), (int) this.getY(), (int) (this.getZ()+(f3*f2)));
-                List<LivingEntity> targets = this.level().getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(3,3,3),  e -> e != this && e!=this.getOwner() && distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= getY() + 3);
-                for(LivingEntity living : targets){
-                    float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
-                    float entityAttackingAngle = this.getControllingPassenger().yBodyRot % 360;
-                    float arc = 180.0F;
-                    if (entityHitAngle < 0) {
-                        entityHitAngle += 360;
-                    }
-                    if (entityAttackingAngle < 0) {
-                        entityAttackingAngle += 360;
-                    }
-                    float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
-                    float entityHitDistance = (float) Math.sqrt((living.getZ() - this.getZ()) * (living.getZ() - this.getZ()) + (living.getX() - this.getX()) * (living.getX() - this.getX())) - living.getBbWidth() / 2f;
-                    if (entityHitDistance <= 3 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2) && !flag) {
-                        living.hurt(damageSources().mobAttack(this), 8.0F);
-                        flag = true;
-                    }else if(flag){
-                        break;
-                    }
-                }
-                this.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);
             }
+            List<LivingEntity> targets = this.level().getEntitiesOfClass(LivingEntity.class,new AABB(this.getOnPos()).inflate(5,5,5),  e -> e != this && e!=this.getOwner() && distanceTo(e) <= 5 + e.getBbWidth() / 2f && e.getY() <= getY() + 5);
+            for(LivingEntity living : targets){
+                if(flag){
+                    break;
+                }
+                float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
+                float entityAttackingAngle = this.getControllingPassenger().getYRot() % 360;
+                float arc = 180.0F;
+                if (entityHitAngle < 0) {
+                    entityHitAngle += 360;
+                }
+                if (entityAttackingAngle < 0) {
+                    entityAttackingAngle += 360;
+                }
+                float entityRelativeAngle = entityHitAngle - entityAttackingAngle;
+                float entityHitDistance = (float) Math.sqrt((living.getZ() - this.getZ()) * (living.getZ() - this.getZ()) + (living.getX() - this.getX()) * (living.getX() - this.getX())) - living.getBbWidth() / 2f;
+                if (entityHitDistance <= 3 - 0.3 && (entityRelativeAngle <= arc / 2 && entityRelativeAngle >= -arc / 2) || (entityRelativeAngle >= 360 - arc / 2 || entityRelativeAngle <= -360 + arc / 2)) {
+                    living.hurt(damageSources().mobAttack(this), 8.0F);
+                    flag=true;
+                }
+            }
+            this.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);
         }
         super.attackG();
     }
@@ -717,7 +712,6 @@ public class WildRavagerEntity extends MountEntity {
     @Override
     public void tick() {
         super.tick();
-
         this.refreshDimensions();
     }
 
