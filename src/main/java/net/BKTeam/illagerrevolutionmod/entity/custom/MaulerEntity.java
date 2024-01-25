@@ -176,12 +176,12 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     private  <E extends GeoEntity> PlayState predicateHead(AnimationState<E> event) {
         if (this.isMauled() && !this.isAttacking()){
             event.getController().setAnimation(RawAnimation.begin().then("animation.mauler.attack3",Animation.LoopType.PLAY_ONCE));
-            return PlayState.CONTINUE;
         }else if(this.isAttacking() && !this.isMauled()) {
             event.getController().setAnimation(RawAnimation.begin().then("animation.mauler.attack"+(this.isLeftAttack ? "1" : "2"),Animation.LoopType.PLAY_ONCE));
-            return PlayState.CONTINUE;
+        }else {
+            event.getController().forceAnimationReset();
         }
-        return PlayState.STOP;
+        return PlayState.CONTINUE;
     }
 
     public boolean isStunned(){
