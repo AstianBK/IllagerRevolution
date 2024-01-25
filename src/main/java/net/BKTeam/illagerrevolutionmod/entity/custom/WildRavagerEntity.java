@@ -613,7 +613,7 @@ public class WildRavagerEntity extends MountEntity {
     @Override
     public void attackG() {
         if(!this.level().isClientSide){
-            if(!this.isImmobile() && !this.isCharged()){
+            if(!this.isImmobile() && !this.isCharged() && this.getControllingPassenger()!=null){
                 boolean flag=false;
                 this.attackTick=10;
                 this.level().broadcastEntityEvent(this, (byte)4);
@@ -625,7 +625,7 @@ public class WildRavagerEntity extends MountEntity {
                 List<LivingEntity> targets = this.level().getEntitiesOfClass(LivingEntity.class,new AABB(pos).inflate(3,3,3),  e -> e != this && e!=this.getOwner() && distanceTo(e) <= 3 + e.getBbWidth() / 2f && e.getY() <= getY() + 3);
                 for(LivingEntity living : targets){
                     float entityHitAngle = (float) ((Math.atan2(living.getZ() - this.getZ(), living.getX() - this.getX()) * (180 / Math.PI) - 90) % 360);
-                    float entityAttackingAngle = this.yBodyRot % 360;
+                    float entityAttackingAngle = this.getControllingPassenger().yBodyRot % 360;
                     float arc = 180.0F;
                     if (entityHitAngle < 0) {
                         entityHitAngle += 360;

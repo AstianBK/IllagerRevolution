@@ -437,7 +437,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements GeoEntity, I
 
     @Override
     public SoundEvent getCelebrateSound() {
-        return null;
+        return SoundEvents.EVOKER_CELEBRATE;
     }
 
     @Override
