@@ -17,7 +17,6 @@
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
     apply plugin: 'org.spongepowered.mixin'
     apply plugin: 'maven-publish'
-    apply plugin: 'eclipse'
 
     mixin{
         add sourceSets.main, 'illagerrevolution.refmap.json'

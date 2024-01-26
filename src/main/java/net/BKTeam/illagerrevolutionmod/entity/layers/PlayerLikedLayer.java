@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
-import net.BKTeam.illagerrevolutionmod.entity.custom.BulkwarkEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.procedures.Util;
@@ -16,7 +15,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,7 +28,6 @@ public class PlayerLikedLayer <T extends LivingEntity,M extends EntityModel<T>> 
 
     public PlayerLikedLayer(RenderLayerParent<T, M> pRenderer) {
         super(pRenderer);
-
     }
     @Override
     public void render(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {

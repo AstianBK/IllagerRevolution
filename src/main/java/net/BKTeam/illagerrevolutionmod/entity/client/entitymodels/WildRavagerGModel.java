@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
@@ -49,7 +50,6 @@ public class WildRavagerGModel extends AnimatedGeoModel<WildRavagerEntity> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void setCustomAnimations(WildRavagerEntity pEntity, int instanceId, AnimationEvent customPredicate) {
-        super.setCustomAnimations(pEntity, instanceId,customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         IBone neck = this.getAnimationProcessor().getBone("neck");
         IBone mouth = this.getBone("mouth");
@@ -58,12 +58,14 @@ public class WildRavagerGModel extends AnimatedGeoModel<WildRavagerEntity> {
         IBone leftHindLeg = this.getAnimationProcessor().getBone("leg1");
         IBone rightFrontLeg = this.getAnimationProcessor().getBone("leg2");
         IBone leftFrontLeg = this.getAnimationProcessor().getBone("leg3");
+        GeoBone main = (GeoBone) this.getAnimationProcessor().getBone("main");
         int i = pEntity.getStunnedTick();
         int j = pEntity.getRoarTick();
         int l = pEntity.getAttackTick();
         float pPartialTick = customPredicate.getPartialTick();
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-
+        AnimationVanillaG.resetMain(main);
+        super.setCustomAnimations(pEntity, instanceId,customPredicate);
         if(!pEntity.isCharged() && !pEntity.isSitting()) {
             body.setPositionY(0.0F);
             body.setRotationX(-(float)Math.PI/2.0F);
@@ -95,7 +97,6 @@ public class WildRavagerGModel extends AnimatedGeoModel<WildRavagerEntity> {
                     mouth.setRotationX(0.15707964F * -Mth.sin((float)Math.PI * ((float)l - pPartialTick) / 10.0F));
                 }
             } else {
-                float f5 = -1.0F;
                 float f6 = -1.0F * Mth.sin(neck.getRotationX());
                 boolean flag = i > 0;
                 neck.setPositionY( flag ? f6 -3.0F : f6 );

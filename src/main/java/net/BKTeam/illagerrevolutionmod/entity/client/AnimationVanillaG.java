@@ -6,8 +6,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CrossbowItem;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.core.snapshot.BoneSnapshot;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 public class AnimationVanillaG {
+    public static void resetMain(GeoBone main){
+        for(GeoBone child:main.childBones){
+            BoneSnapshot initial=child.getInitialSnapshot();
+            child.setRotation(initial.rotationValueX, initial.rotationValueY, initial.rotationValueZ);
+            child.setPosition(initial.positionOffsetX, initial.positionOffsetY, initial.positionOffsetZ);
+            if(!child.childBones.isEmpty()){
+                resetMain(child);
+            }
+        }
+    }
     public static void setPositionBone(IBone bone, float x, float y, float z){
         bone.setPositionX(x);
         bone.setPositionY(y);

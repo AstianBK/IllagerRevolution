@@ -28,9 +28,6 @@ public class ScroungerArmorLayer extends GeoLayerRenderer<ScroungerEntity> {
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, ScroungerEntity entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entityLivingBaseIn.hasChest()) {
-            this.model.getModelResource(entityLivingBaseIn);
-            this.model.getTextureResource(entityLivingBaseIn);
-            this.model.getAnimationResource(entityLivingBaseIn);
             this.renderCopyModel(this.model,LOCATION,matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
     }

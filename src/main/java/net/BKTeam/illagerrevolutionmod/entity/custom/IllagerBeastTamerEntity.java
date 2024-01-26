@@ -59,8 +59,7 @@ public class IllagerBeastTamerEntity extends SpellcasterKnight implements IAnima
 
     }
     public boolean isWieldingTwoHandedWeapon() {
-        return// Bow and crossbows
-                (this.getMainHandItem().getItem() instanceof ProjectileWeaponItem
+        return (this.getMainHandItem().getItem() instanceof ProjectileWeaponItem
                         || this.getOffhandItem().getItem() instanceof ProjectileWeaponItem
                         || this.getMainHandItem().getUseAnimation() == UseAnim.BOW
                         || this.getOffhandItem().getUseAnimation() == UseAnim.BOW);

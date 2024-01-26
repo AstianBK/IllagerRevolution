@@ -25,9 +25,6 @@ public class WarPaintBeastGeckoLayer<T extends IllagerBeastEntity> extends GeoLa
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entityLivingBaseIn.isPainted()) {
             float[] f=entityLivingBaseIn.getColor().getTextureDiffuseColors();
-            this.model.getModelResource(entityLivingBaseIn);
-            this.model.getTextureResource(entityLivingBaseIn);
-            this.model.getAnimationResource(entityLivingBaseIn);
             this.renderCopyModel(this.model,getTextureWarPaint(entityLivingBaseIn),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,f[0],f[1],f[2]);
         }
     }

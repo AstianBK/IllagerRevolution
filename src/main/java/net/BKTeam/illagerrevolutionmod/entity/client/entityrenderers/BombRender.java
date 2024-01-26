@@ -37,6 +37,7 @@ public class BombRender<T extends SoulBomb> extends EntityRenderer<T> {
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }
 
+
     @Override
     public ResourceLocation getTextureLocation(T pEntity) {
         return new ResourceLocation(IllagerRevolutionMod.MOD_ID,"textures/entity/shield_bomb.png");

@@ -6,6 +6,7 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.BKTeam.illagerrevolutionmod.entity.custom.WildRavagerEntity;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.SkeletonModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;

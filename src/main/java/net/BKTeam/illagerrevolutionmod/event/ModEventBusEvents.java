@@ -14,14 +14,11 @@ import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
 import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.particle.custom.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -33,7 +30,6 @@ import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
@@ -87,11 +83,11 @@ public class ModEventBusEvents {
             event.getSkin(s).addLayer(new LivingProtectionLayer(event.getSkin(s)));
         });
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(s->{
-            if(s instanceof LivingEntityRenderer l){
+            if(s instanceof LivingEntityRenderer<?,?> l){
                 l.addLayer(new PlayerLikedLayer(l));
                 l.addLayer(new LivingProtectionLayer(l));
             }
-            if(s instanceof GeoEntityRenderer l){
+            if(s instanceof GeoEntityRenderer<?> l){
                 l.addLayer(new GeckoLivingProtectionLayer(l));
             }
         });

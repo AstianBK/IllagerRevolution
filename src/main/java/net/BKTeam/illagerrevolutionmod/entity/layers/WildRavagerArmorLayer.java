@@ -31,15 +31,9 @@ public class WildRavagerArmorLayer extends GeoLayerRenderer<WildRavagerEntity> {
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, WildRavagerEntity entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemStack itemstack = entityLivingBaseIn.getContainer().getItem(0);
         if (itemstack.getItem() instanceof BeastArmorItem armorItem) {
-            this.model.getModelResource(entityLivingBaseIn);
-            this.model.getTextureResource(entityLivingBaseIn);
-            this.model.getAnimationResource(entityLivingBaseIn);
             this.renderCopyModel(this.model,armorItem.getArmorTexture(itemstack),matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
         if(itemstack.is(Items.SADDLE)){
-            this.model.getModelResource(entityLivingBaseIn);
-            this.model.getTextureResource(entityLivingBaseIn);
-            this.model.getAnimationResource(entityLivingBaseIn);
             this.renderCopyModel(this.model,TEXTURE_SADDLE,matrixStackIn,bufferIn,packedLightIn,entityLivingBaseIn,partialTicks,1.0f,1.0f,1.0f);
         }
     }

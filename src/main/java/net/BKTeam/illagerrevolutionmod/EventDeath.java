@@ -40,52 +40,35 @@ public class EventDeath {
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
-        if (event != null && event.getEntity() != null) {
-            upSouls(event.getEntity().level,event.getEntity(),event.getSource().getEntity());
-            DamageSource pSource=event.getSource();
-            LivingEntity entity=event.getEntity();
-
-            if(entity instanceof  Player){
-                ItemStack stack=entity.getMainHandItem().copy();
-                if (entity.isDeadOrDying() && checkSword(pSource,entity)){
-                    event.setCanceled(true);
-                    sendRunedBladePacket(stack,entity);
-                    giveUseStatAndCriterion(stack,(ServerPlayer) entity);
-                }
-            }
-
-            if(entity instanceof AbstractIllager illager){
-                List<ScroungerEntity> scroungerEntities = illager.level.getEntitiesOfClass(ScroungerEntity.class,illager.getBoundingBox().inflate(40.0D),e->e.getOwnerIllager()==entity);
-                for (ScroungerEntity scrounger : scroungerEntities ){
-                    scrounger.setOwnerIllager(null);
-                }
-            }
-        }
-    }
-    public static void upSouls(LevelAccessor world, Entity entity,Entity assasin) {
-        upSouls(null, world, entity,assasin);
-    }
-
-    private static void upSouls(@Nullable Event event, LevelAccessor world, Entity entity,Entity assasin) {
+        if(event.getEntity()==null)return;
+        DamageSource pSource=event.getSource();
+        LivingEntity entity=event.getEntity();
+        Entity assasin=event.getSource().getEntity();
         LivingEntity souce=(LivingEntity) Util.Entity(entity, BladeKnightEntity.class);
 
-        if (entity == null)
-            return;
-        if ((entity instanceof LivingEntity _livEnt && _livEnt.hasEffect(InitEffect.DEATH_MARK.get())) && !world
-                .getEntitiesOfClass(BladeKnightEntity.class, AABB.ofSize(new Vec3((entity.getX()), (entity.getY()), (entity.getZ())), 100, 100, 100), e -> true)
-                .isEmpty() && !(assasin instanceof Zombie)) {
+        if(entity instanceof  Player){
+            ItemStack stack=entity.getMainHandItem().copy();
+            if (entity.isDeadOrDying() && checkSword(pSource,entity)){
+                event.setCanceled(true);
+                sendRunedBladePacket(stack,entity);
+                giveUseStatAndCriterion(stack,(ServerPlayer) entity);
+            }
+        }
+
+        if (entity.hasEffect(InitEffect.DEATH_MARK.get()) && !entity.level.getEntitiesOfClass(BladeKnightEntity.class,
+                entity.getBoundingBox().inflate(50D)).isEmpty() && !(assasin instanceof Zombie)) {
             boolean flag=true;
             String name = "pillager";
             if(entity.getEncodeId()!=null){
                 name=entity.getEncodeId().split(":")[1];
             }
-            if(_livEnt instanceof ZombifiedEntity zombified_evokerEntity){
+            if(entity instanceof ZombifiedEntity zombified_evokerEntity){
                 name=zombified_evokerEntity.getIdSoul();
                 flag=!(zombified_evokerEntity.getOwner() instanceof Player);
             }
             if(flag){
-                SoulProjectile soul_projectile= new SoulProjectile((LivingEntity) entity,entity.level,souce);
-                SoulEntity soul_entity = new SoulEntity(_livEnt,entity.level,name,souce,_livEnt.getY()+1.0D);
+                SoulProjectile soul_projectile= new SoulProjectile(entity,entity.level,souce);
+                SoulEntity soul_entity = new SoulEntity(entity,entity.level,name,souce,entity.getY()+1.0D);
                 entity.level.addFreshEntity(soul_projectile);
                 entity.level.addFreshEntity(soul_entity);
                 if(entity instanceof Player){
@@ -109,7 +92,13 @@ public class EventDeath {
                     });
                 }
             }
+        }
 
+        if(entity instanceof AbstractIllager illager){
+            List<ScroungerEntity> scroungerEntities = illager.level.getEntitiesOfClass(ScroungerEntity.class,illager.getBoundingBox().inflate(40.0D),e->e.getOwnerIllager()==entity);
+            for (ScroungerEntity scrounger : scroungerEntities ){
+                scrounger.setOwnerIllager(null);
+            }
         }
     }
     public static boolean hasNameSoul(String soul){
