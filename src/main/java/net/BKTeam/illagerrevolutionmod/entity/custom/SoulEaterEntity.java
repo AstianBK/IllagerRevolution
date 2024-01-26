@@ -167,6 +167,7 @@ public class SoulEaterEntity extends Monster implements GeoEntity {
         }else if(!this.isDrainSoul() && this.swinging && !event.isMoving()){
             event.getController().setAnimation(RawAnimation.begin().then("animation.souleater.bite",Animation.LoopType.LOOP));
         }else{
+            event.getController().forceAnimationReset();
         }
         return PlayState.CONTINUE;
     }

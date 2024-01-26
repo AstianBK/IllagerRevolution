@@ -66,7 +66,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class WildRavagerEntity extends MountEntity {
+public class WildRavagerEntity extends MountEntity implements RiderShieldingMount {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final Predicate<Entity> NO_RAVAGER_AND_ALIVE = (p_33346_) -> {
@@ -481,7 +481,7 @@ public class WildRavagerEntity extends MountEntity {
 
     @Override
     public boolean canJump() {
-        return this.isSaddled() && this.roarCooldown==0;
+        return this.isSaddled();
     }
 
     @Override
@@ -567,6 +567,11 @@ public class WildRavagerEntity extends MountEntity {
                 this.level().playSound(null,this,SoundEvents.VILLAGER_TRADE,SoundSource.HOSTILE,1.0F,-2.0F);
             }
         }
+    }
+
+    @Override
+    public int getJumpCooldown() {
+        return this.roarCooldown;
     }
 
     public void activeEffectAura() {
@@ -1049,6 +1054,11 @@ public class WildRavagerEntity extends MountEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public double getRiderShieldingHeight() {
+        return 0.5D;
     }
 
     class RavagerMeleeAttackGoal extends MeleeAttackGoal {

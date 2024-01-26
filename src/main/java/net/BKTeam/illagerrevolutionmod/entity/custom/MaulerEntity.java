@@ -6,7 +6,6 @@ import net.BKTeam.illagerrevolutionmod.item.Beast;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
 import net.BKTeam.illagerrevolutionmod.item.custom.BeastArmorItem;
 import net.BKTeam.illagerrevolutionmod.sound.ModSounds;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -48,6 +47,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
@@ -79,6 +79,10 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     private static final EntityDataAccessor<Boolean> SAVAGER =
             SynchedEntityData.defineId(MaulerEntity.class, EntityDataSerializers.BOOLEAN);
 
+    public static final EntityDataAccessor<Boolean> DASH = SynchedEntityData.defineId(MaulerEntity.class,
+            EntityDataSerializers.BOOLEAN);
+
+
     public int attackTimer;
 
     public boolean isLeftAttack;
@@ -96,6 +100,8 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     private int savagerCooldown;
 
     private int stunnedTimer;
+    private int dashCooldown = 0;
+
 
     public MaulerEntity(EntityType<? extends MountEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -116,7 +122,7 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.15D)
                 .add(Attributes.FOLLOW_RANGE, 30.D)
                 .add(Attributes.MOVEMENT_SPEED, 0.29f)
-                .add(Attributes.JUMP_STRENGTH,0.60d)
+                .add(Attributes.JUMP_STRENGTH,0.42d)
                 .build();
     }
 
@@ -191,10 +197,43 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     public boolean isFood(ItemStack pStack) {
         return pStack.is(Items.ROTTEN_FLESH);
     }
+    public void setDashing(boolean pBoolean){
+        this.entityData.set(DASH,pBoolean);
+    }
 
     @Override
     public double getPassengersRidingOffset() {
         return ((double)this.getBbHeight());
+    }
+
+    protected void executeRidersJump(float p_251967_, Vec3 p_275627_) {
+        double d0 = this.getAttributeValue(Attributes.JUMP_STRENGTH) * (double)this.getBlockJumpFactor() + (double)this.getJumpBoostPower();
+        this.addDeltaMovement(this.getLookAngle().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double)(14.813333F * p_251967_) * Math.min(this.getAttributeValue(Attributes.MOVEMENT_SPEED),0.09F) * (double)this.getBlockSpeedFactor()).add(0.0D, (double)(1.4285F * p_251967_) * d0, 0.0D));
+        this.dashCooldown = 55;
+        this.setDashing(true);
+        this.hasImpulse = true;
+    }
+
+    @Override
+    protected void tickRidden(Player p_278262_, Vec3 p_275242_) {
+        super.tickRidden(p_278262_, p_275242_);
+        Vec2 vec2 = this.getRiddenRotation(p_278262_);
+        this.setRot(vec2.y, vec2.x);
+        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+        if (this.isControlledByLocalInstance()) {
+
+            if (this.onGround()) {
+                this.setIsJumping(false);
+                if (this.playerJumpPendingScale > 0.0F && !this.isJumping()) {
+                    this.executeRidersJump(this.playerJumpPendingScale,p_275242_);
+                }
+
+                this.playerJumpPendingScale = 0.0F;
+            }
+        }
+    }
+    protected Vec2 getRiddenRotation(LivingEntity p_275502_) {
+        return new Vec2(p_275502_.getXRot() * 0.5F, p_275502_.getYRot());
     }
 
     @Override
@@ -264,7 +303,9 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     public boolean isPrepare(){
         return this.prepareTimer>0;
     }
-
+    public boolean isDashing(){
+        return this.entityData.get(DASH);
+    }
     @Override
     public void attackG() {
         if(!this.isMauled() && !this.isImmobile() && this.getControllingPassenger()!=null){
@@ -359,6 +400,16 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
         }else {
             super.handleEntityEvent(pId);
         }
+    }
+
+    @Override
+    public void handleStartJump(int pJumpPower) {
+        super.handleStartJump(pJumpPower);
+        this.setDashing(true);
+    }
+
+    public int getJumpCooldown() {
+        return this.dashCooldown;
     }
 
     @Override
@@ -652,6 +703,15 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
+        if (this.isDashing() && this.dashCooldown < 50 && (this.onGround() || this.isInWater() || this.isPassenger())) {
+            this.setDashing(false);
+        }
+        if (this.dashCooldown > 0) {
+            --this.dashCooldown;
+            if (this.dashCooldown == 0) {
+                this.level().playSound((Player)null, this.blockPosition(), SoundEvents.CAMEL_DASH_READY, SoundSource.NEUTRAL, 1.0F, 1.0F);
+            }
+        }
         if(!this.isImmobile() && !this.isSavager()){
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.29D);
         }else if(this.isImmobile() && !this.isSavager()){
@@ -683,7 +743,6 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     public boolean isAttacking() {
         return this.entityData.get(ATTACKING);
     }
-
 
     public void setSavager(boolean pBoolean) {
         this.entityData.set(SAVAGER,pBoolean);
@@ -888,6 +947,7 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(DASH,false);
         this.entityData.define(ATTACKING,false);
         this.entityData.define(MAULED,false);
         this.entityData.define(SAVAGER,false);
