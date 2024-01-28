@@ -25,10 +25,11 @@ public class PacketHandler {
 
         int index = 0;
 
-        MOD_CHANNEL.registerMessage(index++,PacketSyncSoulBkToClient.class,
-                PacketSyncSoulBkToClient::toBytes,
-                PacketSyncSoulBkToClient::new,
-                PacketSyncSoulBkToClient::handle);
+        MOD_CHANNEL.messageBuilder(PacketSyncSoulBkToClient.class,index++)
+                .consumer(PacketSyncSoulBkToClient::handle)
+                .encoder(PacketSyncSoulBkToClient::toBytes)
+                .decoder(PacketSyncSoulBkToClient::new).
+                add();
 
         MOD_CHANNEL.registerMessage(index++, PacketEffectSwordRuned.class, PacketEffectSwordRuned::encode,
                 PacketEffectSwordRuned::new, PacketEffectSwordRuned::handle);

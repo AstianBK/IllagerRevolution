@@ -44,7 +44,6 @@ public class WildRavagerDrumLayer extends GeoLayerRenderer<WildRavagerEntity> {
                 model.renderOnShoulder(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, limbSwing, limbSwingAmount, netHeadYaw, headPitch, entitylivingbaseIn.tickCount);
                 matrixStackIn.popPose();
             }
-
         }
     }
 

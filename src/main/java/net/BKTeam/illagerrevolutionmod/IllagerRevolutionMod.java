@@ -187,8 +187,8 @@ public class IllagerRevolutionMod {
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT,()->()->{
             eventBus.addListener(this::registerRenderers);
+            eventBus.addListener(BKKeybinds::register);
         });
-        eventBus.addListener(BKKeybinds::register);
 
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,CapabilityHandler::attachEntityCapability);
         MinecraftForge.EVENT_BUS.addListener(this::onLoadingLevel);
