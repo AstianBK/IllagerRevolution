@@ -2,7 +2,6 @@ package net.BKTeam.illagerrevolutionmod.event;
 
 
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
-import net.BKTeam.illagerrevolutionmod.entity.client.armor.*;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.SoulBombModel;
 import net.BKTeam.illagerrevolutionmod.entity.client.entityrenderers.ArrowBeastRender;
 import net.BKTeam.illagerrevolutionmod.entity.layers.DrumModel;
@@ -11,7 +10,6 @@ import net.BKTeam.illagerrevolutionmod.entity.layers.LivingProtectionLayer;
 import net.BKTeam.illagerrevolutionmod.entity.layers.PlayerLikedLayer;
 import net.BKTeam.illagerrevolutionmod.gui.BKGui;
 import net.BKTeam.illagerrevolutionmod.gui.HeartsEffect;
-import net.BKTeam.illagerrevolutionmod.item.custom.*;
 import net.BKTeam.illagerrevolutionmod.particle.custom.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -116,14 +114,10 @@ public class ModEventBusEvents {
         event.register(ILLAGER_MINER.get(),
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(ILLAGER_SCAVENGER.get(),
-                SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+                Monster::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(ILLAGER_BEAST_TAMER.get(),
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Monster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+                Monster::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
     }
 }

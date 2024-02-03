@@ -6,7 +6,7 @@
     "minecraft:sparse_jungle"
   ],
   "spawners": {
-    "type" : "illagerrevolutionmod:illagerbeasttamer",
+    "type" : "illagerrevolutionmod:illager_beast_tamer",
     "weight" : 50,
     "minCount" : 1,
     "maxCount" : 2

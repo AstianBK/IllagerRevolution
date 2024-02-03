@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class BKEntityTypeTagsProvider extends EntityTypeTagsProvider {
 
-    public BKEntityTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, ExistingFileHelper fileHelper) {
+    public BKEntityTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper fileHelper) {
         super(output,lookupProvider, IllagerRevolutionMod.MOD_ID, fileHelper);
     }
 

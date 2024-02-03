@@ -10,25 +10,25 @@ import java.util.function.Supplier;
 
 public class PacketSyncSoulBkToClient {
 
-    private final float playerSoul;
+    private final float souls;
 
     public PacketSyncSoulBkToClient(float playerSoul) {
-        this.playerSoul = playerSoul;
+        this.souls = playerSoul;
     }
 
     public PacketSyncSoulBkToClient(FriendlyByteBuf buf) {
-        playerSoul = buf.readFloat();
+        souls = buf.readFloat();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeFloat(playerSoul);
+        buf.writeFloat(souls);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
         ctx.enqueueWork(() -> {
-            Minecraft.getInstance().player.getAttribute(SoulTick.SOUL).setBaseValue(playerSoul);
-            ClientSoulData.set(playerSoul);
+            Minecraft.getInstance().player.getAttribute(SoulTick.SOUL).setBaseValue(souls);
+            ClientSoulData.set(souls);
         });
         return true;
     }

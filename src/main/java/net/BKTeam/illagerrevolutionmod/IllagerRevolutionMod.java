@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.BKTeam.illagerrevolutionmod.block.ModBlocks;
 import net.BKTeam.illagerrevolutionmod.block.entity.ModBlockEntities;
 import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
+import net.BKTeam.illagerrevolutionmod.data.server.tags.BKEntityTypeTagsProvider;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.data.DeathEntityEvent;
 import net.BKTeam.illagerrevolutionmod.effect.InitEffect;
@@ -24,6 +25,7 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -53,6 +55,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
 import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
 
@@ -196,8 +199,8 @@ public class IllagerRevolutionMod {
     private void dataSetup(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-
         boolean includeServer = event.includeServer();
+        generator.addProvider(includeServer,new BKEntityTypeTagsProvider(generator.getPackOutput(),event.getLookupProvider(),existingFileHelper));
     }
 
     @OnlyIn(Dist.CLIENT)
