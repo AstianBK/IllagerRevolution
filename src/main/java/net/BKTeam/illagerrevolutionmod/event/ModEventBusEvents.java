@@ -108,16 +108,4 @@ public class ModEventBusEvents {
         event.registerAbove(VanillaGuiOverlay.PLAYER_HEALTH.id(), "hearts",new HeartsEffect());
         event.registerAbove(VanillaGuiOverlay.HELMET.id(), "shield",new BKGui());
     }
-
-    @SubscribeEvent
-    public static void registerRulesSpawn(SpawnPlacementRegisterEvent event){
-        event.register(ILLAGER_MINER.get(),
-                SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Monster::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(ILLAGER_BEAST_TAMER.get(),
-                SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Monster::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-    }
 }

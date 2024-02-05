@@ -28,17 +28,22 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -184,7 +189,7 @@ public class IllagerRevolutionMod {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT,()->()->{
             eventBus.addListener(this::registerRenderers);
         });
-
+        eventBus.addListener(this::registerRulesSpawn);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,CapabilityHandler::attachEntityCapability);
         MinecraftForge.EVENT_BUS.addListener(this::onLoadingLevel);
         DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, IllagerRevolutionMod.MOD_ID);
@@ -267,5 +272,17 @@ public class IllagerRevolutionMod {
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(DeathEntityEvent::onLivintDeathEvent);
     }
+
+    public void registerRulesSpawn(final SpawnPlacementRegisterEvent event){
+        event.register(ILLAGER_MINER.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Monster::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(ILLAGER_BEAST_TAMER.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Monster::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+    }
+
 
 }
