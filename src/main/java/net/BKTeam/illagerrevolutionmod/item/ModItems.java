@@ -139,9 +139,7 @@ public class ModItems {
     //
 
     public static final RegistryObject<Item> ILLAGIUM_APPLE = ITEMS.register("illagium_apple",
-            ()->new ArrowBeastItem(new Item.Properties().food(ModFoods.ILLAGIUM_APPLE)));
-
-
+            ()->new Item(new Item.Properties().food(ModFoods.ILLAGIUM_APPLE)));
 
 
     //

@@ -1,6 +1,5 @@
 package net.BKTeam.illagerrevolutionmod.orderoftheknight;
 
-import net.BKTeam.illagerrevolutionmod.DataSaver;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 
