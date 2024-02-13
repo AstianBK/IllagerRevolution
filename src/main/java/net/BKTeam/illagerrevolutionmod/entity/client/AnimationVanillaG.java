@@ -11,12 +11,14 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 public class AnimationVanillaG {
     public static void resetMain(GeoBone main){
-        for(GeoBone child:main.childBones){
-            BoneSnapshot initial=child.getInitialSnapshot();
-            child.setRotation(initial.rotationValueX, initial.rotationValueY, initial.rotationValueZ);
-            child.setPosition(initial.positionOffsetX, initial.positionOffsetY, initial.positionOffsetZ);
-            if(!child.childBones.isEmpty()){
-                resetMain(child);
+        if(main!=null && !main.childBones.isEmpty()){
+            for(GeoBone child:main.childBones){
+                BoneSnapshot initial=child.getInitialSnapshot();
+                child.setRotation(initial.rotationValueX, initial.rotationValueY, initial.rotationValueZ);
+                child.setPosition(initial.positionOffsetX, initial.positionOffsetY, initial.positionOffsetZ);
+                if(!child.childBones.isEmpty()){
+                    resetMain(child);
+                }
             }
         }
     }
