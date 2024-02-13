@@ -12,12 +12,14 @@ import software.bernie.geckolib.core.state.BoneSnapshot;
 public class AnimationVanillaG {
 
     public static void resetMain(GeoBone main){
-        for(GeoBone child:main.getChildBones()){
-            BoneSnapshot initial=child.getInitialSnapshot();
-            setRotBone(child,initial.getRotX(), initial.getRotY(), initial.getRotZ());
-            setPositionBone(child, initial.getOffsetX(), initial.getOffsetY(), initial.getOffsetZ());
-            if(!child.getChildBones().isEmpty()){
-                resetMain(child);
+        if(main!=null && !main.getChildBones().isEmpty()){
+            for(GeoBone child:main.getChildBones()){
+                BoneSnapshot initial=child.getInitialSnapshot();
+                setRotBone(child,initial.getRotX(), initial.getRotY(), initial.getRotZ());
+                setPositionBone(child, initial.getOffsetX(), initial.getOffsetY(), initial.getOffsetZ());
+                if(!child.getChildBones().isEmpty()){
+                    resetMain(child);
+                }
             }
         }
     }
