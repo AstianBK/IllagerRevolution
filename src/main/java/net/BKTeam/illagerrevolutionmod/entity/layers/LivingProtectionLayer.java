@@ -3,9 +3,11 @@ package net.BKTeam.illagerrevolutionmod.entity.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.BKTeam.illagerrevolutionmod.IllagerRevolutionMod;
+import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
 import net.BKTeam.illagerrevolutionmod.entity.client.entitymodels.SoulBombModel;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.event.ModEventBusEvents;
+import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,6 +18,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
@@ -50,7 +53,7 @@ public class LivingProtectionLayer<T extends LivingEntity,M extends EntityModel<
                 float f5;
                 float f6;
                 int i = OverlayTexture.NO_OVERLAY;
-                if(souls.get(0).discardMoment){
+                if(pLivingEntity.hurtDuration>0){
                     f4=1.0F;
                     f5=0.0F;
                     f6=0.0F;
@@ -66,8 +69,6 @@ public class LivingProtectionLayer<T extends LivingEntity,M extends EntityModel<
                 pMatrixStack.mulPose(Axis.YP.rotationDegrees(f1));
                 pMatrixStack.mulPose(new Quaternionf().setAngleAxis(((float)Math.PI / 3F), SIN_45, 0.0F, SIN_45));
                 this.model.renderToBuffer(pMatrixStack,pBuffer.getBuffer(RenderType.energySwirl(LINKED_ARMOR,f3*0.01f,f3*0.01f)),pPackedLight,i,f4,f5,f6,1.0F);
-                this.model.prepareMobModel(pLivingEntity, pLimbSwing, pLimbSwingAmount, pPartialTicks);
-                this.model.setupAnim(pLivingEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
                 pMatrixStack.popPose();
             }
         }

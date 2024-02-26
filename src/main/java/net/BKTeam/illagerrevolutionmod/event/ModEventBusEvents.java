@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,6 +26,7 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import static net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes.*;
@@ -81,7 +83,7 @@ public class ModEventBusEvents {
                 l.addLayer(new PlayerLikedLayer(l));
                 l.addLayer(new LivingProtectionLayer(l));
             }
-            if(s instanceof GeoEntityRenderer<?> l && l.getAnimatable() instanceof LivingEntity){
+            if(s instanceof GeoEntityRenderer<?> l){
                 l.addRenderLayer(new GeckoLivingProtectionLayer(l));
             }
         });

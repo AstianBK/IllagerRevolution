@@ -1,6 +1,8 @@
 package net.BKTeam.illagerrevolutionmod.procedures;
 
 import net.BKTeam.illagerrevolutionmod.ModConstants;
+import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
+import net.BKTeam.illagerrevolutionmod.capability.CapabilityHandler;
 import net.BKTeam.illagerrevolutionmod.entity.ModEntityTypes;
 import net.BKTeam.illagerrevolutionmod.entity.custom.FallenKnightEntity;
 import net.BKTeam.illagerrevolutionmod.entity.custom.ZombifiedEntity;
@@ -217,6 +219,10 @@ public class Util {
     }
     public static int getNumberOfInvocations(List<ZombifiedEntity> zombies){
         return zombies.size();
+    }
+    public static IAbilityKnightCapability getCapability (LivingEntity living){
+        IAbilityKnightCapability knightCapability = CapabilityHandler.getEntityCapability(living,CapabilityHandler.ABILITY_KNIGHT_CAPABILITY);
+        return knightCapability;
     }
 }
 

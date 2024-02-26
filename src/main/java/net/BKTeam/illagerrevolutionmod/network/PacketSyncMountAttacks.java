@@ -1,10 +1,12 @@
 package net.BKTeam.illagerrevolutionmod.network;
 
+import net.BKTeam.illagerrevolutionmod.api.IAbilityKnightCapability;
 import net.BKTeam.illagerrevolutionmod.deathentitysystem.SoulTick;
 import net.BKTeam.illagerrevolutionmod.enchantment.InitEnchantment;
 import net.BKTeam.illagerrevolutionmod.entity.custom.MountEntity;
 import net.BKTeam.illagerrevolutionmod.entity.projectile.SoulBomb;
 import net.BKTeam.illagerrevolutionmod.item.ModItems;
+import net.BKTeam.illagerrevolutionmod.procedures.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;

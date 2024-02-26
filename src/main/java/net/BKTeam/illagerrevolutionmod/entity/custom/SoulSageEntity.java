@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -49,9 +50,7 @@ import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 
 public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, InventoryCarrier{
@@ -67,6 +66,12 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
 
     private static final EntityDataAccessor<Integer> DATA_ID_ATTACK_TARGET_2 =
             SynchedEntityData.defineId(SoulSageEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Optional<UUID>> DATA_UUID_ATTACK_TARGET_0 = SynchedEntityData.defineId(SoulSageEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+
+    private static final EntityDataAccessor<Optional<UUID>> DATA_UUID_ATTACK_TARGET_1 = SynchedEntityData.defineId(SoulSageEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+
+    private static final EntityDataAccessor<Optional<UUID>> DATA_UUID_ATTACK_TARGET_2 = SynchedEntityData.defineId(SoulSageEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+
 
     private static final EntityDataAccessor<Boolean> DRAIN_SOUL =
             SynchedEntityData.defineId(SoulSageEntity.class, EntityDataSerializers.BOOLEAN);
@@ -193,12 +198,15 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
                             }
                             i++;
                         }
+                    }else {
+                        this.setActiveAttackTarget(-1,3, null);
+                        this.setDrainSoul(false);
                     }
                 }else {
                     this.refreshTargetsDrain(list);
                 }
                 if(this.drainDuration==0){
-                    this.setActiveAttackTarget(0,3);
+                    this.setActiveAttackTarget(-1,3, null);
                     this.setDrainSoul(false);
                 }
             }
@@ -272,7 +280,7 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
         if (living!=null){
             if(living.isAlive()){
                 double dist = this.distanceTo(living);
-                if(dist<60){
+                if(dist<10){
                     return true;
                 }else if (living instanceof Player player && !player.isCreative()){
                     return true;
@@ -284,7 +292,7 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
             }
         }
         this.stopDrainSound(living);
-        this.setActiveAttackTarget(0,index);
+        this.setActiveAttackTarget(-1,index, null);
         return false;
     }
 
@@ -299,23 +307,60 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
         return list;
     }
 
-    void setActiveAttackTarget(int pEntityId,int pIndex) {
+    void setActiveAttackTarget(int pEntityId,int pIndex,UUID uuid) {
         switch (pIndex){
-            case 0-> this.entityData.set(DATA_ID_ATTACK_TARGET_0, pEntityId);
-            case 1-> this.entityData.set(DATA_ID_ATTACK_TARGET_1, pEntityId);
-            case 2-> this.entityData.set(DATA_ID_ATTACK_TARGET_2, pEntityId);
+            case 0-> {
+                this.entityData.set(DATA_ID_ATTACK_TARGET_0, pEntityId);
+                if (uuid!=null){
+                    this.entityData.set(DATA_UUID_ATTACK_TARGET_0,Optional.of(uuid));
+                }else {
+                    this.entityData.set(DATA_UUID_ATTACK_TARGET_0,Optional.empty());
+                }
+                if(pEntityId==-1){
+                    this.clientSideDrainTarget0=null;
+                }
+            }
+            case 1-> {
+                this.entityData.set(DATA_ID_ATTACK_TARGET_1, pEntityId);
+                if (uuid!=null){
+                    this.entityData.set(DATA_UUID_ATTACK_TARGET_1,Optional.of(uuid));
+                }else {
+                    this.entityData.set(DATA_UUID_ATTACK_TARGET_1,Optional.empty());
+                }
+                if(pEntityId==-1){
+                    this.clientSideDrainTarget1=null;
+                }
+            }
+
+            case 2-> {
+                this.entityData.set(DATA_ID_ATTACK_TARGET_2, pEntityId);
+                if (uuid!=null){
+                    this.entityData.set(DATA_UUID_ATTACK_TARGET_2,Optional.of(uuid));
+                }else {
+                    this.entityData.set(DATA_UUID_ATTACK_TARGET_2,Optional.empty());
+                }
+                if(pEntityId==-1){
+                    this.clientSideDrainTarget2=null;
+                }
+            }
             case 3-> {
-                this.entityData.set(DATA_ID_ATTACK_TARGET_0, 0);
-                this.entityData.set(DATA_ID_ATTACK_TARGET_1, 0);
-                this.entityData.set(DATA_ID_ATTACK_TARGET_2, 0);
+                this.entityData.set(DATA_ID_ATTACK_TARGET_0, -1);
+                this.entityData.set(DATA_ID_ATTACK_TARGET_1, -1);
+                this.entityData.set(DATA_ID_ATTACK_TARGET_2, -1);
+                this.entityData.set(DATA_UUID_ATTACK_TARGET_0,Optional.empty());
+                this.entityData.set(DATA_UUID_ATTACK_TARGET_1,Optional.empty());
+                this.entityData.set(DATA_UUID_ATTACK_TARGET_2,Optional.empty());
+                this.clientSideDrainTarget0=null;
+                this.clientSideDrainTarget1=null;
+                this.clientSideDrainTarget2=null;
             }
         }
     }
 
     public boolean hasActiveAttackTarget() {
-        return this.entityData.get(DATA_ID_ATTACK_TARGET_0) != 0 ||
-                this.entityData.get(DATA_ID_ATTACK_TARGET_1)!= 0 ||
-                this.entityData.get(DATA_ID_ATTACK_TARGET_2)!= 0;
+        return this.entityData.get(DATA_ID_ATTACK_TARGET_0) != -1 ||
+                this.entityData.get(DATA_ID_ATTACK_TARGET_1)!= -1 ||
+                this.entityData.get(DATA_ID_ATTACK_TARGET_2)!= -1;
     }
 
     public LivingEntity getActiveAttackTarget0() {
@@ -360,9 +405,12 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
                 }
             }
         } else {
-            return this.level().getEntity(this.entityData.get(DATA_ID_ATTACK_TARGET_1)) instanceof LivingEntity ?
-                    (LivingEntity) this.level().getEntity(this.entityData.get(DATA_ID_ATTACK_TARGET_1)) :
-                    null;
+            final UUID id = this.entityData.get(DATA_UUID_ATTACK_TARGET_1).orElse(null);
+            if(id!=null){
+                Entity entity = ((ServerLevel) level()).getEntity(id);
+                return entity instanceof  LivingEntity living ? living  : null;
+            }
+            return null;
         }
     }
 
@@ -383,8 +431,12 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
                 }
             }
         } else {
-            Entity entity = this.level().getEntity(this.entityData.get(DATA_ID_ATTACK_TARGET_2));
-            return entity instanceof LivingEntity ? (LivingEntity) entity : null;
+            final UUID id = this.entityData.get(DATA_UUID_ATTACK_TARGET_2).orElse(null);
+            if(id!=null){
+                Entity entity = ((ServerLevel) level()).getEntity(id);
+                return entity instanceof  LivingEntity living ? living  : null;
+            }
+            return null;
         }
     }
 
@@ -425,7 +477,7 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
     public boolean hurt(DamageSource pSource, float pAmount) {
         if(!(pSource.getEntity() instanceof Projectile) && this.isDrainSoul()){
             this.setDrainSoul(false);
-            this.setActiveAttackTarget(0,3);
+            this.setActiveAttackTarget(0,3, null);
         }
         return super.hurt(pSource, pAmount);
     }
@@ -433,12 +485,16 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_ID_ATTACK_TARGET_0, 0);
-        this.entityData.define(DATA_ID_ATTACK_TARGET_1, 0);
-        this.entityData.define(DATA_ID_ATTACK_TARGET_2, 0);
+        this.entityData.define(DATA_ID_ATTACK_TARGET_0, -1);
+        this.entityData.define(DATA_ID_ATTACK_TARGET_1, -1);
+        this.entityData.define(DATA_ID_ATTACK_TARGET_2, -1);
+        this.entityData.define(DATA_UUID_ATTACK_TARGET_0, Optional.empty());
+        this.entityData.define(DATA_UUID_ATTACK_TARGET_1, Optional.empty());
+        this.entityData.define(DATA_UUID_ATTACK_TARGET_2, Optional.empty());
         this.entityData.define(DRAIN_SOUL,false);
 
     }
+
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
@@ -594,7 +650,7 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
             owner.getNavigation().stop();
             if(owner.getTarget()!=null){
 
-                owner.setActiveAttackTarget(owner.getTarget().getId(),0);
+                owner.setActiveAttackTarget(owner.getTarget().getId(),0,owner.getTarget().getUUID());
 
                 List<LivingEntity> targets = owner.level().getEntitiesOfClass(LivingEntity.class,
                         owner.getBoundingBox().inflate(30.0D),
@@ -604,7 +660,7 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
 
                 for (LivingEntity living: targets){
                     if(owner.getSensing().hasLineOfSight(living)){
-                        owner.setActiveAttackTarget(living.getId(), k);
+                        owner.setActiveAttackTarget(living.getId(), k, living.getUUID());
                         k++;
                         if(k == 3){
                             break;

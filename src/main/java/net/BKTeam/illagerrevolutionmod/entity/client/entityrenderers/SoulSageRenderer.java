@@ -54,26 +54,27 @@ public class SoulSageRenderer extends GeoEntityRenderer<SoulSageEntity> {
             return true;
         } else {
             if (pLivingEntity.hasActiveAttackTarget()) {
+                boolean flag = false;
                 LivingEntity livingentity = pLivingEntity.getActiveAttackTarget0();
                 LivingEntity livingentity1 = pLivingEntity.getActiveAttackTarget1();
                 LivingEntity livingentity2 = pLivingEntity.getActiveAttackTarget2();
                 if (livingentity != null) {
                     Vec3 vec3 = this.getPosition(livingentity, (double)livingentity.getBbHeight() * 0.5D, 1.0F);
                     Vec3 vec31 = this.getPosition(pLivingEntity, (double)pLivingEntity.getEyeHeight(), 1.0F);
-                    return pCamera.isVisible(new AABB(vec31.x, vec31.y, vec31.z, vec3.x, vec3.y, vec3.z));
+                    flag = pCamera.isVisible(new AABB(vec31.x, vec31.y, vec31.z, vec3.x, vec3.y, vec3.z));
                 }
                 if (livingentity1 != null) {
                     Vec3 vec3 = this.getPosition(livingentity1, (double)livingentity1.getBbHeight() * 0.5D, 1.0F);
                     Vec3 vec31 = this.getPosition(pLivingEntity, (double)pLivingEntity.getEyeHeight(), 1.0F);
-                    return pCamera.isVisible(new AABB(vec31.x, vec31.y, vec31.z, vec3.x, vec3.y, vec3.z));
+                    flag = flag || pCamera.isVisible(new AABB(vec31.x, vec31.y, vec31.z, vec3.x, vec3.y, vec3.z));
                 }
                 if (livingentity2 != null) {
                     Vec3 vec3 = this.getPosition(livingentity2, (double)livingentity2.getBbHeight() * 0.5D, 1.0F);
                     Vec3 vec31 = this.getPosition(pLivingEntity, (double)pLivingEntity.getEyeHeight(), 1.0F);
-                    return pCamera.isVisible(new AABB(vec31.x, vec31.y, vec31.z, vec3.x, vec3.y, vec3.z));
+                    flag = flag || pCamera.isVisible(new AABB(vec31.x, vec31.y, vec31.z, vec3.x, vec3.y, vec3.z));
                 }
+                return flag;
             }
-
             return false;
         }
     }
