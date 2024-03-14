@@ -51,6 +51,5 @@ public class BeastInventoryScreen extends AbstractContainerScreen<BeastInventory
             }
         }
         InventoryScreen.renderEntityInInventoryFollowsMouse(p_283065_,i + 51, j + 60, 17, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.beast);
-
     }
 }

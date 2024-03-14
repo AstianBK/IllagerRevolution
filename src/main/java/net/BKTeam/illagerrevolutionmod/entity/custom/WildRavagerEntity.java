@@ -67,7 +67,6 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class WildRavagerEntity extends MountEntity implements RiderShieldingMount {
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final Predicate<Entity> NO_RAVAGER_AND_ALIVE = (p_33346_) -> {
         return p_33346_.isAlive() && !(p_33346_ instanceof WildRavagerEntity);

@@ -628,14 +628,14 @@ public class BladeKnightEntity extends SpellcasterKnight implements GeoEntity, I
                 boolean flag = this.goalOwner.getCombo()==Combo.COMBO_SPIN;
                 if(this.goalOwner.getCombo()==Combo.COMBO_SPIN){
                     if(this.goalOwner.animationTimer>5 && target!=null){
-                        this.goalOwner.lookAt(target, 30F, 30F);
+                        this.goalOwner.lookAt(target, 30F, 0F);
                     }else {
                         this.goalOwner.setYRot(this.goalOwner.yRotO);
                     }
                     this.goalOwner.navigation.stop();
                     if(this.goalOwner.getComboState()==ComboState.THIRD_HIT){
                         if(target!=null){
-                            this.goalOwner.getLookControl().setLookAt(target,30,30);
+                            this.goalOwner.getLookControl().setLookAt(target,30,0);
                             this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
                         }
                         if(this.goalOwner.animationTimer==8 ){
@@ -644,8 +644,9 @@ public class BladeKnightEntity extends SpellcasterKnight implements GeoEntity, I
                                 SoulSlash court = new SoulSlash(this.goalOwner,this.goalOwner.level());
                                 Vec3 vec31 = this.goalOwner.getUpVector(1.0F);
                                 Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((double)((45.0F*i) * ((float)Math.PI / 180F)), vec31.x, vec31.y, vec31.z);
-                                Vec3 vec3 = this.goalOwner.getViewVector(1.0F);
-                                Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);                                court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
+                                Vec3 vec3 = this.goalOwner.getViewVector(1.0F).multiply(1.0F,0.0F,1.0F);
+                                Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
+                                court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
                                 court.shoot((double)vector3f.x(), (double)vector3f.y(), (double)vector3f.z(), 0.5F, 0.0F);
                                 this.goalOwner.level().addFreshEntity(court);
                             }
@@ -673,7 +674,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements GeoEntity, I
                         }
                     }else {
                         if(target!=null){
-                            this.goalOwner.getLookControl().setLookAt(target,30,30);
+                            this.goalOwner.getLookControl().setLookAt(target,30,0);
                             this.goalOwner.setYBodyRot(this.goalOwner.getYHeadRot());
                         }
                         if(this.goalOwner.animationTimer==5){
@@ -681,7 +682,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements GeoEntity, I
                             court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));
                             Vec3 vec31 = this.goalOwner.getUpVector(1.0F);
                             Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((double)(0.0F * ((float)Math.PI / 180F)), vec31.x, vec31.y, vec31.z);
-                            Vec3 vec3 = this.goalOwner.getViewVector(1.0F);
+                            Vec3 vec3 = this.goalOwner.getViewVector(1.0F).multiply(1.0F,0.0F,1.0F);
                             Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
 
                             court.setPos(new Vec3(court.getX(),court.getY(),court.getZ()));

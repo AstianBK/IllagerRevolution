@@ -197,6 +197,7 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
     public boolean isFood(ItemStack pStack) {
         return pStack.is(Items.ROTTEN_FLESH);
     }
+
     public void setDashing(boolean pBoolean){
         this.entityData.set(DASH,pBoolean);
     }

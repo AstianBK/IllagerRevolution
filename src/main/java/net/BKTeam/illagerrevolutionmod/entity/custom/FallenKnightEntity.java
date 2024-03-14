@@ -161,6 +161,7 @@ public class FallenKnightEntity extends ReanimatedEntity implements GeoEntity, I
     }
 
     private void unarmedMoment(){
+        this.refreshDimensions();
         this.setHealth(1.0f);
         this.setInvulnerable(true);
         this.setIsArmed(false,false);
@@ -178,6 +179,12 @@ public class FallenKnightEntity extends ReanimatedEntity implements GeoEntity, I
     protected void populateDefaultEquipmentSlots(DifficultyInstance pDifficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(this.level().random.nextFloat() < 0.5 ? ModItems.ILLAGIUM_SWORD.get() : ModItems.ILLAGIUM_AXE.get()));
     }
+
+    @Override
+    public EntityDimensions getDimensions(Pose p_21047_) {
+        return this.isOnGroundUnarmed() || this.isUnarmed() ? this.getType().getDimensions().scale(0.2F,0.2F) : super.getDimensions(p_21047_);
+    }
+
 
     @Nullable
     @Override
@@ -294,6 +301,14 @@ public class FallenKnightEntity extends ReanimatedEntity implements GeoEntity, I
         }
     }
 
+    @Override
+    public void handleEntityEvent(byte p_21375_) {
+        if(p_21375_==6){
+            this.setOnGroundUnarmed(true);
+        }
+        super.handleEntityEvent(p_21375_);
+    }
+
     public boolean isRearmed() {
         return this.entityData.get(REARMED);
     }
@@ -342,6 +357,7 @@ public class FallenKnightEntity extends ReanimatedEntity implements GeoEntity, I
             this.heal(this.getMaxHealth());
             this.addEntityOfList();
         }
+        this.refreshDimensions();
         super.aiStep();
     }
     @Override

@@ -33,15 +33,19 @@ public class SoulBomb extends ProjectileMagic {
 
     public SoulBomb(LivingEntity thrower, Level level,int summonPosition) {
         super(ModEntityTypes.SOUL_BOMB.get(),thrower, level,summonPosition);
-
     }
 
     @Override
     public void tick() {
         Entity owner = level().getEntity(this.getOwnerID());
-        if (!this.level().isClientSide && owner == null ) {
-            this.remove(RemovalReason.DISCARDED);
-            return;
+        if(!this.level().isClientSide){
+            if(owner==null){
+                this.remove(RemovalReason.DISCARDED);
+                return;
+            }else if(!owner.isAlive()) {
+                this.remove(RemovalReason.DISCARDED);
+                return;
+            }
         } else if (owner == null) {
             return;
         }

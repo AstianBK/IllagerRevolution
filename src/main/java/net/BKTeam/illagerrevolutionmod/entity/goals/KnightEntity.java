@@ -85,7 +85,7 @@ public class KnightEntity extends AbstractIllager {
             if(target==this.getTarget()){
                 return false;
             }
-            if((this.hasActiveRaid() || this.hasActiveRaidOfOrder()) && target.getMobType() == MobType.ILLAGER){
+            if(target.getMobType() == MobType.ILLAGER){
                 return true;
             }else if(target instanceof IllagerBeastEntity beast){
                 return !beast.isTame();

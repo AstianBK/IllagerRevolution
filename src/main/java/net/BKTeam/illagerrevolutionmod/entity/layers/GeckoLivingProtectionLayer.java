@@ -78,7 +78,7 @@ public class GeckoLivingProtectionLayer<T extends Entity & GeoAnimatable> extend
     }
 
     public static boolean getDefender(List<SoulBomb> soulBombs){
-        return !soulBombs.isEmpty();
+        return soulBombs!=null && !soulBombs.isEmpty();
     }
 
     public static float getY(LivingEntity p_114159_, float p_114160_) {

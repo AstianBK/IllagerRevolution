@@ -166,10 +166,8 @@ public class AreaFireColumnEntity extends Entity {
         }
         if(this.prepareTimer==0){
             this.setIsBurn(true);
-            this.prepareTimer--;
-        }else {
-            this.prepareTimer--;
         }
+        this.prepareTimer--;
         if(this.isBurn()){
             if(this.tickCount%10==0){
                 List<LivingEntity> targets;

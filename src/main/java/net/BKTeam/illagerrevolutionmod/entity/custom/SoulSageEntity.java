@@ -276,11 +276,10 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
         }
     }
 
-    public boolean checkIsAlive(LivingEntity living,int index){
+    public boolean checkIsAlive(LivingEntity living, int index){
         if (living!=null){
             if(living.isAlive()){
-                double dist = this.distanceTo(living);
-                if(dist<10){
+                if(this.canDrain(living)){
                     return true;
                 }else if (living instanceof Player player && !player.isCreative()){
                     return true;
@@ -294,6 +293,10 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
         this.stopDrainSound(living);
         this.setActiveAttackTarget(-1,index, null);
         return false;
+    }
+    
+    public boolean canDrain(LivingEntity target){
+        return this.closerThan(target,24.0D);
     }
 
     public List<LivingEntity> getDrainEntities(){
@@ -597,8 +600,19 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
 
         @Override
         public boolean canUse() {
-            return super.canUse() &&
-                    !SoulSageEntity.this.isDrainSoul();
+            if(!super.canUse()){
+                return false;
+            }
+            LivingEntity target = SoulSageEntity.this.getTarget();
+            SoulSageEntity owner =SoulSageEntity.this;
+            List<LivingEntity> targets = owner.level().getEntitiesOfClass(LivingEntity.class,
+                    owner.getBoundingBox().inflate(30.0D),
+                    e->owner.canDrain(e) &&  e.getMobType()!=MobType.ILLAGER && !(e instanceof Player player && player.isCreative()));
+
+            if(target!=null){
+                return SoulSageEntity.this.canDrain(target);
+            }
+            return !SoulSageEntity.this.isDrainSoul() && !targets.isEmpty();
         }
 
         @Override
@@ -649,9 +663,9 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
             owner.level().broadcastEntityEvent(owner,(byte) 60);
             owner.getNavigation().stop();
             if(owner.getTarget()!=null){
-
-                owner.setActiveAttackTarget(owner.getTarget().getId(),0,owner.getTarget().getUUID());
-
+                if(owner.canDrain(owner.getTarget())){
+                    owner.setActiveAttackTarget(owner.getTarget().getId(),0,owner.getTarget().getUUID());
+                }
                 List<LivingEntity> targets = owner.level().getEntitiesOfClass(LivingEntity.class,
                         owner.getBoundingBox().inflate(30.0D),
                         e->e.getMobType()!=MobType.ILLAGER && !(e instanceof Player player && player.isCreative()));
@@ -660,8 +674,10 @@ public class SoulSageEntity extends SpellcasterKnight implements GeoEntity, Inve
 
                 for (LivingEntity living: targets){
                     if(owner.getSensing().hasLineOfSight(living)){
-                        owner.setActiveAttackTarget(living.getId(), k, living.getUUID());
-                        k++;
+                        if(owner.canDrain(living)){
+                            owner.setActiveAttackTarget(living.getId(), k, living.getUUID());
+                            k++;
+                        }
                         if(k == 3){
                             break;
                         }
