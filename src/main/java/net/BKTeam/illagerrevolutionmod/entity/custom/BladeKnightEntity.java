@@ -99,6 +99,7 @@ public class BladeKnightEntity extends SpellcasterKnight implements GeoEntity, I
                 .add(Attributes.MOVEMENT_SPEED, 0.31f).build();
     }
 
+
     public BladeKnightEntity(EntityType<? extends SpellcasterKnight> entityType, Level level) {
         super(entityType, level);
         this.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 99999999, 0, false, false));
