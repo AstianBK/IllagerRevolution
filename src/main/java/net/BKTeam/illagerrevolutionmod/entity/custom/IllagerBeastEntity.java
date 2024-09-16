@@ -245,6 +245,7 @@ public class IllagerBeastEntity extends TamableAnimal implements GeoEntity,Conta
             this.level().addParticle(ParticleTypes.HAPPY_VILLAGER,xp,yp,zp,0.0F,0.0F,0.0F);
         }
     }
+
     protected void createInventory() {
         SimpleContainer simplecontainer = this.inventory;
         this.inventory = new SimpleContainer(this.getInventorySize());

@@ -436,14 +436,6 @@ public class BulkwarkEntity extends KnightEntity implements GeoEntity {
         return 100.0F;
     }
 
-    private void strongKnockbackCharged(Entity p_33340_) {
-        double d0 = p_33340_.getX() - this.getX();
-        double d1 = p_33340_.getZ() - this.getZ();
-        double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
-        double d3 = 2.5D;
-        p_33340_.push(d0 / d2 * d3, 0.2D, d1 / d2 * d3);
-    }
-
 
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {

@@ -9,7 +9,6 @@ import net.BKTeam.illagerrevolutionmod.deathentitysystem.client.ClientSoulData;
 import java.util.function.Supplier;
 
 public class PacketSyncSoulBkToClient {
-
     private final float souls;
 
     public PacketSyncSoulBkToClient(float playerSoul) {

@@ -222,7 +222,6 @@ public class MaulerEntity extends MountEntity implements GeoEntity {
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
         if (this.isControlledByLocalInstance()) {
-
             if (this.onGround()) {
                 this.setIsJumping(false);
                 if (this.playerJumpPendingScale > 0.0F && !this.isJumping()) {
